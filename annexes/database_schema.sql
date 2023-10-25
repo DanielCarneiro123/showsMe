@@ -124,3 +124,4 @@ CREATE TABLE Notification_ (
       (notification_type = 'Report' AND event_id IS NULL AND comment_id IS NULL AND report_id IS NOT NULL)
    )
 );
+
