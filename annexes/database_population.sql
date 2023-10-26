@@ -1,92 +1,283 @@
-INSERT INTO UserClass (email_address, name, password, phone_number, role, is_admin)
-VALUES
-   ('alice@example.com', 'Alice Wonderland', 'pass123', '111-222-3333', 'Event_Creator', FALSE),
-   ('bob@example.com', 'Bob Builder', 'pass456', '444-555-6666', 'Event_Manager', FALSE),
-   ('carol@example.com', 'Carol Singer', 'pass789', '777-888-9999', 'Event_Creator', TRUE),
-   ('dave@example.com', 'Dave Dancer', 'passABC', '999-000-1111', 'Event_Manager', FALSE),
-   ('emma@example.com', 'Emma Explorer', 'passDEF', '222-333-4444', 'Event_Creator', FALSE);
+-- Inserts for Users
+INSERT INTO UserClass (email_address, name, password, phone_number, role, is_admin, promotor_code) 
+VALUES 
+  ('user1@example.com', 'John Doe', 'password1', '1234567890', 'Event_Creator', FALSE, NULL),
+  ('user2@example.com', 'Jane Smith', 'password2', '9876543210', 'Event_Creator', FALSE, NULL),
+  ('user3@example.com', 'Bob Johnson', 'password3', '5551231567', 'Event_Creator', FALSE, NULL),
+  ('user4@example.com', 'Alice Brown', 'password4', '7890123456','Event_Creator', FALSE, NULL),
+  ('user5@example.com', 'Charlie Davis', 'password5', '3216149870', NULL, FALSE, NULL),
+  ('user6@example.com', 'David Wilson', 'password6', '6547810123', 'Event_Manager', FALSE, 'promo1'),
+  ('user7@example.com', 'Eva Rodriguez', 'password7', '7810123456', 'Event_Manager', FALSE, 'promo2'),
+  ('user8@example.com', 'Frank Garcia', 'password8', '9871543210', 'Event_Manager', FALSE, 'promo3'),
+  ('user9@example.com', 'Grace Miller', 'password9', '1231567890', 'Event_Manager', FALSE, 'promo4'),
+  ('user10@example.com', 'Henry Lee', 'password10', '5551134567', 'Event_Manager', FALSE, 'promo5'),
+  ('admin@example.com', 'Admin User', 'adminpassword', '1212223333', NULL, TRUE, NULL),
+  ('user11@example.com', 'Isabel Lopez', 'password11', '7178889999', NULL, FALSE, NULL),
+  ('user12@example.com', 'Jack Turner', 'password12', '4425556666', NULL, FALSE, NULL),
+  ('user13@example.com', 'Kelly White', 'password13', '2233334444', NULL, FALSE, NULL),
+  ('user14@example.com', 'Liam Anderson', 'password14', '1667778888', NULL, FALSE, NULL),
+  ('user15@example.com', 'Mia Harris', 'password15', '3331445555', NULL, FALSE, NULL),
+  ('user16@example.com', 'Nathan Moore', 'password16', '9190001111', NULL, FALSE, NULL),
+  ('user17@example.com', 'Olivia Taylor', 'password17', '2112223333', NULL, FALSE, NULL),
+  ('user18@example.com', 'Peter Martin', 'password18', '8189990000', NULL, FALSE, NULL),
+  ('user19@example.com', 'Quinn Hall', 'password19', '5553667777', NULL, FALSE, NULL),
+  ('user20@example.com', 'Rachel Clark', 'password20', '2123334444', NULL, FALSE, NULL),
+  ('user21@example.com', 'Samuel Allen', 'password21', '7578889999', NULL, FALSE, NULL),
+  ('user22@example.com', 'Tara Turner', 'password22', '4465556666', NULL, FALSE, NULL),
+  ('user23@example.com', 'Ulysses Walker', 'password23', '1667178888', NULL, FALSE, NULL),
+  ('user24@example.com', 'Vivian Scott', 'password24', '3324445555', NULL, FALSE, NULL),
+  ('user25@example.com', 'Walter Bennett', 'password25', '1990001111', NULL, FALSE, NULL),
+  ('user26@example.com', 'Xavier Garcia', 'password26', '1412223333', NULL, FALSE, NULL),
+  ('user27@example.com', 'Yasmine Williams', 'password27', '1889990000', NULL, FALSE, NULL),
+  ('user28@example.com', 'Zachary Smith', 'password28', '5551667777', NULL, FALSE, NULL),
+  ('user29@example.com', 'Ava Davis', 'password29', '2223334144', NULL, FALSE, NULL),
+  ('user30@example.com', 'Benjamin Harris', 'password30', '7171889999', NULL, FALSE, NULL);
 
+-- Inserts for Realistic Events
+INSERT INTO Event_ (name, location, description, private, start_timestamp, end_timestamp, creator_id) 
+VALUES 
+  ('Conference on Technology Innovation', 'Tech Center', 'Join us for the latest in tech innovations and discussions.', FALSE, '2023-11-01 09:00:00', '2023-11-01 17:00:00', 1),
+  ('Art Exhibition: Modern Perspectives', 'City Art Gallery', 'Explore contemporary art from local and international artists.', TRUE, '2023-11-05 18:00:00', '2023-11-05 21:00:00', 2),
+  ('Community Charity Run', 'City Park', 'Run for a cause and support local charities.', FALSE, '2023-11-10 08:00:00', '2023-11-10 12:00:00', 3),
+  ('Food Festival: Taste of the World', 'Downtown Square', 'Indulge in a culinary journey with flavors from around the globe.', TRUE, '2023-11-15 12:00:00', '2023-11-15 20:00:00', 4),
+  ('Tech Workshop: Introduction to AI', 'Innovation Hub', 'Learn the basics of Artificial Intelligence in this hands-on workshop.', FALSE, '2023-11-20 14:00:00', '2023-11-20 17:00:00', 1),
+  ('Music Concert: Jazz Fusion Night', 'Harmony Arena', 'Enjoy an evening of jazz fusion performances by talented musicians.', TRUE, '2023-11-25 19:00:00', '2023-11-25 22:00:00', 2),
+  ('Environmental Awareness Seminar', 'Green Hall', 'Discuss and address current environmental challenges with experts.', FALSE, '2023-11-30 10:00:00', '2023-11-30 13:00:00', 3),
+  ('Fashion Show: Urban Elegance', 'Fashion Center', 'Witness the latest trends in urban fashion and style.', TRUE, '2023-12-05 15:00:00', '2023-12-05 18:00:00', 4),
+  ('Startup Pitch Competition', 'Innovation Hub', 'Entrepreneurs pitch their innovative ideas to a panel of investors.', FALSE, '2023-12-10 13:00:00', '2023-12-10 17:00:00', 1),
+  ('Film Festival: Indie Cinema Showcase', 'Cineplex Theater', 'Explore unique and thought-provoking films from independent filmmakers.', TRUE, '2023-12-15 17:00:00', '2023-12-15 22:00:00', 2),
+  ('Health and Wellness Expo', 'Wellness Center', 'Discover the latest trends in health, fitness, and overall well-being.', FALSE, '2023-12-20 11:00:00', '2023-12-20 16:00:00', 3),
+  ('Culinary Masterclass: Holiday Edition', 'Gourmet Kitchen', 'Learn to prepare festive dishes with renowned chefs.', TRUE, '2023-12-25 16:00:00', '2023-12-25 19:00:00', 4),
+  ('Tech Conference: Future Trends', 'Tech Expo Center', 'Explore upcoming trends in technology and network with industry leaders.', FALSE, '2023-12-30 09:00:00', '2023-12-30 18:00:00', 1),
+  ('Artisan Craft Fair', 'Crafters Market', 'Shop for handmade crafts and unique artisanal products.', TRUE, '2024-01-05 12:00:00', '2024-01-05 15:00:00', 2),
+  ('Educational Symposium: Innovation in Education', 'Education Center', 'Discuss innovative approaches and technologies in education.', FALSE, '2024-01-10 14:00:00', '2024-01-10 17:00:00', 3),
+  ('Gaming Tournament: Esports Championship', 'Gaming Arena', 'Witness intense gaming battles and cheer for your favorite teams.', TRUE, '2024-01-15 18:00:00', '2024-01-15 22:00:00', 4),
+  ('Science Fair for Kids', 'Science Discovery Center', 'Encourage young minds with interactive and educational science exhibits.', FALSE, '2024-01-20 10:00:00', '2024-01-20 14:00:00', 1),
+  ('Fashion Workshop: Sustainable Fashion Practices', 'Fashion Hub', 'Learn about sustainable practices in the fashion industry.', TRUE, '2024-01-25 15:00:00', '2024-01-25 18:00:00', 2),
+  ('Community Cleanup Day', 'City Streets', 'Join hands for a cleaner and greener community.', FALSE, '2024-01-30 09:00:00', '2024-01-30 12:00:00', 3),
+  ('Outdoor Concert: Summer Vibes', 'Sunset Park', 'Celebrate summer with live music and a festive atmosphere.', TRUE, '2024-02-05 17:00:00', '2024-02-05 22:00:00', 4);
 
-INSERT INTO Event_ (name, location, description, start_timestamp, end_timestamp, creator_id)
-VALUES
-   ('Concert in the Park', 'City Park', 'Enjoy live music outdoors.', '2023-11-01 18:00:00', '2023-11-01 22:00:00', 1),
-   ('Tech Conference', 'Convention Center', 'Explore the latest in technology.', '2023-11-10 09:00:00', '2023-11-11 18:00:00', 2),
-   ('Art Exhibition', 'Art Gallery', 'A showcase of modern art.', '2023-11-05 12:00:00', '2023-11-05 18:00:00', 3),
-   ('Dance Workshop', 'Community Center', 'Learn different dance styles.', '2023-11-15 14:00:00', '2023-11-15 17:00:00', 4),
-   ('Nature Walk', 'Nature Reserve', 'Explore the beauty of nature.', '2023-11-20 10:00:00', '2023-11-20 12:00:00', 5);
+-- Inserts for Comments
+INSERT INTO Comment_ (text, media, event_id, author_id) 
+VALUES 
+  ('Great event!', NULL, 1, 1),
+  ('The art was amazing!', NULL, 2, 2),
+  ('I had a blast running!', NULL, 3, 3),
+  ('The food was delicious!', NULL, 4, 4),
+  ('Interesting workshop on AI.', NULL, 5, 5),
+  ('The jazz music was so soothing.', NULL, 6, 6),
+  ('Informative seminar on the environment.', NULL, 7, 7),
+  ('The fashion show was fabulous!', NULL, 8, 8),
+  ('Impressive startup pitches!', NULL, 9, 9),
+  ('The indie films were thought-provoking.', NULL, 10, 10),
+  ('Health expo was very informative.', NULL, 11, 11),
+  ('Enjoyed the culinary masterclass!', NULL, 12, 12),
+  ('Tech conference was enlightening.', NULL, 13, 13),
+  ('Bought some lovely crafts at the fair.', NULL, 14, 14),
+  ('Educational symposium was insightful.', NULL, 15, 15),
+  ('Esports championship was thrilling!', NULL, 16, 16),
+  ('Kids loved the science fair!', NULL, 17, 17),
+  ('Learned a lot about sustainable fashion.', NULL, 18, 18),
+  ('Community cleanup was a success!', NULL, 19, 19),
+  ('Summer vibes concert was fantastic!', NULL, 20, 20);
+  
+  -- Inserts for Ratings
+INSERT INTO Rating (rating, event_id, author_id) 
+VALUES 
+  (5, 1, 1),
+  (4, 2, 2),
+  (5, 3, 3),
+  (4, 4, 4),
+  (4, 5, 5),
+  (5, 6, 6),
+  (4, 7, 7),
+  (5, 8, 8),
+  (4, 9, 9),
+  (5, 10, 10),
+  (4, 11, 11),
+  (5, 12, 12),
+  (4, 13, 13),
+  (5, 14, 14),
+  (4, 15, 15),
+  (5, 16, 16),
+  (4, 17, 17),
+  (5, 18, 18),
+  (4, 19, 19),
+  (5, 20, 20);
+  
+  -- Inserts for Reports
+INSERT INTO Report (Type, comment_id, author_id) 
+VALUES 
+  ('Spam', 1, 1),
+  ('Inappropriate Content', 2, 2),
+  ('Abusive Language', 3, 3),
+  ('Off-Topic', 4, 4),
+  ('Spam', 5, 5),
+  ('Inappropriate Content', 6, 6),
+  ('Abusive Language', 7, 7),
+  ('Off-Topic', 8, 8),
+  ('Spam', 9, 9),
+  ('Inappropriate Content', 10, 10),
+  ('Abusive Language', 11, 11),
+  ('Off-Topic', 12, 12),
+  ('Spam', 13, 13),
+  ('Inappropriate Content', 14, 14),
+  ('Abusive Language', 15, 15),
+  ('Off-Topic', 16, 16),
+  ('Spam', 17, 17),
+  ('Inappropriate Content', 18, 18),
+  ('Abusive Language', 19, 19),
+  ('Off-Topic', 20, 20);
+  
+  -- Inserts for Ticket Types
+INSERT INTO TicketType (name, stock, description, private, person_buying_limit, start_timestamp, end_timestamp, price, event_id)
+VALUES 
+  ('General Admission', 100, 'Access to the event for one person.', FALSE, 10, '2023-11-01 00:00:00', '2023-12-01 00:00:00', 25.99, 1),
+  ('VIP Pass', 50, 'Exclusive access with VIP amenities.', TRUE, 5, '2023-11-05 12:00:00', '2023-11-10 12:00:00', 99.99, 2),
+  ('Runner''s Package', 75, 'Participate in the community charity run.', FALSE, 15, '2023-11-10 09:00:00', '2023-11-11 12:00:00', 10.00, 3),
+  ('Foodie Ticket', 120, 'Taste a variety of dishes at the food festival.', TRUE, 20, '2023-11-15 18:00:00', '2023-11-16 23:59:59', 39.99, 4),
+  ('Workshop Pass', 30, 'Attend workshops on AI and technology.', FALSE, 5, '2023-11-20 14:00:00', '2023-11-21 17:00:00', 49.99, 5),
+  ('Concert Ticket', 200, 'Enjoy live jazz fusion performances.', TRUE, 25, '2023-11-25 19:00:00', '2023-11-26 22:00:00', 29.99, 6),
+  ('Seminar Access', 80, 'Participate in the environmental awareness seminar.', FALSE, 10, '2023-11-30 10:00:00', '2023-12-01 13:00:00', 0.00, 7),
+  ('Fashion Show Ticket', 60, 'Front-row access to the urban elegance fashion show.', TRUE, 8, '2023-12-05 15:00:00', '2023-12-06 18:00:00', 19.99, 8),
+  ('Startup Pitch Pass', 40, 'Attend the startup pitch competition.', FALSE, 5, '2023-12-10 13:00:00', '2023-12-11 17:00:00', 59.99, 9),
+  ('Film Festival Pass', 90, 'Access to screenings at the indie cinema showcase.', TRUE, 15, '2023-12-15 17:00:00', '2023-12-16 22:00:00', 44.99, 10),
+  ('Health Expo Ticket', 110, 'Explore health and wellness trends.', FALSE, 20, '2023-12-20 11:00:00', '2023-12-21 16:00:00', 15.99, 11),
+  ('Culinary Masterclass', 25, 'Learn festive dishes at the culinary masterclass.', TRUE, 5, '2023-12-25 16:00:00', '2023-12-26 19:00:00', 34.99, 12),
+  ('Tech Conference Pass', 150, 'Participate in discussions on future tech trends.', FALSE, 30, '2023-12-30 09:00:00', '2023-12-31 18:00:00', 79.99, 13),
+  ('Artisan Craft Fair Access', 70, 'Access to handmade crafts at the crafters market.', TRUE, 15, '2024-01-05 12:00:00', '2024-01-06 15:00:00', 9.99, 14),
+  ('Educational Symposium Ticket', 45, 'Attend discussions on innovation in education.', FALSE, 8, '2024-01-10 14:00:00', '2024-01-11 17:00:00', 49.99, 15),
+  ('Gaming Tournament Pass', 100, 'Witness intense battles at the esports championship.', TRUE, 20, '2024-01-15 18:00:00', '2024-01-16 22:00:00', 19.99, 16),
+  ('Science Fair Access', 85, 'Encourage young minds at the kids science fair.', FALSE, 12, '2024-01-20 10:00:00', '2024-01-21 14:00:00', 0.00, 17),
+  ('Fashion Workshop Pass', 55, 'Learn about sustainable fashion practices.', TRUE, 10, '2024-01-25 15:00:00', '2024-01-26 18:00:00', 29.99, 18),
+  ('Community Cleanup Volunteer', 35, 'Join hands for a cleaner community.', FALSE, 5, '2024-01-30 09:00:00', '2024-01-31 12:00:00', 0.00, 19),
+  ('Outdoor Concert Ticket', 180, 'Celebrate summer with live music.', TRUE, 25, '2024-02-05 17:00:00', '2024-02-06 22:00:00', 49.99, 20);
 
+-- Inserts for Ticket Orders
+INSERT INTO TicketOrder (promo_code, buyer_id) 
+VALUES 
+  (NULL, 1),
+  ('promo1', 2),
+  (NULL, 3),
+  (NULL, 4),
+  (NULL, 5),
+  (NULL, 6),
+  ('promo1', 7),
+  (NULL, 8),
+  ('promo2', 9),
+  (NULL, 10),
+  (NULL, 11),
+  ('promo3', 12),
+  (NULL, 13),
+  ('promo4', 14),
+  (NULL, 15),
+  (NULL, 16),
+  ('promo5', 17),
+  (NULL, 18),
+  ('promo5', 19),
+  (NULL, 20);
 
-INSERT INTO Comment_ (text, event_id, author_id)
-VALUES
-   ('Great concert!', 1, 2),
-   ('Interesting keynote speakers.', 2, 3),
-   ('Wonderful art pieces.', 3, 4),
-   ('Loved the dance workshop!', 4, 5),
-   ('Amazing scenery during the nature walk.', 5, 1);
+-- Inserts for Ticket Instances
+INSERT INTO TicketInstance (ticket_type_id, order_id) 
+VALUES 
+  (1, 1),
+  (2, 2),
+  (3, 3),
+  (4, 4),
+  (5, 5),
+  (6, 6),
+  (2, 7),
+  (8, 8),
+  (4, 9),
+  (10, 10),
+  (11, 11),
+  (12, 12),
+  (13, 13),
+  (14, 14),
+  (15, 15),
+  (16, 16),
+  (17, 17),
+  (18, 18),
+  (19, 19),
+  (20, 20);
 
-
-INSERT INTO Rating (rating, event_id, author_id)
-VALUES
-   (5, 1, 3),
-   (4, 2, 4),
-   (5, 3, 1),
-   (4, 4, 2),
-   (5, 5, 5);
-
-
-INSERT INTO Report (Type, comment_id, author_id)
-VALUES
-   ('Spam', 1, 4),
-   ('Inappropriate', 2, 5),
-   ('Abuse', 3, 1),
-   ('Spam', 4, 2),
-   ('Inappropriate', 5, 3);
-
-
-INSERT INTO TicketType (name, stock, description, person_buying_limit, start_timestamp, end_timestamp, price, event_id)
-VALUES
-   ('VIP Pass', 50, 'Access to exclusive areas.', 5, '2023-11-01 18:00:00', '2023-11-01 22:00:00', 100.00, 1),
-   ('General Admission', 100, 'Standard entry ticket.', 10, '2023-11-10 09:00:00', '2023-11-11 18:00:00', 50.00, 2),
-   ('Art Lover Package', 30, 'Includes catalog and VIP access.', 3, '2023-11-05 12:00:00', '2023-11-05 18:00:00', 75.00, 3),
-   ('Dance Enthusiast Ticket', 20, 'Participate in dance activities.', 2, '2023-11-15 14:00:00', '2023-11-15 17:00:00', 30.00, 4),
-   ('Nature Explorer Pass', 80, 'Guided tour through the reserve.', 15, '2023-11-20 10:00:00', '2023-11-20 12:00:00', 10.00, 5);
-
-
-INSERT INTO TicketOrder (timestamp, promo_code, buyer_id)
-VALUES
-   ('2023-10-30 08:00:00', 'EARLYBIRD', 1),
-   ('2023-11-02 15:30:00', 'TECH20', 2),
-   ('2023-11-07 11:45:00', NULL, 3),
-   ('2023-11-12 16:20:00', 'DANCEVIP', 4),
-   ('2023-11-18 09:30:00', 'NATURE10', 5);
-
-INSERT INTO TicketInstance (ticket_type_id, order_id)
-VALUES
-   (1, 1),
-   (2, 2),
-   (3, 3),
-   (4, 4),
-   (5, 5);
-
-INSERT INTO Tag (name)
-VALUES
-   ('Music'),
-   ('Technology'),
-   ('Art'),
-   ('Dance'),
-   ('Nature');
-
-INSERT INTO TagEvent (event_id, tag_id)
-VALUES
-   (1, 1),
-   (2, 2),
-   (3, 3),
-   (4, 4),
-   (5, 5);
-
-
-INSERT INTO FAQ (question, answer)
-VALUES
-   ('How can I buy tickets?', 'You can purchase tickets online through our website.'),
-   ('What payment methods are accepted?', 'We accept various payment methods, including credit/debit cards and online payment systems.'),
-   ('How can I contact customer support?', 'You can reach our customer support team through the "Contact Us" section on our website.');
+-- Inserts for Tags
+INSERT INTO Tag (name) 
+VALUES 
+  ('Technology'),
+  ('Art'),
+  ('Charity'),
+  ('Food'),
+  ('Workshop'),
+  ('Music'),
+  ('Environment'),
+  ('Fashion'),
+  ('Startup'),
+  ('Film'),
+  ('Health'),
+  ('Culinary'),
+  ('Tech'),
+  ('Crafts'),
+  ('Education'),
+  ('Gaming'),
+  ('Science'),
+  ('Fashion Workshop'),
+  ('Community'),
+  ('Concert');
+  
+  -- Inserts for TagEvent
+INSERT INTO TagEvent (event_id, tag_id) 
+VALUES 
+  (1, 1),
+  (1, 13),
+  (2, 2),
+  (2, 8),
+  (3, 3),
+  (3, 18),
+  (4, 4),
+  (4, 14),
+  (5, 5),
+  (5, 12),
+  (6, 6),
+  (6, 19),
+  (7, 7),
+  (7, 11),
+  (8, 8),
+  (8, 15),
+  (9, 9),
+  (9, 16),
+  (10, 10),
+  (10, 5),
+  (11, 11),
+  (11, 20),
+  (12, 12),
+  (12, 3),
+  (13, 13),
+  (13, 17),
+  (14, 14),
+  (14, 9),
+  (15, 15),
+  (15, 7),
+  (16, 16),
+  (16, 2),
+  (17, 17),
+  (17, 10),
+  (18, 18),
+  (18, 1),
+  (19, 19),
+  (19, 4),
+  (20, 20),
+  (20, 8);
+-- Inserts for FAQs
+INSERT INTO FAQ (question, answer) 
+VALUES 
+  ('What is the purpose of this platform?', 'This platform is designed to connect users with various events, providing a centralized space to discover and participate in a wide range of activities.'),
+  ('How can I create an account?', 'To create an account, click on the "Sign Up" button on the homepage and follow the registration process. You will need to provide some basic information, including your email address and a password.'),
+  ('Can I participate in events without an account?', 'While browsing events does not require an account, most events and features, such as ticket purchases and event comments, are accessible only to registered users. Creating an account is quick and free.'),
+  ('How do I reset my password?', 'If you forget your password, click on the "Forgot Password" link on the login page. Follow the instructions sent to your registered email address to reset your password.'),
+  ('Are events on this platform free?', 'Event costs vary and are set by the event organizers. Some events may be free, while others may require the purchase of tickets or passes. Check the event details for pricing information.'),
+  ('How can I contact the event organizer?', 'Each event page contains contact information for the organizer. You can find their email or other contact details in the event details section.'),
+  ('What types of events are available?', 'The platform hosts a diverse range of events, including but not limited to conferences, workshops, concerts, charity runs, and art exhibitions. You can explore events by category or search for specific keywords.'),
+  ('How do I leave a comment or review for an event?', 'To leave a comment or review for an event, you must be a registered user. Once logged in, navigate to the event page and use the comment section to share your thoughts or ask questions.'),
+  ('Can I get a refund for purchased tickets?', 'Refund policies vary by event. Check the event details and terms and conditions before purchasing tickets. If you have questions about a specific event, contact the event organizer for more information.'),
+  ('How can I promote my own event on this platform?', 'If you are interested in promoting your event on this platform, you can create an organizer account and follow the steps to add and promote your event. The platform provides tools to manage and market your events effectively.');
