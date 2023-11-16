@@ -14,4 +14,9 @@
             <!-- Add more fields as needed -->
         </div>
     @endforeach
+
+    <!-- Add the login button -->
+    <div>
+        <a href="{{ route('login') }}" class="btn btn-primary">Login</a>
+    </div>
 @endsection
