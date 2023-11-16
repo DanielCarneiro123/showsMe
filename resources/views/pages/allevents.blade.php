@@ -7,7 +7,9 @@
 
     @foreach ($events as $event)
         <div>
-            <h3>{{ $event->name }}</h3>
+            <a href="{{ route('view-event', ['id' => $event->event_id]) }}">
+                <h3>{{ $event->name }}</h3>
+            </a>
             <p>{{ $event->description }}</p>
             <!-- Add more fields as needed -->
         </div>

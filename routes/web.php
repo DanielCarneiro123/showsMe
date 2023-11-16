@@ -9,6 +9,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 
 use App\Http\Controllers\AllEventsController;
+use App\Http\Controllers\EventController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,7 +23,7 @@ use App\Http\Controllers\AllEventsController;
 */
 
 // Home
-Route::redirect('/', '/login');
+Route::redirect('/', '/allevents');
 
 /*// Cards
 Route::controller(CardController::class)->group(function () {
@@ -32,6 +33,11 @@ Route::controller(CardController::class)->group(function () {
 
 
 Route::get('/allevents', [AllEventsController::class, 'index'])->name('allevents');
+
+
+
+Route::get('/view-event/{id}', [EventController::class, 'view'])->name('view-event');
+
 
 
 // API
