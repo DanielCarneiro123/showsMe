@@ -28,25 +28,33 @@ class EventController extends Controller
         return view('pages.my_events', compact('events'));
     }
 
-    public function createEvent()
-{
-    // Logic to create a new event with creator_id = 1
+    public function createEvent(Request $request)
+    {
+        // Validate the form data
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'location' => 'nullable|string',
+            'start_timestamp' => 'required|date',
+            'end_timestamp' => 'required|date|after:start_timestamp',
+            // Add other validation rules for your fields
+        ]);
 
-    // For example:
-    $event = new Event();
-    $event->name = 'Default Event';
-    $event->description = 'Description of the default event';
-    $event->location = 'Default Event Location';
-    $event->start_timestamp = now(); // Set the start timestamp
-    $event->end_timestamp = now()->addDays(7); // Set the end timestamp
-    $event->creator_id = 1; // Set the creator_id
+        // Create a new event with the provided data
+        $event = new Event();
+        $event->name = $request->input('name');
+        $event->description = $request->input('description');
+        $event->location = $request->input('location');
+        $event->start_timestamp = $request->input('start_timestamp');
+        $event->end_timestamp = $request->input('end_timestamp');
+        $event->creator_id = 1; // Assuming creator_id is set to 1 for now
 
-    $event->save();
+        // Save the event
+        $event->save();
 
-    // Redirect back to the My Events page or any other page
-    return redirect('/my-events');
-}
+        // Redirect back to the My Events page or any other page
+        return redirect('/my-events');
 
 
-}
+}}
 ?>
