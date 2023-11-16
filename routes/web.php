@@ -8,7 +8,7 @@ use App\Http\Controllers\ItemController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 
-use App\Http\Controllers\EventController;
+use App\Http\Controllers\AllEventsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,7 +31,7 @@ Route::controller(CardController::class)->group(function () {
 });*/
 
 
-Route::controller(EventController::class, 'index')->name('allevents');
+Route::get('/allevents', [AllEventsController::class, 'index'])->name('allevents');
 
 
 // API
