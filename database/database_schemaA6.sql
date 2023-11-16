@@ -438,7 +438,7 @@ VALUES
 INSERT INTO TicketType (name, stock, description, private, person_buying_limit, start_timestamp, end_timestamp, price, event_id)
 VALUES 
   ('General Admission', 100, 'Access to the event for one person.', FALSE, 10, '2023-11-01 00:00:00', '2023-12-01 00:00:00', 25.99, 1),
-  ('VIP Pass', 50, 'Exclusive access with VIP amenities.', TRUE, 5, '2023-11-05 12:00:00', '2023-11-10 12:00:00', 99.99, 2),
+  ('VIP Pass', 50, 'Exclusive access with VIP amenities.', TRUE, 5, '2023-11-05 12:00:00', '2023-11-10 12:00:00', 99.99, 1),
   ('Runner''s Package', 75, 'Participate in the community charity run.', FALSE, 15, '2023-11-10 09:00:00', '2023-11-11 12:00:00', 10.00, 3),
   ('Foodie Ticket', 120, 'Taste a variety of dishes at the food festival.', TRUE, 20, '2023-11-15 18:00:00', '2023-11-16 23:59:59', 39.99, 4),
   ('Workshop Pass', 30, 'Attend workshops on AI and technology.', FALSE, 5, '2023-11-20 14:00:00', '2023-11-21 17:00:00', 49.99, 5),

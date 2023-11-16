@@ -30,4 +30,9 @@ class Event extends Model
     {
         return $this->belongsTo(User::class, 'creator_id');
     }
+
+    public function ticketTypes()
+    {
+        return $this->hasMany(TicketType::class, 'event_id', 'event_id');
+    }
 }

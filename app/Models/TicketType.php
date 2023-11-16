@@ -42,7 +42,7 @@ class TicketType extends Model
      *
      * @var string
      */
-    protected $table = 'TicketType';
+    protected $table = 'tickettype';
 
     /**
      * The primary key for the model.
