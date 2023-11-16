@@ -13,6 +13,10 @@
         <!-- Styles -->
         <link href="{{ url('css/milligram.min.css') }}" rel="stylesheet">
         <link href="{{ url('css/app.css') }}" rel="stylesheet">
+        <link href="{{ asset('css/style.css') }}" rel="stylesheet">
+        <link href="{{ asset('css/auth.css') }}" rel="stylesheet" >
+        <link href="{{ asset('css/navbar.css') }}" rel="stylesheet">
+        <link rel="icon" type="image/png" href="{{ asset('images/logo1.png') }}">
         <script type="text/javascript">
             // Fix for Firefox autofocus CSS bug
             // See: http://stackoverflow.com/questions/18943276/html-5-autofocus-messes-up-css-loading/18945951#18945951

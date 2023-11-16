@@ -8,6 +8,8 @@ use App\Http\Controllers\ItemController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 
+use App\Http\Controllers\EventController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -22,12 +24,14 @@ use App\Http\Controllers\Auth\RegisterController;
 // Home
 Route::redirect('/', '/login');
 
-// Cards
+/*// Cards
 Route::controller(CardController::class)->group(function () {
     Route::get('/cards', 'list')->name('cards');
     Route::get('/cards/{id}', 'show');
-});
+});*/
 
+
+Route::controller(EventController::class, 'index')->name('allevents');
 
 // API
 Route::controller(CardController::class)->group(function () {
@@ -53,3 +57,5 @@ Route::controller(RegisterController::class)->group(function () {
     Route::get('/register', 'showRegistrationForm')->name('register');
     Route::post('/register', 'register');
 });
+
+
