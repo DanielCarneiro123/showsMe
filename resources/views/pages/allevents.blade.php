@@ -3,6 +3,14 @@
 @extends('layouts.app')  
 
 @section('content')
+    <!-- Add links before All Events -->
+    <div>
+        <a>FAQs</a> |
+        <a >MyEvents</a> |
+        <a >MyTickets</a> |
+        <a >About Us</a>
+    </div>
+
     <h1>All Events</h1>
 
     @foreach ($events as $event)

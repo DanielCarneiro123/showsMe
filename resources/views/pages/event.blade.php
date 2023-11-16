@@ -4,7 +4,7 @@
 
 @section('content')
     <h1>{{ $event->name }}</h1>
-    <p>Date: {{ $event->date }}</p>
+    <p>Location: {{ $event->location }}</p>
     <p>{{ $event->description }}</p>
     <!-- Add more fields as needed -->
 
