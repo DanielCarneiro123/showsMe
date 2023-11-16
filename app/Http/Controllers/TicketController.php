@@ -11,10 +11,11 @@ class TicketController extends Controller
     
     public function myTickets(): View
     {
-       
-        $ticketInstances = TicketInstance::whereHas('order', function ($query) {
-            $query->where('buyer_id', 1);
-        })->get();
+        // Fetch ticket instances by buyer_id = 1 with eager loading
+        $ticketInstances = TicketInstance::with(['order', 'ticketType.event'])
+            ->whereHas('order', function ($query) {
+                $query->where('buyer_id', 1);
+            })->get();
 
         return view('pages.my_tickets', compact('ticketInstances'));
     }

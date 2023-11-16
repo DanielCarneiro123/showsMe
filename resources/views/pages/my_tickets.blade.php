@@ -1,19 +1,21 @@
-<!-- resources/views/pages/my_tickets.blade.php -->
 
-@extends('layouts.app')  
+
+<!-- pages/my_tickets.blade.php -->
+
+@extends('layouts.app')
 
 @section('content')
     <h1>My Tickets</h1>
 
-    @if ($ticketInstances->count() > 0)
-        @foreach ($ticketInstances as $ticketInstance)
-            <div>
-                <p>Ticket Type: {{ $ticketInstance->ticketType->name }}</p>
-                <p>Order Timestamp: {{ $ticketInstance->order->timestamp }}</p>
-                <!-- Add more fields as needed -->
-            </div>
-        @endforeach
-    @else
-        <p>No tickets found.</p>
-    @endif
+    @foreach ($ticketInstances as $ticketInstance)
+        <div>
+            <p>Order ID: {{ $ticketInstance->order_id }}</p>
+            <p>Event Name: {{ $ticketInstance->ticketType->event->name }}</p>
+            <p>Location: {{ $ticketInstance->ticketType->event->location }}</p>
+            <p>Ticket Type: {{ $ticketInstance->ticketType->name }}</p>
+            <p>Start Time: {{ $ticketInstance->ticketType->event->start_timestamp }}</p>
+            <p>End Time: {{ $ticketInstance->ticketType->event->end_timestamp }}</p>
+            <!-- Add more fields as needed -->
+        </div>
+    @endforeach
 @endsection
