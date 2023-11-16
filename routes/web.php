@@ -8,9 +8,11 @@ use App\Http\Controllers\ItemController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 
-use App\Http\Controllers\AllEventsController;
-use App\Http\Controllers\EventController;
 
+use App\Http\Controllers\EventController;
+use App\Http\Controllers\FaqController;
+use App\Http\Controllers\AboutUsController;
+use App\Http\Controllers\TicketController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -32,14 +34,17 @@ Route::controller(CardController::class)->group(function () {
 });*/
 
 
-Route::get('/allevents', [AllEventsController::class, 'index'])->name('allevents');
+Route::get('/allevents', [EventController::class, 'index'])->name('allevents');
 
-
+Route::get('/faq', [FaqController::class, 'index'])->name('faq');
 
 Route::get('/view-event/{id}', [EventController::class, 'view'])->name('view-event');
 
+Route::get('/about-us', [AboutUsController::class, 'index'])->name('about-us');
 
+Route::get('/my-events', [EventController::class, 'myEvents'])->name('my-events');
 
+Route::get('/my-tickets', [TicketController::class, 'myTickets'])->name('my-tickets');
 // API
 Route::controller(CardController::class)->group(function () {
     Route::put('/api/cards', 'create');

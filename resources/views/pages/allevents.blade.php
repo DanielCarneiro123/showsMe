@@ -5,10 +5,10 @@
 @section('content')
     <!-- Add links before All Events -->
     <div>
-        <a>FAQs</a> |
-        <a >MyEvents</a> |
-        <a >MyTickets</a> |
-        <a >About Us</a>
+        <a href="{{ route('faq') }}">FAQs</a> |
+        <a href="{{ route('my-events') }}">MyEvents</a> |
+        <a href="{{ route('my-tickets') }}">MyTickets</a> |
+        <a href="{{ route('about-us') }}">About Us</a>
     </div>
 
     <h1>All Events</h1>
