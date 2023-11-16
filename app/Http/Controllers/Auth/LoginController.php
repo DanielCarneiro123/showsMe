@@ -19,7 +19,8 @@ class LoginController extends Controller
     public function showLoginForm()
     {
         if (Auth::check()) {
-            return redirect('/cards');
+            dd('User is authenticated. Redirecting to /allevents');
+            return redirect('/allevents');
         } else {
             return view('auth.login');
         }

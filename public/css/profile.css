@@ -1,0 +1,59 @@
+.profile-big-pic {
+    display: block;
+    width: 400px;
+    /* Set the desired width */
+    height: 400px;
+    /* Set the desired height */
+    border-radius: 50%;
+    /* Create a circular shape */
+    margin: 0 auto;
+    margin-bottom: 50px;
+  
+  }
+  
+  .profile-left {
+    width: 50%;
+  
+  }
+  
+  .user-form-wrapper input:disabled::placeholder {
+    color: black;
+  }
+  
+  .buttons-profile {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    /* Center the buttons horizontally */
+    margin-top: 10px;
+    /* Adjust the margin as needed */
+  }
+  
+  .buttons-profile button {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 18px;
+    transition: all 500ms ease;
+    text-decoration: none;
+    padding: 10px 50px;
+    margin: 0 30px;
+    border-radius: 10px;
+    min-width: 150px;
+  }
+  
+  #birthday {
+    font-size: 18px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 400;
+    color: #5e5f79;
+  
+  }
+  
+  #save-profile {
+    margin-top: 10px;
+    display: none;
+  }
+  
+  .buttons-profile button:hover {
+    transform: scale(0.95);
+  }

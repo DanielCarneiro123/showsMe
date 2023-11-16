@@ -11,11 +11,13 @@
         <title>{{ config('app.name', 'Laravel') }}</title>
 
         <!-- Styles -->
-        <link href="{{ url('css/milligram.min.css') }}" rel="stylesheet">
-        <link href="{{ url('css/app.css') }}" rel="stylesheet">
         <link href="{{ asset('css/style.css') }}" rel="stylesheet">
         <link href="{{ asset('css/auth.css') }}" rel="stylesheet" >
         <link href="{{ asset('css/navbar.css') }}" rel="stylesheet">
+        <link href="{{ asset('css/contact.css') }}" rel="stylesheet">
+        <link href="{{ asset('css/event.css') }}" rel="stylesheet">
+        <link href="{{ asset('css/faq.css') }}" rel="stylesheet">
+        <link href="{{ asset('css/profile.css') }}" rel="stylesheet">
         <link rel="icon" type="image/png" href="{{ asset('images/logo1.png') }}">
         <script type="text/javascript">
             // Fix for Firefox autofocus CSS bug
@@ -27,7 +29,7 @@
     <body>
         <main>
             <header>
-                <h1><a href="{{ url('/cards') }}">Thingy!</a></h1>
+                <h1><a href="{{ url('/allevents') }}">Event Planet</a></h1>
                 @if (Auth::check())
                     <a class="button" href="{{ url('/logout') }}"> Logout </a> <span>{{ Auth::user()->name }}</span>
                 @endif

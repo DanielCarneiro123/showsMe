@@ -33,6 +33,7 @@ Route::controller(CardController::class)->group(function () {
 
 Route::controller(EventController::class, 'index')->name('allevents');
 
+
 // API
 Route::controller(CardController::class)->group(function () {
     Route::put('/api/cards', 'create');

@@ -1,37 +1,65 @@
-@extends('layouts.app')
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Ticketlane</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/style.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/auth.css') }}">
+    <link rel="icon" type="image/png" href="../images/logo1.png">
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js" defer></script>
+</head>
+<body>
+    <div class="limiter">
+        <div class="login-container" style="background-image: url('../images/background.png');">
+            <div class="login-wrapper">
+                <form class="login-form validate-form" method="POST" action="{{ route('login') }}">
+                    @csrf
 
-@section('content')
-<form method="POST" action="{{ route('login') }}">
-    {{ csrf_field() }}
+                    <span class="login-form-title">User Login</span>
 
-    <label for="email">E-mail</label>
-    <input id="email" type="email" name="email" value="{{ old('email') }}" required autofocus>
-    @if ($errors->has('email'))
-        <span class="error">
-          {{ $errors->first('email') }}
-        </span>
-    @endif
+                    <div class="input-wrapper field">
+                        <ion-icon class="icon" name="person"></ion-icon>
+                        <input class="input" type="email" name="email" placeholder="Email" value="{{ old('email') }}" required autofocus>
+                    </div>
 
-    <label for="password" >Password</label>
-    <input id="password" type="password" name="password" required>
-    @if ($errors->has('password'))
-        <span class="error">
-            {{ $errors->first('password') }}
-        </span>
-    @endif
+                    <div class="input-wrapper">
+                        <ion-icon class="icon" name="lock-closed"></ion-icon>
+                        <input class="input" type="password" name="password" placeholder="Password" required>
+                    </div>
 
-    <label>
-        <input type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}> Remember Me
-    </label>
+                    <div class="btn-wrapper">
+                        <button type="submit" class="login-btn">Login</button>
+                    </div>
 
-    <button type="submit">
-        Login
-    </button>
-    <a class="button button-outline" href="{{ route('register') }}">Register</a>
-    @if (session('success'))
-        <p class="success">
-            {{ session('success') }}
-        </p>
-    @endif
-</form>
-@endsection
+                    <div class="alt-methods">
+                        <hr class="line-before">
+                        <span> Or Login Using </span>
+                        <hr class="line-after">
+                    </div>
+
+                    <div class="login-options">
+                        <button class="google-btn">
+                            <ion-icon class="opt-icon google" name="logo-google"></ion-icon>
+                            <span class="option google">Google</span>
+                        </button>
+                        <button class="phone-btn">
+                            <ion-icon class="opt-icon phone" name="call"></ion-icon>
+                            <span class="option phone">Phone</span>
+                        </button>
+                    </div>
+
+                    <div class="toggle-login">
+                        <span> Don't have an account? 
+                            <a href="{{ route('register') }}" class="toggle-register">Register </a> 
+                        </span>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</body>
+</html>

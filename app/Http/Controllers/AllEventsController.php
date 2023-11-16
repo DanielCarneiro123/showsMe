@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Event;
 use Illuminate\View\View;
 
-class EventController extends Controller
+class AllEventsController extends Controller
 {
     public function index(): View
     {
