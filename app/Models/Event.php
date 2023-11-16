@@ -26,6 +26,8 @@ class Event extends Model
         'end_timestamp' => 'datetime',
     ];
 
+    public $timestamps = false;
+    
     public function creator()
     {
         return $this->belongsTo(User::class, 'creator_id');

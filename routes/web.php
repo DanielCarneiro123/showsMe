@@ -70,4 +70,6 @@ Route::controller(RegisterController::class)->group(function () {
     Route::post('/register', 'register');
 });
 
+//Route::post('/purchase-tickets/{event_id}', [TicketController::class, 'purchase'])->name('purchase-tickets');
+Route::post('/create-event', [EventController::class, 'createEvent']);
 

@@ -19,5 +19,6 @@ class TicketController extends Controller
 
         return view('pages.my_tickets', compact('ticketInstances'));
     }
+    
 }
 ?>

@@ -462,7 +462,7 @@ VALUES
 INSERT INTO TicketOrder (promo_code, buyer_id) 
 VALUES 
   (NULL, 1),
-  ('promo1', 2),
+  ('promo1', 1),
   (NULL, 3),
   (NULL, 4),
   (NULL, 5),

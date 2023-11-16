@@ -18,5 +18,9 @@
     @endif
 
     <!-- Button to create a new event -->
-    <a class="btn btn-primary">Create Event</a>
+    <form method="POST" action="{{ url('/create-event') }}">
+    @csrf
+    <button type="submit" class="btn btn-primary">Create Event</button>
+</form>
+
 @endsection
