@@ -23,6 +23,7 @@
             <!-- Add more fields as needed -->
         </div>
     @endforeach
+    {{ $events->links()}}
 
 <!--    @if (Auth::check())
     <form action="{{ route('logout') }}" method="GET">
