@@ -35,16 +35,20 @@ Route::controller(CardController::class)->group(function () {
     Route::get('/cards/{id}', 'show');
 });*/
 
+Route::controller(EventController::class)->group(function () {
+    Route::get('/allevents', 'index')->name('allevents');
+    Route::get('/view-event/{id}', 'view')->name('view-event');
+    Route::get('/my-events', 'myEvents')->name('my-events');
+    Route::post('/create-event', 'createEvent');
+    Route::post('/update-event/{id}', 'updateEvent');
+});
 
-Route::get('/allevents', [EventController::class, 'index'])->name('allevents');
 
 Route::get('/faq', [FaqController::class, 'index'])->name('faq');
 
-Route::get('/view-event/{id}', [EventController::class, 'view'])->name('view-event');
 
 Route::get('/about-us', [AboutUsController::class, 'index'])->name('about-us');
 
-Route::get('/my-events', [EventController::class, 'myEvents'])->name('my-events');
 
 Route::get('/my-tickets', [TicketController::class, 'myTickets'])->name('my-tickets');
 
@@ -80,5 +84,4 @@ Route::controller(RegisterController::class)->group(function () {
 });
 
 //Route::post('/purchase-tickets/{event_id}', [TicketController::class, 'purchase'])->name('purchase-tickets');
-Route::post('/create-event', [EventController::class, 'createEvent']);
 
