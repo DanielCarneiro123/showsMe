@@ -71,6 +71,9 @@ class EventController extends Controller
     
         // Find the event by ID
         $event = Event::findOrFail($id);
+
+        // Verificar a autorização usando a política
+        $this->authorize('update', $event); //se não for o user_id quem criou o evento, a action nao é autrizada
     
         // Update the event with the provided data
         $event->name = $request->input('edit_name');
