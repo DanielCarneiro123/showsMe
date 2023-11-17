@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Event;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Auth;
 
 class EventController extends Controller
 {
@@ -22,8 +23,8 @@ class EventController extends Controller
     }
     public function myEvents(): View
     {
-        // Fetch events by creator_id = 1, temos que mudar depois para ser do user logged in
-        $events = Event::where('creator_id', 1)->get();
+        
+        $events = Event::where('creator_id', Auth::user()->user_id)->get();
 
         return view('pages.my_events', compact('events'));
     }
@@ -47,7 +48,7 @@ class EventController extends Controller
         $event->location = $request->input('location');
         $event->start_timestamp = $request->input('start_timestamp');
         $event->end_timestamp = $request->input('end_timestamp');
-        $event->creator_id = 1; // Assuming creator_id is set to 1 for now
+        $event->creator_id = Auth::user()->user_id; 
 
         // Save the event
         $event->save();

@@ -306,8 +306,8 @@ EXECUTE FUNCTION check_duplicate_report();
 INSERT INTO users (email, name, password, phone_number, promotor_code) 
 VALUES 
   ('user1@example.com', 'John Doe', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', '1234567890', NULL),
-  ('user2@example.com', 'Jane Smith', 'password2', '9876543210', NULL),
-  ('user3@example.com', 'Bob Johnson', 'password3', '5551231567', NULL),
+  ('user2@example.com', 'Jane Smith', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', '9876543210', NULL),
+  ('user3@example.com', 'Bob Johnson', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', '5551231567', NULL),
   ('user4@example.com', 'Alice Brown', 'password4', '7890123456', NULL),
   ('user5@example.com', 'Charlie Davis', 'password5', '3216149870', NULL),
   ('user6@example.com', 'David Wilson', 'password6', '6547810123', 'promo1'),
