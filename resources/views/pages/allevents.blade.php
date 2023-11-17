@@ -23,17 +23,17 @@
         </div>
     @endforeach
 
-    @if (Auth::check())
+<!--    @if (Auth::check())
     <form action="{{ route('logout') }}" method="GET">
         @csrf
         <button type="submit" class="btn btn-danger">Logout</button>
     </form>
-<!-- Add the login button only if the user is not logged in -->
+    Add the login button only if the user is not logged in 
     @else
     <div>
         <div>
             <a href="{{ route('login') }}" class="btn btn-primary">Login</a>
         </div>
     </div>
-    @endif
+    @endif -->
 @endsection
