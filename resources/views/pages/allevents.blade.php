@@ -10,6 +10,7 @@
         <a href="{{ route('my-tickets') }}">MyTickets</a> |
         <a href="{{ route('about-us') }}">About Us</a> |
         <a href="{{ route('admin') }}">Admin</a>
+        <a href="{{ route('profile') }}">Profile</a>
     </div>
 
     <h1>All Events</h1>
