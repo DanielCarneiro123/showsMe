@@ -41,24 +41,27 @@ Route::controller(EventController::class)->group(function () {
     Route::get('/my-events', 'myEvents')->name('my-events');
     Route::post('/create-event', 'createEvent');
     Route::post('/update-event/{id}', 'updateEvent');
+    Route::get('/create-event-page', [EventController::class, 'showCreateEvent'])->name('create-event-page');
+});
+
+Route::controller(FaqController::class)->group(function () {
+    Route::get('/faq', [FaqController::class, 'index'])->name('faq');
+});
+
+Route::controller(AboutUsController::class)->group(function () {
+    Route::get('/about-us', [AboutUsController::class, 'index'])->name('about-us');
+});
+
+Route::controller(TicketController::class)->group(function () {
+    Route::get('/my-tickets', [TicketController::class, 'myTickets'])->name('my-tickets');
 });
 
 
-Route::get('/faq', [FaqController::class, 'index'])->name('faq');
-
-
-Route::get('/about-us', [AboutUsController::class, 'index'])->name('about-us');
-
-
-Route::get('/my-tickets', [TicketController::class, 'myTickets'])->name('my-tickets');
-
-Route::get('/create-event', [EventController::class, 'showCreateEvent'])->name('create-event');
-
-Route::get('/admin', [UserController::class, 'showAdminPage'])->name('admin');
-
-Route::get('/profile', [UserController::class, 'getCurrentUser'])->name('profile');
-
-
+Route::controller(UserController::class)->group(function () {
+    Route::post('/update-profile', [UserController::class, 'updateProfile'])->name('update-profile');
+    Route::get('/admin', [UserController::class, 'showAdminPage'])->name('admin');
+    Route::get('/profile', [UserController::class, 'getCurrentUser'])->name('profile');
+});
 
 
 // API
