@@ -20,11 +20,9 @@
                 <p>Description: {{ $ticketType->description }}</p>
                 <p>Price: {{ $ticketType->price }}</p>
                 <!-- Add more fields as needed -->
-                <label for="quantity_{{ $ticketType->ticket_type_id }}">Quantity:</label>
-                <input type="number" name="ticket_types[{{ $ticketType->ticket_type_id }}]" id="quantity_{{ $ticketType->ticket_type_id }}" min="0" max=10>
-            </div>
+                  </div>
         @endforeach
 
-        <button type="submit">Purchase Tickets</button>
+       
     </form>
 @endsection

@@ -13,6 +13,7 @@ use App\Http\Controllers\EventController;
 use App\Http\Controllers\FaqController;
 use App\Http\Controllers\AboutUsController;
 use App\Http\Controllers\TicketController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -45,6 +46,10 @@ Route::get('/about-us', [AboutUsController::class, 'index'])->name('about-us');
 Route::get('/my-events', [EventController::class, 'myEvents'])->name('my-events');
 
 Route::get('/my-tickets', [TicketController::class, 'myTickets'])->name('my-tickets');
+
+Route::get('/create-event', [EventController::class, 'showCreateEvent'])->name('create-event');
+
+
 // API
 Route::controller(CardController::class)->group(function () {
     Route::put('/api/cards', 'create');

@@ -56,5 +56,13 @@ class EventController extends Controller
         return redirect('/my-events');
 
 
-}}
+}
+public function showCreateEvent()
+{
+   
+    return view('pages.create_event');
+}
+
+
+}
 ?>
