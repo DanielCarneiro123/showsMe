@@ -3,11 +3,14 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Event extends Model
 {
-    protected $table = 'event_';
+    use HasFactory;
 
+    protected $table = 'event_';
+    public $timestamps = false;
     protected $primaryKey = 'event_id';
 
     protected $fillable = [
@@ -26,7 +29,7 @@ class Event extends Model
         'end_timestamp' => 'datetime',
     ];
 
-    public $timestamps = false;
+ 
     
     public function creator()
     {
