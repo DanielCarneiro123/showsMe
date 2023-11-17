@@ -8,7 +8,8 @@
         <a href="{{ route('faq') }}">FAQs</a> |
         <a href="{{ route('my-events') }}">MyEvents</a> |
         <a href="{{ route('my-tickets') }}">MyTickets</a> |
-        <a href="{{ route('about-us') }}">About Us</a>
+        <a href="{{ route('about-us') }}">About Us</a> |
+        <a href="{{ route('admin') }}">Admin</a>
     </div>
 
     <h1>All Events</h1>

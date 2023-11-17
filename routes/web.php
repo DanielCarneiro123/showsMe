@@ -13,6 +13,7 @@ use App\Http\Controllers\EventController;
 use App\Http\Controllers\FaqController;
 use App\Http\Controllers\AboutUsController;
 use App\Http\Controllers\TicketController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -48,6 +49,9 @@ Route::get('/my-events', [EventController::class, 'myEvents'])->name('my-events'
 Route::get('/my-tickets', [TicketController::class, 'myTickets'])->name('my-tickets');
 
 Route::get('/create-event', [EventController::class, 'showCreateEvent'])->name('create-event');
+
+Route::get('/admin', [UserController::class, 'showAdminPage'])->name('admin');
+
 
 
 // API
