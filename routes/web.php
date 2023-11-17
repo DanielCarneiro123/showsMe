@@ -56,6 +56,9 @@ Route::get('/create-event', [EventController::class, 'showCreateEvent'])->name('
 
 Route::get('/admin', [UserController::class, 'showAdminPage'])->name('admin');
 
+Route::get('/profile', [UserController::class, 'getCurrentUser'])->name('profile');
+
+
 
 
 // API
