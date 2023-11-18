@@ -33,6 +33,7 @@ CREATE TABLE users (
    promotor_code TEXT UNIQUE,
    phone_number TEXT NOT NULL UNIQUE,
    is_admin BOOLEAN NOT NULL DEFAULT FALSE,
+   active BOOLEAN NOT NULL DEFAULT TRUE,
    remember_token VARCHAR
 );
 
@@ -303,39 +304,39 @@ EXECUTE FUNCTION check_duplicate_report();
 
 
 -- Inserts for Users
-INSERT INTO users (email, name, password, phone_number, promotor_code, is_admin) 
+INSERT INTO users (email, name, password, phone_number, promotor_code, is_admin, active) 
 VALUES 
-  ('user1@example.com', 'John Doe', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', '1234567890', NULL, FALSE),
-  ('user2@example.com', 'Jane Smith', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', '9876543210', NULL, FALSE),
-  ('user3@example.com', 'Bob Johnson', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', '5551231567', NULL, FALSE),
-  ('user4@example.com', 'Alice Brown', 'password4', '7890123456', NULL, FALSE),
-  ('user5@example.com', 'Charlie Davis', 'password5', '3216149870', NULL, FALSE),
-  ('user6@example.com', 'David Wilson', 'password6', '6547810123', 'promo1', FALSE),
-  ('user7@example.com', 'Eva Rodriguez', 'password7', '7810123456', 'promo2', FALSE),
-  ('user8@example.com', 'Frank Garcia', 'password8', '9871543210', 'promo3', FALSE),
-  ('user9@example.com', 'Grace Miller', 'password9', '1231567890', 'promo4', FALSE),
-  ('user10@example.com', 'Henry Lee', 'password10', '5551134567', 'promo5', FALSE),
-  ('admin@example.com', 'Admin User', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', '1212223333', NULL, TRUE),
-  ('user11@example.com', 'Isabel Lopez', 'password11', '7178889999', NULL, FALSE),
-  ('user12@example.com', 'Jack Turner', 'password12', '4425556666', NULL, FALSE),
-  ('user13@example.com', 'Kelly White', 'password13', '2233334444',  NULL, FALSE),
-  ('user14@example.com', 'Liam Anderson', 'password14', '1667778888',  NULL, FALSE),
-  ('user15@example.com', 'Mia Harris', 'password15', '3331445555',  NULL, FALSE),
-  ('user16@example.com', 'Nathan Moore', 'password16', '9190001111',  NULL, FALSE),
-  ('user17@example.com', 'Olivia Taylor', 'password17', '2112223333', NULL, FALSE),
-  ('user18@example.com', 'Peter Martin', 'password18', '8189990000',  NULL, FALSE),
-  ('user19@example.com', 'Quinn Hall', 'password19', '5553667777',  NULL, FALSE),
-  ('user20@example.com', 'Rachel Clark', 'password20', '2123334444',  NULL, FALSE),
-  ('user21@example.com', 'Samuel Allen', 'password21', '7578889999',  NULL, FALSE),
-  ('user22@example.com', 'Tara Turner', 'password22', '4465556666', NULL, FALSE),
-  ('user23@example.com', 'Ulysses Walker', 'password23', '1667178888',  NULL, FALSE),
-  ('user24@example.com', 'Vivian Scott', 'password24', '3324445555', NULL, FALSE),
-  ('user25@example.com', 'Walter Bennett', 'password25', '1990001111', NULL, FALSE),
-  ('user26@example.com', 'Xavier Garcia', 'password26', '1412223333',  NULL, FALSE),
-  ('user27@example.com', 'Yasmine Williams', 'password27', '1889990000', NULL, FALSE),
-  ('user28@example.com', 'Zachary Smith', 'password28', '5551667777',  NULL, FALSE),
-  ('user29@example.com', 'Ava Davis', 'password29', '2223334144',  NULL, FALSE),
-  ('user30@example.com', 'Benjamin Harris', 'password30', '7171889999', NULL, FALSE);
+  ('user1@example.com', 'John Doe', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', '1234567890', NULL, FALSE, TRUE),
+  ('user2@example.com', 'Jane Smith', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', '9876543210', NULL, FALSE, TRUE),
+  ('user3@example.com', 'Bob Johnson', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', '5551231567', NULL, FALSE, TRUE),
+  ('user4@example.com', 'Alice Brown', 'password4', '7890123456', NULL, FALSE, TRUE),
+  ('user5@example.com', 'Charlie Davis', 'password5', '3216149870', NULL, FALSE, TRUE),
+  ('user6@example.com', 'David Wilson', 'password6', '6547810123', 'promo1', FALSE, TRUE),
+  ('user7@example.com', 'Eva Rodriguez', 'password7', '7810123456', 'promo2', FALSE, TRUE),
+  ('user8@example.com', 'Frank Garcia', 'password8', '9871543210', 'promo3', FALSE, TRUE),
+  ('user9@example.com', 'Grace Miller', 'password9', '1231567890', 'promo4', FALSE, TRUE),
+  ('user10@example.com', 'Henry Lee', 'password10', '5551134567', 'promo5', FALSE, TRUE),
+  ('admin@example.com', 'Admin User', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', '1212223333', NULL, TRUE, TRUE),
+  ('user11@example.com', 'Isabel Lopez', 'password11', '7178889999', NULL, FALSE, TRUE),
+  ('user12@example.com', 'Jack Turner', 'password12', '4425556666', NULL, FALSE, TRUE),
+  ('user13@example.com', 'Kelly White', 'password13', '2233334444',  NULL, FALSE, TRUE),
+  ('user14@example.com', 'Liam Anderson', 'password14', '1667778888',  NULL, FALSE, TRUE),
+  ('user15@example.com', 'Mia Harris', 'password15', '3331445555',  NULL, FALSE, TRUE),
+  ('user16@example.com', 'Nathan Moore', 'password16', '9190001111',  NULL, FALSE, TRUE),
+  ('user17@example.com', 'Olivia Taylor', 'password17', '2112223333', NULL, FALSE, TRUE),
+  ('user18@example.com', 'Peter Martin', 'password18', '8189990000',  NULL, FALSE, TRUE),
+  ('user19@example.com', 'Quinn Hall', 'password19', '5553667777',  NULL, FALSE, TRUE),
+  ('user20@example.com', 'Rachel Clark', 'password20', '2123334444',  NULL, FALSE, TRUE),
+  ('user21@example.com', 'Samuel Allen', 'password21', '7578889999',  NULL, FALSE, TRUE),
+  ('user22@example.com', 'Tara Turner', 'password22', '4465556666', NULL, FALSE, TRUE),
+  ('user23@example.com', 'Ulysses Walker', 'password23', '1667178888',  NULL, FALSE, TRUE),
+  ('user24@example.com', 'Vivian Scott', 'password24', '3324445555', NULL, FALSE, TRUE),
+  ('user25@example.com', 'Walter Bennett', 'password25', '1990001111', NULL, FALSE, TRUE),
+  ('user26@example.com', 'Xavier Garcia', 'password26', '1412223333',  NULL, FALSE, TRUE),
+  ('user27@example.com', 'Yasmine Williams', 'password27', '1889990000', NULL, FALSE, TRUE),
+  ('user28@example.com', 'Zachary Smith', 'password28', '5551667777',  NULL, FALSE, TRUE),
+  ('user29@example.com', 'Ava Davis', 'password29', '2223334144',  NULL, FALSE, TRUE),
+  ('user30@example.com', 'Benjamin Harris', 'password30', '7171889999', NULL, FALSE, TRUE);
 
 
 -- Inserts for Realistic Events
