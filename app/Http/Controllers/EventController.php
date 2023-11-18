@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Event;
+use App\Models\TicketType;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
@@ -145,6 +146,29 @@ class EventController extends Controller
 
         return redirect()->route('allevents')->with('success', 'Event activated successfully.');
     }
+
+    public function createTicketType(Request $request, Event $event)
+{
+    // Validate the request data as needed
+
+    $ticketType = new TicketType();
+    $ticketType->name = $request->input('ticket_name');
+    $ticketType->stock = $request->input('ticket_stock');
+    $ticketType->description = $request->input('ticket_description');
+    $ticketType->person_buying_limit = $request->input('ticket_person_limit');
+    $ticketType->price = $request->input('ticket_price');
+    $ticketType->start_timestamp = $request->input('ticket_start_timestamp');
+    $ticketType->end_timestamp = $request->input('ticket_end_timestamp');
+    // Set other fields as needed
+
+    // Associate the TicketType with the current event
+    $ticketType->event()->associate($event);
+
+    $ticketType->save();
+
+    // You might want to redirect back to the event page or another page
+    return redirect('/view-event/'.$event->event_id);
+}
 
 
     

@@ -42,6 +42,8 @@ Route::controller(EventController::class)->group(function () {
     Route::post('/create-event', 'createEvent');
     Route::post('/update-event/{id}', 'updateEvent');
     Route::get('/create-event-page', [EventController::class, 'showCreateEvent'])->name('create-event-page');
+    Route::post('/create-ticket-type/{event}', 'createTicketType')->name('create-ticket-type');
+
 });
 
 Route::controller(FaqController::class)->group(function () {
