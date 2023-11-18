@@ -6,19 +6,30 @@
     <p>{{ $event->description }}</p>
     <!-- Add more fields as needed -->
 
-    <!-- Display TicketTypes -->
-    <h2>Ticket Types</h2>
-    <form method="POST">
-        @csrf
-        @foreach ($event->ticketTypes as $ticketType)
-            <div>
-                <h3>{{ $ticketType->name }}</h3>
-                <p>Stock: {{ $ticketType->stock }}</p>
-                <p>Description: {{ $ticketType->description }}</p>
-                <p>Price: {{ $ticketType->price }}</p>
-            </div>
-        @endforeach
-    </form>
+ <!-- Display TicketTypes -->
+ <h2>Ticket Types</h2>
+<form method="POST" action="{{ url('/purchase-tickets/'.$event->event_id) }}">
+    @csrf
+    @foreach ($event->ticketTypes as $ticketType)
+        <div>
+            <h3>{{ $ticketType->name }}</h3>
+            <p>Stock: {{ $ticketType->stock }}</p>
+            <p>Description: {{ $ticketType->description }}</p>
+            <p>Price: {{ $ticketType->price }} €</p>
+
+            <!-- Adicione um campo de input para a quantidade desejada -->
+            <label for="quantity_{{ $ticketType->ticket_type_id }}">Quantity:</label>
+            <input type="number" id="quantity_{{ $ticketType->ticket_type_id }}" name="quantity[{{ $ticketType->ticket_type_id }}]" min="0" max="{{ $ticketType->stock }}">
+        </div>
+    @endforeach
+
+    <!-- Adicione um botão geral para comprar -->
+    <button type="submit" class="btn btn-success">Buy Tickets</button>
+</form>
+
+
+
+
 
     @if(auth()->user() && auth()->user()->is_admin)
         @if ($event->private)
