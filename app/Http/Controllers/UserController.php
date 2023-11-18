@@ -21,4 +21,19 @@ class UserController extends Controller
         return view('pages.profile', compact('user'));
     }
 
+   // UserController.php
+public function updateProfile(Request $request)
+{
+    $user = Auth::user();
+
+    $user->update([
+        'email' => $request->input('email'),
+        'name' => $request->input('name'),
+        'promotor_code' => $request->input('promotor_code'),
+        'phone_number' => $request->input('phone_number'),
+    ]);
+
+    return redirect()->back()->with('success', 'Profile updated successfully.');
+}
+
 }
