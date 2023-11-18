@@ -185,10 +185,12 @@ class EventController extends Controller
     public function purchaseTickets(Request $request, $eventId)
 {
     $quantities = $request->input('quantity', []);
+    $quantity = $request->input('quantity');
 
     if (empty($quantities)) {
         return redirect()->route('view-event', ['id' => $eventId])->with('error', 'Select at least one ticket type.');
     }
+
 
     $buyer = Auth::user();
 
@@ -197,6 +199,8 @@ class EventController extends Controller
     $order->promo_code = null;
     $order->buyer_id = $buyer->user_id;
     $order->save();
+
+
 
     foreach ($quantities as $ticketTypeId => $quantity) {
         if ($quantity > 0) {

@@ -19,7 +19,7 @@
 
             <!-- Adicione um campo de input para a quantidade desejada -->
             <label for="quantity_{{ $ticketType->ticket_type_id }}">Quantity:</label>
-            <input type="number" id="quantity_{{ $ticketType->ticket_type_id }}" name="quantity[{{ $ticketType->ticket_type_id }}]" min="0" max="{{ $ticketType->stock }}">
+            <input type="number" id="quantity_{{ $ticketType->ticket_type_id }}" name="quantity[{{ $ticketType->ticket_type_id }}]" min="0" max="{{ min($ticketType->person_buying_limit, $ticketType->stock) }}">
         </div>
     @endforeach
 

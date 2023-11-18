@@ -73,10 +73,10 @@ CREATE TABLE Report (
 CREATE TABLE TicketType (
    ticket_type_id SERIAL PRIMARY KEY,
    name TEXT NOT NULL,
-   stock INT NOT NULL CHECK (stock > 0),
+   stock INT NOT NULL CHECK (stock >= 0),
    description TEXT NOT NULL,
    private BOOLEAN NOT NULL DEFAULT TRUE,
-   person_buying_limit INT NOT NULL CHECK (person_buying_limit > 0 AND person_buying_limit < stock),
+   person_buying_limit INT NOT NULL CHECK (person_buying_limit > 0),
    start_timestamp TIMESTAMP NOT NULL,
    end_timestamp TIMESTAMP NOT NULL CHECK (start_timestamp < end_timestamp),
    price NUMERIC NOT NULL DEFAULT 0,
