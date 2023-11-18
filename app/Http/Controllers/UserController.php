@@ -65,7 +65,7 @@ class UserController extends Controller
         $user->save();
 
         // Activate all events created by the user if needed
-        $user->own_events()->update(['private' => true]);
+        $user->own_events()->update(['private' => false]);
 
         // Redirect back or to a specific route
         return redirect()->route('admin')->with('success', 'User activated successfully');
