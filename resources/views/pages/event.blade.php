@@ -20,11 +20,25 @@
                 <p>Description: {{ $ticketType->description }}</p>
                 <p>Price: {{ $ticketType->price }}</p>
                 <!-- Add more fields as needed -->
-                  </div>
+            </div>
         @endforeach
     </form>
 
-     <h2>Edit Event</h2>
+    @if(auth()->user() && auth()->user()->is_admin)
+        @if ($event->private)
+            <form method="POST" action="{{ url('/activate-event/'.$event->event_id) }}">
+                @csrf
+                <button type="submit" class="btn btn-success">Activate Event</button>
+            </form>
+        @else
+            <form method="POST" action="{{ url('/deactivate-event/'.$event->event_id) }}">
+                @csrf
+                <button type="submit" class="btn btn-danger">Deactivate Event</button>
+            </form>
+        @endif
+    @endif
+
+    <h2>Edit Event</h2>
     <form method="POST" action="{{ url('/update-event/'.$event->event_id) }}">
         @csrf
         <label for="edit_name">Event Name:</label>

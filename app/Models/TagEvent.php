@@ -41,5 +41,5 @@ class TagEvent extends Model
      *
      * @var string
      */
-    protected $table = 'TagEvent';
+    protected $table = 'tagevent';
 }

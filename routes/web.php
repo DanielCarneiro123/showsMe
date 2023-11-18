@@ -58,7 +58,9 @@ Route::get('/admin', [UserController::class, 'showAdminPage'])->name('admin');
 
 Route::get('/profile', [UserController::class, 'getCurrentUser'])->name('profile');
 
+Route::post('/deactivate-event/{eventId}', [EventController::class, 'deactivateEvent'])->name('deactivate-event');
 
+Route::post('/activate-event/{eventId}', [EventController::class, 'activateEvent'])->name('activate-event');
 
 
 // API

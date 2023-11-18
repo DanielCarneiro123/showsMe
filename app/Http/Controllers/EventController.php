@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Event;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
 
 class EventController extends Controller
 {
@@ -18,8 +19,18 @@ class EventController extends Controller
 
     public function index(): View
     {
-        $events = Event::paginate(8);
-        return view('pages.allevents', compact('events'));
+        $user = Auth::user();
+
+        // Check if the user is an admin
+        if ($user && $user->is_admin) {
+            // Admins can see all events
+            $events = Event::paginate(8);
+        } else {
+            // Regular users can see only public events
+            $events = Event::where('private', false)->paginate(8);
+        }
+
+        return view('pages.allevents', compact('events', 'user'));
     }
     public function myEvents(): View
     {
@@ -85,13 +96,61 @@ class EventController extends Controller
         // Redirect back to the event page or any other page
         return redirect()->route('view-event', ['id' => $id]);
     }
+
+    /*public function deleteEvent(Event $event)
+    {
+        // Check if the user is an admin
+        if (auth()->user() && auth()->user()->is_admin) {
+            // Delete comments and reports associated with the event
+            $event->comments()->each(function ($comment) {
+                $comment->reports()->delete();
+                $comment->delete();
+            });
+
+            // Delete ratings associated with the event
+            $event->ratings()->delete();
+
+            // Delete the event
+            $event->delete();
+
+            // Redirect to a page after deletion (you can customize this)
+            return redirect()->route('allevents')->with('success', 'Event deleted successfully.');
+        } else {
+            // Redirect if the user is not an admin
+            return redirect()->route('allevents')->with('error', 'You do not have permission to delete this event.');
+        }
+    }*/
+
+    public function deactivateEvent($eventId)
+    {
+        $event = Event::findOrFail($eventId);
+
+        // Update the 'private' field to deactivate the event
+        $event->private = true;
+        $event->save();
+
+        return redirect()->route('allevents')->with('success', 'Event deactivated successfully.');
+    }
+
+    public function activateEvent($eventId)
+    {
+        $event = Event::findOrFail($eventId);
+
+        // Update the 'private' field to activate the event
+        $event->private = false;
+        $event->save();
+
+        return redirect()->route('allevents')->with('success', 'Event activated successfully.');
+    }
+
+
     
     
-public function showCreateEvent()
-{
-   
-    return view('pages.create_event');
-}
+    public function showCreateEvent()
+    {
+    
+        return view('pages.create_event');
+    }
 
 
 }
