@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use App\Models\Event;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Auth;
+use App\Models\TicketOrder;
+use App\Models\TicketInstance;
+
 
 class EventController extends Controller
 {
@@ -90,12 +93,43 @@ class EventController extends Controller
     }
     
     
-public function showCreateEvent()
+    public function showCreateEvent()
+    {
+    
+        return view('pages.create_event');
+    }
+
+    public function purchaseTickets(Request $request, $eventId)
 {
-   
-    return view('pages.create_event');
+    $quantities = $request->input('quantity', []);
+
+    if (empty($quantities)) {
+        return redirect()->route('view-event', ['id' => $eventId])->with('error', 'Select at least one ticket type.');
+    }
+
+    $buyer = Auth::user();
+
+    $order = new TicketOrder();
+    $order->timestamp = now();
+    $order->promo_code = null;
+    $order->buyer_id = $buyer->user_id;
+    $order->save();
+
+    foreach ($quantities as $ticketTypeId => $quantity) {
+        if ($quantity > 0) {
+            for ($i = 0; $i < $quantity; $i++) {
+                $ticketInstance = new TicketInstance();
+                $ticketInstance->ticket_type_id = $ticketTypeId;
+                $ticketInstance->order_id = $order->order_id;
+                $ticketInstance->save();
+            }
+        }
+    }
+
+    return redirect()->route('view-event', ['id' => $eventId])->with('success', 'Tickets purchased successfully.');
 }
 
+    
 
 }
 ?>

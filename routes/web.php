@@ -41,6 +41,7 @@ Route::controller(EventController::class)->group(function () {
     Route::get('/my-events', 'myEvents')->name('my-events');
     Route::post('/create-event', 'createEvent');
     Route::post('/update-event/{id}', 'updateEvent');
+    Route::post('/purchase-tickets/{event_id}', [EventController::class, 'purchaseTickets'])->name('purchase-tickets');
 });
 
 
