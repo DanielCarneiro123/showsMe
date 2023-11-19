@@ -8,6 +8,20 @@
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap');
 
 
+h1 {
+  font-size: 3em; /* Adjust the size as needed */
+  text-align: center;
+  padding: 50px; /* Adjust the padding as needed */
+  color: black;
+}
+
+h1 span {
+  color: #36aaf7; /* Light blue color for the second word */
+}
+
+
+
+
 /* Home page */
 
 .title {
@@ -19,7 +33,6 @@
   letter-spacing: 0.01em;
   font-family: 'Plus Jakarta Sans', sans-serif;
   color: #1a2447;
-
 }
 
 .title strong {
@@ -111,49 +124,61 @@
   padding: 10px;
 }
 
-
-
-
-
-
-
-
-
-
-
 /* Event card */
 
 .event-card {
-  align-items: center;
   display: flex;
-  flex-direction: row;
   align-items: center;
   border-radius: 20px;
   padding: 0;
-  max-width: 1000px;
-  height: 350px;
+  max-width: 1100px;
+  height: 400px;
   margin: 0 auto;
-  background-color: #f3f6ff;
+  background-color: #dadada;
   margin-bottom: 40px;
+  transition: transform 0.5s, background-color 0.5s;
 }
 
-.event-image {
+.event-card:hover {
+  transform: scale(0.95);
+  cursor: pointer;
+}
+
+.event-link, .event-link:visited {
+  color: #000; /* Set your desired color for both normal and visited states */
+  text-decoration: none; /* Remove underline */
+}
+
+.event-card img {
   width: 50%;
   height: 100%;
+  border-radius: 20px 0 0 20px; /* Rounded corners only on the left side */
 }
 
-.event-image img {
-  width: 100%;
-  height: 100%;
-  border-radius: 20px 0px 0px 20px;
-}
-
-.event-description {
+.event-info {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  margin: 0px 30px;
-  width: 48%;
+  justify-content: center;
+  padding: 0 20px;
+  box-sizing: border-box; /* Ensures padding is included in the width */
 }
+
+.event-info a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.event-info h3 {
+  margin-bottom: 10px;
+  text-align: center;
+  font-size: 1.5em;
+}
+
+.event-info p {
+  color: #666;
+}
+
 
 .price {
   border-radius: 20px;

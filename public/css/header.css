@@ -1,0 +1,78 @@
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 40px; /* Adjust the padding as needed */
+    background-color: #333; /* Set the background color for the header */
+    color: #fff; /* Set the text color for the header */
+}
+
+header a {
+    text-decoration: none;
+    color: #fff; /* Set the text color for the anchor */
+    font-size: 1.5em; /* Adjust the font size as needed */
+    transition: transform 0.3s ease; /* Add a smooth transition effect on transform property */
+}
+
+#logo {
+    text-decoration: none;
+    color: #fff; /* Set the text color for the logo */
+    font-size: 2.2em; /* Adjust the font size as needed */
+    font-weight: bold; /* Make the text bold */
+    display: inline-block; /* Ensures that the element is treated as a block, allowing for vertical centering */
+}
+
+header a:hover {
+    transform: scale(0.9); /* Scale down the logo on hover */
+}
+
+
+#logo > span {
+    color: #36aaf7; /* Set the text color for the logo */
+}
+#header-nav {
+    display: flex;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+#header-nav a {
+    margin: 0px 15px; /* Add some spacing between nav links */
+}
+
+#header-buttons {
+    display: flex;
+    align-items: center;
+}
+
+#header-buttons a.button {
+    font-size: 1.2em;
+    font-weight: bold;
+    padding: 8px 30px;
+    text-decoration: none;
+    border-radius: 15px;
+    margin-left: 1em; /* Add some spacing between buttons */
+}
+
+#login {
+    background-color: #36aaf7; /* Green color for the login button */
+    border: 2px solid #36aaf7;
+    color: #fff;
+}
+
+#register {
+    background-color: rgba(0, 0, 0, 0);
+    border: 2px solid #36aaf7;
+    color: #36aaf7;
+}
+
+#register:hover{
+    color: #fff;
+}
+
+#header-buttons a.button:hover {
+    background-color: #36aaf7; /* Darker green on hover */
+}
+
+#header-buttons span {
+    margin-right: 10px; /* Add some spacing before the user's name */
+}

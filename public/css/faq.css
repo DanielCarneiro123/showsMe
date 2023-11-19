@@ -16,15 +16,11 @@
 .faq-dropdown {
     margin-right: 1px;
     margin-bottom: 18px;
-    border: 1px solid rgb(230, 231, 243);
+    border: 2px solid rgb(233, 233, 233);
     border-radius: 16px;
     background-color: #fff;
     transition: transform 0.5s ease;
     text-align: left;
-    cursor: pointer;
-}
-
-.faq-dropdown * {
     cursor: pointer;
 }
 
@@ -34,18 +30,13 @@
     padding: 31px 32px 36px;
 }
 
-.faq-dropdown ion-icon {
-    margin-right: 15px;
-    flex: 0 0 auto;
-    color: #316BFF;
-    width: 20px;
-    height: 35px;
-    transition: transform 0.5s ease; /* Add a smooth transition effect */
-
+.faq-title i {
+    margin-right: 10px; /* Adjust the margin between the icon and the text */
 }
 
+
 .faq-question {
-    color: rgb(26, 36, 71);
+    color: rgb(0, 0, 0);
     font-size: 20px;
     line-height: 1.1em;
     font-weight: 700;
@@ -82,8 +73,5 @@
 
 .faq-dropdown:hover {
     transform: scale(0.95);
-}
-
-.rotate {
-    transform: rotate(90deg);
+    border: 2px solid rgb(201, 201, 201);
 }

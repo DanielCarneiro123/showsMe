@@ -3,28 +3,25 @@
 @extends('layouts.app')  
 
 @section('content')
-    <!-- Add links before All Events -->
-    <div>
-        <a href="{{ route('faq') }}">FAQs</a> |
-        <a href="{{ route('my-events') }}">MyEvents</a> |
-        <a href="{{ route('my-tickets') }}">MyTickets</a> |
-        <a href="{{ route('about-us') }}">About Us</a> |
-        <a href="{{ route('admin') }}">Admin</a>
-        <a href="{{ route('profile') }}">Profile</a>
-    </div>
 
-    <h1>All Events</h1>
+    <h1>Featured <span>Events</span></h1>
 
     @foreach ($events as $event)
-        <div>
-            <a href="{{ route('view-event', ['id' => $event->event_id]) }}">
+    <a href="{{ route('view-event', ['id' => $event->event_id]) }}" class="event-link">
+        <article class="event-card">
+            <img src="{{ asset('../media/event_image.jpg') }}" alt="Event Image">
+            <!-- <img src="{{ $event->event_image }}" alt="Event Image" class="event-image"> -->
+            <div class="event-info">
                 <h3>{{ $event->name }}</h3>
-            </a>
-            <p>{{ $event->description }}</p>
-            <!-- Add more fields as needed -->
-        </div>
+                <p>{{ $event->description }}</p>
+                <!-- Add more fields as needed -->
+            </div>
+        </article>
+    </a>
     @endforeach
-    {{ $events->links()}}
+    {{ $events->links() }}
+
+
 
 <!--    @if (Auth::check())
     <form action="{{ route('logout') }}" method="GET">
