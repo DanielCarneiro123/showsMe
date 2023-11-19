@@ -10,10 +10,6 @@ use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
-    public function showAdminPage()
-    {
-        return view('pages.admin');
-    }
 
     public function getCurrentUser()
     {
@@ -22,18 +18,18 @@ class UserController extends Controller
     }
 
    // UserController.php
-public function updateProfile(Request $request)
-{
-    $user = Auth::user();
+    public function updateProfile(Request $request)
+    {
+        $user = Auth::user();
 
-    $user->update([
-        'email' => $request->input('email'),
-        'name' => $request->input('name'),
-        'promotor_code' => $request->input('promotor_code'),
-        'phone_number' => $request->input('phone_number'),
-    ]);
+        $user->update([
+            'email' => $request->input('email'),
+            'name' => $request->input('name'),
+            'promotor_code' => $request->input('promotor_code'),
+            'phone_number' => $request->input('phone_number'),
+        ]);
 
-    return redirect()->back()->with('success', 'Profile updated successfully.');
-}
+        return redirect()->back()->with('success', 'Profile updated successfully.');
+    }
 
 }

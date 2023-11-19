@@ -8,7 +8,7 @@ use App\Http\Controllers\ItemController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 
-
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\FaqController;
 use App\Http\Controllers\AboutUsController;
@@ -35,6 +35,7 @@ Route::controller(CardController::class)->group(function () {
     Route::get('/cards/{id}', 'show');
 });*/
 
+
 Route::controller(EventController::class)->group(function () {
     Route::get('/allevents', 'index')->name('allevents');
     Route::get('/view-event/{id}', 'view')->name('view-event');
@@ -45,6 +46,8 @@ Route::controller(EventController::class)->group(function () {
     Route::get('/create-event-page', [EventController::class, 'showCreateEvent'])->name('create-event-page');
     Route::post('/create-ticket-type/{event}', 'createTicketType')->name('create-ticket-type');
 
+    Route::post('/deactivate-event/{eventId}', 'deactivateEvent')->name('deactivate-event');
+    Route::post('/activate-event/{eventId}', 'activateEvent')->name('activate-event');
 });
 
 Route::controller(FaqController::class)->group(function () {
@@ -60,13 +63,16 @@ Route::controller(TicketController::class)->group(function () {
 });
 
 
-Route::post('/deactivate-event/{eventId}', [EventController::class, 'deactivateEvent'])->name('deactivate-event');
+Route::controller(AdminController::class)->group(function () {
+    Route::get('/admin', [AdminController::class, 'showAdminPage'])->name('admin');
+    Route::put('/deactivateUser/{id}', [AdminController::class, 'deactivateUser'])->name('deactivateUser');
+    Route::put('/activateUser/{id}', [AdminController::class, 'activateUser'])->name('activateUser');
+});
 
-Route::post('/activate-event/{eventId}', [EventController::class, 'activateEvent'])->name('activate-event');
+
 
 Route::controller(UserController::class)->group(function () {
     Route::post('/update-profile', [UserController::class, 'updateProfile'])->name('update-profile');
-    Route::get('/admin', [UserController::class, 'showAdminPage'])->name('admin');
     Route::get('/profile', [UserController::class, 'getCurrentUser'])->name('profile');
 });
 
