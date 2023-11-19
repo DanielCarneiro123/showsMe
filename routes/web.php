@@ -8,7 +8,7 @@ use App\Http\Controllers\ItemController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 
-
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\FaqController;
 use App\Http\Controllers\AboutUsController;
@@ -60,16 +60,17 @@ Route::controller(TicketController::class)->group(function () {
 });
 
 
-
+Route::controller(AdminController::class)->group(function () {
+    Route::get('/admin', [AdminController::class, 'showAdminPage'])->name('admin');
+    Route::put('/deactivateUser/{id}', [AdminController::class, 'deactivateUser'])->name('deactivateUser');
+    Route::put('/activateUser/{id}', [AdminController::class, 'activateUser'])->name('activateUser');
+});
 
 
 
 Route::controller(UserController::class)->group(function () {
     Route::post('/update-profile', [UserController::class, 'updateProfile'])->name('update-profile');
-    Route::get('/admin', [UserController::class, 'showAdminPage'])->name('admin');
     Route::get('/profile', [UserController::class, 'getCurrentUser'])->name('profile');
-    Route::put('/deactivateUser/{id}', [UserController::class, 'deactivateUser'])->name('deactivateUser');
-    Route::put('/activateUser/{id}', [UserController::class, 'activateUser'])->name('activateUser');
 });
 
 
