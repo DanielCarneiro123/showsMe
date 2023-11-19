@@ -36,13 +36,17 @@ class EventController extends Controller
 
         return view('pages.allevents', compact('events', 'user'));
     }
+
     public function myEvents(): View
     {
-        
-        $events = Event::where('creator_id', Auth::user()->user_id)->get();
-
+        if (Auth::check()) {
+            $events = Event::where('creator_id', Auth::user()->user_id)->get();
+        } else {
+            $events = collect();
+        }
         return view('pages.my_events', compact('events'));
     }
+    
 
     public function createEvent(Request $request)
     {
@@ -183,38 +187,43 @@ class EventController extends Controller
     }
 
     public function purchaseTickets(Request $request, $eventId)
-{
-    $quantities = $request->input('quantity', []);
-    $quantity = $request->input('quantity');
+    {
+        
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('error', 'You must be logged in to purchase tickets.');
+        }
 
-    if (empty($quantities)) {
-        return redirect()->route('view-event', ['id' => $eventId])->with('error', 'Select at least one ticket type.');
-    }
+        $quantities = $request->input('quantity', []);
+        $quantity = $request->input('quantity');
 
-
-    $buyer = Auth::user();
-
-    $order = new TicketOrder();
-    $order->timestamp = now();
-    $order->promo_code = null;
-    $order->buyer_id = $buyer->user_id;
-    $order->save();
+        if (empty($quantities)) {
+            return redirect()->route('view-event', ['id' => $eventId])->with('error', 'Select at least one ticket type.');
+        }
 
 
+        $buyer = Auth::user();
 
-    foreach ($quantities as $ticketTypeId => $quantity) {
-        if ($quantity > 0) {
-            for ($i = 0; $i < $quantity; $i++) {
-                $ticketInstance = new TicketInstance();
-                $ticketInstance->ticket_type_id = $ticketTypeId;
-                $ticketInstance->order_id = $order->order_id;
-                $ticketInstance->save();
+        $order = new TicketOrder();
+        $order->timestamp = now();
+        $order->promo_code = null;
+        $order->buyer_id = $buyer->user_id;
+        $order->save();
+
+
+
+        foreach ($quantities as $ticketTypeId => $quantity) {
+            if ($quantity > 0) {
+                for ($i = 0; $i < $quantity; $i++) {
+                    $ticketInstance = new TicketInstance();
+                    $ticketInstance->ticket_type_id = $ticketTypeId;
+                    $ticketInstance->order_id = $order->order_id;
+                    $ticketInstance->save();
+                }
             }
         }
-    }
 
-    return redirect()->route('view-event', ['id' => $eventId])->with('success', 'Tickets purchased successfully.');
-}
+        return redirect()->route('view-event', ['id' => $eventId])->with('success', 'Tickets purchased successfully.');
+    }
 
     
 

@@ -29,12 +29,6 @@ use App\Http\Controllers\UserController;
 // Home
 Route::redirect('/', '/allevents');
 
-/*// Cards
-Route::controller(CardController::class)->group(function () {
-    Route::get('/cards', 'list')->name('cards');
-    Route::get('/cards/{id}', 'show');
-});*/
-
 
 Route::controller(EventController::class)->group(function () {
     Route::get('/allevents', 'index')->name('allevents');
@@ -50,16 +44,17 @@ Route::controller(EventController::class)->group(function () {
     Route::post('/activate-event/{eventId}', 'activateEvent')->name('activate-event');
 });
 
+Route::controller(TicketController::class)->group(function () {
+    Route::get('/my-tickets', [TicketController::class, 'myTickets'])->name('my-tickets')->middleware('auth');
+});
+
+
 Route::controller(FaqController::class)->group(function () {
     Route::get('/faq', [FaqController::class, 'index'])->name('faq');
 });
 
 Route::controller(AboutUsController::class)->group(function () {
     Route::get('/about-us', [AboutUsController::class, 'index'])->name('about-us');
-});
-
-Route::controller(TicketController::class)->group(function () {
-    Route::get('/my-tickets', [TicketController::class, 'myTickets'])->name('my-tickets');
 });
 
 
@@ -73,7 +68,8 @@ Route::controller(AdminController::class)->group(function () {
 
 Route::controller(UserController::class)->group(function () {
     Route::post('/update-profile', [UserController::class, 'updateProfile'])->name('update-profile');
-    Route::get('/profile', [UserController::class, 'getCurrentUser'])->name('profile');
+    Route::get('/admin', [UserController::class, 'showAdminPage'])->name('admin')->middleware('auth');
+    Route::get('/profile', [UserController::class, 'getCurrentUser'])->name('profile')->middleware('auth');
 });
 
 

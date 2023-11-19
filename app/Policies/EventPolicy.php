@@ -65,4 +65,10 @@ class EventPolicy
         //
     }
 
+    public function purchaseTickets(Request $request, $eventId): bool
+    {
+        //
+    }
+
+
 }

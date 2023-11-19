@@ -14,7 +14,7 @@
             </div>
         @endforeach
     @else
-        <p>No events found.</p>
+        <p>Create your first event.</p>
     @endif
 
     <!-- Button to create a new event -->
