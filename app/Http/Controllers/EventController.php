@@ -104,30 +104,6 @@ class EventController extends Controller
         return redirect()->route('view-event', ['id' => $id]);
     }
 
-    /*public function deleteEvent(Event $event)
-    {
-        // Check if the user is an admin
-        if (auth()->user() && auth()->user()->is_admin) {
-            // Delete comments and reports associated with the event
-            $event->comments()->each(function ($comment) {
-                $comment->reports()->delete();
-                $comment->delete();
-            });
-
-            // Delete ratings associated with the event
-            $event->ratings()->delete();
-
-            // Delete the event
-            $event->delete();
-
-            // Redirect to a page after deletion (you can customize this)
-            return redirect()->route('allevents')->with('success', 'Event deleted successfully.');
-        } else {
-            // Redirect if the user is not an admin
-            return redirect()->route('allevents')->with('error', 'You do not have permission to delete this event.');
-        }
-    }*/
-
     public function deactivateEvent($eventId)
     {
         $event = Event::findOrFail($eventId);
@@ -152,7 +128,30 @@ class EventController extends Controller
 
     public function createTicketType(Request $request, Event $event)
 {
-    // Validate the request data as needed
+    $rules = [
+        'ticket_name' => 'required|string',
+        'ticket_stock' => 'required|integer|min:1',
+        'ticket_description' => 'required|string',
+        'ticket_person_limit' => 'required|integer|min:1',
+        'ticket_price' => 'required|numeric|min:0',
+        'ticket_start_timestamp' => 'required|date',
+        'ticket_end_timestamp' => 'required|date|after:ticket_start_timestamp',
+    ];
+
+    $messages = [
+        'ticket_stock.required' => 'The stock field is required.',
+        'ticket_stock.integer' => 'The stock must be a whole number.',
+        'ticket_stock.min' => 'The stock must be at least 1.',
+        'ticket_person_limit.required' => 'The person limit field is required.',
+        'ticket_person_limit.integer' => 'The person limit must be a whole number.',
+        'ticket_person_limit.min' => 'The person limit must be at least 1.',
+        'ticket_price.required' => 'The price field is required.',
+        'ticket_price.integer' => 'The price must be a whole number.',
+        'ticket_price.min' => 'The price must be a positive value.',
+    ];
+
+    // Validate the request
+    $request->validate($rules);
 
     $ticketType = new TicketType();
     $ticketType->name = $request->input('ticket_name');

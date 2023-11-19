@@ -11,18 +11,44 @@
 <form method="POST" action="{{ url('/purchase-tickets/'.$event->event_id) }}">
     @csrf
     @foreach ($event->ticketTypes as $ticketType)
-        <div>
-            <h3>{{ $ticketType->name }}</h3>
-            <p>Stock: {{ $ticketType->stock }}</p>
-            <p>Description: {{ $ticketType->description }}</p>
-            <p>Price: {{ $ticketType->price }} €</p>
+        @if (auth()->user() && auth()->user()->user_id = $event->creator_id)
+            <!-- Display all tickets for the event creator -->
+            <div>
+                <h3>{{ $ticketType->name }}</h3>
+                <p>Stock: {{ $ticketType->stock }}</p>
+                <p>Description: {{ $ticketType->description }}</p>
+                <p>Price: {{ $ticketType->price }} €</p>
+                <form method="POST" action="{{ url('/update-ticket-stock/'.$ticketType->ticket_type_id) }}">
+                    @csrf
+                    @method('PATCH')
+                    <label for="new_stock">New Stock:</label>
+                    <input type="number" id="new_stock" name="new_stock" value="{{ $ticketType->stock }}" required>
+                    <button type="submit" class="btn btn-primary">Update Stock</button>
+                </form>
 
-            <!-- Adicione um campo de input para a quantidade desejada -->
-            <label for="quantity_{{ $ticketType->ticket_type_id }}">Quantity:</label>
-            <input type="number" id="quantity_{{ $ticketType->ticket_type_id }}" name="quantity[{{ $ticketType->ticket_type_id }}]" min="0" max="{{ min($ticketType->person_buying_limit, $ticketType->stock) }}">
-        </div>
+                <label for="quantity_{{ $ticketType->ticket_type_id }}">Quantity:</label>
+                <input type="number" id="quantity_{{ $ticketType->ticket_type_id }}" name="quantity[{{ $ticketType->ticket_type_id }}]" min="0" max="{{ min($ticketType->person_buying_limit, $ticketType->stock) }}">
+                
+                
+
+            </div>
+        @else
+            <!-- Display tickets with stock greater than 0 for other users -->
+            @if ($ticketType->stock > 0)
+                <div>
+                    <h3>{{ $ticketType->name }}</h3>
+                    <p>Stock: {{ $ticketType->stock }}</p>
+                    <p>Description: {{ $ticketType->description }}</p>
+                    <p>Price: {{ $ticketType->price }} €</p>
+
+                    <label for="quantity_{{ $ticketType->ticket_type_id }}">Quantity:</label>
+                    <input type="number" id="quantity_{{ $ticketType->ticket_type_id }}" name="quantity[{{ $ticketType->ticket_type_id }}]" min="0" max="{{ min($ticketType->person_buying_limit, $ticketType->stock) }}">
+
+                </div>
+            @endif
+        @endif
     @endforeach
-
+        
     <!-- Adicione um botão geral para comprar -->
     <button type="submit" class="btn btn-success">Buy Tickets</button>
 </form>
