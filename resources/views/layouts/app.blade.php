@@ -32,11 +32,22 @@
             <header>
                 <a href="{{ url('/allevents') }}" id="logo">show<span>s</span>me</a>
                 <nav id='header-nav'>
+                    
+
+                    @auth
+                        <a href="{{ route('my-events') }}">MyEvents</a> 
+                        <a href="{{ route('my-tickets') }}">MyTickets</a> 
+                        <a href="{{ route('profile') }}">Profile</a> 
+                    @endauth
+                    <a href="{{ route('create-event-page') }}">Create Event</a> 
                     <a href="{{ route('faq') }}">FAQs</a> 
-                    <a href="{{ route('my-events') }}">MyEvents</a> 
-                    <a href="{{ route('my-tickets') }}">MyTickets</a>
                     <a href="{{ route('about-us') }}">About Us</a> 
-                    <a href="{{ route('admin') }}">Admin</a>
+            
+                    @if(auth()->user() && auth()->user()->is_admin)
+                        <a href="{{ route('admin') }}">Admin</a> 
+                    @endif
+                
+            
                 </nav>
                 <section id='header-buttons'>
                     @if (Auth::check())

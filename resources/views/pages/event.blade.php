@@ -79,6 +79,7 @@
 
                 <button type="submit" class="btn btn-primary">Update Event</button>
             </form>
+        </section>
         <h2>Create TicketType</h2>
     <form method="POST" action="{{ url('/create-ticket-type/'.$event->event_id) }}">
         @csrf
@@ -109,7 +110,7 @@
 
         <button type="submit" class="btn btn-primary">Create TicketType</button>
     </form>
-        </section>
+        
 @endcan
 
 @endsection

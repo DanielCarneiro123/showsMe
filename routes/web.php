@@ -68,7 +68,6 @@ Route::controller(AdminController::class)->group(function () {
 
 Route::controller(UserController::class)->group(function () {
     Route::post('/update-profile', [UserController::class, 'updateProfile'])->name('update-profile');
-    Route::get('/admin', [UserController::class, 'showAdminPage'])->name('admin')->middleware('auth');
     Route::get('/profile', [UserController::class, 'getCurrentUser'])->name('profile')->middleware('auth');
 });
 

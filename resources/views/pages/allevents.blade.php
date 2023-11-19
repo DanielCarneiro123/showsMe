@@ -4,22 +4,7 @@
 
 @section('content')
     <!-- Add links before All Events -->
-    <div>
-
-        @auth
-            <a href="{{ route('my-events') }}">MyEvents</a> |
-            <a href="{{ route('my-tickets') }}">MyTickets</a> |
-            <a href="{{ route('profile') }}">Profile</a> |
-        @endauth
-        <a href="{{ route('create-event-page') }}">Create Event</a> |
-        <a href="{{ route('faq') }}">FAQs</a> |
-        <a href="{{ route('about-us') }}">About Us</a> |
-
-        @if(auth()->user() && auth()->user()->is_admin)
-            <a href="{{ route('admin') }}">Admin</a> |
-        @endif
-
-    </div>
+    
 
     <h1>Featured <span>Events</span></h1>
 
