@@ -7,11 +7,10 @@
 
     @if ($events->count() > 0)
         @foreach ($events as $event)
-            <div>
+            <article class="event-card">
                 <h3>{{ $event->name }}</h3>
                 <p>{{ $event->description }}</p>
-                <!-- Add more fields as needed -->
-            </div>
+            </article>
         @endforeach
     @else
         <p>Create your first event.</p>

@@ -1,17 +1,28 @@
 @extends('layouts.app')  
 
 @section('content')
-    <h1>{{ $event->name }}</h1>
-    <p>Location: {{ $event->location }}</p>
-    <p>{{ $event->description }}</p>
-    <!-- Add more fields as needed -->
+
+    <section class="event-thumbnail">
+        <img src="{{ asset('../media/event_image.jpg') }}" alt="Event Image">
+        <div class="text">
+            <h1>{{ $event->name }}</h1>
+            <p>{{ $event->description }}</p>
+        </div>
+        <!-- <img src="{{ $event->event_image }}" alt="Event Image" class="event-image"> -->
+        <section class="event-info">
+            <p id="location">Location: {{ $event->location }}</p>
+            <!-- Add more fields as needed -->
+        </section>
+    </section>
+
+
 
  <!-- Display TicketTypes -->
- <h2>Ticket Types</h2>
+<h2>Ticket <span>Types</span></h2>
 <form method="POST" action="{{ url('/purchase-tickets/'.$event->event_id) }}">
     @csrf
     @foreach ($event->ticketTypes as $ticketType)
-        <div>
+        <article class="ticket-type">
             <h3>{{ $ticketType->name }}</h3>
             <p>Stock: {{ $ticketType->stock }}</p>
             <p>Description: {{ $ticketType->description }}</p>
@@ -20,7 +31,7 @@
             <!-- Adicione um campo de input para a quantidade desejada -->
             <label for="quantity_{{ $ticketType->ticket_type_id }}">Quantity:</label>
             <input type="number" id="quantity_{{ $ticketType->ticket_type_id }}" name="quantity[{{ $ticketType->ticket_type_id }}]" min="0" max="{{ min($ticketType->person_buying_limit, $ticketType->stock) }}">
-        </div>
+        </article>
     @endforeach
 
     <!-- Adicione um botão geral para comprar -->
@@ -47,26 +58,27 @@
 
     <!-- Edit Event form (displayed only for the event creator) -->
     @can('update', $event)
-        <h2>Edit Event</h2>
-        <form method="POST" action="{{ url('/update-event/'.$event->event_id) }}">
-            @csrf
-            <label for="edit_name">Event Name:</label>
-            <input type="text" id="edit_name" name="edit_name" value="{{ $event->name }}" required>
+        <section class="edit-event">
+            <h2>Edit Event</h2>
+            <form method="POST" action="{{ url('/update-event/'.$event->event_id) }}">
+                @csrf
+                <label for="edit_name">Event Name:</label>
+                <input type="text" id="edit_name" name="edit_name" value="{{ $event->name }}" required>
 
-            <label for="edit_description">Event Description:</label>
-            <textarea id="edit_description" name="edit_description">{{ $event->description }}</textarea>
+                <label for="edit_description">Event Description:</label>
+                <textarea id="edit_description" name="edit_description">{{ $event->description }}</textarea>
 
-            <label for="edit_location">Event Location:</label>
-            <input type="text" id="edit_location" name="edit_location" value="{{ $event->location }}">
+                <label for="edit_location">Event Location:</label>
+                <input type="text" id="edit_location" name="edit_location" value="{{ $event->location }}">
 
-            <label for="edit_start_timestamp">Start Timestamp:</label>
-            <input type="datetime-local" id="edit_start_timestamp" name="edit_start_timestamp" value="{{ $event->start_timestamp }}" required>
+                <label for="edit_start_timestamp">Start Timestamp:</label>
+                <input type="datetime-local" id="edit_start_timestamp" name="edit_start_timestamp" value="{{ $event->start_timestamp }}" required>
 
-            <label for="edit_end_timestamp">End Timestamp:</label>
-            <input type="datetime-local" id="edit_end_timestamp" name="edit_end_timestamp" value="{{ $event->end_timestamp }}" required>
+                <label for="edit_end_timestamp">End Timestamp:</label>
+                <input type="datetime-local" id="edit_end_timestamp" name="edit_end_timestamp" value="{{ $event->end_timestamp }}" required>
 
-            <button type="submit" class="btn btn-primary">Update Event</button>
-        </form>
+                <button type="submit" class="btn btn-primary">Update Event</button>
+            </form>
         <h2>Create TicketType</h2>
     <form method="POST" action="{{ url('/create-ticket-type/'.$event->event_id) }}">
         @csrf
@@ -97,6 +109,7 @@
 
         <button type="submit" class="btn btn-primary">Create TicketType</button>
     </form>
+        </section>
 @endcan
 
 @endsection
