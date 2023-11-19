@@ -5,20 +5,20 @@
 @section('content')
     <!-- Add links before All Events -->
     <div>
-        <a href="{{ route('faq') }}">FAQs</a> |
 
         @auth
             <a href="{{ route('my-events') }}">MyEvents</a> |
             <a href="{{ route('my-tickets') }}">MyTickets</a> |
             <a href="{{ route('profile') }}">Profile</a> |
-            <a href="{{ route('admin') }}">Admin</a> |
         @endauth
-
+        <a href="{{ route('create-event-page') }}">Create Event</a> |
+        <a href="{{ route('faq') }}">FAQs</a> |
         <a href="{{ route('about-us') }}">About Us</a> |
+
         @if(auth()->user() && auth()->user()->is_admin)
             <a href="{{ route('admin') }}">Admin</a> |
         @endif
-        <a href="{{ route('profile') }}">Profile</a>
+
     </div>
 
     <h1>All Events</h1>
