@@ -50,15 +50,16 @@ class EventController extends Controller
 
     public function createEvent(Request $request)
     {
-        // Validate the form data
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'location' => 'nullable|string',
-            'start_timestamp' => 'required|date',
-            'end_timestamp' => 'required|date|after:start_timestamp',
-            // Add other validation rules for your fields
-        ]);
+       
+$request->validate([
+    'name' => 'required|string|max:255',
+    'description' => 'nullable|string',
+    'location' => 'required|string',
+    'start_timestamp' => 'required|date',
+    'end_timestamp' => 'required|date|after:start_timestamp',
+    
+]);
+
 
         // Create a new event with the provided data
         $event = new Event();
@@ -82,10 +83,13 @@ class EventController extends Controller
         $request->validate([
             'edit_name' => 'required|string|max:255',
             'edit_description' => 'nullable|string',
-            'edit_location' => 'nullable|string',
+            'edit_location' => 'required|string',
             'edit_start_timestamp' => 'required|date',
             'edit_end_timestamp' => 'required|date|after:edit_start_timestamp',
-            // Adicione outras regras de validação conforme necessário
+           
+        ], [
+            'edit_end_timestamp.after' => 'The end timestamp must be a date after the start timestamp.',
+         
         ]);
     
         // Find the event by ID
@@ -156,7 +160,16 @@ class EventController extends Controller
 
     public function createTicketType(Request $request, Event $event)
 {
-    // Validate the request data as needed
+    $request->validate([
+        'ticket_name' => 'required|string|max:255',
+        'ticket_stock' => 'required|integer|min:0',
+        'ticket_description' => 'nullable|string',
+        'ticket_person_limit' => 'required|integer|min:0',
+        'ticket_price' => 'required|numeric|min:0',
+        'ticket_start_timestamp' => 'required|date',
+        'ticket_end_timestamp' => 'required|date|after:ticket_start_timestamp',
+        
+    ]);
 
     $ticketType = new TicketType();
     $ticketType->name = $request->input('ticket_name');
@@ -166,7 +179,7 @@ class EventController extends Controller
     $ticketType->price = $request->input('ticket_price');
     $ticketType->start_timestamp = $request->input('ticket_start_timestamp');
     $ticketType->end_timestamp = $request->input('ticket_end_timestamp');
-    // Set other fields as needed
+
 
     // Associate the TicketType with the current event
     $ticketType->event()->associate($event);
