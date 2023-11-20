@@ -16,6 +16,8 @@ class EventController extends Controller
 {
     public function view($id): View
     {
+        $this->authorize('auth', Event::class);
+
         $event = Event::findOrFail($id);
 
         return view('pages.event', compact('event'));
@@ -24,6 +26,8 @@ class EventController extends Controller
     public function index(): View
     {
         $user = Auth::user();
+
+        $this->authorize('auth', Event::class);
 
         // Check if the user is an admin
         if ($user && $user->is_admin) {

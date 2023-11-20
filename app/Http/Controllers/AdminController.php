@@ -8,6 +8,7 @@ class AdminController extends Controller
 {
     public function showAdminPage()
     {
+        $this->authorize('verifyAdmin', Admin::class);
         $activeUsers = User::where('active', true)->get();
         $inactiveUsers = User::where('active', false)->get();
         return view('pages.admin', compact('activeUsers', 'inactiveUsers'));
@@ -18,6 +19,7 @@ class AdminController extends Controller
         // Find the user by ID
         $user = User::findOrFail($id);
 
+        $this->authorize('verifyAdmin', Admin::class);
         // Deactivate the user
         $user->active = false;
         $user->save();
@@ -33,6 +35,7 @@ class AdminController extends Controller
         // Find the user by ID
         $user = User::findOrFail($id);
 
+        $this->authorize('verifyAdmin', Admin::class);
         // Activate the user
         $user->active = true;
         $user->save();

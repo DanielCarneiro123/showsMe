@@ -6,51 +6,36 @@
     <p>{{ $event->description }}</p>
     <!-- Add more fields as needed -->
 
- <!-- Display TicketTypes -->
- <h2>Ticket Types</h2>
-<form method="POST" action="{{ url('/purchase-tickets/'.$event->event_id) }}">
-    @csrf
+    <!-- Display TicketTypes -->
+    <h2>Ticket Types</h2>
+
     @foreach ($event->ticketTypes as $ticketType)
-        @if (auth()->user() && auth()->user()->user_id = $event->creator_id)
-            <!-- Display all tickets for the event creator -->
-            <div>
-                <h3>{{ $ticketType->name }}</h3>
-                <p>Stock: {{ $ticketType->stock }}</p>
-                <p>Description: {{ $ticketType->description }}</p>
-                <p>Price: {{ $ticketType->price }} €</p>
-                <form method="POST" action="{{ url('/update-ticket-stock/'.$ticketType->ticket_type_id) }}">
-                    @csrf
-                    @method('PATCH')
-                    <label for="new_stock">New Stock:</label>
-                    <input type="number" id="new_stock" name="new_stock" value="{{ $ticketType->stock }}" required>
-                    <button type="submit" class="btn btn-primary">Update Stock</button>
-                </form>
+        <div>
+            <h3>{{ $ticketType->name }}</h3>
+            <p id="stock_display_{{ $ticketType->ticket_type_id }}">Stock: {{ $ticketType->stock }}</p>
+            <p id="event_description_{{ $ticketType->ticket_type_id }}">Description: {{ $ticketType->description }}</p>
+            <p id="ticket_price_{{ $ticketType->ticket_type_id }}">Price: {{ $ticketType->price }} €</p>
 
-                <label for="quantity_{{ $ticketType->ticket_type_id }}">Quantity:</label>
-                <input type="number" id="quantity_{{ $ticketType->ticket_type_id }}" name="quantity[{{ $ticketType->ticket_type_id }}]" min="0" max="{{ min($ticketType->person_buying_limit, $ticketType->stock) }}">
-                
-                
-
-            </div>
-        @else
-            <!-- Display tickets with stock greater than 0 for other users -->
+            @if (auth()->user() && auth()->user()->user_id == $event->creator_id)
+                <!-- Display update form for the event creator -->
+                @csrf
+                <p>New Stock:
+                <input type="number" id="new_stock_{{ $ticketType->ticket_type_id }}" name="new_stock" value="{{ $ticketType->stock }}" required>
+                </p>
+                <button class="button-update-stock" onclick="updateStock({{ $ticketType->ticket_type_id }})">Update Stock</button>  
+            @endif
+                <!-- Display buy form for other users -->
             @if ($ticketType->stock > 0)
-                <div>
-                    <h3>{{ $ticketType->name }}</h3>
-                    <p>Stock: {{ $ticketType->stock }}</p>
-                    <p>Description: {{ $ticketType->description }}</p>
-                    <p>Price: {{ $ticketType->price }} €</p>
-
+                <form method="POST" action="{{ url('/purchase-tickets/'.$event->event_id) }}">
+                    @csrf
                     <label for="quantity_{{ $ticketType->ticket_type_id }}">Quantity:</label>
                     <input type="number" id="quantity_{{ $ticketType->ticket_type_id }}" name="quantity[{{ $ticketType->ticket_type_id }}]" min="0" max="{{ min($ticketType->person_buying_limit, $ticketType->stock) }}">
-
-                </div>
+                    <button type="submit" class="btn btn-success">Buy Tickets</button>
+                </form>
             @endif
-        @endif
+            
+        </div>
     @endforeach
-        
-    <!-- Adicione um botão geral para comprar -->
-    <button type="submit" class="btn btn-success">Buy Tickets</button>
 </form>
 
 

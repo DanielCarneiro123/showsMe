@@ -60,6 +60,7 @@ Route::controller(AboutUsController::class)->group(function () {
 
 Route::controller(TicketController::class)->group(function () {
     Route::get('/my-tickets', [TicketController::class, 'myTickets'])->name('my-tickets');
+    Route::post('/update-ticket-stock/{ticketTypeId}', [TicketController::class, 'updateTicketStock'])->name('updateTicketStock');
 });
 
 
