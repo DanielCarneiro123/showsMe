@@ -5,8 +5,8 @@
     <section class="event-thumbnail">
         <img src="{{ asset('../media/event_image.jpg') }}" alt="Event Image">
         <div class="text">
-            <h1>{{ $event->name }}</h1>
-            <p>{{ $event->description }}</p>
+            <h1 id ="name" >{{ $event->name }}</h1>
+            <p id ="description" >{{ $event->description }}</p>
         </div>
         <!-- <img src="{{ $event->event_image }}" alt="Event Image" class="event-image"> -->
         <section class="event-info">
@@ -60,7 +60,7 @@
     @can('updateEvent', $event)
         <section class="edit-event">
             <h2>Edit Event</h2>
-            <form method="POST" action="{{ url('/update-event/'.$event->event_id) }}">
+            <article>
                 @csrf
                 <label for="edit_name">Event Name:</label>
                 <input type="text" id="edit_name" name="edit_name" value="{{ $event->name }}" required>
@@ -77,8 +77,8 @@
                 <label for="edit_end_timestamp">End Timestamp:</label>
                 <input type="datetime-local" id="edit_end_timestamp" name="edit_end_timestamp" value="{{ $event->end_timestamp }}" required>
 
-                <button type="submit" class="btn btn-primary">Update Event</button>
-            </form>
+                <button class="button-update-event" onclick="updateEvent({{ $event->event_id }})">Update Event</button>
+            </article>
         </section>
         <h2>Create TicketType</h2>
     <form method="POST" action="{{ url('/create-ticket-type/'.$event->event_id) }}">

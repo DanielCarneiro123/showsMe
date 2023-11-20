@@ -90,7 +90,7 @@ class EventController extends Controller
         $event = Event::findOrFail($id);
 
         // Verificar a autorização usando a política
-        $this->authorize('update', $event); //se não for o user_id quem criou o evento, a action nao é autrizada
+        $this->authorize('updateEvent', $event); //se não for o user_id quem criou o evento, a action nao é autrizada
     
         // Update the event with the provided data
         $event->name = $request->input('edit_name');
@@ -103,7 +103,7 @@ class EventController extends Controller
         $event->save();
     
         // Redirect back to the event page or any other page
-        return redirect()->route('view-event', ['id' => $id]);
+        return response()->json(['message' => 'Atualização bem-sucedida']);
     }
 
     /*public function deleteEvent(Event $event)
