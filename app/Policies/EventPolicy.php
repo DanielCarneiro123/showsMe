@@ -5,6 +5,7 @@ namespace App\Policies;
 use App\Models\Event;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
+use Illuminate\Support\Facades\Auth;
 
 class EventPolicy
 {
@@ -65,9 +66,9 @@ class EventPolicy
         //
     }
 
-    public function purchaseTickets(Request $request, $eventId): bool
+    public function purchaseTickets(User $user, Event $event): bool
     {
-        //
+        return Auth::check();
     }
 
 

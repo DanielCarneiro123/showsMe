@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use App\Models\TicketOrder;
 use App\Models\TicketInstance;
+use Illuminate\Auth\Access\AuthorizationException; 
 
 
 class EventController extends Controller
@@ -188,41 +189,43 @@ class EventController extends Controller
 
     public function purchaseTickets(Request $request, $eventId)
     {
-        
-        if (!Auth::check()) {
-            return redirect()->route('login')->with('error', 'You must be logged in to purchase tickets.');
-        }
+        try {
+            $event = Event::findOrFail($eventId);
 
-        $quantities = $request->input('quantity', []);
-        $quantity = $request->input('quantity');
+            $this->authorize('purchaseTickets', $event);
 
-        if (empty($quantities)) {
-            return redirect()->route('view-event', ['id' => $eventId])->with('error', 'Select at least one ticket type.');
-        }
+            $quantities = $request->input('quantity', []);
 
+            if (empty($quantities)) {
+                return redirect()->route('view-event', ['id' => $eventId])->with('error', 'Select at least one ticket type.');
+            }
 
-        $buyer = Auth::user();
+            $buyer = Auth::user();
 
-        $order = new TicketOrder();
-        $order->timestamp = now();
-        $order->promo_code = null;
-        $order->buyer_id = $buyer->user_id;
-        $order->save();
+            $order = new TicketOrder();
+            $order->timestamp = now();
+            $order->promo_code = null;
+            $order->buyer_id = $buyer->user_id;
+            $order->save();
 
-
-
-        foreach ($quantities as $ticketTypeId => $quantity) {
-            if ($quantity > 0) {
-                for ($i = 0; $i < $quantity; $i++) {
-                    $ticketInstance = new TicketInstance();
-                    $ticketInstance->ticket_type_id = $ticketTypeId;
-                    $ticketInstance->order_id = $order->order_id;
-                    $ticketInstance->save();
+            foreach ($quantities as $ticketTypeId => $quantity) {
+                if ($quantity > 0) {
+                    for ($i = 0; $i < $quantity; $i++) {
+                        $ticketInstance = new TicketInstance();
+                        $ticketInstance->ticket_type_id = $ticketTypeId;
+                        $ticketInstance->order_id = $order->order_id;
+                        $ticketInstance->save();
+                    }
                 }
             }
-        }
 
-        return redirect()->route('view-event', ['id' => $eventId])->with('success', 'Tickets purchased successfully.');
+            return redirect()->route('view-event', ['id' => $eventId])->with('success', 'Tickets purchased successfully.');
+        } 
+        
+        catch (AuthorizationException $e) 
+            {
+                return redirect()->route('login')->with('error', 'You must be logged in to purchase tickets.');
+            }
     }
 
     
