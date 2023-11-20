@@ -28,15 +28,20 @@ class EventPolicy
     /**
      * Determine whether the user can create models.
      */
-    public function create(User $user): bool
+    public function createEvent(User $user): bool
     {
-        //
+        return Auth::check();
     }
 
+    public function createTicketType(User $user, Event $event): bool
+    {
+        return $user->user_id === $event->organizer_id;
+    }
+    
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Event $event): bool
+    public function updateEvent(User $user, Event $event): bool
     {
         // Somente o criador do evento pode atualizá-lo
         return $user->user_id === $event->creator_id;

@@ -20,9 +20,9 @@ class UserController extends Controller
    // UserController.php
     public function updateProfile(Request $request)
     {
-        $user = Auth::user();
+        $this->authorize('updateProfile', Auth::user());
 
-        $user->update([
+        Auth::user()->update([
             'email' => $request->input('email'),
             'name' => $request->input('name'),
             'promotor_code' => $request->input('promotor_code'),

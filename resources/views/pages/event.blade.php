@@ -57,7 +57,7 @@
     @endif
 
     <!-- Edit Event form (displayed only for the event creator) -->
-    @can('update', $event)
+    @can('updateEvent', $event)
         <section class="edit-event">
             <h2>Edit Event</h2>
             <form method="POST" action="{{ url('/update-event/'.$event->event_id) }}">

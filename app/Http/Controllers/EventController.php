@@ -51,17 +51,16 @@ class EventController extends Controller
 
     public function createEvent(Request $request)
     {
-        // Validate the form data
+        $this->authorize('createEvent', Auth::user());
+
         $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'location' => 'nullable|string',
             'start_timestamp' => 'required|date',
             'end_timestamp' => 'required|date|after:start_timestamp',
-            // Add other validation rules for your fields
         ]);
 
-        // Create a new event with the provided data
         $event = new Event();
         $event->name = $request->input('name');
         $event->description = $request->input('description');
@@ -70,10 +69,8 @@ class EventController extends Controller
         $event->end_timestamp = $request->input('end_timestamp');
         $event->creator_id = Auth::user()->user_id; 
 
-        // Save the event
         $event->save();
 
-        // Redirect back to the My Events page or any other page
         return redirect('/my-events');
     }
 
@@ -156,27 +153,24 @@ class EventController extends Controller
     }
 
     public function createTicketType(Request $request, Event $event)
-{
-    // Validate the request data as needed
+    {
+        $this->authorize('createTicketType', $event);
 
-    $ticketType = new TicketType();
-    $ticketType->name = $request->input('ticket_name');
-    $ticketType->stock = $request->input('ticket_stock');
-    $ticketType->description = $request->input('ticket_description');
-    $ticketType->person_buying_limit = $request->input('ticket_person_limit');
-    $ticketType->price = $request->input('ticket_price');
-    $ticketType->start_timestamp = $request->input('ticket_start_timestamp');
-    $ticketType->end_timestamp = $request->input('ticket_end_timestamp');
-    // Set other fields as needed
+        $ticketType = new TicketType();
+        $ticketType->name = $request->input('ticket_name');
+        $ticketType->stock = $request->input('ticket_stock');
+        $ticketType->description = $request->input('ticket_description');
+        $ticketType->person_buying_limit = $request->input('ticket_person_limit');
+        $ticketType->price = $request->input('ticket_price');
+        $ticketType->start_timestamp = $request->input('ticket_start_timestamp');
+        $ticketType->end_timestamp = $request->input('ticket_end_timestamp');
 
-    // Associate the TicketType with the current event
-    $ticketType->event()->associate($event);
+        $ticketType->event()->associate($event);
 
-    $ticketType->save();
+        $ticketType->save();
 
-    // You might want to redirect back to the event page or another page
-    return redirect('/view-event/'.$event->event_id);
-}
+        return redirect('/view-event/'.$event->event_id);
+    }
 
 
     
