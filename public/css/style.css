@@ -378,3 +378,24 @@ button:hover {
   color: white;
   transform: scale(0.95);
 }
+
+
+
+
+#about-us {
+  max-width: 800px;
+  padding: 20px;
+  margin: 3em;
+}
+
+#about-us h2 {
+  font-size: 3em;
+  margin-bottom: 1em;
+  text-align: start;
+}
+
+#about-us p {
+  font-size: 1.1em;
+  line-height: 1.6;
+  margin-bottom: 5em;
+}
