@@ -1,0 +1,38 @@
+#profile {
+    max-width: 600px;
+    margin: 8% auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    border: 2px solid rgb(233, 233, 233);
+}
+
+#profile p {
+    margin: 10px 0;
+}
+
+#profile form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+#profile label {
+    display: block;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+#profile input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+
+#profile button {
+    display: block;
+    margin: 0 auto; /* Center the button */
+}

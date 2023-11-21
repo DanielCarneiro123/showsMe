@@ -6,15 +6,21 @@
 
 
     @if ($events->count() > 0)
-        <h1>My Events</h1>
+        <h1>My <span>Events</span></h1>
         @foreach ($events as $event)
             <article class="event-card">
-                <h3>{{ $event->name }}</h3>
-                <p>{{ $event->description }}</p>
+                <img src="{{ asset('../media/event_image.jpg') }}" alt="Event Image">
+                <div class="event-info">
+                    <h3>{{ $event->name }}</h3>
+                    <p>{{ $event->description }}</p>
+                </div>
             </article>
         @endforeach
         <!-- Button to create a new event -->
-        <a href="{{ route('create-event-page') }}" class="btn btn-primary">Create Event</a>
+        <a href="{{ route('create-event-page') }}" class="a-button">
+            <i class="fa-solid fa-circle-plus"></i>
+            Create Event
+        </a>
     @else
         <section class="warning-section">
             <i class="fa-solid fa-question"></i>
