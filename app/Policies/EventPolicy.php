@@ -33,8 +33,9 @@ class EventPolicy
         return Auth::check();
     }
 
-    public function createTicketType(User $user, Event $event): bool
+    public function createTicketType(Event $event): bool
     {
+        $user = Auth::user();
         return $user->user_id === $event->organizer_id;
     }
     

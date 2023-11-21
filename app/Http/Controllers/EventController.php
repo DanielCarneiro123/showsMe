@@ -51,7 +51,7 @@ class EventController extends Controller
 
     public function createEvent(Request $request)
     {
-        $this->authorize('createEvent', Auth::user());
+        $this->authorize('createEvent', Event::class);
 
         $request->validate([
             'name' => 'required|string|max:255',
@@ -154,7 +154,7 @@ class EventController extends Controller
 
     public function createTicketType(Request $request, Event $event)
     {
-        $this->authorize('createTicketType', $event);
+        $this->authorize('updateEvent', $event);
 
         $ticketType = new TicketType();
         $ticketType->name = $request->input('ticket_name');
@@ -169,7 +169,7 @@ class EventController extends Controller
 
         $ticketType->save();
 
-        return redirect('/view-event/'.$event->event_id);
+        return response()->json(['message' => 'TicketType created successfully', 'ticketType' => $ticketType]);
     }
 
 
