@@ -1,3 +1,4 @@
+
 openapi: 3.0.0
 
 info:
@@ -157,7 +158,7 @@ paths:
     post:
       operationId: R107
       summary: 'R107: Update User Profile'
-      description: 'Update user information. Access: USR, ADM'
+      description: 'Update user information. Access: OWN'
       tags:
         - 'M01: User Authentication and Profiles'
       requestBody:
@@ -199,7 +200,7 @@ paths:
     get:
       operationId: R201
       summary: 'R201: List All Events'
-      description: 'Retrieve a list of all events. Access: VST'
+      description: 'Retrieve a list of all events. Access: VST,USR,OWN,ADM'
       tags:
         - 'M02: Event Discovery'
       responses:
@@ -210,7 +211,7 @@ paths:
     get:
       operationId: R202
       summary: 'R202: View Event Details'
-      description: 'Show details of a specific event. Access: VST'
+      description: 'Show details of a specific event. Access: VST,USR,OWN,ADM'
       tags:
         - 'M02: Event Discovery'
       parameters:
@@ -222,12 +223,11 @@ paths:
       responses:
         '200':
           description: 'Ok. Show Event Details UI'
-    
   /search-events:
     get:
       operationId: R203
       summary: 'R203: Full Text Search'
-      description: 'Perform a full-text search on events based on name, description, tags, and location. Access: VST'
+      description: 'Perform a full-text search on events based on name, description, tags, and location. Access: VST,USR,OWN,ADM'
       tags:
         - 'M02: Event Discovery'
       parameters:
@@ -273,7 +273,7 @@ paths:
     post:
       operationId: R401
       summary: 'R401: Edit Details of Created Event'
-      description: 'Edit details of a created event. Access: USR'
+      description: 'Edit details of a created event. Access: OWN'
       tags:
         - 'M04: Event Creation and Management'
       parameters:
@@ -316,7 +316,7 @@ paths:
     post:
       operationId: R402
       summary: 'R402: Create Tickets for Sale'
-      description: 'Create tickets for sale for an event. Access: USR'
+      description: 'Create tickets for sale for an event. Access: OWN'
       tags:
         - 'M04: Event Creation and Management'
       parameters:
@@ -367,7 +367,7 @@ paths:
     post:
       operationId: R403
       summary: 'R403: Update Ticket Stock'
-      description: 'Update the stock of a ticket type for an event. Access: USR'
+      description: 'Update the stock of a ticket type for an event. Access: OWN'
       tags:
         - 'M04: Event Creation and Management'
       parameters:
@@ -417,7 +417,7 @@ paths:
     get:
       operationId: R302
       summary: 'R302: View Purchased Tickets'
-      description: 'View a list of purchased tickets by authenticated user. Access: USR, ADM'
+      description: 'View a list of purchased tickets by authenticated user. Access: OWN'
       tags:
         - 'M03: Ticket Purchase and Management'
       responses:
@@ -491,7 +491,7 @@ paths:
     get:
       operationId: R503
       summary: 'R503: About Us'
-      description: 'View information about the platform. Access: VST'
+      description: 'View information about the platform. Access: VST,USR,OWN,ADM'
       tags:
         - 'M05: Site Administration and Static Pages'
       responses:
@@ -502,10 +502,11 @@ paths:
     get:
       operationId: R504
       summary: 'R504: FAQ'
-      description: 'View frequently asked questions. Access: VST'
+      description: 'View frequently asked questions. Access: VST,USR,OWN,ADM'
       tags:
         - 'M05: Site Administration and Static Pages'
       responses:
         '200':
           description: 'Ok. Show FAQ UI'
+
 
