@@ -17,8 +17,8 @@ tags:
   - name: 'M01: User Authentication and Profiles'
   - name: 'M02: Event Discovery'
   - name: 'M03: Ticket Purchase and Management'
-  - name: 'M05: Event Creation and Management'
-  - name: 'M06: Site Administration and Static Pages'
+  - name: 'M04: Event Creation and Management'
+  - name: 'M05: Site Administration and Static Pages'
 
 paths:
   /login:
@@ -100,7 +100,7 @@ paths:
     post:
       operationId: R105
       summary: 'R105: Register Action'
-      description: 'Processes the new user registration form submission. Access: PUB'
+      description: 'Processes the new user registration form submission. Access: VST'
       tags:
         - 'M01: User Authentication and Profiles'
       requestBody:
@@ -252,11 +252,11 @@ paths:
 
   /edit-event/{event_id}:
     post:
-      operationId: R501
-      summary: 'R501: Edit Details of Created Event'
+      operationId: R401
+      summary: 'R401: Edit Details of Created Event'
       description: 'Edit details of a created event. Access: USR'
       tags:
-        - 'M05: Event Creation and Management'
+        - 'M04: Event Creation and Management'
       parameters:
         - in: path
           name: event_id
@@ -295,11 +295,11 @@ paths:
 
   /create-tickets/{event_id}:
     post:
-      operationId: R502
-      summary: 'R502: Create Tickets for Sale'
+      operationId: R402
+      summary: 'R402: Create Tickets for Sale'
       description: 'Create tickets for sale for an event. Access: USR'
       tags:
-        - 'M05: Event Creation and Management'
+        - 'M04: Event Creation and Management'
       parameters:
         - in: path
           name: event_id
@@ -346,11 +346,11 @@ paths:
 
   /update-ticket-stock/{event_id}:
     post:
-      operationId: R503
-      summary: 'R503: Update Ticket Stock'
+      operationId: R403
+      summary: 'R403: Update Ticket Stock'
       description: 'Update the stock of a ticket type for an event. Access: USR'
       tags:
-        - 'M05: Event Creation and Management'
+        - 'M04: Event Creation and Management'
       parameters:
         - in: path
           name: event_id
@@ -379,11 +379,11 @@ paths:
 
   /deactivate-event/{event_id}:
     post:
-      operationId: R601
-      summary: 'R601: Deactivate or Activate Event'
+      operationId: R501
+      summary: 'R501: Deactivate or Activate Event'
       description: 'Deactivate an event. Access: ADM'
       tags:
-        - 'M06: Site Administration and Static Pages'
+        - 'M05: Site Administration and Static Pages'
       parameters:
         - in: path
           name: event_id
@@ -406,11 +406,11 @@ paths:
           description: 'Ok. Show List of Purchased Tickets UI'
   /create-event-page:
     post:
-      operationId: R504
-      summary: 'R504: Create an Event'
+      operationId: R404
+      summary: 'R404: Create an Event'
       description: 'Create a new event. Access: USR'
       tags:
-        - 'M05: Event Creation and Management'
+        - 'M04: Event Creation and Management'
       requestBody:
         required: true
         content:
@@ -453,11 +453,11 @@ paths:
                   value: '/create-event-page'
   /admin:
     post:
-      operationId: R602
-      summary: 'R602: Deactivate or Activate Users'
+      operationId: R502
+      summary: 'R502: Deactivate or Activate Users'
       description: 'Deactivate or activate user accounts. Access: ADM'
       tags:
-        - 'M06: Site Administration and Static Pages'
+        - 'M05: Site Administration and Static Pages'
       parameters:
         - in: query
           name: user_id
@@ -470,22 +470,22 @@ paths:
 
   /about-us:
     get:
-      operationId: R603
-      summary: 'R603: About Us'
-      description: 'View information about the platform. Access: PUB'
+      operationId: R503
+      summary: 'R503: About Us'
+      description: 'View information about the platform. Access: VST'
       tags:
-        - 'M06: Site Administration and Static Pages'
+        - 'M05: Site Administration and Static Pages'
       responses:
         '200':
           description: 'Ok. Show About Us UI'
 
   /faq:
     get:
-      operationId: R604
-      summary: 'R604: FAQ'
-      description: 'View frequently asked questions. Access: PUB'
+      operationId: R504
+      summary: 'R504: FAQ'
+      description: 'View frequently asked questions. Access: VST'
       tags:
-        - 'M06: Site Administration and Static Pages'
+        - 'M05: Site Administration and Static Pages'
       responses:
         '200':
           description: 'Ok. Show FAQ UI'
