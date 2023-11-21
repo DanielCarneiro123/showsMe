@@ -27,7 +27,7 @@ class EventController extends Controller
     {
         $user = Auth::user();
 
-        $this->authorize('auth', Event::class);
+        //$this->authorize('auth', Event::class);
 
         // Check if the user is an admin
         if ($user && $user->is_admin) {

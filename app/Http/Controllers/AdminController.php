@@ -15,20 +15,23 @@ class AdminController extends Controller
     }
 
     public function deactivateUser($id)
-    {
-        // Find the user by ID
-        $user = User::findOrFail($id);
+{
+    // Find the user by ID
+    $user = User::findOrFail($id);
 
-        $this->authorize('verifyAdmin', Admin::class);
-        // Deactivate the user
-        $user->active = false;
-        $user->save();
+    $this->authorize('verifyAdmin', Admin::class);
 
-        // Deactivate all events created by the user
-        $user->own_events()->update(['private' => true]);
-        // Redirect back or to a specific route
-        return redirect()->route('admin')->with('success', 'User deactivated successfully');
-    }
+    // Deactivate the user
+    $user->active = false;
+    $user->save();
+
+    // Deactivate all events created by the user
+    $user->own_events()->update(['private' => true]);
+
+    // Return a JSON response
+    return response()->json(['user_id' => $user->user_id]);
+}
+
 
     public function activateUser($id)
     {
@@ -44,6 +47,6 @@ class AdminController extends Controller
         $user->own_events()->update(['private' => false]);
 
         // Redirect back or to a specific route
-        return redirect()->route('admin')->with('success', 'User activated successfully');
+        return response()->json(['user_id' => $user->user_id]);
     }
 }
