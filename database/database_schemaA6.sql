@@ -140,66 +140,48 @@ ALTER TABLE Event_
 ADD COLUMN tsvectors TSVECTOR;
 
 CREATE OR REPLACE FUNCTION event_search_update() RETURNS TRIGGER AS $$
-
 BEGIN
-IF TG_OP = 'INSERT' THEN
+  IF TG_OP = 'INSERT' THEN
+    NEW.tsvectors = (
+      setweight(to_tsvector('english', NEW.name), 'A') ||
+      setweight(to_tsvector('english', NEW.description), 'B') ||
+      setweight(to_tsvector('english', COALESCE((SELECT string_agg(Tag.name, ' ') FROM TagEvent JOIN Tag ON TagEvent.tag_id = Tag.tag_id WHERE TagEvent.event_id = NEW.event_id),' ')), 'C') ||
+      setweight(to_tsvector('english', NEW.location), 'D')
+    );
+  END IF;
 
-NEW.tsvectors = (
-
-setweight(to_tsvector('english', NEW.name), 'A') ||
-
-setweight(to_tsvector('english', NEW.description), 'B') ||
-
-setweight(to_tsvector('english', (SELECT string_agg(Tag.name, ' ') FROM TagEvent JOIN Tag ON TagEvent.tag_id = Tag.tag_id WHERE TagEvent.event_id = NEW.event_id)), 'C') ||
-
-setweight(to_tsvector('english', NEW.location), 'D')
-
-);
-
-END IF;
-
-IF TG_OP = 'UPDATE' THEN
-
-
-     IF (NEW.name <> OLD.name OR
-       NEW.description <> OLD.description OR
-       (SELECT string_agg(Tag.name, ' ')
-        FROM TagEvent
-        JOIN Tag ON TagEvent.tag_id = Tag.tag_id
-       WHERE TagEvent.event_id = NEW.event_id)
-       <> (SELECT string_agg(Tag.name, ' ')
-            FROM TagEvent
+  IF TG_OP = 'UPDATE' THEN
+    IF (NEW.name <> OLD.name OR
+        NEW.description <> OLD.description OR
+        (SELECT string_agg(Tag.name, ' ')
+         FROM TagEvent
          JOIN Tag ON TagEvent.tag_id = Tag.tag_id
-          WHERE TagEvent.event_id = OLD.event_id) OR
-
-        NEW.location <> OLD.location) THEN
-
+         WHERE TagEvent.event_id = NEW.event_id)
+         <> (SELECT string_agg(Tag.name, ' ')
+             FROM TagEvent
+             JOIN Tag ON TagEvent.tag_id = Tag.tag_id
+             WHERE TagEvent.event_id = OLD.event_id) OR
+         NEW.location <> OLD.location) THEN
 
       NEW.tsvectors = (
-
         setweight(to_tsvector('english', NEW.name), 'A') ||
-
-       setweight(to_tsvector('english', NEW.description), 'B') ||
-
-      setweight(to_tsvector('english', (SELECT string_agg(Tag.name, ' ') FROM TagEvent JOIN Tag ON TagEvent.tag_id = Tag.tag_id WHERE TagEvent.event_id = NEW.event_id)), 'C') ||
-
-       setweight(to_tsvector('english', NEW.location), 'D')
-
-     );
+        setweight(to_tsvector('english', NEW.description), 'B') ||
+        setweight(to_tsvector('english', COALESCE((SELECT string_agg(Tag.name, ' ') FROM TagEvent JOIN Tag ON TagEvent.tag_id = Tag.tag_id WHERE TagEvent.event_id = NEW.event_id),' ')), 'C') ||
+        setweight(to_tsvector('english', NEW.location), 'D')
+      );
 
     END IF;
- END IF;
- RETURN NEW;
+  END IF;
 
-END $$
 
-LANGUAGE plpgsql;
+
+  RETURN NEW;
+END $$ LANGUAGE plpgsql;
+
 CREATE TRIGGER event_search_update
 
 BEFORE INSERT OR UPDATE ON Event_
-
 FOR EACH ROW
-
 EXECUTE PROCEDURE event_search_update();
 CREATE INDEX event_text_search_idx ON Event_ USING GIN (tsvectors);
 

@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Redirect;
 use App\Models\TicketOrder;
 use App\Models\TicketInstance;
 
+use Illuminate\Support\Facades\DB;
 
 class EventController extends Controller
 {
@@ -237,6 +238,17 @@ $request->validate([
 
         return redirect()->route('view-event', ['id' => $eventId])->with('success', 'Tickets purchased successfully.');
     }
+    
+    public function searchEvents(Request $request)
+{
+    $query = $request->input('query');
+
+    $events = Event::whereRaw('tsvectors @@ plainto_tsquery(?)', [$query])
+        ->orderByRaw('ts_rank(tsvectors, plainto_tsquery(?)) DESC', [$query])
+        ->paginate(10);
+
+    return view('pages.allevents', compact('events'));
+}
 
     
 
