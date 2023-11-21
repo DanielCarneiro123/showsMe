@@ -44,17 +44,17 @@ Route::controller(EventController::class)->group(function () {
     Route::post('/activate-event/{eventId}', 'activateEvent')->name('activate-event');
 });
 
-Route::controller(TicketController::class)->group(function () {
-    Route::get('/my-tickets', [TicketController::class, 'myTickets'])->name('my-tickets')->middleware('auth');
-});
-
-
 Route::controller(FaqController::class)->group(function () {
     Route::get('/faq', [FaqController::class, 'index'])->name('faq');
 });
 
 Route::controller(AboutUsController::class)->group(function () {
     Route::get('/about-us', [AboutUsController::class, 'index'])->name('about-us');
+});
+
+Route::controller(TicketController::class)->group(function () {
+    Route::get('/my-tickets', [TicketController::class, 'myTickets'])->name('my-tickets')->middleware('auth');
+    Route::post('/update-ticket-stock/{ticketTypeId}', [TicketController::class, 'updateTicketStock'])->name('updateTicketStock');
 });
 
 

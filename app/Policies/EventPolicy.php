@@ -5,6 +5,7 @@ namespace App\Policies;
 use App\Models\Event;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
+use Illuminate\Support\Facades\Auth;
 
 class EventPolicy
 {
@@ -16,12 +17,17 @@ class EventPolicy
         //
     }
 
+    public function myEvents(User $user, Event $event) : bool
+    {
+      return $user->user_id === $event->creator_id;
+    }
+
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Event $event): bool
+    public function auth(User $user): bool
     {
-        //
+        return Auth::check();
     }
 
     /**

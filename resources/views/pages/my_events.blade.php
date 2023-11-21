@@ -8,7 +8,9 @@
     @if ($events->count() > 0)
         @foreach ($events as $event)
             <article class="event-card">
-                <h3>{{ $event->name }}</h3>
+                <a href="{{ route('view-event', ['id' => $event->event_id]) }}">
+                    <h3>{{ $event->name }}</h3>
+                </a>
                 <p>{{ $event->description }}</p>
             </article>
         @endforeach

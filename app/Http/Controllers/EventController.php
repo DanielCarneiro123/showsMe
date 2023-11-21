@@ -16,6 +16,8 @@ class EventController extends Controller
 {
     public function view($id): View
     {
+        $this->authorize('auth', Event::class);
+
         $event = Event::findOrFail($id);
 
         return view('pages.event', compact('event'));
@@ -24,6 +26,8 @@ class EventController extends Controller
     public function index(): View
     {
         $user = Auth::user();
+
+        //$this->authorize('auth', Event::class);
 
         // Check if the user is an admin
         if ($user && $user->is_admin) {
@@ -112,30 +116,6 @@ $request->validate([
         return redirect()->route('view-event', ['id' => $id]);
     }
 
-    /*public function deleteEvent(Event $event)
-    {
-        // Check if the user is an admin
-        if (auth()->user() && auth()->user()->is_admin) {
-            // Delete comments and reports associated with the event
-            $event->comments()->each(function ($comment) {
-                $comment->reports()->delete();
-                $comment->delete();
-            });
-
-            // Delete ratings associated with the event
-            $event->ratings()->delete();
-
-            // Delete the event
-            $event->delete();
-
-            // Redirect to a page after deletion (you can customize this)
-            return redirect()->route('allevents')->with('success', 'Event deleted successfully.');
-        } else {
-            // Redirect if the user is not an admin
-            return redirect()->route('allevents')->with('error', 'You do not have permission to delete this event.');
-        }
-    }*/
-
     public function deactivateEvent($eventId)
     {
         $event = Event::findOrFail($eventId);
@@ -170,6 +150,8 @@ $request->validate([
         'ticket_end_timestamp' => 'required|date|after:ticket_start_timestamp',
         
     ]);
+
+    $request->validate($rules);
 
     $ticketType = new TicketType();
     $ticketType->name = $request->input('ticket_name');

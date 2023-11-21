@@ -17,25 +17,35 @@
 
 
 
- <!-- Display TicketTypes -->
-<h2>Ticket <span>Types</span></h2>
-<form method="POST" action="{{ url('/purchase-tickets/'.$event->event_id) }}">
-    @csrf
+
+    <h2>Ticket <span>Types</span></h2>
     @foreach ($event->ticketTypes as $ticketType)
         <article class="ticket-type">
             <h3>{{ $ticketType->name }}</h3>
-            <p>Stock: {{ $ticketType->stock }}</p>
-            <p>Description: {{ $ticketType->description }}</p>
-            <p>Price: {{ $ticketType->price }} €</p>
-
-            <!-- Adicione um campo de input para a quantidade desejada -->
-            <label for="quantity_{{ $ticketType->ticket_type_id }}">Quantity:</label>
-            <input type="number" id="quantity_{{ $ticketType->ticket_type_id }}" name="quantity[{{ $ticketType->ticket_type_id }}]" min="0" max="{{ min($ticketType->person_buying_limit, $ticketType->stock) }}">
+            <p id="stock_display_{{ $ticketType->ticket_type_id }}">Stock: {{ $ticketType->stock }}</p>
+            <p id="event_description_{{ $ticketType->ticket_type_id }}">Description: {{ $ticketType->description }}</p>
+            <p id="ticket_price_{{ $ticketType->ticket_type_id }}">Price: {{ $ticketType->price }} €</p>
         </article>
+            @if (auth()->user() && auth()->user()->user_id == $event->creator_id)
+                <!-- Display update form for the event creator -->
+                @csrf
+                <p>New Stock:
+                <input type="number" id="new_stock_{{ $ticketType->ticket_type_id }}" name="new_stock" value="{{ $ticketType->stock }}" required>
+                </p>
+                <button class="button-update-stock" onclick="updateStock({{ $ticketType->ticket_type_id }})">Update Stock</button>  
+            @endif
+                <!-- Display buy form for other users -->
+            @if ($ticketType->stock > 0)
+                <form method="POST" action="{{ url('/purchase-tickets/'.$event->event_id) }}">
+                    @csrf
+                    <label for="quantity_{{ $ticketType->ticket_type_id }}">Quantity:</label>
+                    <input type="number" id="quantity_{{ $ticketType->ticket_type_id }}" name="quantity[{{ $ticketType->ticket_type_id }}]" min="0" max="{{ min($ticketType->person_buying_limit, $ticketType->stock) }}">
+                    <button type="submit" class="btn btn-success">Buy Tickets</button>
+                </form>
+            @endif
+            
+        </div>
     @endforeach
-
-    <!-- Adicione um botão geral para comprar -->
-    <button type="submit" class="btn btn-success">Buy Tickets</button>
 </form>
 
 

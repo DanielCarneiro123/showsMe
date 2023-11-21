@@ -101,7 +101,7 @@ CREATE TABLE Tag (
    tag_id SERIAL PRIMARY KEY,
    name TEXT NOT NULL UNIQUE
 );
-
+                
 CREATE TABLE FAQ (
    faq_id SERIAL PRIMARY KEY,
    question TEXT NOT NULL,
