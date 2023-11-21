@@ -3,6 +3,23 @@
 @section('content')
 
     <section class="event-thumbnail">
+        @if(auth()->user() && auth()->user()->is_admin)
+            @if ($event->private)
+                <form method="POST" action="{{ url('/activate-event/'.$event->event_id) }}">
+                    @csrf
+                    <button class="event-button" id="activate-button" type="submit">
+                        <i class="fa-solid fa-circle-check"></i> Activate Event
+                    </button>
+                </form>
+            @else
+                <form method="POST" action="{{ url('/deactivate-event/'.$event->event_id) }}">
+                    @csrf
+                    <button class="event-button" id="deactivate-button" type="submit">
+                        <i class="fa-solid fa-ban"></i> Deactivate Event
+                    </button>
+                </form>
+            @endif
+        @endif
         <img src="{{ asset('../media/event_image.jpg') }}" alt="Event Image">
         <div class="text">
             <h1>{{ $event->name }}</h1>
@@ -18,43 +35,31 @@
 
 
  <!-- Display TicketTypes -->
-<h2>Ticket <span>Types</span></h2>
-<form method="POST" action="{{ url('/purchase-tickets/'.$event->event_id) }}">
-    @csrf
-    @foreach ($event->ticketTypes as $ticketType)
-        <article class="ticket-type">
-            <h3>{{ $ticketType->name }}</h3>
-            <p>Stock: {{ $ticketType->stock }}</p>
-            <p>Description: {{ $ticketType->description }}</p>
-            <p>Price: {{ $ticketType->price }} €</p>
+ <section class="ticket-types">
+    <h2>Ticket <span>Types</span></h2>
+    <form method="POST" action="{{ url('/purchase-tickets/'.$event->event_id) }}">
+        @csrf
+        @foreach ($event->ticketTypes as $ticketType)
+            <article class="ticket-type">
+                <h3>{{ $ticketType->name }}</h3>
+                <p>Stock: {{ $ticketType->stock }}</p>
+                <p>Description: {{ $ticketType->description }}</p>
+                <p>Price: {{ $ticketType->price }} €</p>
 
-            <!-- Adicione um campo de input para a quantidade desejada -->
-            <label for="quantity_{{ $ticketType->ticket_type_id }}">Quantity:</label>
-            <input type="number" id="quantity_{{ $ticketType->ticket_type_id }}" name="quantity[{{ $ticketType->ticket_type_id }}]" min="0" max="{{ min($ticketType->person_buying_limit, $ticketType->stock) }}">
-        </article>
-    @endforeach
+                <!-- Adicione um campo de input para a quantidade desejada -->
+                <label for="quantity_{{ $ticketType->ticket_type_id }}">Quantity:</label>
+                <input type="number" id="quantity_{{ $ticketType->ticket_type_id }}" name="quantity[{{ $ticketType->ticket_type_id }}]" min="0" max="{{ min($ticketType->person_buying_limit, $ticketType->stock) }}">
+            </article>
+        @endforeach
+        <br>
+        <!-- Adicione um botão geral para comprar -->
+        <button type="submit" class="event-button" id="buy-button">
+            <i class="fa-solid fa-credit-card"></i>Buy Tickets
+        </button>
+    </form>
+</section>
 
-    <!-- Adicione um botão geral para comprar -->
-    <button type="submit" class="btn btn-success">Buy Tickets</button>
-</form>
 
-
-
-
-
-    @if(auth()->user() && auth()->user()->is_admin)
-        @if ($event->private)
-            <form method="POST" action="{{ url('/activate-event/'.$event->event_id) }}">
-                @csrf
-                <button type="submit" class="btn btn-success">Activate Event</button>
-            </form>
-        @else
-            <form method="POST" action="{{ url('/deactivate-event/'.$event->event_id) }}">
-                @csrf
-                <button type="submit" class="btn btn-danger">Deactivate Event</button>
-            </form>
-        @endif
-    @endif
 
     <!-- Edit Event form (displayed only for the event creator) -->
     @can('update', $event)

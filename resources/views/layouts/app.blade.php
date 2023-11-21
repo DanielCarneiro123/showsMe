@@ -18,7 +18,9 @@
         <link href="{{ asset('css/event.css') }}" rel="stylesheet">
         <link href="{{ asset('css/faq.css') }}" rel="stylesheet">
         <link href="{{ asset('css/profile.css') }}" rel="stylesheet">
+        <link href="{{ asset('css/login.css') }}" rel="stylesheet">
         <link href="{{ asset('css/header.css') }}" rel="stylesheet">
+        <link href="{{ asset('css/create_event.css') }}" rel="stylesheet">
         <link rel="icon" type="image/png" href="{{ asset('images/logo1.png') }}">
         <script type="text/javascript">
             // Fix for Firefox autofocus CSS bug
@@ -52,10 +54,10 @@
                 <section id='header-buttons'>
                     @if (Auth::check())
                         <span>{{ Auth::user()->name}}</span>
-                        <a href="{{ url('/logout') }}"> Logout </a>
+                        <a class="button login" href="{{ url('/logout') }}"> Logout </a>
                     @else
-                        <a class="button" id="login" href="{{ url('/login') }}"> login </a>
-                        <a class="button" id="register" href="{{ url('/resister') }}"> register </a>
+                        <a class="button login" href="{{ url('/login') }}"> login </a>
+                        <a class="button" id="register" href="{{ url('/register') }}"> register </a>
                     @endif
                 </section>
             </header>

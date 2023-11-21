@@ -3,7 +3,7 @@ header {
     justify-content: space-between;
     align-items: center;
     padding: 20px 40px; /* Adjust the padding as needed */
-    background-color: #333; /* Set the background color for the header */
+    background-color: #1f1f1f; /* Set the background color for the header */
     color: #fff; /* Set the text color for the header */
 }
 
@@ -53,7 +53,7 @@ header a:hover {
     margin-left: 1em; /* Add some spacing between buttons */
 }
 
-#login {
+.login {
     background-color: #36aaf7; /* Green color for the login button */
     border: 2px solid #36aaf7;
     color: #fff;
@@ -70,7 +70,8 @@ header a:hover {
 }
 
 #header-buttons a.button:hover {
-    background-color: #36aaf7; /* Darker green on hover */
+    background-color: #36aaf7;
+    color:white;
 }
 
 #header-buttons span {
