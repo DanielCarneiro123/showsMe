@@ -16,9 +16,7 @@ use Illuminate\Auth\Access\AuthorizationException;
 class EventController extends Controller
 {
     public function view($id): View
-    {
-        $this->authorize('auth', Event::class);
-
+    { 
         $event = Event::findOrFail($id);
 
         return view('pages.event', compact('event'));
