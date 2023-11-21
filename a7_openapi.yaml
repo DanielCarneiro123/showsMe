@@ -383,7 +383,7 @@ paths:
       summary: 'R601: Deactivate or Activate Event'
       description: 'Deactivate an event. Access: ADM'
       tags:
-        - 'M06:  Site Administration and Static Pages'
+        - 'M06: Site Administration and Static Pages'
       parameters:
         - in: path
           name: event_id
