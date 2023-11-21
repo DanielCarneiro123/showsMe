@@ -222,6 +222,25 @@ paths:
       responses:
         '200':
           description: 'Ok. Show Event Details UI'
+    
+  /search-events:
+    get:
+      operationId: R203
+      summary: 'R203: Full Text Search'
+      description: 'Perform a full-text search on events based on name, description, tags, and location. Access: VST'
+      tags:
+        - 'M02: Event Discovery'
+      parameters:
+        - in: query
+          name: query
+          schema:
+            type: string
+          required: true
+          description: 'The search query'
+      responses:
+        '200':
+          description: 'Ok. Show Search Results UI'
+
 
   /purchase-tickets/{event_id}:
     post:
