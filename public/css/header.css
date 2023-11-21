@@ -2,33 +2,33 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px 40px; /* Adjust the padding as needed */
-    background-color: #1f1f1f; /* Set the background color for the header */
-    color: #fff; /* Set the text color for the header */
+    padding: 20px 40px; 
+    background-color: #1f1f1f;
+    color: #fff;
 }
 
 header a {
     text-decoration: none;
-    color: #fff; /* Set the text color for the anchor */
-    font-size: 1.5em; /* Adjust the font size as needed */
-    transition: transform 0.3s ease; /* Add a smooth transition effect on transform property */
+    color: #fff; 
+    font-size: 1.5em;
+    transition: transform 0.3s ease; 
 }
 
 #logo {
     text-decoration: none;
-    color: #fff; /* Set the text color for the logo */
-    font-size: 2.2em; /* Adjust the font size as needed */
-    font-weight: bold; /* Make the text bold */
-    display: inline-block; /* Ensures that the element is treated as a block, allowing for vertical centering */
+    color: #fff;
+    font-size: 2.2em;
+    font-weight: bold;
+    display: inline-block;
 }
 
 header a:hover {
-    transform: scale(0.9); /* Scale down the logo on hover */
+    transform: scale(0.9);
 }
 
 
 #logo > span {
-    color: #36aaf7; /* Set the text color for the logo */
+    color: #36aaf7;
 }
 #header-nav {
     display: flex;
@@ -36,7 +36,7 @@ header a:hover {
 }
 
 #header-nav a {
-    margin: 0px 15px; /* Add some spacing between nav links */
+    margin: 0px 15px;
 }
 
 #header-buttons {
@@ -50,11 +50,11 @@ header a:hover {
     padding: 8px 30px;
     text-decoration: none;
     border-radius: 15px;
-    margin-left: 1em; /* Add some spacing between buttons */
+    margin-left: 1em;
 }
 
 .login {
-    background-color: #36aaf7; /* Green color for the login button */
+    background-color: #36aaf7;
     border: 2px solid #36aaf7;
     color: #fff;
 }
@@ -75,5 +75,5 @@ header a:hover {
 }
 
 #header-buttons span {
-    margin-right: 10px; /* Add some spacing before the user's name */
+    margin-right: 10px;
 }

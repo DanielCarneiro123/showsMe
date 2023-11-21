@@ -9,14 +9,14 @@
 
 
 h1 {
-  font-size: 3em; /* Adjust the size as needed */
+  font-size: 3em;
   text-align: center;
-  padding: 50px; /* Adjust the padding as needed */
+  padding: 50px;
   color: black;
 }
 
 h1 span {
-  color: #36aaf7; /* Light blue color for the second word */
+  color: #36aaf7;
 }
 
 
@@ -40,17 +40,11 @@ h1 span {
 }
 
 
-/* My Events */
-
 .profile-pic {
   width: 3em;
-  /* Set the width to 47 pixels to make it a square */
   height: 3em;
-  /* Set the height to 47 pixels */
   border-radius: 50%;
-  /* Makes the image circular */
   overflow: hidden;
-  /* Hides the overflow if the image is not a perfect square */
   vertical-align: middle;
   margin-left: 10px;
 }
@@ -68,9 +62,7 @@ h1 span {
 .my-event-card {
   position: relative;
   display: flex;
-  /* Use flexbox to control the layout */
   flex-direction: column;
-  /* Stack child elements vertically */
   text-align: center;
   margin: 1rem;
   margin-top: 0;
@@ -102,9 +94,7 @@ h1 span {
   left: 0;
   width: 100%;
   color: white;
-  /* Optional: Set text color for readability */
   padding: 10px;
-  /* Optional: Add some padding to the details */
   box-sizing: border-box;
 }
 
@@ -145,14 +135,14 @@ h1 span {
 }
 
 .event-link, .event-link:visited {
-  color: #000; /* Set your desired color for both normal and visited states */
-  text-decoration: none; /* Remove underline */
+  color: #000;
+  text-decoration: none;
 }
 
 .event-card img {
   width: 50%;
   height: 100%;
-  border-radius: 20px 0 0 20px; /* Rounded corners only on the left side */
+  border-radius: 20px 0 0 20px;
 }
 
 .event-info {
@@ -161,7 +151,7 @@ h1 span {
   flex-direction: column;
   justify-content: center;
   padding: 0 20px;
-  box-sizing: border-box; /* Ensures padding is included in the width */
+  box-sizing: border-box;
 }
 
 .event-info a {
@@ -241,10 +231,8 @@ h1 span {
   position: absolute;
   left: 0;
   bottom: -30px;
-  /* Adjust the distance from the button as needed */
   width: 100%;
   border-bottom: 1px solid #5f5f74;
-  /* You can change the color and thickness as needed */
 }
 
 main {
@@ -267,8 +255,8 @@ footer {
 
 .footer-col {
   flex: 1;
-  padding: 0 30px; /* Add padding or adjust as needed */
-  box-sizing: border-box; /* Make sure padding is included in the width */
+  padding: 0 30px;
+  box-sizing: border-box;
 }
 
 footer img {
@@ -378,11 +366,11 @@ button {
   font-weight: bold;
   padding: 12px 20px;
   text-decoration: none;
-  background: linear-gradient(to bottom, #1279bd, #36aaf7); /* Gradient background */
+  background: linear-gradient(to bottom, #1279bd, #36aaf7);
   border-radius: 15px;
-  margin-left: 1em; /* Add some spacing between buttons */
+  margin-left: 1em; 
   color: #fff;
-  transition: transform 0.3s ease; /* Add a smooth transition effect on transform property */
+  transition: transform 0.3s ease; 
 }
 
 .a-button:hover,

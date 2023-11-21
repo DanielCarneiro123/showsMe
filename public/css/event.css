@@ -43,7 +43,7 @@
 
 
 .ticket-types {
-    margin-top: 3em; /* Adjust the margin as needed for separation */
+    margin-top: 3em;
     text-align: center;
 }
 
@@ -58,21 +58,21 @@ h2 span {
 .ticket-type {
     display: inline-block;
     padding: 3em;
-    width: 20%; /* Set the width of the card */
-    height: 30%; /* Set the height of the card */
+    width: 20%;
+    height: 30%;
     max-height: 30%;
-    margin: 10px; /* Adjust the margin between cards */
-    border: 3px solid #ddd; /* Border for the card */
+    margin: 10px;
+    border: 3px solid #ddd;
     border-radius: 10px;
     background-color: #ddd;
     overflow: hidden;
     cursor: pointer;
-    transition: all 0.3s ease; /* Add transition for a smooth effect */
+    transition: all 0.3s ease;
 }
 
 .ticket-type:hover {
-    border-color: #0000006b;; /* Change border color on hover */
-    transform: scale(1.05); /* Slightly scale up on hover */
+    border-color: #0000006b;
+    transform: scale(1.05);
 }
 
 
@@ -88,8 +88,8 @@ h2 span {
 
 #ticket-type p#ticket-type-price {
     position: absolute;
-    top: 10px; /* Adjust to place it at the top */
-    left: 10px; /* Adjust to place it at the left */
+    top: 10px;
+    left: 10px; 
     font-size: 1.5em;
     margin: 0;
 }
@@ -112,27 +112,27 @@ h2 span {
     padding: 12px 20px;
     text-decoration: none;
     border-radius: 15px;
-    margin-left: 1em; /* Add some spacing between buttons */
+    margin-left: 1em;
     color: #fff;
-    transition: transform 0.3s ease; /* Add a smooth transition effect on transform property */
+    transition: transform 0.3s ease;
 }
 
 #deactivate-button{
-    top: 20px; /* Adjust the top position */
-    right: 20px; /* Adjust the left position */
+    top: 20px;
+    right: 20px;
     position: absolute;
-    background: linear-gradient(to bottom, #bb0e08, #ee3c1c); /* Gradient background */
+    background: linear-gradient(to bottom, #bb0e08, #ee3c1c);
 }
 
 #activate-button{
-    top: 20px; /* Adjust the top position */
-    right: 20px; /* Adjust the left position */
+    top: 20px;
+    right: 20px;
     position: absolute;
-    background: linear-gradient(to bottom, #1279bd, #36aaf7); /* Gradient background */
+    background: linear-gradient(to bottom, #1279bd, #36aaf7);
 }
 
 #buy-button{
-    background: linear-gradient(to bottom, #1279bd, #36aaf7); /* Gradient background */
+    background: linear-gradient(to bottom, #1279bd, #36aaf7); 
 }
 
 .event-button i{
@@ -145,32 +145,28 @@ h2 span {
 }
 
 
-/* Styles for the quantity input */
 input[type="number"] {
-    width: 60px; /* Adjust the width as needed */
+    width: 60px;
     padding: 8px;
     border-radius: 5px;
     box-sizing: border-box;
     font-size: 1em;
     text-align: center;
-    margin-right: 5px; /* Add some spacing between the input and the next element */
+    margin-right: 5px; 
 }
 
-/* Optional: Hover and focus styles for better user interaction */
 input[type="number"]:hover,
 input[type="number"]:focus {
-    border-color: #36aaf7; /* Change border color on hover/focus */
+    border-color: #36aaf7; 
     outline: none;
 }
 
-/* Optional: Adjust appearance for WebKit browsers (like Chrome and Safari) */
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
 
-/* Optional: Style the input when it's invalid (e.g., quantity exceeds the max limit) */
 input[type="number"]:invalid {
-    border-color: #FF0000; /* Change border color for invalid state */
+    border-color: #FF0000;
 }

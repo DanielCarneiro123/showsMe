@@ -1,5 +1,5 @@
 .auth-section {
-    background: linear-gradient(to bottom, #073c5f, #36aaf7); /* Gradient background */
+    background: linear-gradient(to bottom, #073c5f, #36aaf7);
     padding: 10%;
 }
 
@@ -7,9 +7,9 @@
     background-color: white;
     border-radius: 10px;
     width: 33%;
-    padding: 3em 3em; /* Adjusted padding */
+    padding: 3em 3em;
     margin: auto;
-    color: rgb(0, 0, 0); /* Text color for better contrast */
+    color: rgb(0, 0, 0);
     box-shadow: 5px 0 40px rgba(0, 0, 0, 0.2); 
 }
 
@@ -24,7 +24,7 @@ h2 {
 .auth-form label {
     display: block;
     margin-bottom: 8px;
-    color: #000000; /* Dark blue color */
+    color: #000000;
     font-size: larger;
     font-weight:500;
 }
@@ -39,10 +39,10 @@ h2 {
     padding: 12px 15px;
     cursor: pointer;
     display: inline-block;
-    background: linear-gradient(to bottom, #1279bd, #36aaf7); /* Gradient background */
+    background: linear-gradient(to bottom, #1279bd, #36aaf7);
     color: #fff;
     margin-bottom: 10px;
-    transition: transform 0.3s ease; /* Add a smooth transition effect on transform property */
+    transition: transform 0.3s ease; 
 }
 
 
@@ -65,19 +65,19 @@ h2 {
     text-align: center;
     font-size: 16px;
     margin-top: 10px;
-    color: #000000; /* Adjusted to the blue color used in the design */
+    color: #000000; 
 }
 
 .auth-link {
     text-decoration: none;
-    color: #36aaf7; /* Adjusted to the blue color used in the design */
+    color: #36aaf7; 
     font-weight: bold;
     margin-left: 5px;
     margin-right: 5px;
 }
 
 .auth-link:hover {
-    text-decoration: underline; /* Underline on hover for better indication */
+    text-decoration: underline;
 }
 
 .input-group {

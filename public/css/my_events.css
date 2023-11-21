@@ -1,0 +1,12 @@
+#ticket-instance {
+    max-width: 600px;
+    margin: 8% auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    border: 2px solid rgb(233, 233, 233);
+}
+
+#ticket-instance p {
+    margin: 10px 0;
+}

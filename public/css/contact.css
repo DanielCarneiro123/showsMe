@@ -204,13 +204,11 @@
   .contact-message::placeholder,
   .contact-us-inputs input::placeholder {
     color: #878583;
-    /* Change this to your desired color */
   }
   
   .contact-message:focus,
   .contact-us-inputs input:focus {
     border-color: #316BFF;
-    /* Border color when textarea is focused */
     border-width: 2px;
   }
   
