@@ -1,21 +1,27 @@
 function addEventListeners() {
-  // Attach event listener to the parent table
-  document.getElementById('active_users_section').addEventListener('click', function(event) {
-    // Check if the clicked element is a deactivate button
-    if (event.target.classList.contains('deactivate-btn')) {
-      let userId = event.target.getAttribute('data-user-id');
-      deactivateUser(userId);
-    }
-  });
+  // Attach event listener to the parent table if it exists
+  let activeUsersSection = document.getElementById('active_users_section');
+  if (activeUsersSection) {
+    activeUsersSection.addEventListener('click', function(event) {
+      // Check if the clicked element is a deactivate button
+      if (event.target.classList.contains('deactivate-btn')) {
+        let userId = event.target.getAttribute('data-user-id');
+        deactivateUser(userId);
+      }
+    });
+  }
 
-  // Attach event listener to the parent table
-  document.getElementById('inactive_users_section').addEventListener('click', function(event) {
-    // Check if the clicked element is an activate button
-    if (event.target.classList.contains('activate-btn')) {
-      let userId = event.target.getAttribute('data-user-id');
-      activateUser(userId);
-    }
-  });
+  // Attach event listener to the parent table if it exists
+  let inactiveUsersSection = document.getElementById('inactive_users_section');
+  if (inactiveUsersSection) {
+    inactiveUsersSection.addEventListener('click', function(event) {
+      // Check if the clicked element is an activate button
+      if (event.target.classList.contains('activate-btn')) {
+        let userId = event.target.getAttribute('data-user-id');
+        activateUser(userId);
+      }
+    });
+  }
 }
   
   function encodeForAjax(data) {
@@ -24,7 +30,17 @@ function addEventListeners() {
       return encodeURIComponent(k) + '=' + encodeURIComponent(data[k])
     }).join('&');
   }
-  
+
+  function sendAjaxRequest(method, url, data, handler) {
+    let request = new XMLHttpRequest();
+
+    request.open(method, url, true);
+    request.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').content);
+    request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    request.addEventListener('load', handler);
+    request.send(encodeForAjax(data));
+  }
+
 
   function updateStockContent(formData, ticketTypeId) {
     document.getElementById('new_stock_' + ticketTypeId ).innerHTML = formData['new_stock_' + ticketTypeId];
@@ -76,17 +92,6 @@ function moveUserToActiveTable(userId) {
       console.error('Inactive user row not found:', userId);
   }
 }
-
-
-  function sendAjaxRequest(method, url, data, handler) {
-    let request = new XMLHttpRequest();
-
-    request.open(method, url, true);
-    request.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').content);
-    request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    request.addEventListener('load', handler);
-    request.send(encodeForAjax(data));
-  }
 
   function updateStock(ticketTypeId) {
     let newStock = document.getElementById('new_stock_' + ticketTypeId).value;

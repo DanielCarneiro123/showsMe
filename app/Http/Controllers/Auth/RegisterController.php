@@ -44,7 +44,7 @@ class RegisterController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            return redirect()->route('allevents')->withSuccess('You have successfully registered & logged in!');
+            return redirect()->route('all-events')->withSuccess('You have successfully registered & logged in!');
         }
 
         return back()->withErrors(['email' => 'Registration failed.'])->withInput();

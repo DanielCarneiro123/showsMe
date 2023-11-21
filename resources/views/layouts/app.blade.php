@@ -32,7 +32,7 @@
     <body>
         <main>
             <header>
-                <a href="{{ url('/allevents') }}" id="logo">show<span>s</span>me</a>
+                <a href="{{ url('/all-events') }}" id="logo">show<span>s</span>me</a>
                 <nav id='header-nav'>
                     
 
@@ -41,7 +41,7 @@
                         <a href="{{ route('my-tickets') }}">MyTickets</a> 
                         <a href="{{ route('profile') }}">Profile</a> 
                     @endauth
-                    <a href="{{ route('create-event-page') }}">Create Event</a> 
+                    <a href="{{ route('create-event') }}">Create Event</a> 
                     <a href="{{ route('faq') }}">FAQs</a> 
                     <a href="{{ route('about-us') }}">About Us</a> 
             

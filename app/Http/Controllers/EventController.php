@@ -28,18 +28,13 @@ class EventController extends Controller
     {
         $user = Auth::user();
 
-        //$this->authorize('auth', Event::class);
-
-        // Check if the user is an admin
         if ($user && $user->is_admin) {
-            // Admins can see all events
             $events = Event::paginate(8);
         } else {
-            // Regular users can see only public events
             $events = Event::where('private', false)->paginate(8);
         }
 
-        return view('pages.allevents', compact('events', 'user'));
+        return view('pages.all_events', compact('events', 'user'));
     }
 
     public function myEvents(): View
@@ -121,7 +116,7 @@ class EventController extends Controller
         $event->private = true;
         $event->save();
 
-        return redirect()->route('allevents')->with('success', 'Event deactivated successfully.');
+        return redirect()->route('all-events')->with('success', 'Event deactivated successfully.');
     }
 
     public function activateEvent($eventId)
@@ -132,7 +127,7 @@ class EventController extends Controller
         $event->private = false;
         $event->save();
 
-        return redirect()->route('allevents')->with('success', 'Event activated successfully.');
+        return redirect()->route('all-events')->with('success', 'Event activated successfully.');
     }
 
     public function createTicketType(Request $request, Event $event)

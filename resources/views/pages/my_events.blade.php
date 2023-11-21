@@ -19,6 +19,6 @@
     @endif
 
     <!-- Button to create a new event -->
-    <a href="{{ route('create-event-page') }}" class="btn btn-primary">Create Event</a>
+    <a href="{{ route('create-event') }}" class="btn btn-primary">Create Event</a>
 
 @endsection
