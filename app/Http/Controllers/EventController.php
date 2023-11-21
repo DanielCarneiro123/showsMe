@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use App\Models\TicketOrder;
 use App\Models\TicketInstance;
+use Illuminate\Auth\Access\AuthorizationException; 
 
 
 class EventController extends Controller
@@ -54,18 +55,16 @@ class EventController extends Controller
 
     public function createEvent(Request $request)
     {
-       
-$request->validate([
-    'name' => 'required|string|max:255',
-    'description' => 'nullable|string',
-    'location' => 'required|string',
-    'start_timestamp' => 'required|date',
-    'end_timestamp' => 'required|date|after:start_timestamp',
-    
-]);
+        $this->authorize('createEvent', Event::class);
 
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'location' => 'required|string',
+            'start_timestamp' => 'required|date',
+            'end_timestamp' => 'required|date|after:start_timestamp',
+        ]);
 
-        // Create a new event with the provided data
         $event = new Event();
         $event->name = $request->input('name');
         $event->description = $request->input('description');
@@ -74,10 +73,8 @@ $request->validate([
         $event->end_timestamp = $request->input('end_timestamp');
         $event->creator_id = Auth::user()->user_id; 
 
-        // Save the event
         $event->save();
 
-        // Redirect back to the My Events page or any other page
         return redirect('/my-events');
     }
 
@@ -100,7 +97,7 @@ $request->validate([
         $event = Event::findOrFail($id);
 
         // Verificar a autorização usando a política
-        $this->authorize('update', $event); //se não for o user_id quem criou o evento, a action nao é autrizada
+        $this->authorize('updateEvent', $event); //se não for o user_id quem criou o evento, a action nao é autrizada
     
         // Update the event with the provided data
         $event->name = $request->input('edit_name');
@@ -139,7 +136,8 @@ $request->validate([
     }
 
     public function createTicketType(Request $request, Event $event)
-{
+    {
+        $this->authorize('updateEvent', $event);
     $request->validate([
         'ticket_name' => 'required|string|max:255',
         'ticket_stock' => 'required|integer|min:0',
@@ -163,14 +161,12 @@ $request->validate([
     $ticketType->end_timestamp = $request->input('ticket_end_timestamp');
 
 
-    // Associate the TicketType with the current event
-    $ticketType->event()->associate($event);
+        $ticketType->event()->associate($event);
 
-    $ticketType->save();
+        $ticketType->save();
 
-    // You might want to redirect back to the event page or another page
-    return redirect('/view-event/'.$event->event_id);
-}
+        return response()->json(['message' => 'TicketType created successfully', 'ticketType' => $ticketType]);
+    }
 
 
     
@@ -183,41 +179,43 @@ $request->validate([
 
     public function purchaseTickets(Request $request, $eventId)
     {
-        
-        if (!Auth::check()) {
-            return redirect()->route('login')->with('error', 'You must be logged in to purchase tickets.');
-        }
+        try {
+            $event = Event::findOrFail($eventId);
 
-        $quantities = $request->input('quantity', []);
-        $quantity = $request->input('quantity');
+            $this->authorize('purchaseTickets', $event);
 
-        if (empty($quantities)) {
-            return redirect()->route('view-event', ['id' => $eventId])->with('error', 'Select at least one ticket type.');
-        }
+            $quantities = $request->input('quantity', []);
 
+            if (empty($quantities)) {
+                return redirect()->route('view-event', ['id' => $eventId])->with('error', 'Select at least one ticket type.');
+            }
 
-        $buyer = Auth::user();
+            $buyer = Auth::user();
 
-        $order = new TicketOrder();
-        $order->timestamp = now();
-        $order->promo_code = null;
-        $order->buyer_id = $buyer->user_id;
-        $order->save();
+            $order = new TicketOrder();
+            $order->timestamp = now();
+            $order->promo_code = null;
+            $order->buyer_id = $buyer->user_id;
+            $order->save();
 
-
-
-        foreach ($quantities as $ticketTypeId => $quantity) {
-            if ($quantity > 0) {
-                for ($i = 0; $i < $quantity; $i++) {
-                    $ticketInstance = new TicketInstance();
-                    $ticketInstance->ticket_type_id = $ticketTypeId;
-                    $ticketInstance->order_id = $order->order_id;
-                    $ticketInstance->save();
+            foreach ($quantities as $ticketTypeId => $quantity) {
+                if ($quantity > 0) {
+                    for ($i = 0; $i < $quantity; $i++) {
+                        $ticketInstance = new TicketInstance();
+                        $ticketInstance->ticket_type_id = $ticketTypeId;
+                        $ticketInstance->order_id = $order->order_id;
+                        $ticketInstance->save();
+                    }
                 }
             }
-        }
 
-        return redirect()->route('view-event', ['id' => $eventId])->with('success', 'Tickets purchased successfully.');
+            return redirect()->route('view-event', ['id' => $eventId])->with('success', 'Tickets purchased successfully.');
+        } 
+        
+        catch (AuthorizationException $e) 
+            {
+                return redirect()->route('login')->with('error', 'You must be logged in to purchase tickets.');
+            }
     }
 
     

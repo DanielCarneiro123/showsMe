@@ -35,4 +35,8 @@ class EventServiceProvider extends ServiceProvider
     {
         return false;
     }
+
+    protected $policies = [
+        'App\Models\Event' => 'App\Policies\EventPolicy',
+    ];    
 }

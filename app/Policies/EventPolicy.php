@@ -33,15 +33,21 @@ class EventPolicy
     /**
      * Determine whether the user can create models.
      */
-    public function create(User $user): bool
+    public function createEvent(User $user): bool
     {
-        //
+        return Auth::check();
     }
 
+    public function createTicketType(Event $event): bool
+    {
+        $user = Auth::user();
+        return $user->user_id === $event->organizer_id;
+    }
+    
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Event $event): bool
+    public function updateEvent(User $user, Event $event): bool
     {
         // Somente o criador do evento pode atualizá-lo
         return $user->user_id === $event->creator_id;
@@ -71,9 +77,9 @@ class EventPolicy
         //
     }
 
-    public function purchaseTickets(Request $request, $eventId): bool
+    public function purchaseTickets(User $user, Event $event): bool
     {
-        //
+        return Auth::check();
     }
 
 
