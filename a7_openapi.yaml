@@ -222,6 +222,8 @@ paths:
       responses:
         '200':
           description: 'Ok. Show Event Details UI'
+
+  /purchase-tickets/{event_id}:
     post:
       operationId: R301
       summary: 'R301: Purchase Tickets for Event'
@@ -247,6 +249,8 @@ paths:
       responses:
         '200':
           description: 'Ok. Show Ticket Purchase Confirmation UI'
+
+  /edit-event/{event_id}:
     post:
       operationId: R501
       summary: 'R501: Edit Details of Created Event'
@@ -258,7 +262,7 @@ paths:
           name: event_id
           schema:
             type: integer
-            required: true
+          required: true
       requestBody:
         required: true
         content:
@@ -288,6 +292,8 @@ paths:
       responses:
         '200':
           description: 'Ok. Show Event Details Edited UI'
+
+  /create-tickets/{event_id}:
     post:
       operationId: R502
       summary: 'R502: Create Tickets for Sale'
@@ -299,7 +305,7 @@ paths:
           name: event_id
           schema:
             type: integer
-            required: true
+          required: true
       requestBody:
         required: true
         content:
@@ -337,6 +343,8 @@ paths:
       responses:
         '200':
           description: 'Ok. Show Tickets Created UI'
+
+  /update-ticket-stock/{event_id}:
     post:
       operationId: R503
       summary: 'R503: Update Ticket Stock'
@@ -348,7 +356,7 @@ paths:
           name: event_id
           schema:
             type: integer
-            required: true
+          required: true
       requestBody:
         required: true
         content:
@@ -368,6 +376,8 @@ paths:
       responses:
         '200':
           description: 'Ok. Show Ticket Stock Updated UI'
+
+  /deactivate-event/{event_id}:
     post:
       operationId: R601
       summary: 'R601: Deactivate or Activate Event'
@@ -379,10 +389,12 @@ paths:
           name: event_id
           schema:
             type: integer
-            required: true
+          required: true
       responses:
         '200':
           description: 'Ok. Show Event Deactivated UI'
+...
+
   /my-events:
     get:
       operationId: R302
