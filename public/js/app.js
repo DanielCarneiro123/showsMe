@@ -254,6 +254,11 @@ function createTicketType(event_id) {
       return;
   }
 
+  if (ticketStartTimestamp.split('T')[0] === ticketEndTimestamp.split('T')[0] && ticketStartTimestamp.split('T')[1] >= ticketEndTimestamp.split('T')[1]) {
+    alert("A hora de início do ingresso deve ser anterior à hora de término no mesmo dia.");
+    return;
+  }
+
   let formData = {
       'ticket_name': ticketName,
       'ticket_stock': ticketStock,
