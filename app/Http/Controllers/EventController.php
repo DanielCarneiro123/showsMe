@@ -135,12 +135,6 @@ class EventController extends Controller
         'ticket_end_timestamp' => 'required|date|after:ticket_start_timestamp',
     ]);
 
-    $rules = [
-        // Defina suas regras de validação personalizadas aqui, se necessário.
-    ];
-
-    $request->validate($rules);
-
 
     $ticketType = new TicketType();
     $ticketType->name = $request->input('ticket_name');

@@ -192,9 +192,10 @@ function updateProfile() {
 
   console.log(formData);
 
-  updateProfilePageContent(formData);
 
   sendAjaxRequest('post', '../update-profile', formData);
+  
+  updateProfilePageContent(formData);
   
   //depois tenho de colocar uma mensagem a dizer que foi alterado
 

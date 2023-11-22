@@ -1,0 +1,30 @@
+
+
+#paginator{
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+}
+
+.pagination{
+  display: flex;
+  gap: 10px;
+}
+
+.previous{
+  display: flex;
+  grid-area: previous;
+  width: fit-content;
+}
+
+#indexes{
+  display: flex;
+  grid-area: indexes;
+  width: fit-content;
+}
+
+.next{
+  grid-area: next;
+  display: flex;
+  width: fit-content;
+}

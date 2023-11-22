@@ -11,24 +11,30 @@ use App\Models\User;
 
 class RegisterController extends Controller
 {
-    /**
-     * Display a registration form.
-     */
+
     public function showRegistrationForm(): View
     {
         return view('auth.register');
     }
 
-    /**
-     * Register a new user.
-     */
+
     public function register(Request $request)
     {
         $request->validate([
             'name' => 'required|string|max:250',
             'email' => 'required|email|max:250|unique:users',
-            'password' => 'required|min:8|confirmed',
-            'phone_number' => 'required|string|max:20|unique:users',
+            'password' => [
+                'required',
+                'string',
+                'min:8',
+            ],
+            'phone_number' => [
+                'required',
+                'string',
+                'regex:/^[0-9]{9}$/',
+            ],
+        ], [
+            'phone_number.regex' => 'O número de telefone deve conter exatamente 9 dígitos.',
         ]);
 
         User::create([
@@ -37,7 +43,7 @@ class RegisterController extends Controller
             'password' => Hash::make($request->password),
             'promotor_code' => NULL,
             'phone_number' => $request->phone_number,
-            'is_admin' => false, // Assuming default value is false
+            'is_admin' => false, 
         ]);
 
         $credentials = $request->only('email', 'password');

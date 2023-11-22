@@ -38,7 +38,7 @@
         <span class="text-danger">{{ $message }}</span>
     @enderror
     <br>
-        <button type="submit">Save Changes</button>
+        <button id="update-profile-button" onclick="updateProfile()">Save Changes</button>
     </br>
 </section>
 
