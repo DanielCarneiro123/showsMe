@@ -1,4 +1,3 @@
-
 openapi: 3.0.0
 
 info:
@@ -65,7 +64,7 @@ paths:
                 302Success:
                   description: 'Successful authentication. Redirect to home page'
                   value: '/all_events'
-                302Error:
+                302Failure:
                   description: 'Failed authentication. Redirect to login form.'
                   value: '/login'
 
@@ -87,6 +86,8 @@ paths:
                 302Success:
                   description: 'Successful logout. Redirect to login form.'
                   value: '/login'
+                
+
 
   /register:
     get:
@@ -142,7 +143,7 @@ paths:
                   description: 'Successful authentication. Redirect to home screen.'
                   value: '/all_events'
                 302Failure:
-                  description: 'Failed authentication. Redirect to login form.'
+                  description: 'Failed authentication. Redirect to register form.'
                   value: '/register'
 
   /profile:
@@ -266,8 +267,19 @@ paths:
                 - ticket_type
                 - quantity
       responses:
-        '200':
-          description: 'Ok. Show Ticket Purchase Confirmation UI'
+  '302':
+    description: 'Redirect after processing the ticket purchase.'
+    headers:
+      Location:
+        schema:
+          type: string
+        examples:
+          302Failure:
+            description: 'Failed ticket purchase. Redirect back.'
+          302Success:
+            description: 'Successful ticket purchase. Redirect back.'
+               
+
 
   /edit-event/{event_id}:
     post:
@@ -310,7 +322,21 @@ paths:
                 - end_timestamp
       responses:
         '200':
-          description: 'Ok. Show Event Details Edited UI'
+          description: 'OK. Event Edited with success'
+        '302':
+          description: 'Redirect if event edit'
+          headers:
+            Location:
+              schema:
+                type: string
+              example:
+                302Success:
+                  description: 'Event Edited with success. Redirect back.'
+                302Failure:
+                  description: 'Failure editing event. Redirect back.'
+
+
+
 
   /create-tickets/{event_id}:
     post:
@@ -362,6 +388,17 @@ paths:
       responses:
         '200':
           description: 'Ok. Show Tickets Created UI'
+        '302':
+          description: 'Redirect after creating ticket.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Successful ticket created. Redirect back.'
+                302Failure:
+                  description: 'Ticket created failed. Redirect back.'
 
   /update-ticket-stock/{event_id}:
     post:
@@ -395,6 +432,17 @@ paths:
       responses:
         '200':
           description: 'Ok. Show Ticket Stock Updated UI'
+        '302':
+          description: 'Redirect after updating stock.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Successful stock updated. Redirect back.'
+                302Failure:
+                  description: 'Ticket created failed. Redirect back.'
 
   /deactivate-event/{event_id}:
     post:
@@ -508,5 +556,3 @@ paths:
       responses:
         '200':
           description: 'Ok. Show FAQ UI'
-
-
