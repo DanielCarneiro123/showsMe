@@ -22,6 +22,7 @@
         <link href="{{ asset('css/header.css') }}" rel="stylesheet">
         <link href="{{ asset('css/my_ticket.css') }}" rel="stylesheet">
         <link href="{{ asset('css/create_event.css') }}" rel="stylesheet">
+        <link href="{{ asset('../css/pagination.css') }}" rel="stylesheet">
         <link rel="icon" type="image/png" href="{{ asset('images/logo1.png') }}">
         <script type="text/javascript">
             // Fix for Firefox autofocus CSS bug
