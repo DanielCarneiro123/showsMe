@@ -459,7 +459,18 @@ paths:
           required: true
       responses:
         '200':
-          description: 'Ok. Show Event Deactivated UI'
+          description: 'Ok. Show Event UI'
+        '302':
+          description: 'Redirect after Activating/Deactivating Event.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Successful event activated/deactivated. Redirect back.'
+                302Failure:
+                  description: 'Event activated/deactivated failed. Redirect back.'
 
   /my-events:
     get:
@@ -534,6 +545,18 @@ paths:
       responses:
         '200':
           description: 'Ok. Show Users Deactivated or Activated UI'
+        '302':
+          description: 'Redirect after Activating/Deactivating User.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Successful user activated/deactivated. Redirect back.'
+                302Failure:
+                  description: 'User activated/deactivated failed. Redirect back.'
+        
 
   /about-us:
     get:
