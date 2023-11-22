@@ -1,6 +1,6 @@
-DROP SCHEMA IF EXISTS showsme CASCADE;
-CREATE SCHEMA IF NOT EXISTS showsme;
-SET search_path TO showsme;
+DROP SCHEMA IF EXISTS lbaw23105 CASCADE;
+CREATE SCHEMA IF NOT EXISTS lbaw23105;
+SET search_path TO lbaw23105;
 
 
 -- Drop Tables If They Exist
