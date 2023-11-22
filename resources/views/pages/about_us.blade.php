@@ -3,8 +3,10 @@
 @extends('layouts.app')  
 
 @section('content')
-    <h1>About Us</h1>
-    <p>Add your "About Us" content here.</p>
-    <h1>Contact Us</h1>
-    <p> To Be Done </p>
+    <section id="about-us">
+        <h2>About <span>Us</span></h2>
+        <p>Add your "About Us" content here.</p>
+        <h2>Contact <span>Us</span></h2>
+        <p>To Be Done</p>
+</seciton>
 @endsection

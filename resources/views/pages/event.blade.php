@@ -3,6 +3,23 @@
 @section('content')
 
     <section class="event-thumbnail">
+        @if(auth()->user() && auth()->user()->is_admin)
+            @if ($event->private)
+                <form method="POST" action="{{ url('/activate-event/'.$event->event_id) }}">
+                    @csrf
+                    <button class="event-button" id="activate-button" type="submit">
+                        <i class="fa-solid fa-circle-check"></i> Activate Event
+                    </button>
+                </form>
+            @else
+                <form method="POST" action="{{ url('/deactivate-event/'.$event->event_id) }}">
+                    @csrf
+                    <button class="event-button" id="deactivate-button" type="submit">
+                        <i class="fa-solid fa-ban"></i> Deactivate Event
+                    </button>
+                </form>
+            @endif
+        @endif
         <img src="{{ asset('../media/event_image.jpg') }}" alt="Event Image">
         <div class="text">
             <h1 id ="name" >{{ $event->name }}</h1>
@@ -18,6 +35,7 @@
 
 
  <!-- Display TicketTypes -->
+ <section class="ticket-types">
 <h2>Ticket <span>Types</span></h2>
 <form method="POST" action="{{ url('/purchase-tickets/'.$event->event_id) }}">
     @csrf
@@ -46,10 +64,14 @@
         </article>
     @endforeach
     </div>
-
+    <br>
     <!-- Adicione um botão geral para comprar -->
-    <button type="submit" class="btn btn-success">Buy Tickets</button>
+    <button type="submit" class="btn btn-success event-button"  id="buy-button">  <!-- OR class="event-button" ? -->
+        <i class="fa-solid fa-credit-card"></i>Buy Tickets
+    </button>
 </form>
+</section>
+
 
 
 

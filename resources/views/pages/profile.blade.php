@@ -3,6 +3,7 @@
 @extends('layouts.app')
 
 @section('content')
+<section id="profile">
     <h1>Profile</h1>
 
     <p id="user_email">Email: {{ $user->email }}</p>
@@ -10,7 +11,7 @@
     <p id="user_promotor_code">Promotor Code: {{ $user->promotor_code }}</p>
     <p id="user_phone_number">Phone Number: {{ $user->phone_number }}</p>
 
-<article>
+<section>
     @csrf
 
     <label for="name">Name:</label>
@@ -36,9 +37,10 @@
     @error('phone_number')
         <span class="text-danger">{{ $message }}</span>
     @enderror
-
-    <button id="update-profile-button" onclick="updateProfile()">Save Changes</button>
-</article>
+    <br>
+        <button type="submit">Save Changes</button>
+    </br>
+</section>
 
 
 @endsection
