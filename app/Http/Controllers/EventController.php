@@ -115,19 +115,19 @@ class EventController extends Controller
         // Update the 'private' field to deactivate the event
         $event->private = true;
         $event->save();
-
-        return redirect()->back()->with('success', 'Event deactivated successfully.');
+        return response()->json(['message' => 'deactivated successfully']);
+       // return redirect()->back()->with('success', 'Event deactivated successfully.');
     }
 
-    public function activateEvent($eventId)
+    public function activateEvent(Request $request, $eventId)
     {
         $event = Event::findOrFail($eventId);
 
         // Update the 'private' field to activate the event
         $event->private = false;
         $event->save();
-
-        return redirect()->back()->with('success', 'Event activated successfully.');
+        return response()->json(['message' => 'activated successfully']);
+//        return redirect()->back()->with('success', 'Event activated successfully.');
     }
 
     public function createTicketType(Request $request, Event $event)
