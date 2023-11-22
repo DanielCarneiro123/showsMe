@@ -217,3 +217,38 @@ function createTicketType(event_id) {
 
 
 addEventListeners();
+
+
+
+
+
+const activate = document.querySelector('#activate-button');
+
+if (activate) {
+  activate.addEventListener('click', function(){
+    const eventId = activate.getAttribute('data-id');
+    if (activate.textContent == 'Activate Event') {
+      sendAjaxRequest('post', '/activate-event/' + eventId, {}, eventHandler)
+     
+    } else {
+     sendAjaxRequest('post', '/deactivate-event/' + eventId, {}, event2Handler)
+   }
+  })
+}
+
+
+function eventHandler(){
+  if (this.status == 200){
+    console.log('Ativado');
+    activate.textContent = 'Deactivate Event'
+    activate.classList.remove('active')
+  }
+}
+
+function event2Handler(){
+  if (this.status == 200){
+    console.log('Desativado');
+    activate.textContent = 'Activate Event'
+    activate.classList.add('active')
+  }
+}

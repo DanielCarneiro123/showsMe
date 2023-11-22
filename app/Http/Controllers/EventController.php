@@ -12,6 +12,7 @@ use App\Models\TicketOrder;
 use App\Models\TicketInstance;
 use Illuminate\Auth\Access\AuthorizationException; 
 
+use Illuminate\Support\Facades\DB;
 
 class EventController extends Controller
 {
@@ -106,18 +107,18 @@ class EventController extends Controller
 
         $event->private = true;
         $event->save();
-
-        return redirect()->route('all-events')->with('success', 'Event deactivated successfully.');
+        return response()->json(['message' => 'deactivated successfully']);
+       // return redirect()->back()->with('success', 'Event deactivated successfully.');
     }
 
-    public function activateEvent($eventId)
+    public function activateEvent(Request $request, $eventId)
     {
         $event = Event::findOrFail($eventId);
 
         $event->private = false;
         $event->save();
-
-        return redirect()->route('all-events')->with('success', 'Event activated successfully.');
+        return response()->json(['message' => 'activated successfully']);
+//        return redirect()->back()->with('success', 'Event activated successfully.');
     }
 
     public function createTicketType(Request $request, Event $event)
@@ -204,6 +205,17 @@ class EventController extends Controller
                 return redirect()->route('login')->with('error', 'You must be logged in to purchase tickets.');
             }
     }
+    
+    public function searchEvents(Request $request)
+{
+    $query = $request->input('query');
+
+    $events = Event::whereRaw('tsvectors @@ plainto_tsquery(?)', [$query])
+        ->orderByRaw('ts_rank(tsvectors, plainto_tsquery(?)) DESC', [$query])
+        ->paginate(10);
+
+    return view('pages.all_events', compact('events'));
+}
 
     
 

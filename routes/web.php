@@ -36,7 +36,7 @@ Route::controller(EventController::class)->group(function () {
     Route::post('/purchase-tickets/{event_id}', [EventController::class, 'purchaseTickets'])->name('purchase-tickets');
     Route::get('/create-event', [EventController::class, 'showCreateEvent'])->name('create-event');
     Route::post('/create-ticket-type/{event}', 'createTicketType')->name('create-ticket-type');
-
+    Route::get('/search-events', [EventController::class, 'searchEvents'])->name('search-events');
     Route::post('/deactivate-event/{eventId}', 'deactivateEvent')->name('deactivate-event');
     Route::post('/activate-event/{eventId}', 'activateEvent')->name('activate-event');
 });
