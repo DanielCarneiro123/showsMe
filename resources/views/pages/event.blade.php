@@ -103,7 +103,7 @@
         </section>
         
         <h2>Create TicketType</h2>
-        <article>
+        <article class="ticket-type">
             @csrf
 
             <label for="ticket_name">Ticket Name:</label>

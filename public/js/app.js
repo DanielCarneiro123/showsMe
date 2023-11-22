@@ -226,22 +226,50 @@ function updateTicketPageContent(formData) {
 }
 
 function createTicketType(event_id) {
+  let ticketName = document.getElementById('ticket_name').value;
+  let ticketStock = document.getElementById('ticket_stock').value;
+  let ticketPersonLimit = document.getElementById('ticket_person_limit').value;
+  let ticketPrice = document.getElementById('ticket_price').value || 0;
+  let ticketStartTimestamp = document.getElementById('ticket_start_timestamp').value;
+  let ticketEndTimestamp = document.getElementById('ticket_end_timestamp').value;
+
+  if (!ticketName || !ticketStock || !ticketPersonLimit || !ticketStartTimestamp || !ticketEndTimestamp) {
+      alert("Todos os campos são obrigatórios.");
+      return;
+  }
+
+  if (isNaN(ticketPrice)) {
+      alert("O preço do ingresso deve ser um número.");
+      return;
+  }
+
+  let currentDate = new Date().toISOString().split('T')[0];
+  if (ticketStartTimestamp < currentDate) {
+      alert("A data de início do ingresso deve ser igual ou superior à data atual.");
+      return;
+  }
+
+  if (ticketEndTimestamp <= currentDate) {
+      alert("A data de término do ingresso deve ser superior à data atual.");
+      return;
+  }
 
   let formData = {
-    'ticket_name': document.getElementById('ticket_name').value,
-    'ticket_stock': document.getElementById('ticket_stock').value,
-    'ticket_description': document.getElementById('ticket_description').value,
-    'ticket_person_limit': document.getElementById('ticket_person_limit').value,
-    'ticket_price': document.getElementById('ticket_price').value,
-    'ticket_start_timestamp': document.getElementById('ticket_start_timestamp').value, 
-    'ticket_end_timestamp': document.getElementById('ticket_end_timestamp').value, 
+      'ticket_name': ticketName,
+      'ticket_stock': ticketStock,
+      'ticket_description': document.getElementById('ticket_description').value,
+      'ticket_person_limit': ticketPersonLimit,
+      'ticket_price': ticketPrice,
+      'ticket_start_timestamp': ticketStartTimestamp,
+      'ticket_end_timestamp': ticketEndTimestamp,
   };
-
-  updateTicketPageContent(formData);
 
   sendAjaxRequest('post', `../create-ticket-type/${event_id}`, formData);
 
+  updateTicketPageContent(formData);
 }
+
+
 
 
 addEventListeners();

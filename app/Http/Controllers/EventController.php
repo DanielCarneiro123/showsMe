@@ -122,34 +122,34 @@ class EventController extends Controller
     }
 
     public function createTicketType(Request $request, Event $event)
-{
-    $this->authorize('updateEvent', $event);
+    {
+        $this->authorize('updateEvent', $event);
 
-    $request->validate([
-        'ticket_name' => 'required|string|max:255',
-        'ticket_stock' => 'required|integer|min:0',
-        'ticket_description' => 'nullable|string',
-        'ticket_person_limit' => 'required|integer|min:0',
-        'ticket_price' => 'required|numeric|min:0',
-        'ticket_start_timestamp' => 'required|date',
-        'ticket_end_timestamp' => 'required|date|after:ticket_start_timestamp',
-    ]);
+        $request->validate([
+            'ticket_name' => 'required|string|max:255',
+            'ticket_stock' => 'required|integer|min:0',
+            'ticket_description' => 'nullable|string',
+            'ticket_person_limit' => 'required|integer|min:0',
+            'ticket_price' => 'required|numeric|min:0',
+            'ticket_start_timestamp' => 'required|date',
+            'ticket_end_timestamp' => 'required|date|after:ticket_start_timestamp',
+        ]);
 
 
-    $ticketType = new TicketType();
-    $ticketType->name = $request->input('ticket_name');
-    $ticketType->stock = $request->input('ticket_stock');
-    $ticketType->description = $request->input('ticket_description');
-    $ticketType->person_buying_limit = $request->input('ticket_person_limit');
-    $ticketType->price = $request->input('ticket_price');
-    $ticketType->start_timestamp = $request->input('ticket_start_timestamp');
-    $ticketType->end_timestamp = $request->input('ticket_end_timestamp');
+        $ticketType = new TicketType();
+        $ticketType->name = $request->input('ticket_name');
+        $ticketType->stock = $request->input('ticket_stock');
+        $ticketType->description = $request->input('ticket_description');
+        $ticketType->person_buying_limit = $request->input('ticket_person_limit');
+        $ticketType->price = $request->input('ticket_price');
+        $ticketType->start_timestamp = $request->input('ticket_start_timestamp');
+        $ticketType->end_timestamp = $request->input('ticket_end_timestamp');
 
-    $ticketType->event()->associate($event);
-    $ticketType->save();
+        $ticketType->event()->associate($event);
+        $ticketType->save();
 
-    return response()->json(['message' => 'TicketType created successfully', 'ticketType' => $ticketType]);
-}
+        return response()->json(['message' => 'TicketType created successfully', 'ticketType' => $ticketType]);
+    }
 
 
 
