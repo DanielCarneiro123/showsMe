@@ -3,8 +3,8 @@ header {
     justify-content: space-between;
     align-items: center;
     padding: 20px 40px; 
-    background-color: #1f1f1f;
-    color: #fff;
+    background-color: var(--dark-gray);
+    color: var(--gray);
 }
 
 header a {
@@ -24,11 +24,12 @@ header a {
 
 header a:hover {
     transform: scale(0.9);
+    color: var(--light-blue);
 }
 
 
 #logo > span {
-    color: #36aaf7;
+    color: var(--light-blue);
 }
 #header-nav {
     display: flex;
@@ -54,14 +55,14 @@ header a:hover {
 }
 
 .login {
-    background-color: #36aaf7;
-    border: 2px solid #36aaf7;
+    background-color: var(--light-blue);
+    border: 2px solid var(--light-blue);
     color: #fff;
 }
 
 #register {
     background-color: rgba(0, 0, 0, 0);
-    border: 2px solid #36aaf7;
+    border: 2px solid var(--light-blue);
     color: #36aaf7;
 }
 
@@ -70,7 +71,7 @@ header a:hover {
 }
 
 #header-buttons a.button:hover {
-    background-color: #36aaf7;
+    background-color: var(--light-blue);
     color:white;
 }
 
