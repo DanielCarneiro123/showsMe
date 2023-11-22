@@ -1,7 +1,4 @@
 .faqs-grid {
-    grid-row-gap: 0px;
-    grid-template-columns: 1fr;
-    margin-top: 60px;
     grid-column-gap: 29px;
     grid-template-rows: auto;
     display: grid;
@@ -19,7 +16,7 @@
     border: 2px solid rgb(233, 233, 233);
     border-radius: 16px;
     background-color: #fff;
-    transition: transform 0.5s ease;
+    transition: transform 0.5s ease, box-shadow 0.5s ease;
     text-align: left;
     cursor: pointer;
 }
@@ -27,12 +24,14 @@
 .faq-title {
     display: flex;
     align-items: center;
-    padding: 31px 32px 36px;
+    padding: 31px 32px 10px;
 }
 
 .faq-title i {
     margin-right: 10px; 
+    font-size: 1.2em;
 }
+
 
 
 .faq-question {
@@ -44,34 +43,15 @@
     font-family: 'Plus Jakarta Sans', sans-serif;
     text-align: left;
     box-sizing: border-box;
-    transition: color 0.5s ease;
 }
 
-.faq-answer {
-    padding: 0 32px 0;
-    display: block;
-    opacity: 1;
-    width: 392.6px;
-    max-width: 100%;
-    min-width: 100%;
-    transition: max-height 0.5s;
-    max-height: 0px;
-    overflow: hidden;
+.faq-dropdown p {
+    margin: 1em;
 }
 
-.faq-answer p {
-    margin-bottom: 30px;
-    padding-left: 35px;
-    margin-top: 0;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    color: #5e5f79;
-    font-size: 18px;
-    line-height: 1.667em;
-    font-weight: 400;
-    text-align: left;
-}
 
 .faq-dropdown:hover {
-    transform: scale(0.95);
+    transform: scale(1.15);
     border: 2px solid rgb(201, 201, 201);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
 }
