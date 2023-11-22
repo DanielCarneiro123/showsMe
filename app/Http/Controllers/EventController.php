@@ -116,7 +116,7 @@ class EventController extends Controller
         $event->private = true;
         $event->save();
 
-        return redirect()->route('all-events')->with('success', 'Event deactivated successfully.');
+        return redirect()->back()->with('success', 'Event deactivated successfully.');
     }
 
     public function activateEvent($eventId)
@@ -127,7 +127,7 @@ class EventController extends Controller
         $event->private = false;
         $event->save();
 
-        return redirect()->route('all-events')->with('success', 'Event activated successfully.');
+        return redirect()->back()->with('success', 'Event activated successfully.');
     }
 
     public function createTicketType(Request $request, Event $event)
