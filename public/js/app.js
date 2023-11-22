@@ -41,7 +41,34 @@ function addEventListeners() {
   function updateStockContent(formData, ticketTypeId) {
     document.getElementById('new_stock_' + ticketTypeId ).innerHTML = formData['new_stock_' + ticketTypeId];
     document.getElementById('stock_display_' + ticketTypeId ).innerHTML = 'Stock: ' + formData['new_stock_' + ticketTypeId];
+    let newStock = document.getElementById('new_stock_' + ticketTypeId).value;
+    if (newStock == 0){
+      const label = document.getElementById('label' + ticketTypeId);
+      const input = document.getElementById('input' + ticketTypeId);
+
+      label.style.display = 'none';
+      input.style.display = 'none';
+    }
+    else {
+      
+      const label = document.getElementById('label' + ticketTypeId);
+      const input = document.getElementById('input' + ticketTypeId);
+      if (label){
+        label.style.display = 'flex';
+        input.style.display = 'flex';
+      } else {
+        const container = document.querySelector('#ticket-type-'+ticketTypeId);
+        const max = container.getAttribute('data-max');
+        console.log(container.innerHTML);
+        let original = container.innerHTML;
+        const update = original + ` <label class="quant" id ="label${ticketTypeId}" for="quantity_${ticketTypeId}">Quantity:</label>
+        <input class="quant" id ="input${ticketTypeId}" type="number" id="quantity_${ticketTypeId}" name="quantity[${ticketTypeId}]" min="0" max="${max}">
+        `;
+        container.innerHTML = update;
+      }
+   
   }
+}
 
   function moveUserToInactiveTable(userId) {
     let activeUserRow = document.getElementById('active_user_row_' + userId);

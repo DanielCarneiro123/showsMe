@@ -3,7 +3,6 @@
 @extends('layouts.app')  
 
 @section('content')
-    <!-- Add links before All Events -->
     
 
     <h1>Featured <span>Events</span></h1>
@@ -21,7 +20,6 @@
             <div class="event-info">
                 <h3>{{ $event->name }}</h3>
                 <p>{{ $event->description }}</p>
-                <!-- Add more fields as needed -->
             </div>
         </article>
     </a>
