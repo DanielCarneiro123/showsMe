@@ -1,9 +1,7 @@
 function addEventListeners() {
-  // Attach event listener to the parent table if it exists
   let activeUsersSection = document.getElementById('active_users_section');
   if (activeUsersSection) {
     activeUsersSection.addEventListener('click', function(event) {
-      // Check if the clicked element is a deactivate button
       if (event.target.classList.contains('deactivate-btn')) {
         let userId = event.target.getAttribute('data-user-id');
         deactivateUser(userId);
@@ -11,11 +9,9 @@ function addEventListeners() {
     });
   }
 
-  // Attach event listener to the parent table if it exists
   let inactiveUsersSection = document.getElementById('inactive_users_section');
   if (inactiveUsersSection) {
     inactiveUsersSection.addEventListener('click', function(event) {
-      // Check if the clicked element is an activate button
       if (event.target.classList.contains('activate-btn')) {
         let userId = event.target.getAttribute('data-user-id');
         activateUser(userId);
@@ -145,7 +141,6 @@ function activateUser(userId) {
           'edit_end_timestamp': document.getElementById('edit_end_timestamp').value
       };
 
-      //document.getElementById('location').innerHTML = 'Location: ' + formData.edit_location;
       updateEventPageContent(formData);
 
       sendAjaxRequest('post', '../update-event/' + eventId, formData);
@@ -179,10 +174,6 @@ function updateProfile() {
 }
 
 function updateTicketPageContent(formData) {
-  // Lógica para atualizar a exibição dos tipos de bilhetes
-
-  // Aqui você pode adicionar lógica para atualizar a interface do usuário com os novos dados de formData
-  // Por exemplo, você pode adicionar o novo tipo de bilhete à lista existente
 
   let ticketTypesContainer = document.getElementById('ticket-types-container');
   let newTicketType = document.createElement('article');
@@ -217,7 +208,6 @@ function createTicketType(event_id) {
     'ticket_start_timestamp': document.getElementById('ticket_start_timestamp').value, 
     'ticket_end_timestamp': document.getElementById('ticket_end_timestamp').value, 
   };
-  // Adicione aqui a lógica para pegar os dados dos campos do formulário, se necessário
 
   updateTicketPageContent(formData);
 

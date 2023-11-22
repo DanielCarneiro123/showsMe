@@ -73,7 +73,6 @@ class EventController extends Controller
 
     public function updateEvent(Request $request, $id)
     {
-        // Validate the form data
         $request->validate([
             'edit_name' => 'required|string|max:255',
             'edit_description' => 'nullable|string',
@@ -86,23 +85,18 @@ class EventController extends Controller
          
         ]);
     
-        // Find the event by ID
         $event = Event::findOrFail($id);
 
-        // Verificar a autorização usando a política
-        $this->authorize('updateEvent', $event); //se não for o user_id quem criou o evento, a action nao é autrizada
+        $this->authorize('updateEvent', $event); 
     
-        // Update the event with the provided data
         $event->name = $request->input('edit_name');
         $event->description = $request->input('edit_description');
         $event->location = $request->input('edit_location');
         $event->start_timestamp = $request->input('edit_start_timestamp');
         $event->end_timestamp = $request->input('edit_end_timestamp');
     
-        // Save the updated event
         $event->save();
     
-        // Redirect back to the event page or any other page
         return redirect()->route('view-event', ['id' => $id]);
     }
 
@@ -110,7 +104,6 @@ class EventController extends Controller
     {
         $event = Event::findOrFail($eventId);
 
-        // Update the 'private' field to deactivate the event
         $event->private = true;
         $event->save();
 
@@ -121,7 +114,6 @@ class EventController extends Controller
     {
         $event = Event::findOrFail($eventId);
 
-        // Update the 'private' field to activate the event
         $event->private = false;
         $event->save();
 
@@ -178,8 +170,10 @@ class EventController extends Controller
             $this->authorize('purchaseTickets', $event);
 
             $quantities = $request->input('quantity', []);
-
-            if (empty($quantities)) {
+            
+            if (empty(array_filter($quantities, function($quantity) {
+                return $quantity > 0;
+            }))) {
                 return redirect()->route('view-event', ['id' => $eventId])->with('error', 'Select at least one ticket type.');
             }
 
@@ -202,7 +196,7 @@ class EventController extends Controller
                 }
             }
 
-            return redirect()->route('view-event', ['id' => $eventId])->with('success', 'Tickets purchased successfully.');
+            return redirect()->route('my-tickets')->with('success', 'Tickets purchased successfully.');
         } 
         
         catch (AuthorizationException $e) 

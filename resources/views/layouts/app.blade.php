@@ -61,6 +61,17 @@
                     @endif
                 </section>
             </header>
+            @if(session('error'))
+            <div class="alert alert-danger" style="color: red;">
+                    {{ session('error') }}
+                </div>
+            @endif
+
+            @if(session('success'))
+                <div class="alert alert-success" style="color: green;">
+                    {{ session('success') }}
+                </div>
+            @endif
             <section id="content">
                 @yield('content')
             </section>
