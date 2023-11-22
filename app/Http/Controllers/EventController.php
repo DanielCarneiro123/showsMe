@@ -134,7 +134,7 @@ class EventController extends Controller
         
     ]);
 
-    $request->validate($rules);
+    //$request->validate($rules);
 
     $ticketType = new TicketType();
     $ticketType->name = $request->input('ticket_name');

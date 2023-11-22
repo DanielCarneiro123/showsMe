@@ -23,40 +23,40 @@ class UserController extends Controller
    // UserController.php
 
    public function updateProfile(Request $request)
-   {
-           //$this->authorize('updateProfile', Auth::user());
-   
+{
+    $user = Auth::user();
+
     $request->validate([
-        'email' => [
+        'edit_email' => [
             'required',
             'email',
-            Rule::unique('users', 'email')->ignore($user->user_id, 'user_id'),
-
-
+            Rule::unique('users', 'email')->ignore($user->user_id, 'user_id')
         ],
-        'name' => 'required|string|max:255',
-        'promotor_code' => 'nullable|string|max:255',
-        'phone_number' => [
+        'edit_name' => 'required|string|max:255',
+        'edit_promotor_code' => 'nullable|string|max:255',
+        'edit_phone_number' => [
             'required',
             'string',
             'max:20',
-            'regex:/^[0-9]+$/',
+            'regex:/^[0-9]+$/'
         ],
-    ], [
-        'email.unique' => 'The email address is already in use.',
+], 
+    ['email.unique' => 'The email address is already in use.',
         'phone_number.numeric' => 'The phone number must be a number.',
-        'phone_number.regex' => 'The phone number must only contain numbers.',
+        'phone_number.regex' => 'The phone number must only contain numbers.']);
+
+    // Usar o próprio modelo User e chamar o método update
+    $user->update([
+        'email' => $request->input('edit_email'),
+        'name' => $request->input('edit_name'),
+        'promotor_code' => $request->input('edit_promotor_code'),
+        'phone_number' => $request->input('edit_phone_number'),
     ]);
 
-           Auth::user()->update([
-            'email' => $request->input('edit_email'),
-            'name' => $request->input('edit_name'),
-            'promotor_code' => $request->input('edit_promotor_code'),
-            'phone_number' => $request->input('edit_phone_number'),
-        ]);
+    $user->save();
 
-   
-           return response()->json(['message' => 'Perfil atualizado com sucesso']);
-   }
+    return response()->json(['message' => 'Perfil atualizado com sucesso']);
+}
+
 
 }

@@ -36,7 +36,7 @@
             <label for="phone">Phone Number</label>
             <div class="icon-input">
                 <i class="fas fa-phone"></i>
-                <input id="phone" type="text" placeholder="Type your phone number" name="phone_number" value="{{ old('phone_number') }}" required>
+                <input id="phone" type="tel" placeholder="Type your phone number" name="phone_number" value="{{ old('phone_number') }}" required patter="[0-9]{9}">
             </div>
             @if ($errors->has('phone'))
                 <span class="error">
