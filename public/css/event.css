@@ -105,3 +105,7 @@
     margin: 0;
     font-size: 0.8em;
 }
+
+.active {
+    background-color: aqua;
+}

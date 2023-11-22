@@ -56,17 +56,7 @@
 
 
     @if(auth()->user() && auth()->user()->is_admin)
-        @if ($event->private)
-            <form method="POST" action="{{ url('/activate-event/'.$event->event_id) }}">
-                @csrf
-                <button type="submit" class="btn btn-success">Activate Event</button>
-            </form>
-        @else
-            <form method="POST" action="{{ url('/deactivate-event/'.$event->event_id) }}">
-                @csrf
-                <button type="submit" class="btn btn-danger">Deactivate Event</button>
-            </form>
-        @endif
+        <button class="btn btn-success {{ $event->private ? 'active' : '' }}" id="activate-button" data-id="{{ $event->event_id }}">{{ $event->private ? 'Activate Event' : 'Deactivate Event' }}</button>
     @endif
 
     <!-- Edit Event form (displayed only for the event creator) -->
