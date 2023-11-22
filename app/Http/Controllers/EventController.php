@@ -12,6 +12,7 @@ use App\Models\TicketOrder;
 use App\Models\TicketInstance;
 use Illuminate\Auth\Access\AuthorizationException; 
 
+use Illuminate\Support\Facades\DB;
 
 class EventController extends Controller
 {
@@ -204,6 +205,17 @@ class EventController extends Controller
                 return redirect()->route('login')->with('error', 'You must be logged in to purchase tickets.');
             }
     }
+    
+    public function searchEvents(Request $request)
+{
+    $query = $request->input('query');
+
+    $events = Event::whereRaw('tsvectors @@ plainto_tsquery(?)', [$query])
+        ->orderByRaw('ts_rank(tsvectors, plainto_tsquery(?)) DESC', [$query])
+        ->paginate(10);
+
+    return view('pages.allevents', compact('events'));
+}
 
     
 
