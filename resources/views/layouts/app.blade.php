@@ -30,11 +30,13 @@
         
         <script type="text/javascript" src={{ url('js/app.js') }} defer>
         </script>
+        <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.3.0/jquery.form.min.js" ></script>
     </head>
     <body>
         <main>
             <header>
-                <a href="{{ url('/allevents') }}" id="logo">show<span>s</span>me</a>
+                <a href="{{ url('/all-events') }}" id="logo">show<span>s</span>me</a>
                 <nav id='header-nav'>
                     
 
@@ -43,7 +45,7 @@
                         <a href="{{ route('my-tickets') }}">MyTickets</a> 
                         <a href="{{ route('profile') }}">Profile</a> 
                     @endauth
-                    <a href="{{ route('create-event-page') }}">Create Event</a> 
+                    <a href="{{ route('create-event') }}">Create Event</a> 
                     <a href="{{ route('faq') }}">FAQs</a> 
                     <a href="{{ route('about-us') }}">About Us</a> 
             
@@ -63,6 +65,17 @@
                     @endif
                 </section>
             </header>
+            @if(session('error'))
+            <div class="alert alert-danger" style="color: red;">
+                    {{ session('error') }}
+                </div>
+            @endif
+
+            @if(session('success'))
+                <div class="alert alert-success" style="color: green;">
+                    {{ session('success') }}
+                </div>
+            @endif
             <section id="content">
                 @yield('content')
             </section>

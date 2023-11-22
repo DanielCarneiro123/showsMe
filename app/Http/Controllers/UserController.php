@@ -21,10 +21,11 @@ class UserController extends Controller
     }
 
    // UserController.php
-    public function updateProfile(Request $request)
-    {
-        $user = Auth::user();
 
+   public function updateProfile(Request $request)
+   {
+           //$this->authorize('updateProfile', Auth::user());
+   
     $request->validate([
         'email' => [
             'required',
@@ -47,14 +48,15 @@ class UserController extends Controller
         'phone_number.regex' => 'The phone number must only contain numbers.',
     ]);
 
-        $user->update([
-            'email' => $request->input('email'),
-            'name' => $request->input('name'),
-            'promotor_code' => $request->input('promotor_code'),
-            'phone_number' => $request->input('phone_number'),
+           Auth::user()->update([
+            'email' => $request->input('edit_email'),
+            'name' => $request->input('edit_name'),
+            'promotor_code' => $request->input('edit_promotor_code'),
+            'phone_number' => $request->input('edit_phone_number'),
         ]);
 
-        return redirect()->back()->with('success', 'Profile updated successfully.');
-    }
+   
+           return response()->json(['message' => 'Perfil atualizado com sucesso']);
+   }
 
 }

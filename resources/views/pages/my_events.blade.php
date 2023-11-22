@@ -9,11 +9,13 @@
         <h1>My <span>Events</span></h1>
         @foreach ($events as $event)
             <article class="event-card">
-                <img src="{{ asset('../media/event_image.jpg') }}" alt="Event Image">
+            <a href="{{ route('view-event', ['id' => $event->event_id]) }}">
+            <img src="{{ asset('../media/event_image.jpg') }}" alt="Event Image">
                 <div class="event-info">
                     <h3>{{ $event->name }}</h3>
                     <p>{{ $event->description }}</p>
                 </div>
+            </a> 
             </article>
         @endforeach
         <!-- Button to create a new event -->
@@ -29,6 +31,7 @@
         </section>
     @endif
 
-
+    <!-- Button to create a new event -->
+    <a href="{{ route('create-event') }}" class="btn btn-primary">Create Event</a>
 
 @endsection

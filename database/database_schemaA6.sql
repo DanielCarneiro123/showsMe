@@ -1,6 +1,6 @@
-DROP SCHEMA IF EXISTS thingy CASCADE;
-CREATE SCHEMA IF NOT EXISTS thingy;
-SET search_path TO thingy;
+DROP SCHEMA IF EXISTS showsme CASCADE;
+CREATE SCHEMA IF NOT EXISTS showsme;
+SET search_path TO showsme;
 
 
 -- Drop Tables If They Exist
@@ -101,7 +101,7 @@ CREATE TABLE Tag (
    tag_id SERIAL PRIMARY KEY,
    name TEXT NOT NULL UNIQUE
 );
-
+                
 CREATE TABLE FAQ (
    faq_id SERIAL PRIMARY KEY,
    question TEXT NOT NULL,

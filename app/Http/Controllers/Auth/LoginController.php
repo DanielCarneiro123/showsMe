@@ -19,8 +19,8 @@ class LoginController extends Controller
     public function showLoginForm()
     {
         if (Auth::check()) {
-            dd('User is authenticated. Redirecting to /allevents');
-            return redirect('/allevents');
+            dd('User is authenticated. Redirecting to /all-events');
+            return redirect('/all-events');
         } else {
             return view('auth.login');
         }
@@ -43,7 +43,7 @@ class LoginController extends Controller
             if (Auth::attempt($credentials, $request->filled('remember'))) {
                 $request->session()->regenerate();
 
-                return redirect()->intended('/allevents');
+                return redirect()->intended('/all-events');
             }
         }
 

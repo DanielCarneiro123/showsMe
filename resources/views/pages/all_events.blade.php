@@ -1,4 +1,4 @@
-<!-- pages/allevents.blade.php -->
+<!-- pages/all_events.blade.php -->
 
 @extends('layouts.app')  
 
@@ -21,6 +21,7 @@
         </article>
     </a>
     @endforeach
+    
     {{ $events->links() }}
 
 
