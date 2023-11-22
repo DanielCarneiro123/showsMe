@@ -214,7 +214,7 @@ class EventController extends Controller
         ->orderByRaw('ts_rank(tsvectors, plainto_tsquery(?)) DESC', [$query])
         ->paginate(10);
 
-    return view('pages.allevents', compact('events'));
+    return view('pages.all_events', compact('events'));
 }
 
     
