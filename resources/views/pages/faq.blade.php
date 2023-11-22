@@ -9,12 +9,10 @@
         @foreach ($faqs as $faq)
             <div class="faq-dropdown">
                 <div class="faq-title">
-                    <i class="fa-solid fa-caret-down rotate"></i>
+                    <i class="fa-solid fa-circle-question"></i>
                     <h3 class="faq-question">{{ $faq->question }}</h3>
                 </div>
-                <div class="faq-answer">
-                    <p>{{ $faq->answer }}</p>
-                </div>
+                <p>{{ $faq->answer }}</p>
             </div>
         @endforeach
     </section>
