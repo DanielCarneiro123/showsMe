@@ -66,7 +66,7 @@
     </div>
     <br>
     <!-- Adicione um botão geral para comprar -->
-    <button type="submit" class="btn btn-success"  id="buy-button">  <!-- OR class="event-button" ? -->
+    <button type="submit" class="btn btn-success event-button"  id="buy-button">  <!-- OR class="event-button" ? -->
         <i class="fa-solid fa-credit-card"></i>Buy Tickets
     </button>
 </form>
