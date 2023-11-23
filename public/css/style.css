@@ -8,152 +8,82 @@
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap');
 
 
-/* Home page */
+body{
+  margin: 0em;
+  max-width: 100vw;
+  --light-blue: #36aaf7;
+  --dark-blue: #1279bd;
+  --darkest-blue: #073c5f;
+  --dark-gray: #1f1f1f;
+  --gray: #fff;
+}
 
-.title {
+h1 {
+  font-size: 3em;
   text-align: center;
-  margin: 50px 0px 60px;
-  font-size: 48px;
-  line-height: 1.333em;
-  font-weight: 700;
-  letter-spacing: 0.01em;
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  color: #1a2447;
-
+  padding: 50px;
+  color: black;
 }
 
-.title strong {
-  color: #316BFF;
+h1 span {
+  color: var(--light-blue);
 }
-
-
-/* My Events */
-
-.profile-pic {
-  width: 3em;
-  /* Set the width to 47 pixels to make it a square */
-  height: 3em;
-  /* Set the height to 47 pixels */
-  border-radius: 50%;
-  /* Makes the image circular */
-  overflow: hidden;
-  /* Hides the overflow if the image is not a perfect square */
-  vertical-align: middle;
-  margin-left: 10px;
-}
-
-.grid-cards {
-  max-width: 1242px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 5px;
-  row-gap: 30px;
-  justify-content: center;
-}
-
-.my-event-card {
-  position: relative;
-  display: flex;
-  /* Use flexbox to control the layout */
-  flex-direction: column;
-  /* Stack child elements vertically */
-  text-align: center;
-  margin: 1rem;
-  margin-top: 0;
-  width: 400px;
-  height: 320px;
-  transition: transform 0.5s, background-color 0.5s;
-}
-
-.my-event-card:hover {
-  transform: scale(0.95);
-}
-
-.my-event-card:hover img {
-  filter: brightness(0.7);
-}
-
-.my-event-card img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 20px;
-  filter: brightness(0.5);
-  transition: filter 0.5s ease;
-}
-
-.event-details {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  color: white;
-  /* Optional: Set text color for readability */
-  padding: 10px;
-  /* Optional: Add some padding to the details */
-  box-sizing: border-box;
-}
-
-.event-details .event-phrase {
-  text-align: left;
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 22px;
-  font-weight: bolder;
-  margin-left: 5px;
-}
-
-.event-details .event-date {
-  text-align: right;
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 20px;
-  font-weight: bolder;
-  padding: 10px;
-}
-
-
-
-
-
-
-
-
-
-
 
 /* Event card */
 
 .event-card {
-  align-items: center;
   display: flex;
-  flex-direction: row;
   align-items: center;
   border-radius: 20px;
   padding: 0;
-  max-width: 1000px;
-  height: 350px;
+  max-width: 1100px;
+  height: 400px;
   margin: 0 auto;
-  background-color: #f3f6ff;
+  background-color: #dadada;
   margin-bottom: 40px;
+  transition: transform 0.5s, background-color 0.5s;
 }
 
-.event-image {
+.event-card:hover {
+  transform: scale(0.95);
+  cursor: pointer;
+}
+
+.event-link, .event-link:visited {
+  color: #000;
+  text-decoration: none;
+}
+
+.event-card img {
   width: 50%;
   height: 100%;
+  border-radius: 20px 0 0 20px;
 }
 
-.event-image img {
-  width: 100%;
-  height: 100%;
-  border-radius: 20px 0px 0px 20px;
-}
-
-.event-description {
+.event-info {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  margin: 0px 30px;
-  width: 48%;
+  justify-content: center;
+  padding: 0 20px;
+  box-sizing: border-box;
 }
+
+.event-info a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.event-info h3 {
+  margin-bottom: 10px;
+  text-align: center;
+  font-size: 1.5em;
+}
+
+.event-info p {
+  color: #666;
+}
+
 
 .price {
   border-radius: 20px;
@@ -216,10 +146,8 @@
   position: absolute;
   left: 0;
   bottom: -30px;
-  /* Adjust the distance from the button as needed */
   width: 100%;
   border-bottom: 1px solid #5f5f74;
-  /* You can change the color and thickness as needed */
 }
 
 main {
@@ -242,8 +170,8 @@ footer {
 
 .footer-col {
   flex: 1;
-  padding: 0 30px; /* Add padding or adjust as needed */
-  box-sizing: border-box; /* Make sure padding is included in the width */
+  padding: 0 30px;
+  box-sizing: border-box;
 }
 
 footer img {
@@ -345,4 +273,44 @@ footer .rights {
   font-family: 'Dongle', sans-serif;
   font-size: 20px;
   font-weight: 100;
+}
+
+.a-button,
+button {
+  font-size: 1.2em;
+  font-weight: bold;
+  padding: 12px 20px;
+  text-decoration: none;
+  background: linear-gradient(to bottom, #1279bd, #36aaf7);
+  border-radius: 15px;
+  margin-left: 1em; 
+  color: #fff;
+  transition: transform 0.3s ease; 
+}
+
+.a-button:hover,
+button:hover {
+  color: white;
+  transform: scale(0.95);
+}
+
+
+
+
+#about-us {
+  max-width: 800px;
+  padding: 20px;
+  margin: 3em;
+}
+
+#about-us h2 {
+  font-size: 3em;
+  margin-bottom: 1em;
+  text-align: start;
+}
+
+#about-us p {
+  font-size: 1.1em;
+  line-height: 1.6;
+  margin-bottom: 5em;
 }

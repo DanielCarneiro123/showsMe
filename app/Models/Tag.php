@@ -23,7 +23,7 @@ class Tag extends Model
      *
      * @var string
      */
-    protected $table = 'Tag';
+    protected $table = 'tag';
 
     /**
      * The primary key for the model.

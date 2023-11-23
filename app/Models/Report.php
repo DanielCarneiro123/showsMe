@@ -25,7 +25,7 @@ class Report extends Model
      *
      * @var string
      */
-    protected $table = 'Report';
+    protected $table = 'report';
 
     /**
      * The primary key for the model.
@@ -56,4 +56,10 @@ class Report extends Model
     {
         return $this->belongsTo(UserClass::class, 'author_id', 'user_id');
     }
+
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class, 'report_id');
+    }
+
 }

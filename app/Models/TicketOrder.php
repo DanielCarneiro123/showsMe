@@ -34,7 +34,7 @@ class TicketOrder extends Model
      *
      * @var string
      */
-    protected $table = 'TicketOrder';
+    protected $table = 'ticketorder';
 
     /**
      * The primary key for the model.

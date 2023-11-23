@@ -1,6 +1,6 @@
-DROP SCHEMA IF EXISTS thingy CASCADE;
-CREATE SCHEMA IF NOT EXISTS thingy;
-SET search_path TO thingy;
+DROP SCHEMA IF EXISTS lbaw23105 CASCADE;
+CREATE SCHEMA IF NOT EXISTS lbaw23105;
+SET search_path TO lbaw23105;
 
 
 -- Drop Tables If They Exist
@@ -33,6 +33,7 @@ CREATE TABLE users (
    promotor_code TEXT UNIQUE,
    phone_number TEXT NOT NULL UNIQUE,
    is_admin BOOLEAN NOT NULL DEFAULT FALSE,
+   active BOOLEAN NOT NULL DEFAULT TRUE,
    remember_token VARCHAR
 );
 
@@ -73,10 +74,10 @@ CREATE TABLE Report (
 CREATE TABLE TicketType (
    ticket_type_id SERIAL PRIMARY KEY,
    name TEXT NOT NULL,
-   stock INT NOT NULL CHECK (stock > 0),
+   stock INT NOT NULL CHECK (stock >= 0),
    description TEXT NOT NULL,
    private BOOLEAN NOT NULL DEFAULT TRUE,
-   person_buying_limit INT NOT NULL CHECK (person_buying_limit > 0 AND person_buying_limit < stock),
+   person_buying_limit INT NOT NULL CHECK (person_buying_limit > 0),
    start_timestamp TIMESTAMP NOT NULL,
    end_timestamp TIMESTAMP NOT NULL CHECK (start_timestamp < end_timestamp),
    price NUMERIC NOT NULL DEFAULT 0,
@@ -100,7 +101,7 @@ CREATE TABLE Tag (
    tag_id SERIAL PRIMARY KEY,
    name TEXT NOT NULL UNIQUE
 );
-
+                
 CREATE TABLE FAQ (
    faq_id SERIAL PRIMARY KEY,
    question TEXT NOT NULL,
@@ -139,66 +140,48 @@ ALTER TABLE Event_
 ADD COLUMN tsvectors TSVECTOR;
 
 CREATE OR REPLACE FUNCTION event_search_update() RETURNS TRIGGER AS $$
-
 BEGIN
-IF TG_OP = 'INSERT' THEN
+  IF TG_OP = 'INSERT' THEN
+    NEW.tsvectors = (
+      setweight(to_tsvector('english', NEW.name), 'A') ||
+      setweight(to_tsvector('english', NEW.description), 'B') ||
+      setweight(to_tsvector('english', COALESCE((SELECT string_agg(Tag.name, ' ') FROM TagEvent JOIN Tag ON TagEvent.tag_id = Tag.tag_id WHERE TagEvent.event_id = NEW.event_id),' ')), 'C') ||
+      setweight(to_tsvector('english', NEW.location), 'D')
+    );
+  END IF;
 
-NEW.tsvectors = (
-
-setweight(to_tsvector('english', NEW.name), 'A') ||
-
-setweight(to_tsvector('english', NEW.description), 'B') ||
-
-setweight(to_tsvector('english', (SELECT string_agg(Tag.name, ' ') FROM TagEvent JOIN Tag ON TagEvent.tag_id = Tag.tag_id WHERE TagEvent.event_id = NEW.event_id)), 'C') ||
-
-setweight(to_tsvector('english', NEW.location), 'D')
-
-);
-
-END IF;
-
-IF TG_OP = 'UPDATE' THEN
-
-
-     IF (NEW.name <> OLD.name OR
-       NEW.description <> OLD.description OR
-       (SELECT string_agg(Tag.name, ' ')
-        FROM TagEvent
-        JOIN Tag ON TagEvent.tag_id = Tag.tag_id
-       WHERE TagEvent.event_id = NEW.event_id)
-       <> (SELECT string_agg(Tag.name, ' ')
-            FROM TagEvent
+  IF TG_OP = 'UPDATE' THEN
+    IF (NEW.name <> OLD.name OR
+        NEW.description <> OLD.description OR
+        (SELECT string_agg(Tag.name, ' ')
+         FROM TagEvent
          JOIN Tag ON TagEvent.tag_id = Tag.tag_id
-          WHERE TagEvent.event_id = OLD.event_id) OR
-
-        NEW.location <> OLD.location) THEN
-
+         WHERE TagEvent.event_id = NEW.event_id)
+         <> (SELECT string_agg(Tag.name, ' ')
+             FROM TagEvent
+             JOIN Tag ON TagEvent.tag_id = Tag.tag_id
+             WHERE TagEvent.event_id = OLD.event_id) OR
+         NEW.location <> OLD.location) THEN
 
       NEW.tsvectors = (
-
         setweight(to_tsvector('english', NEW.name), 'A') ||
-
-       setweight(to_tsvector('english', NEW.description), 'B') ||
-
-      setweight(to_tsvector('english', (SELECT string_agg(Tag.name, ' ') FROM TagEvent JOIN Tag ON TagEvent.tag_id = Tag.tag_id WHERE TagEvent.event_id = NEW.event_id)), 'C') ||
-
-       setweight(to_tsvector('english', NEW.location), 'D')
-
-     );
+        setweight(to_tsvector('english', NEW.description), 'B') ||
+        setweight(to_tsvector('english', COALESCE((SELECT string_agg(Tag.name, ' ') FROM TagEvent JOIN Tag ON TagEvent.tag_id = Tag.tag_id WHERE TagEvent.event_id = NEW.event_id),' ')), 'C') ||
+        setweight(to_tsvector('english', NEW.location), 'D')
+      );
 
     END IF;
- END IF;
- RETURN NEW;
+  END IF;
 
-END $$
 
-LANGUAGE plpgsql;
+
+  RETURN NEW;
+END $$ LANGUAGE plpgsql;
+
 CREATE TRIGGER event_search_update
 
 BEFORE INSERT OR UPDATE ON Event_
-
 FOR EACH ROW
-
 EXECUTE PROCEDURE event_search_update();
 CREATE INDEX event_text_search_idx ON Event_ USING GIN (tsvectors);
 
@@ -303,39 +286,39 @@ EXECUTE FUNCTION check_duplicate_report();
 
 
 -- Inserts for Users
-INSERT INTO users (email, name, password, phone_number, promotor_code) 
+INSERT INTO users (email, name, password, phone_number, promotor_code, is_admin, active) 
 VALUES 
-  ('user1@example.com', 'John Doe', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', '1234567890', NULL),
-  ('user2@example.com', 'Jane Smith', 'password2', '9876543210', NULL),
-  ('user3@example.com', 'Bob Johnson', 'password3', '5551231567', NULL),
-  ('user4@example.com', 'Alice Brown', 'password4', '7890123456', NULL),
-  ('user5@example.com', 'Charlie Davis', 'password5', '3216149870', NULL),
-  ('user6@example.com', 'David Wilson', 'password6', '6547810123', 'promo1'),
-  ('user7@example.com', 'Eva Rodriguez', 'password7', '7810123456', 'promo2'),
-  ('user8@example.com', 'Frank Garcia', 'password8', '9871543210', 'promo3'),
-  ('user9@example.com', 'Grace Miller', 'password9', '1231567890', 'promo4'),
-  ('user10@example.com', 'Henry Lee', 'password10', '5551134567', 'promo5'),
-  ('admin@example.com', 'Admin User', 'adminpassword', '1212223333', NULL),
-  ('user11@example.com', 'Isabel Lopez', 'password11', '7178889999', NULL),
-  ('user12@example.com', 'Jack Turner', 'password12', '4425556666', NULL),
-  ('user13@example.com', 'Kelly White', 'password13', '2233334444',  NULL),
-  ('user14@example.com', 'Liam Anderson', 'password14', '1667778888',  NULL),
-  ('user15@example.com', 'Mia Harris', 'password15', '3331445555',  NULL),
-  ('user16@example.com', 'Nathan Moore', 'password16', '9190001111',  NULL),
-  ('user17@example.com', 'Olivia Taylor', 'password17', '2112223333', NULL),
-  ('user18@example.com', 'Peter Martin', 'password18', '8189990000',  NULL),
-  ('user19@example.com', 'Quinn Hall', 'password19', '5553667777',  NULL),
-  ('user20@example.com', 'Rachel Clark', 'password20', '2123334444',  NULL),
-  ('user21@example.com', 'Samuel Allen', 'password21', '7578889999',  NULL),
-  ('user22@example.com', 'Tara Turner', 'password22', '4465556666', NULL),
-  ('user23@example.com', 'Ulysses Walker', 'password23', '1667178888',  NULL),
-  ('user24@example.com', 'Vivian Scott', 'password24', '3324445555', NULL),
-  ('user25@example.com', 'Walter Bennett', 'password25', '1990001111', NULL),
-  ('user26@example.com', 'Xavier Garcia', 'password26', '1412223333',  NULL),
-  ('user27@example.com', 'Yasmine Williams', 'password27', '1889990000', NULL),
-  ('user28@example.com', 'Zachary Smith', 'password28', '5551667777',  NULL),
-  ('user29@example.com', 'Ava Davis', 'password29', '2223334144',  NULL),
-  ('user30@example.com', 'Benjamin Harris', 'password30', '7171889999', NULL);
+  ('user1@example.com', 'John Doe', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', '1234567890', NULL, FALSE, TRUE),
+  ('user2@example.com', 'Jane Smith', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', '9876543210', NULL, FALSE, TRUE),
+  ('user3@example.com', 'Bob Johnson', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', '5551231567', NULL, FALSE, TRUE),
+  ('user4@example.com', 'Alice Brown', 'password4', '7890123456', NULL, FALSE, TRUE),
+  ('user5@example.com', 'Charlie Davis', 'password5', '3216149870', NULL, FALSE, TRUE),
+  ('user6@example.com', 'David Wilson', 'password6', '6547810123', 'promo1', FALSE, TRUE),
+  ('user7@example.com', 'Eva Rodriguez', 'password7', '7810123456', 'promo2', FALSE, TRUE),
+  ('user8@example.com', 'Frank Garcia', 'password8', '9871543210', 'promo3', FALSE, TRUE),
+  ('user9@example.com', 'Grace Miller', 'password9', '1231567890', 'promo4', FALSE, TRUE),
+  ('user10@example.com', 'Henry Lee', 'password10', '5551134567', 'promo5', FALSE, TRUE),
+  ('admin@example.com', 'Admin User', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', '1212223333', NULL, TRUE, TRUE),
+  ('user11@example.com', 'Isabel Lopez', 'password11', '7178889999', NULL, FALSE, TRUE),
+  ('user12@example.com', 'Jack Turner', 'password12', '4425556666', NULL, FALSE, TRUE),
+  ('user13@example.com', 'Kelly White', 'password13', '2233334444',  NULL, FALSE, TRUE),
+  ('user14@example.com', 'Liam Anderson', 'password14', '1667778888',  NULL, FALSE, TRUE),
+  ('user15@example.com', 'Mia Harris', 'password15', '3331445555',  NULL, FALSE, TRUE),
+  ('user16@example.com', 'Nathan Moore', 'password16', '9190001111',  NULL, FALSE, TRUE),
+  ('user17@example.com', 'Olivia Taylor', 'password17', '2112223333', NULL, FALSE, TRUE),
+  ('user18@example.com', 'Peter Martin', 'password18', '8189990000',  NULL, FALSE, TRUE),
+  ('user19@example.com', 'Quinn Hall', 'password19', '5553667777',  NULL, FALSE, TRUE),
+  ('user20@example.com', 'Rachel Clark', 'password20', '2123334444',  NULL, FALSE, TRUE),
+  ('user21@example.com', 'Samuel Allen', 'password21', '7578889999',  NULL, FALSE, TRUE),
+  ('user22@example.com', 'Tara Turner', 'password22', '4465556666', NULL, FALSE, TRUE),
+  ('user23@example.com', 'Ulysses Walker', 'password23', '1667178888',  NULL, FALSE, TRUE),
+  ('user24@example.com', 'Vivian Scott', 'password24', '3324445555', NULL, FALSE, TRUE),
+  ('user25@example.com', 'Walter Bennett', 'password25', '1990001111', NULL, FALSE, TRUE),
+  ('user26@example.com', 'Xavier Garcia', 'password26', '1412223333',  NULL, FALSE, TRUE),
+  ('user27@example.com', 'Yasmine Williams', 'password27', '1889990000', NULL, FALSE, TRUE),
+  ('user28@example.com', 'Zachary Smith', 'password28', '5551667777',  NULL, FALSE, TRUE),
+  ('user29@example.com', 'Ava Davis', 'password29', '2223334144',  NULL, FALSE, TRUE),
+  ('user30@example.com', 'Benjamin Harris', 'password30', '7171889999', NULL, FALSE, TRUE);
 
 
 -- Inserts for Realistic Events
@@ -438,7 +421,7 @@ VALUES
 INSERT INTO TicketType (name, stock, description, private, person_buying_limit, start_timestamp, end_timestamp, price, event_id)
 VALUES 
   ('General Admission', 100, 'Access to the event for one person.', FALSE, 10, '2023-11-01 00:00:00', '2023-12-01 00:00:00', 25.99, 1),
-  ('VIP Pass', 50, 'Exclusive access with VIP amenities.', TRUE, 5, '2023-11-05 12:00:00', '2023-11-10 12:00:00', 99.99, 2),
+  ('VIP Pass', 50, 'Exclusive access with VIP amenities.', TRUE, 5, '2023-11-05 12:00:00', '2023-11-10 12:00:00', 99.99, 1),
   ('Runner''s Package', 75, 'Participate in the community charity run.', FALSE, 15, '2023-11-10 09:00:00', '2023-11-11 12:00:00', 10.00, 3),
   ('Foodie Ticket', 120, 'Taste a variety of dishes at the food festival.', TRUE, 20, '2023-11-15 18:00:00', '2023-11-16 23:59:59', 39.99, 4),
   ('Workshop Pass', 30, 'Attend workshops on AI and technology.', FALSE, 5, '2023-11-20 14:00:00', '2023-11-21 17:00:00', 49.99, 5),
@@ -462,7 +445,7 @@ VALUES
 INSERT INTO TicketOrder (promo_code, buyer_id) 
 VALUES 
   (NULL, 1),
-  ('promo1', 2),
+  ('promo1', 1),
   (NULL, 3),
   (NULL, 4),
   (NULL, 5),

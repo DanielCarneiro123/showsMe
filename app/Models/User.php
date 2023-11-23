@@ -15,7 +15,7 @@ class User extends Authenticatable
 
     // Don't add create and update timestamps in the database.
     public $timestamps  = false;
-
+    protected $primaryKey = 'user_id';
     /**
      * The attributes that are mass assignable.
      *
@@ -28,6 +28,7 @@ class User extends Authenticatable
         'promotor_code',
         'phone_number',
         'is_admin',
+        'active',
         'remember_token',
     ];
 
@@ -59,11 +60,8 @@ class User extends Authenticatable
      */
     protected $table = 'users';
 
-    /**
-     * Get the cards for a user.
-     */
-    public function cards(): HasMany
+    public function own_events()
     {
-        return $this->hasMany(Card::class);
+        return $this->hasMany(Event::class, 'creator_id');
     }
 }

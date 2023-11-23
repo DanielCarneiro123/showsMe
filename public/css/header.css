@@ -1,0 +1,80 @@
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 40px; 
+    background-color: var(--dark-gray);
+    color: var(--gray);
+}
+
+header a {
+    text-decoration: none;
+    color: #fff; 
+    font-size: 1.5em;
+    transition: transform 0.3s ease; 
+}
+
+#logo {
+    text-decoration: none;
+    color: #fff;
+    font-size: 2.2em;
+    font-weight: bold;
+    display: inline-block;
+}
+
+header a:hover {
+    transform: scale(0.9);
+    color: var(--light-blue);
+}
+
+
+#logo > span {
+    color: var(--light-blue);
+}
+#header-nav {
+    display: flex;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+#header-nav a {
+    margin: 0px 15px;
+}
+
+#header-buttons {
+    display: flex;
+    align-items: center;
+}
+
+#header-buttons a.button {
+    font-size: 1.2em;
+    font-weight: bold;
+    padding: 8px 30px;
+    text-decoration: none;
+    border-radius: 15px;
+    margin-left: 1em;
+}
+
+.login {
+    background-color: var(--light-blue);
+    border: 2px solid var(--light-blue);
+    color: #fff;
+}
+
+#register {
+    background-color: rgba(0, 0, 0, 0);
+    border: 2px solid var(--light-blue);
+    color: #36aaf7;
+}
+
+#register:hover{
+    color: #fff;
+}
+
+#header-buttons a.button:hover {
+    background-color: var(--light-blue);
+    color:white;
+}
+
+#header-buttons span {
+    margin-right: 10px;
+}

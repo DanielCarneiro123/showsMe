@@ -25,7 +25,7 @@ class Rating extends Model
      *
      * @var string
      */
-    protected $table = 'Rating';
+    protected $table = 'rating';
 
     /**
      * The primary key for the model.

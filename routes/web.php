@@ -2,13 +2,15 @@
 
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\CardController;
-use App\Http\Controllers\ItemController;
-
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\FaqController;
+use App\Http\Controllers\AboutUsController;
+use App\Http\Controllers\TicketController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,29 +24,53 @@ use App\Http\Controllers\EventController;
 */
 
 // Home
-Route::redirect('/', '/login');
-
-/*// Cards
-Route::controller(CardController::class)->group(function () {
-    Route::get('/cards', 'list')->name('cards');
-    Route::get('/cards/{id}', 'show');
-});*/
+Route::redirect('/', '/all-events');
 
 
-Route::controller(EventController::class, 'index')->name('allevents');
+Route::controller(EventController::class)->group(function () {
+    Route::get('/all-events', 'index')->name('all-events');
+    Route::get('/view-event/{id}', 'view')->name('view-event');
+    Route::get('/my-events', 'myEvents')->name('my-events');
+    Route::post('/create-event', 'createEvent');
+    Route::post('/update-event/{id}', 'updateEvent');
+    Route::post('/purchase-tickets/{event_id}', [EventController::class, 'purchaseTickets'])->name('purchase-tickets');
+    Route::get('/create-event', [EventController::class, 'showCreateEvent'])->name('create-event');
+    Route::post('/create-ticket-type/{event}', 'createTicketType')->name('create-ticket-type');
+    Route::get('/search-events', [EventController::class, 'searchEvents'])->name('search-events');
+    Route::post('/deactivate-event/{eventId}', 'deactivateEvent')->name('deactivate-event');
+    Route::post('/activate-event/{eventId}', 'activateEvent')->name('activate-event');
+});
+
+Route::controller(FaqController::class)->group(function () {
+    Route::get('/faq', [FaqController::class, 'index'])->name('faq');
+});
+
+Route::controller(AboutUsController::class)->group(function () {
+    Route::get('/about-us', [AboutUsController::class, 'index'])->name('about-us');
+});
+
+Route::controller(TicketController::class)->group(function () {
+    Route::get('/my-tickets', [TicketController::class, 'myTickets'])->name('my-tickets')->middleware('auth');
+    Route::post('/update-ticket-stock/{ticketTypeId}', [TicketController::class, 'updateTicketStock'])->name('updateTicketStock');
+});
+
+
+Route::controller(AdminController::class)->group(function () {
+    Route::get('/admin', [AdminController::class, 'showAdminPage'])->name('admin');
+    Route::put('/deactivateUser/{id}', [AdminController::class, 'deactivateUser'])->name('deactivateUser');
+    Route::put('/activateUser/{id}', [AdminController::class, 'activateUser'])->name('activateUser');
+});
+
+
+
+Route::controller(UserController::class)->group(function () {
+    Route::post('/update-profile', [UserController::class, 'updateProfile'])->name('update-profile');
+    Route::get('/profile', [UserController::class, 'getCurrentUser'])->name('profile')->middleware('auth');
+});
+
 
 
 // API
-Route::controller(CardController::class)->group(function () {
-    Route::put('/api/cards', 'create');
-    Route::delete('/api/cards/{card_id}', 'delete');
-});
-
-Route::controller(ItemController::class)->group(function () {
-    Route::put('/api/cards/{card_id}', 'create');
-    Route::post('/api/item/{id}', 'update');
-    Route::delete('/api/item/{id}', 'delete');
-});
 
 
 // Authentication
@@ -59,4 +85,5 @@ Route::controller(RegisterController::class)->group(function () {
     Route::post('/register', 'register');
 });
 
+//Route::post('/purchase-tickets/{event_id}', [TicketController::class, 'purchase'])->name('purchase-tickets');
 

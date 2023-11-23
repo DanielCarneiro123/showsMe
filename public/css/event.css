@@ -1,181 +1,171 @@
-.schedule {
-    display: flex;
-    justify-content: center;
-    border-bottom: 1px solid #e6e7f3;
-    max-width: 1200px;
-    margin: 0 auto;
-    margin-top: 40px;
-}
-
-.schedule a {
-    bottom: -1px;
-    padding: 0px 38px;
-    padding-bottom: 5px;
-    font-weight: 500;
-    text-align: center;
-    text-decoration: none;
-    transition: all 200ms;
-}
-
-.schedule .selected,
-.schedule a:hover {
-    border-bottom: 3px solid #316bff;
-}
-
-.schedule .day {
-    color: #1a2447;
-    font-size: 60px;
-    line-height: 1.063em;
-    letter-spacing: -0.01em;
-    font-family: 'Dongle', sans-serif;
-}
-
-.schedule .weekday {
-    color: #5e5f79;
-    font-size: 12px;
-    line-height: 1.429em;
-    font-weight: 500;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-}
-
-.event-info-wrapper {
-    display: flex;
-    max-width: 1200px;
-    margin: 0 auto;
-    margin-top: 50px;
-}
-
-.event-info-wrapper img {
-    flex: 1;
-    /* Set the image to occupy 50% of the container's width */
-    width: 45%;
-    /* Ensure the image doesn't exceed its original width */
-    height: 350px;
-    /* Maintain the image's aspect ratio */
-    border-radius: 20px;
-}
-
-.event-info-wrapper .event-content {
-    flex: 1;
-}
-
-.event-content {
-    display: flex;
-    flex-direction: column;
-    padding: 10px 40px;
-}
-
-.event-content h2 {
-    font-weight: 700;
-    letter-spacing: 0.01em;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 35px;
-    margin: 40px 0;
-}
-
-.event-content p {
-    font-weight: 400;
-    letter-spacing: 0.01em;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 20px;
-    line-height: 2em;
-}
-
-.event-content-links {
-    display: flex;
-    justify-content: space-between;
-    justify-items: center;
-    gap: 15px;
-}
-
-.event-content-links a {
-    flex: 1;
-    border-radius: 7px;
-    padding: 10px 0;
-    text-transform: uppercase;
-    text-align: center;
-    font-family: 'Poppins', sans-serif;
-    font-weight: 500;
-    color: black;
-    background-color: #fff;
-    border: 1px solid #5e5f79;
-    transition: all 500ms ease;
-}
-
-.event-content-links .current-content,
-.event-content-links a:hover {
-    color: #fff;
-    background-color: #316bff;
-    border: none;
-}
-
-.event-tickets {
-    max-width: 1242px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 40px;
-    row-gap: 30px;
-    justify-content: center;
-    border-top: 1px solid #e6e7f3;
-    margin-top: 40px;
-    padding: 40px 0;
-}
-
-.event-tickets .event-ticket {
-    border-radius: 28px;
-    background-color: #fff;
-    box-shadow: 0 8px 30px 0 rgba(50, 53, 130, 0.08);
-    padding: 30px;
+.event-thumbnail {
     position: relative;
-    border: 2px solid #D8E2FF;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.event-ticket h3 {
-    font-family: 'Poppins', sans-serif;
-    font-weight: 700;
-    font-size: 25px;
-    color: #316bff;
-    background-color: #D8E2FF;
-    width: fit-content;
-    padding: 10px 20px;
-    border-radius: 10px;
+.event-thumbnail img{
+    width: 100%;
+    height: 35em;
+    object-fit: cover;
+    object-position: center center;
 }
 
-.event-ticket h2 {
-    padding-top: 20px;
-    font-family: 'Poppins', sans-serif;
-    font-weight: 700;
-    font-size: 30px;
-}
 
-.event-ticket p {
-    padding-top: 13px;
-    font-family: 'Poppins', sans-serif;
-    font-weight: 400;
-    font-size: 16px;
-    width: 60%;
-    margin-bottom: 60px;
-}
-
-.event-ticket input {
-    font-size: 20px;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    border: 1px solid #e6e7f3;
-    border-radius: 4px;
-    background-color: #fff;
-    padding-top: 8px;
-    padding-right: 6px;
-    padding-bottom: 8px;
-    padding-left: 12px;
-    width: 60px;
+.event-thumbnail .text {
     position: absolute;
-    bottom: 40px;
-    right: 40px;
-    transition: all 500ms ease;
+    align-self: center;
 }
 
-.event-ticket input:focus {
-    border-color: #316bff;
+.event-thumbnail .text h1{
+    color: white;
+}
+
+.event-thumbnail .text p{
+    color: white;
+}
+
+.event-thumbnail .event-info{
+    position: absolute;
+    align-self: flex-end;
+    left: 0;
+    font-weight: bold;
+    font-size: larger;
+    padding: 2%;
+}
+
+.event-thumbnail .event-info p{
+    color: white;
+}
+
+
+.ticket-types {
+    margin-top: 3em;
+    text-align: center;
+}
+
+.ticket-types h2 {
+    font-size: 3em;
+}
+
+h2 span {
+    color: #316BFF;
+}
+
+.ticket-type {
+    display: inline-block;
+    padding: 3em;
+    width: 20%;
+    height: 30%;
+    max-height: 30%;
+    margin: 10px;
+    border: 3px solid #ddd;
+    border-radius: 10px;
+    background-color: #ddd;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.ticket-type:hover {
+    border-color: #0000006b;
+    transform: scale(1.05);
+}
+
+
+#ticket-type h3 {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    margin: 0;
+}
+
+
+#ticket-type p#ticket-type-price {
+    position: absolute;
+    top: 10px;
+    left: 10px; 
+    font-size: 1.5em;
+    margin: 0;
+}
+
+#ticket-type p#ticket-type-description {
+    text-align: center;
+    margin: 10px 0;
+}
+
+#ticket-type p#ticket-type-stock {
+    text-align: center;
+    margin: 0;
+    font-size: 0.8em;
+}
+
+
+.event-button {
+    font-size: 1.2em;
+    font-weight: bold;
+    padding: 12px 20px;
+    text-decoration: none;
+    border-radius: 15px;
+    margin-left: 1em;
+    color: #fff;
+    transition: transform 0.3s ease;
+}
+
+#deactivate-button{
+    top: 20px;
+    right: 20px;
+    position: absolute;
+    background: linear-gradient(to bottom, #bb0e08, #ee3c1c);
+}
+
+#activate-button{
+    top: 20px;
+    right: 20px;
+    position: absolute;
+    background: linear-gradient(to bottom, #1279bd, #36aaf7);
+}
+
+#buy-button{
+    background: linear-gradient(to bottom, #1279bd, #36aaf7); 
+}
+
+.event-button i{
+    margin-right: 5px;
+}
+
+
+.event-button:hover {
+    transform: scale(0.95);
+}
+
+
+input[type="number"] {
+    width: 60px;
+    padding: 8px;
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-size: 1em;
+    text-align: center;
+    margin-right: 5px; 
+}
+
+input[type="number"]:hover,
+input[type="number"]:focus {
+    border-color: #36aaf7; 
+    outline: none;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="number"]:invalid {
+    border-color: #FF0000;
 }

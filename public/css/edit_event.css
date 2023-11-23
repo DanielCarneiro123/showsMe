@@ -1,0 +1,58 @@
+.edit-event {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.edit-event h2 {
+    margin-top: 2em;
+    font-size: 3em;
+    margin-bottom: 20px;
+}
+
+.edit-event article {
+    padding: 20px;
+    background-color: var(--gray);
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+.edit-event label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+.edit-event input[type="text"],
+.edit-event textarea,
+.edit-event input[type="datetime-local"] {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 16px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.edit-event textarea {
+    height: 100px;
+    resize: vertical;
+}
+
+.button-update-event {
+    background-color: #4caf50;
+    color: #fff;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.button-update-event:hover {
+    background-color: #45a049;
+}
+
+.text-danger {
+    color: #ff0000;
+    font-size: 14px;
+}

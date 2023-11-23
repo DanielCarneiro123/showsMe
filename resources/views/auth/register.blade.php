@@ -1,65 +1,77 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>Ticketlane</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="{{ asset('css/style.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('css/auth.css') }}">
-    <link rel="icon" type="image/png" href="../images/logo1.png">
-    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js" defer></script>
-</head>
-<body>
-    <div class="limiter">
-        <div class="login-container" style="background-image: url('../images/background.png');">
-            <div class="login-wrapper">
-                <form class="login-form validate-form" method="POST" action="{{ route('register') }}">
-                    {{ csrf_field() }}
+@extends('layouts.app')
 
-                    <span class="login-form-title">User Register</span>
+@section('content')
+<section class="auth-section">
+    <form class="auth-form" method="POST" action="{{ route('register') }}">
+        <h2>Register</h2>
+        {{ csrf_field() }}
 
-                    <div class="input-wrapper field">
-                        <ion-icon class="icon" name="person"></ion-icon>
-                        <input class="input" type="text" name="name" placeholder="Full name" value="{{ old('name') }}" required autofocus>
-                    </div>
+        <div class="input-group">
+            <label for="name">Name</label>
+            <div class="icon-input">
+                <i class="fas fa-user"></i>
+                <input id="name" type="text" placeholder="Type your name" name="name" value="{{ old('name') }}" required autofocus>
+            </div>
+            @if ($errors->has('name'))
+                <span class="error">
+                    {{ $errors->first('name') }}
+                </span>
+            @endif
+        </div>
 
-                    <div class="input-wrapper field">
-                        <ion-icon class="icon" name="person"></ion-icon>
-                        <input class="input" type="email" name="email" placeholder="Email" value="{{ old('email') }}" required>
-                    </div>
+        <div class="input-group">
+            <label for="email">E-mail</label>
+            <div class="icon-input">
+                <i class="fas fa-envelope"></i>
+                <input id="email" type="email" placeholder="Type your email" name="email" value="{{ old('email') }}" required>
+            </div>
+            @if ($errors->has('email'))
+                <span class="error">
+                    {{ $errors->first('email') }}
+                </span>
+            @endif
+        </div>
 
-                    <div class="input-wrapper field">
-                        <ion-icon class="icon" name="lock-closed"></ion-icon>
-                        <input class="input" type="password" name="password" placeholder="Password" required>
-                    </div>
+        <div class="input-group">
+            <label for="phone">Phone Number</label>
+            <div class="icon-input">
+                <i class="fas fa-phone"></i>
+                <input id="phone" type="tel" placeholder="Type your phone number" name="phone_number" value="{{ old('phone_number') }}" required patter="[0-9]{9}">
+            </div>
+            @if ($errors->has('phone'))
+                <span class="error">
+                    {{ $errors->first('phone') }}
+                </span>
+            @endif
+        </div>
 
-                    <div class="input-wrapper field">
-                        <ion-icon class="icon" name="lock-closed"></ion-icon>
-                        <input class="input" type="password" name="password_confirmation" placeholder="Confirm password" required>
-                    </div>
+        <div class="input-group">
+            <label for="password">Password</label>
+            <div class="icon-input">
+                <i class="fas fa-lock"></i>
+                <input id="password" type="password" placeholder="Type your password" name="password" required>
+            </div>
+            @if ($errors->has('password'))
+                <span class="error">
+                    {{ $errors->first('password') }}
+                </span>
+            @endif
+        </div>
 
-                    <div class="terms">
-                        <input type="checkbox" id="acceptTerms">
-                        <label for="acceptTerms" class="round-checkbox"></label>
-                        <span> Accept
-                            <strong> Terms & Conditions</strong>
-                        </span>
-                    </div>
-
-                    <div class="btn-wrapper">
-                        <button class="register-btn"> Register </button>
-                    </div>
-
-                    <div class="toggle-register">
-                        <span> Already registered?
-                            <a href="{{ route('login') }}" class="toggle-register"> Login </a>
-                        </span>
-                    </div>
-                </form>
+        <div class="input-group">
+            <label for="password-confirm">Confirm Password</label>
+            <div class="icon-input">
+                <i class="fas fa-lock"></i>
+                <input id="password-confirm" type="password" placeholder="Confirm your password" name="password_confirmation" required>
             </div>
         </div>
-    </div>
-    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
-</body>
-</html>
+
+        <button type="submit">
+            Register
+        </button>
+        <p class="auth-message">
+            Already have an account? <a href="{{ route('login') }}" class="auth-link">Login here</a>.
+        </p>
+    </form>
+</section>
+@endsection

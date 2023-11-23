@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 
@@ -19,8 +19,8 @@ class LoginController extends Controller
     public function showLoginForm()
     {
         if (Auth::check()) {
-            dd('User is authenticated. Redirecting to /allevents');
-            return redirect('/allevents');
+            dd('User is authenticated. Redirecting to /all-events');
+            return redirect('/all-events');
         } else {
             return view('auth.login');
         }
@@ -35,15 +35,20 @@ class LoginController extends Controller
             'email' => ['required', 'email'],
             'password' => ['required'],
         ]);
- 
-        if (Auth::attempt($credentials, $request->filled('remember'))) {
-            $request->session()->regenerate();
- 
-            return redirect()->intended('/allevents');
+
+        // Check if the user is active
+        $user = User::where('email', $credentials['email'])->first();
+
+        if ($user && $user->active) {
+            if (Auth::attempt($credentials, $request->filled('remember'))) {
+                $request->session()->regenerate();
+
+                return redirect()->intended('/all-events');
+            }
         }
- 
+
         return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
+            'email' => 'The provided credentials do not match our records or the account is not active.',
         ])->onlyInput('email');
     }
 
@@ -52,6 +57,7 @@ class LoginController extends Controller
      */
     public function logout(Request $request)
     {
+        
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -26,7 +27,7 @@ class Comment extends Model
      *
      * @var string
      */
-    protected $table = 'Comment_';
+    protected $table = 'comment_';
 
     /**
      * The primary key for the model.
@@ -56,5 +57,12 @@ class Comment extends Model
     public function author()
     {
         return $this->belongsTo(UserClass::class, 'author_id', 'user_id');
+    }
+
+    // Comment.php (model)
+
+    public function reports()
+    {
+        return $this->hasMany(Report::class, 'comment_id');
     }
 }

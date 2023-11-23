@@ -24,7 +24,7 @@ class TicketInstance extends Model
      *
      * @var string
      */
-    protected $table = 'TicketInstance';
+    protected $table = 'ticketinstance';
 
     /**
      * The primary key for the model.

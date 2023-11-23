@@ -43,7 +43,7 @@ class Notification extends Model
      *
      * @var string
      */
-    protected $table = 'Notification_';
+    protected $table = 'notification_';
 
     /**
      * Get the user that was notified.
