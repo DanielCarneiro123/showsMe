@@ -13,6 +13,7 @@
         <!-- Styles -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
         <link href="{{ asset('css/style.css') }}" rel="stylesheet">
+        <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
         <link href="{{ asset('css/auth.css') }}" rel="stylesheet" >
         <link href="{{ asset('css/contact.css') }}" rel="stylesheet">
         <link href="{{ asset('css/event.css') }}" rel="stylesheet">
@@ -37,36 +38,54 @@
     </head>
     <body>
         <main>
-            <header>
-                <a href="{{ url('/all-events') }}" id="logo">show<span>s</span>me</a>
-                <nav id='header-nav'>
-                    
-
-                    @auth
-                        <a href="{{ route('my-events') }}">MyEvents</a> 
-                        <a href="{{ route('my-tickets') }}">MyTickets</a> 
-                        <a href="{{ route('profile') }}">Profile</a> 
-                    @endauth
-                    <a href="{{ route('create-event') }}">Create Event</a> 
-                    <a href="{{ route('faq') }}">FAQs</a> 
-                    <a href="{{ route('about-us') }}">About Us</a> 
+        <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{{ url('/all-events') }}" id="logo">show<span>s</span>me</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarColor01">
+                <ul class="navbar-nav me-auto">
+                @auth   
+                <li class="nav-item">
+                   <a class="nav-link" href="{{ route('my-events') }}">MyEvents</a> 
+                </li> 
+                <li class="nav-item">  
+                   <a class="nav-link" href="{{ route('my-tickets') }}">MyTickets</a> 
+                </li> 
+                <li class="nav-item">  
+                   <a class="nav-link" href="{{ route('profile') }}">Profile</a>
+                </li> 
+                @endauth
+                <li class="nav-item">
+                   <a class="nav-link" href="{{ route('create-event') }}">Create Event</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('faq') }}">FAQs</a> 
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('about-us') }}">About Us</a> 
+                </li>
             
-                    @if(auth()->user() && auth()->user()->is_admin)
-                        <a href="{{ route('admin') }}">Admin</a> 
-                    @endif
-                
-            
-                </nav>
+                @if(auth()->user() && auth()->user()->is_admin)
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('admin') }}">Admin</a> 
+                </li>
+                @endif   
+                </ul>
                 <section id='header-buttons'>
                     @if (Auth::check())
-                        <span>{{ Auth::user()->name}}</span>
-                        <a class="button login" href="{{ url('/logout') }}"> Logout </a>
+                        <span class="text-light">{{ Auth::user()->name}}</span>
+                        <a class="btn btn-outline-secondary" href="{{ url('/logout') }}"> Logout </a>
                     @else
-                        <a class="button login" href="{{ url('/login') }}"> login </a>
-                        <a class="button" id="register" href="{{ url('/register') }}"> register </a>
+                        <a class="btn btn-primary" href="{{ url('/login') }}"> Login </a>
+                        <a class="btn btn-primary" href="{{ url('/register') }}"> Register </a>
                     @endif
                 </section>
-            </header>
+                </div>
+            </div>
+        </nav>
+
             @if(session('error'))
             <div class="alert alert-danger" style="color: red;">
                     {{ session('error') }}
