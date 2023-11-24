@@ -12,8 +12,10 @@
 
         <!-- Styles -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-        <link href="{{ asset('css/style.css') }}" rel="stylesheet">
+        <link href="{{ asset('css/header.css') }}" rel="stylesheet">
+       
         <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
+   
         <link href="{{ asset('css/auth.css') }}" rel="stylesheet" >
         <link href="{{ asset('css/contact.css') }}" rel="stylesheet">
         <link href="{{ asset('css/event.css') }}" rel="stylesheet">
@@ -25,6 +27,7 @@
         <link href="{{ asset('css/create_event.css') }}" rel="stylesheet">
         <link href="{{ asset('../css/pagination.css') }}" rel="stylesheet">
         <link href="{{ asset('../css/edit_event.css') }}" rel="stylesheet">
+        <link href="{{ asset('css/style.css') }}" rel="stylesheet">
         <link rel="icon" type="image/png" href="{{ asset('images/logo1.png') }}">
         <script type="text/javascript">
             // Fix for Firefox autofocus CSS bug

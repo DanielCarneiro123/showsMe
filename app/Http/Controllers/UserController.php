@@ -57,6 +57,13 @@ class UserController extends Controller
 
     return response()->json(['message' => 'Perfil atualizado com sucesso']);
 }
+public function editProfile()
+{
+    // Add logic to fetch user details (you may use Auth::user() or any other method)
+    $user = auth()->user();
+
+    return view('edit_profile', compact('user'));
+}
 
 
 }

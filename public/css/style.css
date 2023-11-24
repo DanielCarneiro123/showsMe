@@ -26,7 +26,7 @@ h1 {
 }
 
 h1 span {
-  color: var(--light-blue);
+  color: rgb(192, 148, 198);
 }
 
 /* Event card */
@@ -275,18 +275,7 @@ footer .rights {
   font-weight: 100;
 }
 
-.a-button,
-button {
-  font-size: 1.2em;
-  font-weight: bold;
-  padding: 12px 20px;
-  text-decoration: none;
-  background: linear-gradient(to bottom, #1279bd, #36aaf7);
-  border-radius: 15px;
-  margin-left: 1em; 
-  color: #fff;
-  transition: transform 0.3s ease; 
-}
+
 
 .a-button:hover,
 button:hover {

@@ -4,13 +4,16 @@
 
 @section('content')
 <section id="profile">
-    <h1>Profile</h1>
 
-    <p id="user_email">Email: {{ $user->email }}</p>
-    <p id="user_name">Name: {{ $user->name }}</p>
-    <p id="user_promotor_code">Promotor Code: {{ $user->promotor_code }}</p>
-    <p id="user_phone_number">Phone Number: {{ $user->phone_number }}</p>
+            <i class="fa-regular fa-user"></i>
+           
 
+  
+    <p id="user_email"><strong>Email: </strong>{{ $user->email }}</p>
+    <p id="user_name"><strong>Name: </strong>{{ $user->name }}</p>
+    <p id="user_promotor_code"><strong>Promotor Code:</strong> {{ $user->promotor_code }}</p>
+    <p id="user_phone_number"><strong>Phone Number:</strong> {{ $user->phone_number }}</p>
+<!--
 <section>
     @csrf
 
@@ -38,9 +41,9 @@
         <span class="text-danger">{{ $message }}</span>
     @enderror
     <br>
-        <button id="update-profile-button" onclick="updateProfile()">Save Changes</button>
+        <button type="button" class="btn btn-outline-primary" id="update-profile-button" onclick="updateProfile()">Save Changes</button>
     </br>
-</section>
+</section>-->
 
 
 @endsection
