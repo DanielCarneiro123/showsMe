@@ -211,7 +211,6 @@ function updateProfile() {
 }
 
 function updateTicketPageContent(formData) {
-
   let ticketTypesContainer = document.getElementById('ticket-types-container');
   let newTicketType = document.createElement('article');
   newTicketType.className = 'ticket-type'; 
@@ -222,6 +221,12 @@ function updateTicketPageContent(formData) {
       <p>Price: ${formData.ticket_price} €</p>
       <label for="quantity_${formData.ticket_type_id}">Quantity:</label>
       <input type="number" id="quantity_${formData.ticket_type_id}" name="quantity[${formData.ticket_type_id}]" min="0" max="${formData.ticket_person_limit}">
+      
+      <!-- New Stock -->
+      <p>New Stock:
+      <input type="number" id="new_stock_${formData.ticket_type_id}" name="new_stock" value="${formData.ticket_stock}" required>
+      </p>
+      <button class="button-update-stock" onclick="updateStock(${formData.ticket_type_id})" form="purchaseForm">Update Stock</button>
   `;
   ticketTypesContainer.appendChild(newTicketType);
 
@@ -232,6 +237,7 @@ function updateTicketPageContent(formData) {
   document.getElementById('ticket_price').value = '';
   document.getElementById('ticket_start_timestamp').value = '';
   document.getElementById('ticket_end_timestamp').value = '';
+  
 }
 
 function createTicketType(event_id) {
