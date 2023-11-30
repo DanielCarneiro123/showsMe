@@ -6,17 +6,19 @@
 
     @auth
         <h1>Create Event</h1>
+
+        <div class="progress" id="progress-bar-container">
+            <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>
+        </div>
+
+
         <!-- Conteúdo do formulário de criação de evento para utilizadores autenticados -->
         <form method="POST" id="create-event-form" action="{{ url('/create-event') }}">
             @csrf
-            <!-- Form fields -->
 
-            <!-- Event Name -->
-            <div class="input-group">
-                <label for="name">Event Name:</label>
-                <div class="icon-input">
-                    <i class="fas fa-tag"></i>
-                    <input type="text" placeholder="Type the name of the event" name="name" required>
+            <div class="form-group">
+                <label for="name" class="form-label mt-4">Event Name:</label>
+                    <input type="text" class="form-control form-field" id="name" name="name" placeholder="Type the name of the event" required>
                 </div>
                 @error('name')
                     <span class="text-danger">{{ $message }}</span>
@@ -24,54 +26,44 @@
             </div>
 
             <!-- Event Description -->
-            <div class="input-group">
-                <label for="description">Event Description:</label>
-                <div class="icon-input">
-                    <i class="fas fa-file-alt"></i>
-                    <textarea id="description" placeholder="Type a short description of the event" name="description"></textarea>
-                </div>
+            <div class="form-group">
+                <label for="description" class="form-label mt-4">Event Description:</label>
+                <textarea id="description" class="form-control form-field" placeholder="Type a short description of the event" name="description"></textarea>
                 @error('description')
                     <span class="text-danger">{{ $message }}</span>
                 @enderror
             </div>
 
+
             <!-- Event Location -->
-            <div class="input-group">
-                <label for="location">Event Location:</label>
-                <div class="icon-input">
-                    <i class="fas fa-map-marker-alt"></i>
-                    <input type="text" placeholder="Type the location of the event" name="location" required>
-                </div>
+            <div class="form-group">
+                <label for="location" class="form-label mt-4">Event Location:</label>
+                <input type="text" class="form-control form-field" id="location" name="location" placeholder="Type the location of the event" required>
                 @error('location')
                     <span class="text-danger">{{ $message }}</span>
                 @enderror
             </div>
 
             <!-- Start Timestamp -->
-            <div class="input-group">
-                <label for="start_timestamp">Start Timestamp:</label>
-                <div class="icon-input">
-                    <i class="far fa-clock"></i>
-                    <input type="datetime-local" name="start_timestamp" required>
-                </div>
+            <div class="form-group">
+                <label for="start_timestamp" class="form-label mt-4">Start Timestamp:</label>
+                <input type="datetime-local" class="form-control form-field" name="start_timestamp" required>
                 @error('start_timestamp')
                     <span class="text-danger">{{ $message }}</span>
                 @enderror
             </div>
 
             <!-- End Timestamp -->
-            <div class="input-group">
-                <label for="end_timestamp">End Timestamp:</label>
-                <div class="icon-input">
-                    <i class="far fa-clock"></i>
-                    <input type="datetime-local" name="end_timestamp" required>
-                </div>
+            <div class="form-group">
+                <label for="end_timestamp" class="form-label mt-4">End Timestamp:</label>
+                <input type="datetime-local" class="form-control form-field" name="end_timestamp" required>
                 @error('end_timestamp')
                     <span class="text-danger">{{ $message }}</span>
                 @enderror
             </div>
 
-            <button type="submit">Create Event</button>
+            <button class="btn btn-primary" type="submit" >Create Event</button>
+
         </form>
 
     @else

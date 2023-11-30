@@ -216,17 +216,14 @@ class EventController extends Controller
 
     
     public function searchEvents(Request $request)
-{
-    $query = $request->input('query');
+    {
+        $query = $request->input('query');
 
-    $events = Event::whereRaw('tsvectors @@ plainto_tsquery(?)', [$query])
-        ->orderByRaw('ts_rank(tsvectors, plainto_tsquery(?)) DESC', [$query])
-        ->paginate(10);
+        $events = Event::whereRaw('tsvectors @@ plainto_tsquery(?)', [$query])
+            ->orderByRaw('ts_rank(tsvectors, plainto_tsquery(?)) DESC', [$query])
+            ->paginate(10);
 
-    return view('pages.all_events', compact('events'));
-}
-
-    
-
+        return view('pages.all_events', compact('events'));
+    }   
 }
 ?>

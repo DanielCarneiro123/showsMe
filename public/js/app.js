@@ -145,9 +145,6 @@ function activateUser(userId) {
   sendAjaxRequest('PUT', '/activateUser/' + userId, formData, moveUserToActiveTable(userId)); 
 }
 
-
-  addEventListeners();
-
   
   
   function updateEventPageContent(formData) {
@@ -271,6 +268,20 @@ function createTicketType(event_id) {
     return;
   }
 
+  let eventStartTimestamp = document.getElementById('edit_start_timestamp').value;
+  let eventEndTimestamp = document.getElementById('edit_end_timestamp').value;
+
+  if (ticketStartTimestamp < eventStartTimestamp || ticketStartTimestamp >= eventEndTimestamp) {
+      alert("A data de início do ingresso deve ser maior ou igual à data de início do evento e menor que a data de fim do evento.");
+      return;
+  }
+
+  if ((ticketEndTimestamp && ticketEndTimestamp <= eventStartTimestamp) || (ticketEndTimestamp && ticketEndTimestamp > eventEndTimestamp)) {
+      alert("A data de término do ingresso deve ser maior que a data de início do evento e menor ou igual à data de fim do evento.");
+      return;
+  }
+
+
   let formData = {
       'ticket_name': ticketName,
       'ticket_stock': ticketStock,
@@ -285,11 +296,6 @@ function createTicketType(event_id) {
 
   updateTicketPageContent(formData);
 }
-
-
-
-
-addEventListeners();
 
 
 
@@ -335,3 +341,29 @@ function toggleProfileButtons() {
     document.getElementById('edit_promotor_code').disabled = false;
     document.getElementById('edit_phone_number').disabled = false;
 }
+
+
+$(document).ready(function() {
+  let totalFields = $(".form-field").length;
+
+  function updateProgressBar() {
+      let filledFields = $(".form-field").filter(function() {
+          return this.value !== "";
+      }).length;
+
+      let progress = (filledFields / totalFields) * 100;
+      $("#progress-bar-container .progress-bar").css("width", progress + "%");
+      $("#progress-bar-container .progress-bar").attr("aria-valuenow", progress);
+  }
+
+  $(".form-field").on("input", function() {
+      updateProgressBar();
+  });
+
+  $(".form-field").on("change", function() {
+      updateProgressBar();
+  });
+});
+
+
+addEventListeners();

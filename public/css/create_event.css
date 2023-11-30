@@ -42,22 +42,6 @@
     font-weight:500;
 }
 
-#create-event-form button {
-    margin-top: 20px;
-    font-size: 1.2em;
-    font-weight: bold;
-    width: 100%;
-    text-decoration: none;
-    border-radius: 27px;
-    padding: 12px 15px;
-    cursor: pointer;
-    display: inline-block;
-    background: linear-gradient(to bottom, #1279bd, #36aaf7); /* Gradient background */
-    color: #fff;
-    margin-bottom: 10px;
-    transition: transform 0.3s ease; /* Add a smooth transition effect on transform property */
-}
-
 
 #create-event-form button:hover {
     transform: scale(0.95); 
