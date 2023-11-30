@@ -75,6 +75,6 @@ header a:hover {
     color:white;
 }
 
-#header-buttons span {
+#header-buttons a {
     margin-right: 10px;
 }

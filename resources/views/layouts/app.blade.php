@@ -56,9 +56,7 @@
                 <li class="nav-item">  
                    <a class="nav-link" href="{{ route('my-tickets') }}">MyTickets</a> 
                 </li> 
-                <li class="nav-item">  
-                   <a class="nav-link" href="{{ route('profile') }}">Profile</a>
-                </li> 
+                
                 @endauth
                 <li class="nav-item">
                    <a class="nav-link" href="{{ route('create-event') }}">Create Event</a>
@@ -78,7 +76,7 @@
                 </ul>
                 <section id='header-buttons'>
                     @if (Auth::check())
-                        <span id="user-header-name" class="text-light">{{ Auth::user()->name}}</span>
+                        <a id="user-header-name" class="text-light"  href="{{ route('profile') }}">{{ Auth::user()->name}}</a>
                         <a class="btn btn-outline-secondary" href="{{ url('/logout') }}"> Logout </a>
                     @else
                         <a class="btn btn-primary" href="{{ url('/login') }}"> Login </a>

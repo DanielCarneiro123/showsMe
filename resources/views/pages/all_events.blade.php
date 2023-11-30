@@ -6,11 +6,18 @@
     
 
     <h1>Featured <span>Events</span></h1>
-
-    <form method="GET" action="{{ route('search-events') }}">
-        <input type="text" name="query" placeholder="Search events...">
-        <button type="submit">Search</button>
+    <section class="centered-section">
+    <form  class="row" method="GET" action="{{ route('search-events') }}">
+    <div class="col-sm-8">
+    <input class="form-control me-sm-2" type="text" name="query" placeholder="Search events...">
+    </div>
+    <div class="col-sm-4">
+    <button class="btn btn-primary" type="submit">Search</button>
+        </div>
     </form>
+
+    </section>
+  
 
     @foreach ($events as $event)
     <a href="{{ route('view-event', ['id' => $event->event_id]) }}" class="event-link">

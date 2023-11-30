@@ -12,7 +12,7 @@
             <!-- Form fields -->
 
             <!-- Event Name -->
-            <div class="input-group">
+            <div class="my-input-group">
                 <label for="name">Event Name:</label>
                 <div class="icon-input">
                     <i class="fas fa-tag"></i>
@@ -24,7 +24,7 @@
             </div>
 
             <!-- Event Description -->
-            <div class="input-group">
+            <div class="my-input-group">
                 <label for="description">Event Description:</label>
                 <div class="icon-input">
                     <i class="fas fa-file-alt"></i>
@@ -36,7 +36,7 @@
             </div>
 
             <!-- Event Location -->
-            <div class="input-group">
+            <div class="my-input-group">
                 <label for="location">Event Location:</label>
                 <div class="icon-input">
                     <i class="fas fa-map-marker-alt"></i>
@@ -48,7 +48,7 @@
             </div>
 
             <!-- Start Timestamp -->
-            <div class="input-group">
+            <div class="my-input-group">
                 <label for="start_timestamp">Start Timestamp:</label>
                 <div class="icon-input">
                     <i class="far fa-clock"></i>
@@ -60,7 +60,7 @@
             </div>
 
             <!-- End Timestamp -->
-            <div class="input-group">
+            <div class="my-input-group">
                 <label for="end_timestamp">End Timestamp:</label>
                 <div class="icon-input">
                     <i class="far fa-clock"></i>

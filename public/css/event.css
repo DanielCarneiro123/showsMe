@@ -169,3 +169,9 @@ input[type="number"]::-webkit-outer-spin-button {
 input[type="number"]:invalid {
     border-color: #FF0000;
 }
+
+.centered-section {
+   
+    align-items: center;
+    padding: 1rem 11em;
+}
