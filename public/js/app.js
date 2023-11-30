@@ -180,9 +180,20 @@ function updateProfilePageContent(formData) {
     document.getElementById('user_email').innerHTML = "Email: " + formData.edit_email;
     document.getElementById('user_promotor_code').innerHTML = "Promotor Code: " + formData.edit_promotor_code;
     document.getElementById('user_phone_number').innerHTML = "Phone Number: " + formData.edit_phone_number;
+    
+
   }
 
 function updateProfile() {
+
+  document.getElementById('update-profile-button').style.display = 'none';
+  document.getElementById('edit-profile-button').style.display = 'block';
+  document.getElementById('edit_name').disabled = true;
+  document.getElementById('edit_email').disabled = true;
+  document.getElementById('edit_promotor_code').disabled = true;
+  document.getElementById('edit_phone_number').disabled = true;
+
+
   let formData = {
       'edit_name': document.getElementById('edit_name').value,
       'edit_email': document.getElementById('edit_email').value,
@@ -198,6 +209,7 @@ function updateProfile() {
   updateProfilePageContent(formData);
   
   //depois tenho de colocar uma mensagem a dizer que foi alterado
+
 
 }
 
@@ -312,4 +324,14 @@ function event2Handler(){
     activate.textContent = 'Activate Event'
     activate.classList.add('active')
   }
+}
+
+function toggleProfileButtons() {
+  document.getElementById('edit-profile-button').style.display = 'none';
+  document.getElementById('update-profile-button').style.display = 'block';
+
+    document.getElementById('edit_name').disabled = false;
+    document.getElementById('edit_email').disabled = false;
+    document.getElementById('edit_promotor_code').disabled = false;
+    document.getElementById('edit_phone_number').disabled = false;
 }
