@@ -78,7 +78,7 @@
                 </ul>
                 <section id='header-buttons'>
                     @if (Auth::check())
-                        <span class="text-light">{{ Auth::user()->name}}</span>
+                        <span id="user-header-name" class="text-light">{{ Auth::user()->name}}</span>
                         <a class="btn btn-outline-secondary" href="{{ url('/logout') }}"> Logout </a>
                     @else
                         <a class="btn btn-primary" href="{{ url('/login') }}"> Login </a>

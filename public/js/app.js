@@ -176,11 +176,7 @@ function activateUser(userId) {
   }
 
 function updateProfilePageContent(formData) {
-    document.getElementById('user_name').innerHTML = "Name: " + formData.edit_name;
-    document.getElementById('user_email').innerHTML = "Email: " + formData.edit_email;
-    document.getElementById('user_promotor_code').innerHTML = "Promotor Code: " + formData.edit_promotor_code;
-    document.getElementById('user_phone_number').innerHTML = "Phone Number: " + formData.edit_phone_number;
-    
+  document.getElementById('user-header-name').innerText = formData.edit_name;
 
   }
 
