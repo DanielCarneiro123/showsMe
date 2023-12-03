@@ -52,6 +52,7 @@ Route::controller(AboutUsController::class)->group(function () {
 Route::controller(TicketController::class)->group(function () {
     Route::get('/my-tickets', [TicketController::class, 'myTickets'])->name('my-tickets')->middleware('auth');
     Route::post('/update-ticket-stock/{ticketTypeId}', [TicketController::class, 'updateTicketStock'])->name('updateTicketStock');
+    Route::get('/ticket-verification/{id}', 'verifyTicket')->name('ticket-verification');
 });
 
 

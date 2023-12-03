@@ -1,9 +1,6 @@
-
-
 <!-- pages/my_tickets.blade.php -->
 
 @extends('layouts.app')
-
 
 @section('content')
     <h1>My <span>Tickets</span></h1>
@@ -16,7 +13,10 @@
                 <p>Ticket Type: {{ $ticketInstance->ticketType->name }}</p>
                 <p>Start Time: {{ $ticketInstance->ticketType->event->start_timestamp }}</p>
                 <p>End Time: {{ $ticketInstance->ticketType->event->end_timestamp }}</p>
-                <img src="{{ route('ticket-verification', ['id' => $ticketInstance->ticket_instance_id]) }}" alt="QR Code">
+                {!! QrCode::size(100)->generate(Request::input('id', $ticketInstance->ticket_instance_id)) !!}
+                
+                <!-- <img src="{{ route('ticket-verification', ['id' => $ticketInstance->ticket_instance_id]) }}" alt="QR Code"> --> 
+                <!-- Add more fields as needed -->
             </article>
         @endforeach
     </section>
