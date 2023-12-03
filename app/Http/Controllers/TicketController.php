@@ -39,5 +39,12 @@ class TicketController extends Controller
         return view('pages.my_tickets', compact('ticketInstances'));
     }
     
+    public function generateQRCode()
+    {
+        $url = route('ticket-verification', ['id' => $this->ticket_instance_id]);
+
+        return QrCode::size(200)->generate($url);
+    }
+
 }
 ?>

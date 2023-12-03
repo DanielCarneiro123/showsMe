@@ -16,7 +16,7 @@
                 <p>Ticket Type: {{ $ticketInstance->ticketType->name }}</p>
                 <p>Start Time: {{ $ticketInstance->ticketType->event->start_timestamp }}</p>
                 <p>End Time: {{ $ticketInstance->ticketType->event->end_timestamp }}</p>
-                <!-- Add more fields as needed -->
+                <img src="{{ route('ticket-verification', ['id' => $ticketInstance->ticket_instance_id]) }}" alt="QR Code">
             </article>
         @endforeach
     </section>
