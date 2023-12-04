@@ -1,5 +1,3 @@
-<!-- pages/my_tickets.blade.php -->
-
 @extends('layouts.app')
 
 @section('content')
@@ -12,12 +10,16 @@
                 <p>Location: {{ $ticketInstance->ticketType->event->location }}</p>
                 <p>Ticket Type: {{ $ticketInstance->ticketType->name }}</p>
                 <p>Start Time: {{ $ticketInstance->ticketType->event->start_timestamp }}</p>
-                <p>End Time: {{ $ticketInstance->ticketType->event->end_timestamp }}</p>
-                {!! QrCode::size(100)->generate(Request::input('id', $ticketInstance->ticket_instance_id)) !!}
-                
-                <!-- <img src="{{ route('ticket-verification', ['id' => $ticketInstance->ticket_instance_id]) }}" alt="QR Code"> --> 
-                <!-- Add more fields as needed -->
+                <p>End Time: {{ $ticketInstance->ticketType->event->start_timestamp }}</p>
+
+                @if ($ticketInstance->qr_code_path)
+                    {!! QrCode::size(100)->generate($ticketInstance->qr_code_path) !!}
+                @else
+                    {!! QrCode::size(100)->generate(Request::input('id', $ticketInstance->ticket_instance_id)) !!}
+                @endif
+                <!-- Adicione mais campos conforme necessário -->
             </article>
         @endforeach
     </section>
 @endsection
+

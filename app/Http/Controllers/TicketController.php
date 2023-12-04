@@ -39,27 +39,5 @@ class TicketController extends Controller
         return view('pages.my_tickets', compact('ticketInstances'));
     }
 
-    public function generateQRCode()
-    {
-        $url = route('ticket-verification', ['id' => $this->ticket_instance_id]);
-
-        return QrCode::size(200)->generate($url);
-    }
-
-    public function verifyTicket($id)
-    {
-        $ticketInstance = TicketInstance::findOrFail($id);
-
-        /*if ($ticketInstance->order->buyer_id == Auth::user()->user_id) {
-            // Lógica de verificação bem-sucedida
-            return "Bilhete válido!";
-        } else {
-            // Lógica de bilhete inválido
-            return "Bilhete inválido.";
-        }*/
-
-        // Retorne a imagem do QR code como resposta
-        return Response::make($this->generateQRCode($ticketInstance))->header('Content-Type', 'image/png');
-    }
-
+    
 }

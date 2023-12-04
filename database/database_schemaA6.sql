@@ -94,7 +94,8 @@ CREATE TABLE TicketOrder (
 CREATE TABLE TicketInstance (
    ticket_instance_id SERIAL PRIMARY KEY,
    ticket_type_id INT NOT NULL REFERENCES TicketType (ticket_type_id) ON UPDATE CASCADE,
-   order_id INT NOT NULL REFERENCES TicketOrder(order_id) ON UPDATE CASCADE
+   order_id INT NOT NULL REFERENCES TicketOrder(order_id) ON UPDATE CASCADE,
+   qr_code_path TEXT
 );
 
 CREATE TABLE Tag (
@@ -288,6 +289,7 @@ EXECUTE FUNCTION check_duplicate_report();
 -- Inserts for Users
 INSERT INTO users (email, name, password, phone_number, promotor_code, is_admin, active) 
 VALUES 
+  ('danielmc2116@gmail.com', 'Daniel', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', '913756968', NULL, TRUE, TRUE),
   ('user1@example.com', 'John Doe', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', '1234567890', NULL, FALSE, TRUE),
   ('user2@example.com', 'Jane Smith', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', '9876543210', NULL, FALSE, TRUE),
   ('user3@example.com', 'Bob Johnson', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', '5551231567', NULL, FALSE, TRUE),

@@ -11,6 +11,11 @@ use Illuminate\Support\Facades\Redirect;
 use App\Models\TicketOrder;
 use App\Models\TicketInstance;
 use Illuminate\Auth\Access\AuthorizationException; 
+use Illuminate\Support\Facades\Mail;
+use App\Mail\TicketPurchaseConfirmation;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use Illuminate\Support\Facades\Storage;
+
 
 use Illuminate\Support\Facades\DB;
 
@@ -198,14 +203,17 @@ class EventController extends Controller
                         $ticketInstance = new TicketInstance();
                         $ticketInstance->ticket_type_id = $ticketTypeId;
                         $ticketInstance->order_id = $order->order_id;
+                        $qrCodePath = $this->generateQRCodePath($ticketInstance);
+                        $ticketInstance->qr_code_path = $qrCodePath;
                         $ticketInstance->save();
+                        Mail::to($buyer->email)->send(new TicketPurchaseConfirmation($ticketInstance)); 
                     }
                 } else {
                     return redirect()->route('view-event', ['id' => $eventId])->with('error', 'Invalid quantity for ticket type.');
                 }
             }
         }
-
+        
         return redirect()->route('my-tickets')->with('success', 'Tickets purchased successfully.');
     } catch (AuthorizationException $e) {
         return redirect()->route('login')->with('error', 'You must be logged in to purchase tickets.');
@@ -216,17 +224,29 @@ class EventController extends Controller
 
     
     public function searchEvents(Request $request)
-{
-    $query = $request->input('query');
+    {
+        $query = $request->input('query');
 
-    $events = Event::whereRaw('tsvectors @@ plainto_tsquery(?)', [$query])
-        ->orderByRaw('ts_rank(tsvectors, plainto_tsquery(?)) DESC', [$query])
-        ->paginate(10);
+        $events = Event::whereRaw('tsvectors @@ plainto_tsquery(?)', [$query])
+            ->orderByRaw('ts_rank(tsvectors, plainto_tsquery(?)) DESC', [$query])
+            ->paginate(10);
 
-    return view('pages.all_events', compact('events'));
-}
+        return view('pages.all_events', compact('events'));
+    }
 
-    
+    private function generateQRCodePath(TicketInstance $ticketInstance)
+    {
+        $qrCode = QrCode::format('png')
+            ->size(300)
+            ->generate(route('my-tickets', ['id' => $ticketInstance->id]));
+
+        $filename = $ticketInstance->id . $ticketInstance->order_id . '_qrcode.png';
+        $path = storage_path('app/public/qrcodes/' . $filename);
+
+        Storage::disk('public')->put('qrcodes/' . $filename, $qrCode);
+
+        return 'qrcodes/' . $filename;
+    }
 
 }
 ?>

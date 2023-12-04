@@ -26,6 +26,7 @@ use App\Http\Controllers\UserController;
 // Home
 Route::redirect('/', '/all-events');
 
+Route::post('/send', [MailController::class, 'send']);
 
 Route::controller(EventController::class)->group(function () {
     Route::get('/all-events', 'index')->name('all-events');
@@ -39,6 +40,7 @@ Route::controller(EventController::class)->group(function () {
     Route::get('/search-events', [EventController::class, 'searchEvents'])->name('search-events');
     Route::post('/deactivate-event/{eventId}', 'deactivateEvent')->name('deactivate-event');
     Route::post('/activate-event/{eventId}', 'activateEvent')->name('activate-event');
+    Route::get('/generate-qrcode/{ticketInstanceId}', [EventController::class, 'generateQRCode'])->name('generate-qrcode');
 });
 
 Route::controller(FaqController::class)->group(function () {
@@ -52,7 +54,6 @@ Route::controller(AboutUsController::class)->group(function () {
 Route::controller(TicketController::class)->group(function () {
     Route::get('/my-tickets', [TicketController::class, 'myTickets'])->name('my-tickets')->middleware('auth');
     Route::post('/update-ticket-stock/{ticketTypeId}', [TicketController::class, 'updateTicketStock'])->name('updateTicketStock');
-    Route::get('/ticket-verification/{id}', 'verifyTicket')->name('ticket-verification');
 });
 
 
