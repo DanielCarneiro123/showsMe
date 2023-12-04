@@ -76,6 +76,18 @@
                 </ul>
                 <section id='header-buttons'>
                     @if (Auth::check())
+                    <li class="nav-item">
+                        <a class="text-light" href="" >
+                           
+                        
+                                {{ auth()->user()->unreadNotifications->count() }}
+
+                        </a>
+                       
+                    </li>
+                    <script>
+                        
+                    </script>
                         <a id="user-header-name" class="text-light"  href="{{ route('profile') }}">{{ Auth::user()->name}}</a>
                         <a class="btn btn-outline-secondary" href="{{ url('/logout') }}"> Logout </a>
                     @else

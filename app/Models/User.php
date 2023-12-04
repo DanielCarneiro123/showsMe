@@ -64,4 +64,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(Event::class, 'creator_id');
     }
+
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class, 'notified_user');
+    }
+
+    public function unreadNotifications()
+    {
+        return $this->notifications()->where('viewed', false);
+    }
 }

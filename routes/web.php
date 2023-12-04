@@ -11,6 +11,7 @@ use App\Http\Controllers\FaqController;
 use App\Http\Controllers\AboutUsController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\NotificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,6 +26,8 @@ use App\Http\Controllers\UserController;
 
 // Home
 Route::redirect('/', '/all-events');
+
+
 
 
 Route::controller(EventController::class)->group(function () {
@@ -44,6 +47,7 @@ Route::controller(EventController::class)->group(function () {
 Route::controller(FaqController::class)->group(function () {
     Route::get('/faq', [FaqController::class, 'index'])->name('faq');
 });
+
 
 Route::controller(AboutUsController::class)->group(function () {
     Route::get('/about-us', [AboutUsController::class, 'index'])->name('about-us');

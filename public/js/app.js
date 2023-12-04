@@ -331,3 +331,5 @@ function toggleProfileButtons() {
     document.getElementById('edit_promotor_code').disabled = false;
     document.getElementById('edit_phone_number').disabled = false;
 }
+
+

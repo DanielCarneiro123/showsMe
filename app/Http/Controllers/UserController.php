@@ -17,7 +17,8 @@ class UserController extends Controller
     public function getCurrentUser()
     {
         $user = Auth::user();
-        return view('pages.profile', compact('user'));
+        $notifications = $user->notifications;
+        return view('pages.profile', compact('user', 'notifications'));
     }
 
    // UserController.php
@@ -59,7 +60,7 @@ class UserController extends Controller
 }
 public function editProfile()
 {
-    // Add logic to fetch user details (you may use Auth::user() or any other method)
+    
     $user = auth()->user();
 
     return view('edit_profile', compact('user'));
