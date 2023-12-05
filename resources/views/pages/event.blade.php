@@ -34,7 +34,7 @@
 
 <section class="ticket-types">
     <h2>Ticket <span>Types</span></h2>
-    <form method="POST" action="{{ url('/purchase-tickets/'.$event->event_id) }}">
+    <!--<form method="POST" action="{{ url('/purchase-tickets/'.$event->event_id) }}"> -->
         @csrf
         <div id="ticket-types-container">
         @foreach ($event->ticketTypes as $ticketType)
@@ -60,9 +60,9 @@
         @endforeach
         </div>
         <br>
-        <button type="submit" class="btn btn-success event-button"  id="buy-button">  
-            <i class="fa-solid fa-credit-card"></i>Buy Tickets
-        </button>
+        <a href="{{ route('checkout', $event->event_id) }}" class="btn btn-success event-button">
+            <i class="fa-solid fa-credit-card"></i> Checkout
+        </a>
     </form>
 </section>
 

@@ -15,6 +15,10 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\TicketPurchaseConfirmation;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash; 
+
 
 
 use Illuminate\Support\Facades\DB;
@@ -166,10 +170,18 @@ class EventController extends Controller
         return view('pages.create_event');
     }
 
+
     public function purchaseTickets(Request $request, $eventId)
 {
     try {
         $event = Event::findOrFail($eventId);
+
+        // If the user is not logged in, create a temporary account
+        if (Auth::guest()) {
+            $user = $this->createTemporaryAccount($request);
+        } else {
+            $user = Auth::user();
+        }
 
         $this->authorize('purchaseTickets', $event);
 
@@ -181,12 +193,10 @@ class EventController extends Controller
             return redirect()->route('view-event', ['id' => $eventId])->with('error', 'Select at least one ticket type.');
         }
 
-        $buyer = Auth::user();
-
         $order = new TicketOrder();
         $order->timestamp = now();
         $order->promo_code = null;
-        $order->buyer_id = $buyer->user_id;
+        $order->buyer_id = $user->user_id; // Use the temporary user or logged-in user
         $order->save();
 
         foreach ($quantities as $ticketTypeId => $quantity) {
@@ -206,22 +216,49 @@ class EventController extends Controller
                         $qrCodePath = $this->generateQRCodePath($ticketInstance);
                         $ticketInstance->qr_code_path = $qrCodePath;
                         $ticketInstance->save();
-                        Mail::to($buyer->email)->send(new TicketPurchaseConfirmation($ticketInstance)); 
+                        Mail::to($user->email)->send(new TicketPurchaseConfirmation($ticketInstance));
                     }
                 } else {
                     return redirect()->route('view-event', ['id' => $eventId])->with('error', 'Invalid quantity for ticket type.');
                 }
             }
         }
-        
+
+        // Logout apenas se o usuário estiver autenticado
+        if (Auth::check()) {
+            Auth::logout();
+        }
+
         return redirect()->route('my-tickets')->with('success', 'Tickets purchased successfully.');
-    } catch (AuthorizationException $e) {
-        return redirect()->route('login')->with('error', 'You must be logged in to purchase tickets.');
     } catch (ModelNotFoundException $e) {
         return redirect()->route('view-event', ['id' => $eventId])->with('error', 'Invalid ticket type.');
     }
 }
 
+private function createTemporaryAccount(Request $request)
+{
+
+    $request->validate([
+        'name' => 'required|string',
+        'email' => 'required|email|unique:users,email', // Ensure email is unique in the users table
+        'phone_number' => 'required|string', // You might need to adjust this based on your requirements
+    ]);
+    // Generate a random password for the temporary account
+    $randomPassword = Str::random(12);
+
+    // Create a temporary user with the provided information
+    $user = new User();
+    $user->name = $request->input('name');
+    $user->email = $request->input('email');
+    $user->phone_number = $request->input('phone_number');
+    $user->password = Hash::make($randomPassword);
+    $user->save();
+
+    // Log in the temporary user
+    Auth::login($user);
+
+    return $user;
+}
     
     public function searchEvents(Request $request)
     {
