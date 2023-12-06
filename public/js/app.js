@@ -331,3 +331,13 @@ function toggleProfileButtons() {
     document.getElementById('edit_promotor_code').disabled = false;
     document.getElementById('edit_phone_number').disabled = false;
 }
+
+function toggleCheckoutSection() {
+  var checkoutSection = document.getElementById('checkout-section');
+  var buyButton = document.getElementById('buy-button');
+  var showForm = document.getElementById('show-form')
+
+  checkoutSection.style.display = 'block';
+  buyButton.style.display = 'inline';
+  showForm.style.display = 'none';
+}

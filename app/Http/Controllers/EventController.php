@@ -224,8 +224,8 @@ class EventController extends Controller
             }
         }
 
-        // Logout apenas se o usuário estiver autenticado
-        if (Auth::check()) {
+        // Logout apenas se o usuário estiver autenticado - if errado
+        if (Auth::check() && $user->temporary) {
             Auth::logout();
         }
 
@@ -252,6 +252,7 @@ private function createTemporaryAccount(Request $request)
     $user->email = $request->input('email');
     $user->phone_number = $request->input('phone_number');
     $user->password = Hash::make($randomPassword);
+    $user->temporary = true;
     $user->save();
 
     // Log in the temporary user

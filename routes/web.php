@@ -91,4 +91,4 @@ Route::controller(RegisterController::class)->group(function () {
 //Route::post('/purchase-tickets/{event_id}', [TicketController::class, 'purchase'])->name('purchase-tickets');
 
 
-Route::get('/checkout/{eventId}', [CheckoutController::class, 'showCheckoutPage'])->name('checkout');
+//Route::get('/checkout/{eventId}', [CheckoutController::class, 'showCheckoutPage'])->name('checkout');
