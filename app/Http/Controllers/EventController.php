@@ -276,6 +276,7 @@ private function createTemporaryAccount(Request $request)
 
         return view('pages.all_events', compact('events'));
     }
+}
 
     private function generateQRCodePath(TicketInstance $ticketInstance)
     {
