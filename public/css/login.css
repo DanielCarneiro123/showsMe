@@ -1,13 +1,13 @@
 .auth-section {
-    background: linear-gradient(to bottom, #073c5f, #36aaf7);
-    padding: 10%;
+    
+    padding: 2%;
 }
 
 .auth-form {
     background-color: white;
     border-radius: 10px;
     width: 33%;
-    padding: 3em 3em;
+    padding: 1.5em 1em;
     margin: auto;
     color: rgb(0, 0, 0);
     box-shadow: 5px 0 40px rgba(0, 0, 0, 0.2); 
@@ -30,19 +30,8 @@ h2 {
 }
 
 .auth-form button {
-    margin-top: 10px;
-    font-size: 1.2em;
-    font-weight: bold;
-    width: 100%;
-    text-decoration: none;
-    border-radius: 27px;
-    padding: 12px 15px;
-    cursor: pointer;
-    display: inline-block;
-    background: linear-gradient(to bottom, #1279bd, #36aaf7);
-    color: #fff;
-    margin-bottom: 10px;
-    transition: transform 0.3s ease; 
+
+  margin: auto;
 }
 
 
@@ -80,7 +69,7 @@ h2 {
     text-decoration: underline;
 }
 
-.input-group {
+.my-input-group {
     margin-bottom: 15px;
 }
 

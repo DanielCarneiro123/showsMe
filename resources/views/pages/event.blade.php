@@ -2,37 +2,51 @@
 
 @section('content')
 
-    <section class="event-thumbnail">
-        @if(auth()->user() && auth()->user()->is_admin)
-            @if ($event->private)
-                <form method="POST" action="{{ url('/activate-event/'.$event->event_id) }}">
-                    @csrf
-                    <button class="event-button" id="activate-button" type="submit">
-                        <i class="fa-solid fa-circle-check"></i> Activate Event
-                    </button>
-                </form>
-            @else
-                <form method="POST" action="{{ url('/deactivate-event/'.$event->event_id) }}">
-                    @csrf
-                    <button class="event-button" id="deactivate-button" type="submit">
-                        <i class="fa-solid fa-ban"></i> Deactivate Event
-                    </button>
-                </form>
-            @endif
+<section class="event-thumbnail">
+    @if(auth()->user() && auth()->user()->is_admin)
+        @if ($event->private)
+            <form method="POST" action="{{ url('/activate-event/'.$event->event_id) }}">
+                @csrf
+                <button class="event-button" id="activate-button" type="submit">
+                    <i class="fa-solid fa-circle-check"></i> Activate Event
+                </button>
+            </form>
+        @else
+            <form method="POST" action="{{ url('/deactivate-event/'.$event->event_id) }}">
+                @csrf
+                <button class="event-button" id="deactivate-button" type="submit">
+                    <i class="fa-solid fa-ban"></i> Deactivate Event
+                </button>
+            </form>
         @endif
-        <img src="{{ asset('../media/event_image.jpg') }}" alt="Event Image">
-        <div class="text">
-            <h1 id ="name" >{{ $event->name }}</h1>
-            <p id ="description" >{{ $event->description }}</p>
-        </div>
-        <!-- <img src="{{ $event->event_image }}" alt="Event Image" class="event-image"> -->
-        <section class="event-info">
-            <p id="location">Location: {{ $event->location }}</p>
-        </section>
+    @endif
+    <img src="{{ asset('../media/event_image.jpg') }}" alt="Event Image">
+    <div class="text">
+        <h1 id ="name" >{{ $event->name }}</h1>
+        <p id ="description" >{{ $event->description }}</p>
+    </div>
+    <!-- <img src="{{ $event->event_image }}" alt="Event Image" class="event-image"> -->
+    <section class="event-info">
+        <p id="location">Location: {{ $event->location }}</p>
     </section>
+</section>
 
+<div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+  <input type="radio" class="btn-check" name="sectionToggle" id="eventInfo" autocomplete="off" checked data-section-id="event-info">
+  <label class="btn btn-outline-primary" for="eventInfo">Event Info</label>
+  
+  <input type="radio" class="btn-check" name="sectionToggle" id="ticketTypes" autocomplete="off" data-section-id="ticket-types">
+  <label class="btn btn-outline-primary" for="ticketTypes">Ticket Types</label>
+  @can('updateEvent', $event)
+    <input type="radio" class="btn-check" name="sectionToggle" id="editEvent" autocomplete="off" data-section-id="edit-event">
+    <label class="btn btn-outline-primary" for="editEvent">Edit Event</label>
+    
+    <input type="radio" class="btn-check" name="sectionToggle" id="createTicketType" autocomplete="off" data-section-id="create-ticket-type">
+    <label class="btn btn-outline-primary" for="createTicketType">Create Ticket Type</label>
+  @endcan
+</div>
 
-<section class="ticket-types">
+<section id="ticket-types" class="event-section">
     <h2>Ticket <span>Types</span></h2>
     <form method="POST" action="{{ url('/purchase-tickets/'.$event->event_id) }}">
         @csrf
@@ -77,7 +91,7 @@
 
     <!-- Edit Event form (displayed only for the event creator) -->
     @can('updateEvent', $event)
-        <section class="edit-event">
+        <section id="edit-event" class="event-section">
             <h2>Edit <span>Event</span></h2>
             <article>
                 @csrf
@@ -102,7 +116,7 @@
             </article>
         </section>
 
-        <section class = "edit-event">
+        <section id="create-ticket-type" class = "event-section">
             <h2>Create <span> TicketType </span> </h2>
                 <article class="">
                     @csrf

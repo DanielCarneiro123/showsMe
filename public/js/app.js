@@ -173,11 +173,7 @@ function activateUser(userId) {
   }
 
 function updateProfilePageContent(formData) {
-    document.getElementById('user_name').innerHTML = "Name: " + formData.edit_name;
-    document.getElementById('user_email').innerHTML = "Email: " + formData.edit_email;
-    document.getElementById('user_promotor_code').innerHTML = "Promotor Code: " + formData.edit_promotor_code;
-    document.getElementById('user_phone_number').innerHTML = "Phone Number: " + formData.edit_phone_number;
-    
+  document.getElementById('user-header-name').innerText = formData.edit_name;
 
   }
 
@@ -347,6 +343,55 @@ function toggleProfileButtons() {
     document.getElementById('edit_promotor_code').disabled = false;
     document.getElementById('edit_phone_number').disabled = false;
 }
+
+
+
+
+//Immediate Execution on Page Load (To follow this approach later, if there is time)
+
+function showSection() {
+  var sectionButtons = document.querySelectorAll('.btn-check');
+  var eventSections = document.getElementsByClassName("event-section");
+
+  if (!sectionButtons.length || !eventSections.length) {
+    return;
+  }
+  
+  for (var j = 0; j < eventSections.length; j++) {
+    eventSections[j].style.display = "none";
+  }
+
+  sectionButtons.forEach(function(button) {
+    button.addEventListener("click", function() {
+      console.log(this);
+      
+      var sectionId = this.getAttribute("data-section-id");
+      console.log("Section ID:", sectionId);
+
+      var currentSection = document.getElementById(sectionId);
+
+      for (var j = 0; j < eventSections.length; j++) {
+        eventSections[j].style.display = "none";
+      }
+
+      if (currentSection) {
+        currentSection.style.display = "block";
+        console.log("Displaying section with ID:", sectionId);
+      } else {
+        console.log("Section not found with ID:", sectionId);
+      }
+
+      sectionButtons.forEach(function(btn) {
+        btn.parentElement.classList.remove("selected");
+      });
+
+      this.parentElement.classList.add("selected");
+      console.log("Button marked as selected");
+    });
+  });
+}
+
+showSection();
 
 
 $(document).ready(function() {

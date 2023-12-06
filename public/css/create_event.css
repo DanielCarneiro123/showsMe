@@ -56,19 +56,19 @@
     font-size: medium;
 }
 
-.input-group label,
-.input-group textarea,
-.input-group input,
-.input-group select {
+.my-input-group label,
+.my-input-group textarea,
+.my-input-group input,
+.my-input-group select {
     font-family: 'Plus Jakarta Sans', sans-serif;
     font-size: 16px; /* Set your preferred font size */
     font-weight: normal; /* Set your preferred font weight */
 }
 
 
-.input-group textarea::placeholder,
-.input-group input::placeholder,
-.input-group select::placeholder {
+.my-input-group textarea::placeholder,
+.my-input-group input::placeholder,
+.my-input-group select::placeholder {
     color: #3a3a3a;
 }
 
