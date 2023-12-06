@@ -8,29 +8,29 @@ use App\Models\TicketType;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\JsonResponse;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use Illuminate\Support\Facades\Response;
 
 class TicketController extends Controller
 {
 
     public function updateTicketStock(Request $request, $ticketTypeId)
-{
-    try {
-        // Validate input if needed
+    {
+        try {
+            // Validate input if needed
 
-        $ticketType = TicketType::findOrFail($ticketTypeId);
-        $ticketType->stock = $request->input('new_stock_' . $ticketTypeId);
-        $ticketType->save();
+            $ticketType = TicketType::findOrFail($ticketTypeId);
+            $ticketType->stock = $request->input('new_stock_' . $ticketTypeId);
+            $ticketType->save();
 
-        return response()->json(['new_stock_' . $ticketTypeId => $ticketType->stock]);
-    } catch (\Exception $e) {
-        return response()->json(['error' => 'Error updating stock: ' . $e->getMessage()], 500);
+            return response()->json(['new_stock_' . $ticketTypeId => $ticketType->stock]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error updating stock: ' . $e->getMessage()], 500);
+        }
     }
-}
 
-    
     public function myTickets(): View
     {
-        
         $ticketInstances = TicketInstance::with(['order', 'ticketType.event'])
             ->whereHas('order', function ($query) {
                 $query->where('buyer_id', Auth::user()->user_id);
@@ -38,6 +38,6 @@ class TicketController extends Controller
 
         return view('pages.my_tickets', compact('ticketInstances'));
     }
+
     
 }
-?>
