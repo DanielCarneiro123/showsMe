@@ -333,3 +333,31 @@ function toggleProfileButtons() {
 }
 
 
+
+function loadNotifications() {
+  // Simule uma requisição Ajax para obter as notificações do usuário
+  // Substitua este bloco com sua lógica real de notificações
+  let notifications = [
+      "Notificação 1",
+      "Notificação 2",
+      "Notificação 3"
+  ];
+
+  let notificationsBody = document.getElementById('notificationsBody');
+  notificationsBody.innerHTML = ''; // Limpa o conteúdo anterior
+
+  // Adiciona as notificações ao corpo do modal
+  for (let i = 0; i < notifications.length; i++) {
+      notificationsBody.innerHTML += '<p>' + notifications[i] + '</p>';
+  }
+
+  // Atualiza o contador de notificações (substitua pelo número real de notificações)
+  document.getElementById('notificationsCount').innerText = notifications.length;
+}
+
+document.getElementById('notificationsModal').addEventListener('show.bs.modal', loadNotifications);
+
+/*const pusher = new Pusher(pusherAppKey, {
+  cluster: pusherCluster,
+  encrypted: true
+});*/

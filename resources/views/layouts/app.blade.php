@@ -38,6 +38,7 @@
         </script>
         <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.3.0/jquery.form.min.js" ></script>
+        <script src="https://js.pusher.com/7.0/pusher.min.js" defer></script>
     </head>
     <body>
         <main>
@@ -48,71 +49,82 @@
                 <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarColor01">
-                <ul class="navbar-nav me-auto">
-                @auth   
-                <li class="nav-item">
-                   <a class="nav-link" href="{{ route('my-events') }}">MyEvents</a> 
-                </li> 
-                <li class="nav-item">  
-                   <a class="nav-link" href="{{ route('my-tickets') }}">MyTickets</a> 
-                </li> 
-                
-                @endauth
-                <li class="nav-item">
-                   <a class="nav-link" href="{{ route('create-event') }}">Create Event</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('faq') }}">FAQs</a> 
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('about-us') }}">About Us</a> 
-                </li>
-            
-                @if(auth()->user() && auth()->user()->is_admin)
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('admin') }}">Admin</a> 
-                </li>
-                @endif   
-                </ul>
-                <section id='header-buttons'>
-                    @if (Auth::check())
+                    <ul class="navbar-nav me-auto">
+                    @auth   
                     <li class="nav-item">
-                        <a class="text-light" href="" >
-                           
-                        
-                                {{ auth()->user()->unreadNotifications->count() }}
-
-                        </a>
-                       
+                    <a class="nav-link" href="{{ route('my-events') }}">MyEvents</a> 
+                    </li> 
+                    <li class="nav-item">  
+                    <a class="nav-link" href="{{ route('my-tickets') }}">MyTickets</a> 
+                    </li> 
+                    
+                    @endauth
+                    <li class="nav-item">
+                    <a class="nav-link" href="{{ route('create-event') }}">Create Event</a>
                     </li>
-                    <script>
-                        
-                    </script>
-                        <a id="user-header-name" class="text-light"  href="{{ route('profile') }}">{{ Auth::user()->name}}</a>
-                        <a class="btn btn-outline-secondary" href="{{ url('/logout') }}"> Logout </a>
-                    @else
-                        <a class="btn btn-primary" href="{{ url('/login') }}"> Login </a>
-                        <a class="btn btn-primary" href="{{ url('/register') }}"> Register </a>
-                    @endif
-                </section>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('faq') }}">FAQs</a> 
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('about-us') }}">About Us</a> 
+                    </li>
+                
+                    @if(auth()->user() && auth()->user()->is_admin)
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('admin') }}">Admin</a> 
+                    </li>
+                    @endif   
+                    </ul>
+                    <section id='header-buttons'>
+                        @if (Auth::check())
+                        <div class="notification-icon me-3">
+                            <button class="btn btn-link" data-bs-toggle="modal" data-bs-target="#notificationsModal">
+                                <i class="fa-solid fa-bell fa-2x"></i>
+                                <!--<span class="badge bg-danger" id="notificationsCount">3</span>-->
+                            </button>
+                        </div>
+                        <div class="user-info">
+                            <a id="user-header-name" class="text-light me-2" href="{{ route('profile') }}">{{ Auth::user()->name}}</a>
+                            <a class="btn btn-outline-secondary" href="{{ url('/logout') }}">Logout</a>
+                        </div>
+                        @else
+                            <a class="btn btn-primary" href="{{ url('/login') }}"> Login </a>
+                            <a class="btn btn-primary" href="{{ url('/register') }}"> Register </a>
+                        @endif
+                    </section>
+                    <div class="modal fade" id="notificationsModal" tabindex="-1" aria-labelledby="notificationsModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="notificationsModalLabel">Notificações</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body" id="notificationsBody">
+                                    <!-- Conteúdo da lista de notificações será carregado dinamicamente aqui -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </nav>
 
-            @if(session('error'))
-            <div class="alert alert-danger" style="color: red;">
-                    {{ session('error') }}
-                </div>
-            @endif
+        @if(session('error'))
+        <div class="alert alert-danger" style="color: red;">
+                {{ session('error') }}
+            </div>
+        @endif
 
-            @if(session('success'))
-                <div class="alert alert-success" style="color: green;">
-                    {{ session('success') }}
-                </div>
-            @endif
-            <section id="content">
-                @yield('content')
-            </section>
+        @if(session('success'))
+            <div class="alert alert-success" style="color: green;">
+                {{ session('success') }}
+            </div>
+        @endif
+        <section id="content">
+            @yield('content')
+        </section>
+
+
         </main>
     </body>
 </html>
