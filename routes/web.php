@@ -11,6 +11,8 @@ use App\Http\Controllers\FaqController;
 use App\Http\Controllers\AboutUsController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ReportController;
+use App\Http\Controllers\CommentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,6 +27,12 @@ use App\Http\Controllers\UserController;
 
 // Home
 Route::redirect('/', '/all-events');
+
+
+
+Route::post('/submit-comment', [CommentController::class, 'submitComment'])->name('submitComment');
+
+Route::post('/submit-report', [ReportController::class, 'submitReport'])->name('submitReport');
 
 
 Route::controller(EventController::class)->group(function () {
@@ -66,6 +74,7 @@ Route::controller(AdminController::class)->group(function () {
 Route::controller(UserController::class)->group(function () {
     Route::post('/update-profile', [UserController::class, 'updateProfile'])->name('update-profile');
     Route::get('/profile', [UserController::class, 'getCurrentUser'])->name('profile')->middleware('auth');
+    Route::post('/add-rating', [UserController::class, 'addRating'])->name('add-rating');
 });
 
 

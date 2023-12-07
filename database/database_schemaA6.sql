@@ -349,7 +349,7 @@ VALUES
 INSERT INTO Comment_ (text, media, event_id, author_id) 
 VALUES 
   ('Great event!', NULL, 1, 1),
-  ('The art was amazing!', NULL, 2, 2),
+  ('The art was amazing!', NULL, 1, 2),
   ('I had a blast running!', NULL, 3, 3),
   ('The food was delicious!', NULL, 4, 4),
   ('Interesting workshop on AI.', NULL, 5, 5),
@@ -373,25 +373,27 @@ VALUES
 INSERT INTO Rating (rating, event_id, author_id) 
 VALUES 
   (5, 1, 1),
+  (4, 1, 2),
   (4, 2, 2),
-  (5, 3, 3),
-  (4, 4, 4),
-  (4, 5, 5),
-  (5, 6, 6),
-  (4, 7, 7),
-  (5, 8, 8),
-  (4, 9, 9),
-  (5, 10, 10),
-  (4, 11, 11),
-  (5, 12, 12),
-  (4, 13, 13),
-  (5, 14, 14),
-  (4, 15, 15),
-  (5, 16, 16),
-  (4, 17, 17),
-  (5, 18, 18),
-  (4, 19, 19),
-  (5, 20, 20);
+  (5, 2, 1),
+  (5, 3, 1),
+  (4, 4, 1),
+  (4, 5, 1),
+  (5, 6, 1),
+  (4, 7, 1),
+  (5, 8, 1),
+  (4, 9, 1),
+  (5, 10, 1),
+  (4, 11, 1),
+  (5, 12, 1),
+  (4, 13, 1),
+  (5, 14, 1),
+  (4, 15, 1),
+  (5, 16, 1),
+  (4, 17, 1),
+  (5, 18, 1),
+  (4, 19, 1),
+  (5, 20, 2);
   
   -- Inserts for Reports
 INSERT INTO Report (Type, comment_id, author_id) 

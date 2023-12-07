@@ -4,9 +4,11 @@
 
 @section('content')
 
-    <div class="text-center"> <!-- Center all content within this div -->
+    <div class="text-center"> 
         @if ($events->count() > 0)
             <h1>My <span>Events</span></h1>
+            <div class="event-container">
+                
             @foreach ($events as $event)
                 <a href="{{ route('view-event', ['id' => $event->event_id]) }}">
                     <article class="event-card">
@@ -20,12 +22,15 @@
             @endforeach
             <a href="{{ route('create-event') }}">
                 <article class="event-card">
-                    <div class="event-info">
+                    <div class="new-event-info">
                         <h3>Create a new Event!</h3>
                         <i class="fa-solid fa-circle-plus fa-4x"></i>
                     </div>
                 </article>
             </a>
+            </div>
+
+            
         @else
             <section class="warning-section">
                 <i class="fa-solid fa-question"></i>
