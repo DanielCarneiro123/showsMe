@@ -202,9 +202,38 @@
                 </article>
         </section>
 
-        <section id="event-stats">
-            <h2>Estatísticas de Bilhetes</h2>
-        </section>
+            <section class="event-section" id="event-info">
+                <h2>Histórico de Compras</h2>
+                    @php $totalSoldTickets = 0; $purchaseNumber = 1; @endphp
+                    @foreach ($soldTickets->groupBy('order_id') as $orderTickets)
+                        @php
+                            $order = $orderTickets->first()->order;
+                            $buyer = $order->buyer;
+                            $totalSoldTickets += $orderTickets->count();
+                        @endphp
+                        <div class="card text-white bg-secondary mb-3" style="max-width: 20rem;">
+                        <div class="card-header"><strong>Compra #{{ $purchaseNumber }}</strong></div>
+                        <div class="card-body compra-info">
+                            <div class="compra-data"><strong>Data:</strong> {{ $order->timestamp }}</div>
+                            <div class="compra-quanti"><strong>Total:</strong> {{ $orderTickets->count() }}</div>
+                            <div class="compra-tipos"><strong>Tipos:</strong>
+                                <ul>
+                                    @foreach ($orderTickets->groupBy('ticket_type_id') as $ticketType => $typeTickets)
+                                        @php
+                                            $ticketTypeName = $typeTickets->first()->ticketType->name;
+                                            $quantity = $typeTickets->count();
+                                        @endphp
+                                        <li class="compra-tipo-nome"> {{ $ticketTypeName }}  {{ $quantity }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                        @php $purchaseNumber++; @endphp
+                    @endforeach
+
+                <strong>Total de Bilhetes Vendidos:</strong> {{ $totalSoldTickets }}
+            </section>
         
 @endcan
 

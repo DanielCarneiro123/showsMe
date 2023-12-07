@@ -367,7 +367,7 @@ function showSection() {
     return;
   }
   
-  for (var j = 0; j < eventSections.length; j++) {
+  for (var j = 0; j < eventSections.length-1; j++) {
     eventSections[j].style.display = "none";
   }
 
@@ -403,26 +403,22 @@ function showSection() {
 
 showSection();
 
-
-$(document).ready(function() {
-  let totalFields = $(".form-field").length;
+document.addEventListener("DOMContentLoaded", function() {
+  let totalFields = document.querySelectorAll(".form-field").length;
 
   function updateProgressBar() {
-      let filledFields = $(".form-field").filter(function() {
-          return this.value !== "";
-      }).length;
+    let filledFields = Array.from(document.querySelectorAll(".form-field")).filter(function(field) {
+      return field.value.trim() !== "";
+    }).length;
 
-      let progress = (filledFields / totalFields) * 100;
-      $("#progress-bar-container .progress-bar").css("width", progress + "%");
-      $("#progress-bar-container .progress-bar").attr("aria-valuenow", progress);
+    let progress = (filledFields / totalFields) * 100;
+    document.querySelector("#progress-bar-container .progress-bar").style.width = progress + "%";
+    document.querySelector("#progress-bar-container .progress-bar").setAttribute("aria-valuenow", progress);
   }
 
-  $(".form-field").on("input", function() {
-      updateProgressBar();
-  });
-
-  $(".form-field").on("change", function() {
-      updateProgressBar();
+  document.querySelectorAll(".form-field").forEach(function(field) {
+    field.addEventListener("input", updateProgressBar);
+    field.addEventListener("change", updateProgressBar);
   });
 });
 

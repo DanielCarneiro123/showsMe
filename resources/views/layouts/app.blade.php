@@ -36,8 +36,6 @@
         
         <script type="text/javascript" src={{ url('js/app.js') }} defer>
         </script>
-        <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.3.0/jquery.form.min.js" ></script>
     </head>
     <body>
         <main>

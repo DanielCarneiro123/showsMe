@@ -42,6 +42,7 @@ Route::controller(EventController::class)->group(function () {
     Route::post('/deactivate-event/{eventId}', 'deactivateEvent')->name('deactivate-event');
     Route::post('/activate-event/{eventId}', 'activateEvent')->name('activate-event');
     Route::get('/generate-qrcode/{ticketInstanceId}', [EventController::class, 'generateQRCode'])->name('generate-qrcode');
+    Route::get('/view-event/{id}', [EventController::class, 'show'])->name('view-event');
 });
 
 Route::controller(FaqController::class)->group(function () {

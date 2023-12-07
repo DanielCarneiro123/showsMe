@@ -49,4 +49,11 @@ class Event extends Model
     {
         return $this->hasMany(Rating::class, 'event_id');
     }
+
+    public function soldTickets()
+    {
+        // Retorna todas as instâncias de TicketInstance associadas aos TicketTypes deste evento
+        return TicketInstance::whereIn('ticket_type_id', $this->ticketTypes->pluck('ticket_type_id'))
+            ->get();
+    }
 }

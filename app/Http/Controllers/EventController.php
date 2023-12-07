@@ -288,5 +288,13 @@ private function createTemporaryAccount(Request $request)
         return 'qrcodes/' . $filename;
     }
 
+    public function show($eventId)
+    {
+        $event = Event::findOrFail($eventId);
+        $soldTickets = $event->soldTickets();
+
+        return view('pages.event', compact('event', 'soldTickets'));
+    }
+
 }
 ?>
