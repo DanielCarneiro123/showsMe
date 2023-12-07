@@ -428,3 +428,14 @@ $(document).ready(function() {
 
 
 addEventListeners();
+
+
+function toggleCheckoutSection() {
+  var checkoutSection = document.getElementById('checkout-section');
+  var buyButton = document.getElementById('buy-button');
+  var showForm = document.getElementById('show-form')
+
+  checkoutSection.style.display = 'block';
+  buyButton.style.display = 'inline';
+  showForm.style.display = 'none';
+}
