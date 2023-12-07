@@ -1,3 +1,5 @@
+let newId = 0;
+
 function addEventListeners() {
   let activeUsersSection = document.getElementById('active_users_section');
   if (activeUsersSection) {
@@ -206,23 +208,24 @@ function updateProfile() {
 
 }
 
-function updateTicketPageContent(formData) {
+function updateTicketPageContent(ticketType) {
+  console.log(ticketType);
   let ticketTypesContainer = document.getElementById('ticket-types-container');
   let newTicketType = document.createElement('article');
   newTicketType.className = 'ticket-type'; 
   newTicketType.innerHTML = `
-      <h3>${formData.ticket_name}</h3>
-      <p>Stock: ${formData.ticket_stock}</p>
-      <p>Description: ${formData.ticket_description}</p>
-      <p>Price: ${formData.ticket_price} €</p>
-      <label for="quantity_${formData.ticket_type_id}">Quantity:</label>
-      <input type="number" id="quantity_${formData.ticket_type_id}" name="quantity[${formData.ticket_type_id}]" min="0" max="${formData.ticket_person_limit}">
+      <h3>${ticketType.name}</h3>
+      <p>Stock: ${ticketType.stock}</p>
+      <p>Description: ${ticketType.description}</p>
+      <p>Price: ${ticketType.price} €</p>
+      <label for="quantity_${ticketType.ticket_type_id}">Quantity:</label>
+      <input type="number" id="quantity_${ticketType.ticket_type_id}" name="quantity[${ticketType.ticket_type_id}]" min="0" max="${ticketType.person_buying_limit}">
       
       <!-- New Stock -->
       <p>New Stock:
-      <input type="number" id="new_stock_${formData.ticket_type_id}" name="new_stock" value="${formData.ticket_stock}" required>
+      <input type="number" id="new_stock_${ticketType.ticket_type_id}" name="new_stock" value="${ticketType.stock}" required>
       </p>
-      <button class="button-update-stock" onclick="updateStock(${formData.ticket_type_id})" form="purchaseForm">Update Stock</button>
+      <button class="button-update-stock" onclick="updateStock(${ticketType.ticket_type_id})" form="purchaseForm">Update Stock</button>
   `;
   ticketTypesContainer.appendChild(newTicketType);
 
@@ -236,7 +239,7 @@ function updateTicketPageContent(formData) {
   
 }
 
-function createTicketType(event_id) {
+async function createTicketType(event_id) {
   let ticketName = document.getElementById('ticket_name').value;
   let ticketStock = document.getElementById('ticket_stock').value;
   let ticketPersonLimit = document.getElementById('ticket_person_limit').value;
@@ -294,13 +297,20 @@ function createTicketType(event_id) {
       'ticket_end_timestamp': ticketEndTimestamp,
   };
 
-  sendAjaxRequest('post', `../create-ticket-type/${event_id}`, formData);
+  sendAjaxRequest('post', `../create-ticket-type/${event_id}`, formData, createTypeHandler);
 
-  updateTicketPageContent(formData);
 }
 
 
+function createTypeHandler() {
+  if (this.status == 200) {
+    const response = JSON.parse(this.responseText);
+    const ticketType = response.ticketType;
+    console.log(ticketType.ticket_type_id);
+    updateTicketPageContent(ticketType);
 
+  }
+}
 
 
 const activate = document.querySelector('#activate-button');

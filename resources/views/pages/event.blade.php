@@ -148,6 +148,10 @@
                         <button type="button" class="btn btn-primary" onclick="createTicketType({{ $event->event_id }})">Create TicketType</button>
                 </article>
         </section>
+
+        <section id="event-stats">
+            <h2>Estatísticas de Bilhetes</h2>
+        </section>
         
 @endcan
 

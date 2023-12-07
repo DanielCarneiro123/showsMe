@@ -151,10 +151,6 @@ class EventController extends Controller
         return response()->json(['message' => 'TicketType created successfully', 'ticketType' => $ticketType]);
     }
 
-
-
-    
-    
     public function showCreateEvent()
     {
     
@@ -165,7 +161,6 @@ class EventController extends Controller
 {
     try {
         $event = Event::findOrFail($eventId);
-
         $this->authorize('purchaseTickets', $event);
 
         $quantities = $request->input('quantity', []);
@@ -224,6 +219,6 @@ class EventController extends Controller
             ->paginate(10);
 
         return view('pages.all_events', compact('events'));
-    }   
+    }
 }
 ?>

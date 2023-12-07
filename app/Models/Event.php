@@ -40,7 +40,6 @@ class Event extends Model
         return $this->hasMany(TicketType::class, 'event_id', 'event_id');
     }
 
-
     public function comments()
     {
         return $this->hasMany(Comment::class, 'event_id');
@@ -50,5 +49,4 @@ class Event extends Model
     {
         return $this->hasMany(Rating::class, 'event_id');
     }
-
 }
