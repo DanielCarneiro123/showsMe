@@ -77,10 +77,9 @@
                     </ul>
                     <section id='header-buttons'>
                         @if (Auth::check())
-                        <div class="notification-icon me-3">
+                        <div class="notification-icon me-3" onclick="toggleNotifications()">
                             <button class="btn btn-link" data-bs-toggle="modal" data-bs-target="#notificationsModal">
                                 <i class="fa-solid fa-bell fa-2x"></i>
-                                <!--<span class="badge bg-danger" id="notificationsCount">3</span>-->
                             </button>
                         </div>
                         <div class="user-info">
@@ -92,22 +91,31 @@
                             <a class="btn btn-primary" href="{{ url('/register') }}"> Register </a>
                         @endif
                     </section>
-                    <div class="modal fade" id="notificationsModal" tabindex="-1" aria-labelledby="notificationsModalLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="notificationsModalLabel">Notificações</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body" id="notificationsBody">
-                                    <!-- Conteúdo da lista de notificações será carregado dinamicamente aqui -->
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </nav>
+
+        <div id="notification-container" class="notification-container" style="display: none;">
+            <div class="notification-content">
+                <h2>Notifications</h2>
+                <div id="notifications-body">
+                    @foreach ($notifications as $notification)
+                        <div class="notification">
+                            @if ($notification->event_id)
+                                <a href="{{ route('view-event', ['id' => $notification->event_id]) }}">
+                                    {{ $notification->notification_type }}
+                                    {{ $notification->timestamp }}
+                                </a>
+                            @else
+                                <!-- Lógica adicional ou tratamento caso o event_id não esteja disponível -->
+                                {{ $notification->notification_type }}
+                                {{ $notification->timestamp }}
+                            @endif
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        </div>
 
         @if(session('error'))
         <div class="alert alert-danger" style="color: red;">

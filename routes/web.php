@@ -89,5 +89,16 @@ Route::controller(RegisterController::class)->group(function () {
     Route::post('/register', 'register');
 });
 
+//ver o nome da função que faz isto
+Route::post('/post/comment', [PostController::class, 'like']);
+
+
+/*Route::controller(NotificationController::class)->group(function (){
+    Route::get('/get-notifications', 'getNotifications')->name('get-notifications');
+
+    //Route::post('/notifications/mark-as-read', 'NotificationController@markAsRead')->name('notifications.markAsRead')->middleware('auth');
+});*/
+
+
 //Route::post('/purchase-tickets/{event_id}', [TicketController::class, 'purchase'])->name('purchase-tickets');
 

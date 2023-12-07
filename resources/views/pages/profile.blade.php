@@ -36,15 +36,6 @@
         <button type="button" class="btn btn-outline-primary" id="update-profile-button" onclick="updateProfile()" style="display: none;">Save Changes</button>
         </br>
     </section>
-    <section id="notifications">
-        <h2>Notifications</h2>
-        @foreach ($notifications as $notification)
-            <div class="notification">
-                {{ $notification->notification_type }}
-                {{ $notification->timestamp }}
-            </div>
-        @endforeach
-    </section>
 </section>
 
 

@@ -4,9 +4,18 @@ namespace App\Http\Controllers;
 
 use App\Models\Comment;
 use Illuminate\Http\Request;
+use App\Events\PostComment;
+
 
 class CommentController extends Controller
 {
+
+    function comment(Request $request) {
+        event(new PostComment($request->id));
+    }
+
+
+
     /*public function deleteComment(Comment $comment)
     {
         // Delete reports associated with the comment

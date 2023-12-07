@@ -333,31 +333,69 @@ function toggleProfileButtons() {
 }
 
 
+// Modifique a função toggleNotifications() no seu arquivo JavaScript
+function toggleNotifications() {
+  const notificationContainer = document.getElementById('notification-container');
+  const notificationsBody = document.getElementById('notifications-body');
 
-function loadNotifications() {
-  // Simule uma requisição Ajax para obter as notificações do usuário
-  // Substitua este bloco com sua lógica real de notificações
-  let notifications = [
-      "Notificação 1",
-      "Notificação 2",
-      "Notificação 3"
-  ];
-
-  let notificationsBody = document.getElementById('notificationsBody');
-  notificationsBody.innerHTML = ''; // Limpa o conteúdo anterior
-
-  // Adiciona as notificações ao corpo do modal
-  for (let i = 0; i < notifications.length; i++) {
-      notificationsBody.innerHTML += '<p>' + notifications[i] + '</p>';
+  // Alternar entre exibir e ocultar o contêiner de notificações
+  if (notificationContainer.style.display === 'none') {
+      // Se o contêiner estiver oculto, carregue as notificações via AJAX
+      loadNotifications(notificationsBody);
+      calculateNotificationPosition(); 
+      notificationContainer.style.display = 'block';
+  } else {
+      notificationContainer.style.display = 'none';
   }
-
-  // Atualiza o contador de notificações (substitua pelo número real de notificações)
-  document.getElementById('notificationsCount').innerText = notifications.length;
 }
 
-document.getElementById('notificationsModal').addEventListener('show.bs.modal', loadNotifications);
+// Adicione esta função para carregar notificações via AJAX
+function loadNotifications(notificationsBody) {
+  // Use AJAX para buscar notificações do servidor (por exemplo, via rota Laravel)
+  // Certifique-se de ajustar a URL conforme necessário
+  fetch('/get-notifications')
+      .then(response => response.json())
+      .then(data => {
+          // Limpe o conteúdo existente
+          notificationsBody.innerHTML = '';
 
-/*const pusher = new Pusher(pusherAppKey, {
+          // Adicione as notificações ao corpo do contêiner
+          data.notifications.forEach(notification => {
+              const notificationElement = document.createElement('div');
+              notificationElement.classList.add('notification');
+              notificationElement.textContent = `${notification.notification_type} ${notification.timestamp}`;
+              notificationsBody.appendChild(notificationElement);
+          });
+      })
+      .catch(error => console.error('Error fetching notifications:', error));
+}
+
+function calculateNotificationPosition() {
+  const icon = document.getElementById('icon-bell');
+  const notificationContainer = document.getElementById('notification-container');
+
+  // Certifique-se de que o ícone e o contêiner existam
+  if (icon && notificationContainer) {
+      const iconRect = icon.getBoundingClientRect();
+      const iconBottom = iconRect.bottom + window.scrollY;
+      const iconRight = iconRect.right + window.scrollX;
+
+      // Ajuste conforme necessário para o posicionamento desejado
+      const containerTop = iconBottom + 100;
+      const containerRight = window.innerWidth - iconRight + 10;
+
+      notificationContainer.style.top = `${containerTop}px`;
+      notificationContainer.style.right = `${containerRight}px`;
+  }
+}
+
+
+const pusher = new Pusher(pusherAppKey, {
   cluster: pusherCluster,
   encrypted: true
-});*/
+});
+
+const channel = pusher.subscribe('comment_posted');
+  channel.bind('notification-postcomment', function(data) {
+  console.log(`New notification: ${data.message}`);
+})
