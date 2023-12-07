@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use App\Models\TicketOrder;
 use App\Models\TicketInstance;
+use App\Models\Notification; 
+use App\Models\User;
 use Illuminate\Auth\Access\AuthorizationException; 
 
 use Illuminate\Support\Facades\DB;
@@ -33,17 +35,24 @@ class EventController extends Controller
             $events = Event::where('private', false)->paginate(8);
         }
 
-        return view('pages.all_events', compact('events', 'user'));
+        $notifications = $user ? $user->notifications : [];
+
+
+        return view('pages.all_events', compact('events', 'user', 'notifications'));
     }
 
     public function myEvents(): View
     {
         if (Auth::check()) {
+            $user = Auth::user();
             $events = Event::where('creator_id', Auth::user()->user_id)->get();
+            $notifications = $user ? $user->notifications : [];
+            return view('pages.my_events', compact('events', 'notifications'));
         } else {
             $events = collect();
+            return view('pages.my_events', compact('events'));
         }
-        return view('pages.my_events', compact('events'));
+        
     }
     
 
@@ -157,8 +166,9 @@ class EventController extends Controller
     
     public function showCreateEvent()
     {
-    
-        return view('pages.create_event');
+        $user = Auth::user();
+        $notifications = $user ? $user->notifications : [];
+        return view('pages.create_event', compact('notifications'));
     }
 
     public function purchaseTickets(Request $request, $eventId)
@@ -205,7 +215,6 @@ class EventController extends Controller
                 }
             }
         }
-
         return redirect()->route('my-tickets')->with('success', 'Tickets purchased successfully.');
     } catch (AuthorizationException $e) {
         return redirect()->route('login')->with('error', 'You must be logged in to purchase tickets.');
@@ -216,17 +225,18 @@ class EventController extends Controller
 
     
     public function searchEvents(Request $request)
-{
-    $query = $request->input('query');
+    {
 
-    $events = Event::whereRaw('tsvectors @@ plainto_tsquery(?)', [$query])
-        ->orderByRaw('ts_rank(tsvectors, plainto_tsquery(?)) DESC', [$query])
-        ->paginate(10);
+        $user = Auth::user();
+        $notifications = $user->notifications;
 
-    return view('pages.all_events', compact('events'));
-}
+        $query = $request->input('query');
 
-    
+        $events = Event::whereRaw('tsvectors @@ plainto_tsquery(?)', [$query])
+            ->orderByRaw('ts_rank(tsvectors, plainto_tsquery(?)) DESC', [$query])
+            ->paginate(10);
 
+        return view('pages.all_events', compact('events', 'notifications'));
+    }  
 }
 ?>
