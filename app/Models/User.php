@@ -64,4 +64,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Event::class, 'creator_id');
     }
+
+    public function getProfileImage() {
+        return FileController::get('profile', $this->id);
+    }
+    
 }

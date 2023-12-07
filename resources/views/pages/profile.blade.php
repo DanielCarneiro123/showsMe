@@ -7,11 +7,22 @@
     <section>
         @csrf
 
+        <img src="{{ \App\Http\Controllers\FileController::get('profile_image', $user->user_id) }}" alt="Profile Image">
+        
         <label for="name">Name:</label>
         <input type="text" id="edit_name" name="name" value="{{ $user->name }}" required disabled>
         @error('name')
             <span class="text-danger">{{ $message }}</span>
         @enderror
+
+        <form method="POST" action="/file/upload" enctype="multipart/form-data">
+            @csrf
+            <input name="file" type="file" required>
+            <input name="id" type="number" value="{{ $user->user_id }}" hidden>
+            <input name="type" type="text" value="profile_image" hidden>
+            <button type="submit">Submit</button>
+        </form>
+
 
         <label for="email">Email:</label>
         <input type="email" id="edit_email" name="email" value="{{ $user->email }}" required disabled>

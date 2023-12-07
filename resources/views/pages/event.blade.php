@@ -94,6 +94,14 @@
         <section id="edit-event" class="event-section">
             <h2>Edit <span>Event</span></h2>
             <article>
+                <form method="POST" action="/file/upload" enctype="multipart/form-data">
+                    @csrf
+                    <input name="file" type="file" required>
+                    <input name="id" type="number" value="{{ $event->event_id }}" hidden>
+                    <input name="type" type="text" value="event_image" hidden>
+                    <button type="submit">Submit</button>
+                </form>
+
                 @csrf
                 <label for="edit_name">Event Name:</label>
                 <input type="text" id="edit_name" name="edit_name" value="{{ $event->name }}" required>

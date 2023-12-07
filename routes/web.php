@@ -11,6 +11,8 @@ use App\Http\Controllers\FaqController;
 use App\Http\Controllers\AboutUsController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\FileController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -68,6 +70,13 @@ Route::controller(UserController::class)->group(function () {
     Route::get('/profile', [UserController::class, 'getCurrentUser'])->name('profile')->middleware('auth');
 });
 
+
+
+
+// File Upload Route
+Route::controller(FileController::class)->group(function () {
+    Route::post('/file/upload', [FileController::class, 'upload'])->name('file.upload');
+});
 
 
 // API
