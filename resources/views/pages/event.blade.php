@@ -53,13 +53,12 @@
 </div>
 
 <section id="event-info" class="event-section">
-@if(auth()->user())
+
  
-            
+@if(auth()->user())
     @if($userRating = $event->userRating())
         <p id="your-rating" class="mt-2">
-        @if($userRating = $event->userRating())
-        <p id="your-rating">
+      
             Your Rating: {{ $userRating->rating }}
             <span class="star-icon">★</span>
         </p>
@@ -68,28 +67,28 @@
             Give your Rating
         </p>
     @endif
-        </p>
-    @else
-        <p id="your-rating">
-            Give your Rating
-        </p>
-    @endif
+@endif
+    
+
     <h2 class="text-primary">Comments</h2>
 
     @forelse($event->comments as $comment)
         <div class="comment" data-id="{{ $comment->comment_id}}">
-        @if(auth()->check())
+       
         
         <div class="comment-icons-container">
             <p class="comment-author">{{ $comment->author->name }}</p>
             <div>
+            @if(auth()->check())
             <i class="fa-solid fa-flag" onclick="showReportPopUp()"></i>
+            
             @if(auth()->user()->user_id === $comment->author->user_id)
             <i class="fa-solid fa-pen-to-square"></i>
             @endif
+            @endif
             </div>
         </div>
-        @endif
+        
        
         <p class="comment-text">{{ $comment->text }}</p>
             
@@ -103,6 +102,17 @@
         <p>No comments yet.</p>
     @endforelse
 
+    @if(auth()->check())
+    <form id="newCommentForm" action="{{ route('submitComment') }}" method="post">
+    @csrf
+    <div class="comment new-comment">
+        <textarea name="newCommentText" id="newCommentText" class="new-comment-textbox" rows="3" placeholder="Write a new comment"></textarea>
+    </div>
+    <input type="hidden" name="event_id"  value="{{$event->event_id}}">
+    <button type="submit" class="btn btn-primary" id="submit-comment-button">Submit Comment</button>
+</form>
+@endif
+
     <div class="pop-up-report">
     <div class="report-section">
         <h3>Why are you reporting?</h3>
@@ -115,21 +125,13 @@
         </form>
     </div>
     </div>
-    <form id="newCommentForm" action="{{ route('submitComment') }}" method="post">
-    @csrf
-    <div class="comment new-comment">
-        <textarea name="newCommentText" id="newCommentText" class="new-comment-textbox" rows="3" placeholder="Write a new comment"></textarea>
-    </div>
-    <input type="hidden" name="event_id"  value="{{$event->event_id}}">
-    <button type="submit" class="btn btn-primary" id="submit-comment-button">Submit Comment</button>
-</form>
+   
 
 
     
 
 
-       
-@endif
+
 
 </section>
 
