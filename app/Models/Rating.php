@@ -56,4 +56,6 @@ class Rating extends Model
     {
         return $this->belongsTo(UserClass::class, 'author_id', 'user_id');
     }
+
+   
 }

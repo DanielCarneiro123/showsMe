@@ -17,7 +17,7 @@ html,body{
 }
 
 body{
-  max-width: 100em;
+  max-width: 120em;
   margin: 0 auto;
   --light-blue: #36aaf7;
   --dark-blue: #1279bd;
@@ -40,15 +40,24 @@ h1 span {
 /* Event card */
 .event-container {
   display: flex;
-  justify-content: space-between;
+  justify-content:start;
   flex-wrap: wrap;
   margin: 20px;
 }
+
+.event-container {
+  padding: 0 auto;
+
+}
+
+
 
 .event-card {
   flex: 0 0 calc(33.33% - 20px); 
   box-sizing: border-box;
   margin-bottom: 40px;
+  margin-left: 2px;
+  margin-right: 2px;
 }
 .event-card {
   display: flex;
@@ -76,6 +85,12 @@ h1 span {
   color: white;
 }
 
+.new-event-info {
+  padding: 20px;
+  text-align: center;
+  color: white;
+  margin:auto;
+}
 
 .price {
   border-radius: 20px;

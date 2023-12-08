@@ -24,16 +24,22 @@
     <div class="text">
         <h1 id ="name" >{{ $event->name }}</h1>
         <p id ="description" >{{ $event->description }}</p>
+        <section class="ratings-event">
+        <p id="average-rating"> Rating: {{ $event->averageRating }} <span class="star-icon">★</span></p>
+       
+        </section>
     </div>
     <!-- <img src="{{ $event->event_image }}" alt="Event Image" class="event-image"> -->
     <section class="event-info">
         <p id="location">Location: {{ $event->location }}</p>
+        
     </section>
 </section>
 
 <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
   <input type="radio" class="btn-check" name="sectionToggle" id="eventInfo" autocomplete="off" checked data-section-id="event-info">
   <label class="btn btn-outline-primary" for="eventInfo">Event Info</label>
+  
   
   <input type="radio" class="btn-check" name="sectionToggle" id="ticketTypes" autocomplete="off" data-section-id="ticket-types">
   <label class="btn btn-outline-primary" for="ticketTypes">Ticket Types</label>
@@ -45,6 +51,89 @@
     <label class="btn btn-outline-primary" for="createTicketType">Create Ticket Type</label>
   @endcan
 </div>
+
+<section id="event-info" class="event-section">
+
+ 
+@if(auth()->user())
+    @if($userRating = $event->userRating())
+        <p id="your-rating" class="mt-2">
+      
+            Your Rating: {{ $userRating->rating }}
+            <span class="star-icon">★</span>
+        </p>
+    @else
+        <p id="your-rating" class="mt-2">
+            Give your Rating
+        </p>
+    @endif
+@endif
+    
+
+    <h2 class="text-primary">Comments</h2>
+
+    @forelse($event->comments as $comment)
+        <div class="comment" data-id="{{ $comment->comment_id}}">
+       
+        
+        <div class="comment-icons-container">
+            <p class="comment-author">{{ $comment->author->name }}</p>
+            <div>
+            @if(auth()->check())
+            <i class="fa-solid fa-flag" onclick="showReportPopUp()"></i>
+            
+            @if(auth()->user()->user_id === $comment->author->user_id)
+            <i class="fa-solid fa-pen-to-square"></i>
+            @endif
+            @endif
+            </div>
+        </div>
+        
+       
+        <p class="comment-text">{{ $comment->text }}</p>
+            
+      
+
+        </div>
+       
+   
+
+    @empty
+        <p>No comments yet.</p>
+    @endforelse
+
+    @if(auth()->check())
+    <form id="newCommentForm" action="{{ route('submitComment') }}" method="post">
+    @csrf
+    <div class="comment new-comment">
+        <textarea name="newCommentText" id="newCommentText" class="new-comment-textbox" rows="3" placeholder="Write a new comment"></textarea>
+    </div>
+    <input type="hidden" name="event_id"  value="{{$event->event_id}}">
+    <button type="submit" class="btn btn-primary" id="submit-comment-button">Submit Comment</button>
+</form>
+@endif
+
+    <div class="pop-up-report">
+    <div class="report-section">
+        <h3>Why are you reporting?</h3>
+        
+        <input type="hidden" name="comment_id" id="reportCommentId" value="0">
+        <form action="{{ route('submitReport') }}" method="post">
+            @csrf
+            <textarea id="reportReason" class="report-textbox" name="reportReason" rows="4" placeholder="Enter your reason here"></textarea>
+            <button type="submit" class="btn btn-primary">Submit Report</button>
+        </form>
+    </div>
+    </div>
+   
+
+
+    
+
+
+
+
+</section>
 
 <section id="ticket-types" class="event-section">
     <h2>Ticket <span>Types</span></h2>
