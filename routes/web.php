@@ -92,12 +92,11 @@ Route::controller(RegisterController::class)->group(function () {
 //ver o nome da função que faz isto
 Route::post('/post/comment', [PostController::class, 'like']);
 
-
-/*Route::controller(NotificationController::class)->group(function (){
-    Route::get('/get-notifications', 'getNotifications')->name('get-notifications');
+Route::controller(NotificationController::class)->group(function (){
+    Route::get('/get-notifications', 'getNotifications')->name('get-notifications')->middleware('auth');
 
     //Route::post('/notifications/mark-as-read', 'NotificationController@markAsRead')->name('notifications.markAsRead')->middleware('auth');
-});*/
+});
 
 
 //Route::post('/purchase-tickets/{event_id}', [TicketController::class, 'purchase'])->name('purchase-tickets');

@@ -125,7 +125,7 @@ CREATE TABLE Notification_ (
    notification_type NotificationType NOT NULL,
    CHECK (
       (notification_type = 'Event' AND event_id IS NOT NULL AND comment_id IS NULL AND report_id IS NULL) OR
-      (notification_type = 'Comment' AND event_id IS NULL AND comment_id IS NOT NULL AND report_id IS NULL) OR
+      (notification_type = 'Comment' AND event_id IS NOT NULL AND comment_id IS NOT NULL AND report_id IS NULL) OR
       (notification_type = 'Report' AND event_id IS NULL AND comment_id IS NULL AND report_id IS NOT NULL)
    )
 );
@@ -189,8 +189,8 @@ CREATE OR REPLACE FUNCTION send_comment_notification()
 RETURNS TRIGGER AS $$
 BEGIN
   -- Insert a new notification for the event owner
-  INSERT INTO Notification_ (notified_user, comment_id, notification_type, timestamp)
-  VALUES ((SELECT creator_id FROM Event_ WHERE event_id = NEW.event_id), NEW.comment_id, 'Comment', NOW());
+  INSERT INTO Notification_ (notified_user, event_id, comment_id, notification_type, timestamp)
+  VALUES ((SELECT creator_id FROM Event_ WHERE event_id = NEW.event_id), NEW.event_id, NEW.comment_id, 'Comment', NOW());
 
   RETURN NEW;
 END;

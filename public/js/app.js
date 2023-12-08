@@ -342,7 +342,7 @@ function toggleNotifications() {
   if (notificationContainer.style.display === 'none') {
       // Se o contêiner estiver oculto, carregue as notificações via AJAX
       loadNotifications(notificationsBody);
-      calculateNotificationPosition(); 
+      //calculateNotificationPosition(); 
       notificationContainer.style.display = 'block';
   } else {
       notificationContainer.style.display = 'none';
@@ -351,26 +351,52 @@ function toggleNotifications() {
 
 // Adicione esta função para carregar notificações via AJAX
 function loadNotifications(notificationsBody) {
-  // Use AJAX para buscar notificações do servidor (por exemplo, via rota Laravel)
-  // Certifique-se de ajustar a URL conforme necessário
+  // Use AJAX to fetch notifications from the server (adjust the URL as needed)
   fetch('/get-notifications')
       .then(response => response.json())
       .then(data => {
-          // Limpe o conteúdo existente
+          // Clear the existing content
           notificationsBody.innerHTML = '';
 
-          // Adicione as notificações ao corpo do contêiner
+          // Add notifications to the body of the container
           data.notifications.forEach(notification => {
               const notificationElement = document.createElement('div');
               notificationElement.classList.add('notification');
-              notificationElement.textContent = `${notification.notification_type} ${notification.timestamp}`;
+
+              // Create an anchor tag for each notification
+              const anchorTag = document.createElement('a');
+              anchorTag.classList.add('event-link');
+
+              // Set the href attribute based on the notification type
+              if (notification.notification_type === 'Event') {
+                  anchorTag.href = `/view-event/${notification.event_id}`;
+                  anchorTag.innerHTML = `The event <strong>${notification.event_name || 'Unknown Event'}</strong> had some changes made. Check them out! `;
+              } else if (notification.notification_type === 'Comment') {
+                  anchorTag.href = `/view-event/${notification.event_id}`;
+                  anchorTag.innerHTML = `A comment was made in the event <strong>${notification.event_name || 'Unknown Event'}</strong>. `;
+              } else if (notification.notification_type === 'Report') {
+                  anchorTag.href = `/view-event/${notification.event_id}`;
+                  anchorTag.innerHTML = `A report on a comment was made in the event <strong>${notification.event_name || 'Unknown Event'}</strong>. `;
+              }
+
+              // Append the anchor tag to the notification element
+              notificationElement.appendChild(anchorTag);
+
+              const horizontalLine = document.createElement('hr');
+              notificationElement.appendChild(horizontalLine);
+
+              // Append the notification element to the body
               notificationsBody.appendChild(notificationElement);
           });
       })
       .catch(error => console.error('Error fetching notifications:', error));
 }
 
-function calculateNotificationPosition() {
+
+
+
+
+/*function calculateNotificationPosition() {
   const icon = document.getElementById('icon-bell');
   const notificationContainer = document.getElementById('notification-container');
 
@@ -388,7 +414,7 @@ function calculateNotificationPosition() {
       notificationContainer.style.right = `${containerRight}px`;
   }
 }
-
+*/
 
 const pusher = new Pusher(pusherAppKey, {
   cluster: pusherCluster,

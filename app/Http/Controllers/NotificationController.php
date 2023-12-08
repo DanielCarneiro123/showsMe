@@ -9,12 +9,25 @@ use Illuminate\Support\Facades\Auth;
 
 class NotificationController extends Controller
 {
-    /*public function getNotifications(Request $request)
+    public function getNotifications(Request $request)
     {
-        $notifications = Notification::where('user_id', auth()->id())->get();
+        $notifications = Notification::with('event') // Eager load the associated event
+            ->where('notified_user', auth()->id())
+            ->latest('timestamp')
+            ->get();
 
-        return response()->json(['notifications' => $notifications]);
-    }*/
+        // Transform the notifications to include the event name
+        $transformedNotifications = $notifications->map(function ($notification) {
+            return [
+                'event_id' => $notification->event_id,
+                'event_name' => $notification->event ? $notification->event->name : null,
+                'notification_type' => $notification->notification_type,
+                'timestamp' => $notification->timestamp,
+            ];
+        });
+
+        return response()->json(['notifications' => $transformedNotifications]);
+    }
 
     public function markAsRead()
     {

@@ -21,8 +21,10 @@ class EventController extends Controller
     public function view($id): View
     { 
         $event = Event::findOrFail($id);
+        $user = Auth::user();
+        $notifications = $user ? $user->notifications : [];
 
-        return view('pages.event', compact('event'));
+        return view('pages.event', compact('event', 'notifications'));
     }
 
     public function index(): View
