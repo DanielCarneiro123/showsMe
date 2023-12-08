@@ -32,5 +32,19 @@ class CommentController extends Controller
 
         // Redirect or respond as needed
     }*/
+    public function submitComment(Request $request)
+    {
+       
+
+         $comment = new Comment();
+         $comment->text = $request->input('newCommentText');
+  
+         $comment->event_id = $request->input('event_id'); 
+         $comment->author_id = auth()->user()->user_id;
+         $comment->save();
+ 
+        
+        return redirect()->back();
+    }
 
 }

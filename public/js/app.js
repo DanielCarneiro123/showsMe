@@ -145,9 +145,6 @@ function activateUser(userId) {
   sendAjaxRequest('PUT', '/activateUser/' + userId, formData, moveUserToActiveTable(userId)); 
 }
 
-
-  addEventListeners();
-
   
   
   function updateEventPageContent(formData) {
@@ -281,12 +278,6 @@ function createTicketType(event_id) {
 
   updateTicketPageContent(formData);
 }
-
-
-
-
-addEventListeners();
-
 
 
 
@@ -425,3 +416,113 @@ const channel = pusher.subscribe('comment_posted');
   channel.bind('notification-postcomment', function(data) {
   console.log(`New notification: ${data.message}`);
 })
+
+
+
+
+
+//Immediate Execution on Page Load (To follow this approach later, if there is time)
+
+function showSection() {
+  var sectionButtons = document.querySelectorAll('.btn-check');
+  var eventSections = document.getElementsByClassName("event-section");
+
+  if (!sectionButtons.length || !eventSections.length) {
+    return;
+  }
+  
+  for (var j = 1; j < eventSections.length; j++) {
+    eventSections[j].style.display = "none";
+  }
+
+  sectionButtons.forEach(function(button) {
+    button.addEventListener("click", function() {
+      console.log(this);
+      
+      var sectionId = this.getAttribute("data-section-id");
+      console.log("Section ID:", sectionId);
+
+      var currentSection = document.getElementById(sectionId);
+
+      for (var j = 0; j < eventSections.length; j++) {
+        eventSections[j].style.display = "none";
+      }
+
+      if (currentSection) {
+        currentSection.style.display = "block";
+        console.log("Displaying section with ID:", sectionId);
+      } else {
+        console.log("Section not found with ID:", sectionId);
+      }
+
+      sectionButtons.forEach(function(btn) {
+        btn.parentElement.classList.remove("selected");
+      });
+
+      this.parentElement.classList.add("selected");
+      console.log("Button marked as selected");
+    });
+  });
+}
+
+showSection();
+
+addEventListeners();
+
+function showReportPopUp(){
+    const comment_id = event.target.closest('.comment').getAttribute('data-id');
+  console.log(comment_id);
+  
+  document.getElementById('reportCommentId').value = comment_id;
+
+const reportPopUp = document.querySelector('.pop-up-report');
+    reportPopUp.style.display = 'block';
+
+    window.onclick = function(event) {
+        if (event.target == reportPopUp) {
+            reportPopUp.style.display = 'none';
+        }
+    };
+  }
+
+  /*function showReportPopUp(commentId) {
+    const reportPopUp = document.getElementById(`reportPopUp_${commentId}`);
+    const reportCommentIdInput = document.getElementById('reportCommentId');
+
+    // Set the value of the hidden input
+    reportCommentIdInput.value = commentId;
+
+    // Display the report pop-up
+    reportPopUp.style.display = 'block';
+
+    // Close the pop-up when clicking outside of it
+    window.onclick = function(event) {
+        if (event.target == reportPopUp) {
+            reportPopUp.style.display = 'none';
+        }
+    };
+}*/
+/*
+
+const userRatingSubmitButton = document.querySelector('#submit-rating');
+
+if (userRatingSubmitButton) {
+  console.log('the button exsuts')
+  userRatingSubmitButton.addEventListener('click', addRating);
+}
+
+
+function addRating() {
+  event.preventDefault();
+ let formData = {
+    'event_id': '9',
+    'rating': '2',
+ };
+
+  sendAjaxRequest('post', '/add-rating', formData, addRatingHandler);
+}
+
+
+function addRatingHandler() {
+    console.log("Hi");
+}*/

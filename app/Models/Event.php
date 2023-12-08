@@ -48,7 +48,28 @@ class Event extends Model
 
     public function ratings()
     {
-        return $this->hasMany(Rating::class, 'event_id');
+        return $this->hasMany(Rating::class, 'event_id', 'event_id');
     }
+    public function getAverageRatingAttribute()
+    {
+        $ratings = $this->ratings;
+        $totalRatings = $ratings->count();
 
+        if ($totalRatings > 0) {
+            $sum = $ratings->sum('rating');
+            return $sum / $totalRatings;
+        }
+
+        return 0; // Default value if there are no ratings
+    }
+    public function userRating()
+    {
+        if (auth()->check()) {
+            $userId = auth()->user()->user_id;
+
+            return $this->ratings()->where('author_id', $userId)->first();
+        }
+
+        return null;
+    }
 }

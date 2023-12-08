@@ -22,6 +22,7 @@
     
     <div class="event-container">
   @foreach ($events as $event)
+    
     <div class="event-card">
       <a href="{{ route('view-event', ['id' => $event->event_id]) }}" class="event-link">
         
@@ -31,7 +32,7 @@
             <h3>{{ $event->name }}</h3>
             <p>{{ $event->location }}</p>
           </div>
-        </article>
+       
       </a>
     </div>
   @endforeach
