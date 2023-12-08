@@ -59,7 +59,15 @@ class Comment extends Model
         return $this->belongsTo(User::class, 'author_id', 'user_id');
     }
 
-    // Comment.php (model)
+    
+    
+    public function isReported()
+    {
+        $userId = auth()->user()->user_id;
+
+        
+        return $this->reports()->where('author_id', $userId)->exists();
+    }
 
     public function reports()
     {

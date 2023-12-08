@@ -80,7 +80,12 @@
             <p class="comment-author">{{ $comment->author->name }}</p>
             <div>
             @if(auth()->check())
-            <i class="fa-solid fa-flag" onclick="showReportPopUp()"></i>
+            @if((auth()->user()->user_id !== $comment->author->user_id)&&(!$comment->isReported()))
+            
+                        <i class="fa-solid fa-flag" onclick="showReportPopUp()"></i>
+            @endif
+         
+
             
             @if(auth()->user()->user_id === $comment->author->user_id)
             <i class="fa-solid fa-pen-to-square"></i>
@@ -117,9 +122,10 @@
     <div class="report-section">
         <h3>Why are you reporting?</h3>
         
-        <input type="hidden" name="comment_id" id="reportCommentId" value="0">
+        
         <form action="{{ route('submitReport') }}" method="post">
             @csrf
+            <input type="hidden" name="comment_id" id="reportCommentId" value="0">
             <textarea id="reportReason" class="report-textbox" name="reportReason" rows="4" placeholder="Enter your reason here"></textarea>
             <button type="submit" class="btn btn-primary">Submit Report</button>
         </form>

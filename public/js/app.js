@@ -441,21 +441,24 @@ function toggleCheckoutSection() {
 
 addEventListeners();
 
-function showReportPopUp(){
-    const comment_id = event.target.closest('.comment').getAttribute('data-id');
-  console.log(comment_id);
-  
+function showReportPopUp() {
+ 
+
+
+  const comment_id = event.target.closest('.comment').getAttribute('data-id');
+
+
   document.getElementById('reportCommentId').value = comment_id;
 
-const reportPopUp = document.querySelector('.pop-up-report');
-    reportPopUp.style.display = 'block';
+  const reportPopUp = document.querySelector('.pop-up-report');
+  reportPopUp.style.display = 'block';
 
-    window.onclick = function(event) {
-        if (event.target == reportPopUp) {
-            reportPopUp.style.display = 'none';
-        }
-    };
-  }
+  window.onclick = function(event) {
+      if (event.target == reportPopUp) {
+          reportPopUp.style.display = 'none';
+      }
+  };
+}
 
   /*function showReportPopUp(commentId) {
     const reportPopUp = document.getElementById(`reportPopUp_${commentId}`);
