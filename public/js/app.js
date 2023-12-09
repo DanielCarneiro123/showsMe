@@ -1,5 +1,3 @@
-let newId = 0;
-
 function addEventListeners() {
   let activeUsersSection = document.getElementById('active_users_section');
   if (activeUsersSection) {
@@ -139,23 +137,42 @@ function deactivateUser(userId) {
   let formData = { 'user_id': userId };
 
   sendAjaxRequest('PUT', '/deactivateUser/' + userId, formData, moveUserToInactiveTable(userId));
+
+  updateInactiveUserCount();
+  updateActiveUserCount();
 }
 
 function activateUser(userId) {
   let formData = { 'user_id': userId };
 
-  sendAjaxRequest('PUT', '/activateUser/' + userId, formData, moveUserToActiveTable(userId)); 
+  sendAjaxRequest('PUT', '/activateUser/' + userId, formData, moveUserToActiveTable(userId));
+  
+  updateInactiveUserCount();
+  updateActiveUserCount();
+}
+
+function updateActiveUserCount() {
+  sendAjaxRequest('GET', '/getActiveUserCount', null, function(event) {
+    let count = JSON.parse(event.target.responseText).count;
+    document.getElementById('activeUserCount').innerText = 'Total de usuários ativos: ' + count;
+  });
+}
+
+function updateInactiveUserCount() {
+  sendAjaxRequest('GET', '/getInactiveUserCount', null, function(event) {
+    let count = JSON.parse(event.target.responseText).count;
+    document.getElementById('inactiveUserCount').innerText = 'Total de usuários inativos: ' + count;
+  });
 }
 
   
-  
-  function updateEventPageContent(formData) {
-      document.getElementById('name').innerHTML = formData.edit_name;
-      document.getElementById('location').innerHTML =  formData.edit_location;
-      document.getElementById('description').innerHTML =  formData.edit_description;
-      //document.getElementById('start_timestamp').innerHTML =  formData.edit_start_timestamp; //ainda não está display
-      //document.getElementById('end_timestamp').innerHTML =  formData.edit_end_timestamp;  //ainda não está display
-  }
+function updateEventPageContent(formData) {
+    document.getElementById('name').innerHTML = formData.edit_name;
+    document.getElementById('location').innerHTML =  formData.edit_location;
+    document.getElementById('description').innerHTML =  formData.edit_description;
+    //document.getElementById('start_timestamp').innerHTML =  formData.edit_start_timestamp; //ainda não está display
+    //document.getElementById('end_timestamp').innerHTML =  formData.edit_end_timestamp;  //ainda não está display
+}
 
   function updateEvent(eventId) {
 

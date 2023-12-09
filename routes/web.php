@@ -43,6 +43,7 @@ Route::controller(EventController::class)->group(function () {
     Route::post('/activate-event/{eventId}', 'activateEvent')->name('activate-event');
     Route::get('/generate-qrcode/{ticketInstanceId}', [EventController::class, 'generateQRCode'])->name('generate-qrcode');
     Route::get('/view-event/{id}', [EventController::class, 'show'])->name('view-event');
+    Route::get('/event/{eventId}', 'EventController@show');
 });
 
 Route::controller(FaqController::class)->group(function () {
@@ -63,8 +64,10 @@ Route::controller(AdminController::class)->group(function () {
     Route::get('/admin', [AdminController::class, 'showAdminPage'])->name('admin');
     Route::put('/deactivateUser/{id}', [AdminController::class, 'deactivateUser'])->name('deactivateUser');
     Route::put('/activateUser/{id}', [AdminController::class, 'activateUser'])->name('activateUser');
+    Route::get('/count', [AdminController::class, 'showUserCount'])->name('count');
+    Route::get('/getActiveUserCount', [AdminController::class, 'getActiveUserCount']);
+    Route::get('/getInactiveUserCount', [AdminController::class, 'getInactiveUserCount']);
 });
-
 
 
 Route::controller(UserController::class)->group(function () {

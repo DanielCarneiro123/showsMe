@@ -212,7 +212,7 @@ class EventController extends Controller
                         $qrCodePath = $this->generateQRCodePath($ticketInstance);
                         $ticketInstance->qr_code_path = $qrCodePath;
                         $ticketInstance->save();
-                        Mail::to($user->email)->send(new TicketPurchaseConfirmation($ticketInstance));
+                        //Mail::to($user->email)->send(new TicketPurchaseConfirmation($ticketInstance));
                     }
                 } else {
                     return redirect()->route('view-event', ['id' => $eventId])->with('error', 'Invalid quantity for ticket type.');
@@ -296,5 +296,12 @@ private function createTemporaryAccount(Request $request)
         return view('pages.event', compact('event', 'soldTickets'));
     }
 
+    public function calculateAndDisplayRevenue($eventId)
+    {
+        $event = Event::findOrFail($eventId);
+        $revenue = $event->calculateRevenue();
+
+        return view('event.revenue', ['event' => $event, 'revenue' => $revenue]);
+    }
 }
 ?>

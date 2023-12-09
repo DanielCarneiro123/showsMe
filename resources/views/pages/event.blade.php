@@ -207,9 +207,15 @@
                     @php $totalSoldTickets = 0; $purchaseNumber = 1; @endphp
                     @foreach ($soldTickets->groupBy('order_id') as $orderTickets)
                         @php
+                            $totalSoldTickets += $orderTickets->count();
+                        @endphp
+                    @endforeach
+                    <strong>Total de Bilhetes Vendidos:</strong> {{ $totalSoldTickets }}
+                    
+                    @foreach ($soldTickets->groupBy('order_id') as $orderTickets)
+                        @php
                             $order = $orderTickets->first()->order;
                             $buyer = $order->buyer;
-                            $totalSoldTickets += $orderTickets->count();
                         @endphp
                         <div class="card text-white bg-secondary mb-3" style="max-width: 20rem;">
                         <div class="card-header"><strong>Compra #{{ $purchaseNumber }}</strong></div>
@@ -231,10 +237,119 @@
                     </div>
                         @php $purchaseNumber++; @endphp
                     @endforeach
-
-                <strong>Total de Bilhetes Vendidos:</strong> {{ $totalSoldTickets }}
             </section>
+
+            <div>
+                <canvas id="myChart"></canvas>
+            </div>
         
+            @php
+                $chartData = $event->tickets_chart();
+            @endphp
+
+            <script>
+    const ctx = document.getElementById('myChart');
+
+    const chartData = @json($chartData);
+
+    // Encontre o valor máximo nos conjuntos de dados
+    const maxYValue = Math.max(...chartData.datasets.flatMap(dataset => dataset.data));
+
+    // Adicione 10 ao valor máximo
+    const adjustedMaxYValue = maxYValue + 10;
+
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: chartData.labels,
+            datasets: chartData.datasets
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: adjustedMaxYValue
+                }
+            }
+        }
+    });
+</script>
+
+<div>
+    <canvas id="myPieChart"></canvas>
+</div>
+
+@php
+    $pieChartData = $event->tickets_pie_chart();
+@endphp
+
+<script>
+    const pieCtx = document.getElementById('myPieChart');
+
+    const pieChartData = @json($pieChartData);
+
+    new Chart(pieCtx, {
+        type: 'pie',
+        data: pieChartData,
+        options: {
+            responsive: true,
+            maintainAspectRatio: false, // Se desejar manter a relação de aspecto
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                title: {
+                    display: true,
+                    text: 'Distribution of Tickets by Type',
+                },
+            },
+        },
+    });
+</script>
+@foreach($event->tickets_pie_charts() as $pieChart)
+    <div>
+        <canvas id="myChart{{ $pieChart['key'] }}"></canvas>
+    </div>
+
+    @php
+        $pieChartData = $pieChart['data'];
+    @endphp
+
+    <script>
+        const pieCtx{{ $pieChart['key'] }} = document.getElementById('myChart{{ $pieChart['key'] }}');
+        const pieChartData{{ $pieChart['key'] }} = @json($pieChartData);
+
+        const chartOptions{{ $pieChart['key'] }} = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                title: {
+                    display: true,
+                    text: 'Distribution of Tickets for {{ $pieChart['label'] }}',
+                },
+            },
+        };
+
+        if (pieChartData{{ $pieChart['key'] }}.datasets[0].data[0] === 100) {
+            chartOptions{{ $pieChart['key'] }}.plugins.title.text = 'SOLD OUT';
+        } else {
+            chartOptions{{ $pieChart['key'] }}.plugins.title.text = Math.round(pieChartData{{ $pieChart['key'] }}.datasets[0].data[0]) + '% sold';
+        }
+
+        new Chart(pieCtx{{ $pieChart['key'] }}, {
+            type: 'pie',
+            data: pieChartData{{ $pieChart['key'] }},
+            options: chartOptions{{ $pieChart['key'] }},
+        });
+    </script>
+@endforeach
+
+    <p>Faturação: {{ $event->calculateRevenue() }}€</p>
+
+
 @endcan
 
 @endsection
