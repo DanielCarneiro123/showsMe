@@ -124,10 +124,10 @@ CREATE TABLE Notification_ (
    viewed BOOLEAN NOT NULL DEFAULT FALSE,
    notification_type NotificationType NOT NULL,
    CHECK (
-      (notification_type = 'Event' AND event_id IS NOT NULL AND comment_id IS NULL AND report_id IS NULL) OR
-      (notification_type = 'Comment' AND event_id IS NOT NULL AND comment_id IS NOT NULL AND report_id IS NULL) OR
-      (notification_type = 'Report' AND event_id IS NULL AND comment_id IS NULL AND report_id IS NOT NULL)
-   )
+    (notification_type = 'Event' AND event_id IS NOT NULL AND comment_id IS NULL AND report_id IS NULL) OR
+    (notification_type = 'Comment' AND event_id IS NOT NULL AND comment_id IS NOT NULL AND report_id IS NULL) OR
+    (notification_type = 'Report' AND event_id IS NULL AND comment_id IS NULL AND report_id IS NOT NULL)
+  )
 );
 
 CREATE INDEX start_timestamp_event ON Event_ USING btree (start_timestamp);
@@ -233,10 +233,12 @@ CREATE OR REPLACE FUNCTION send_report_notification()
 RETURNS TRIGGER AS $$
 BEGIN
   -- Insert a new 'Report' type notification for every user with isAdmin = TRUE
-  INSERT INTO Notification_ (notified_user, report_id, notification_type, timestamp)
-  SELECT user_id, NEW.report_id, 'Report'::NotificationType, NOW()
-  FROM users
-  WHERE is_admin = TRUE;
+  IF NEW.report_id IS NOT NULL THEN
+    INSERT INTO Notification_ (notified_user, report_id, notification_type, timestamp)
+    SELECT user_id, NEW.report_id, 'Report'::NotificationType, NOW()
+    FROM users
+    WHERE is_admin = TRUE;
+  END IF;
 
   RETURN NEW;
 END;

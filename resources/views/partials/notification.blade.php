@@ -18,22 +18,10 @@
                                 {{ $notification->timestamp }}
                             </a>
                         @elseif ($notification->notification_type === 'Report')
-                            <a href="{{ route('view-event', ['id' => $notification->event_id]) }}" >
+                            <a href="{{ route('view-event', ['id' => $notification->event_id]) }}" class="event-link">
                                 A report on a comment was made in the event {{ $notification->event->name }}.
                                 {{ $notification->timestamp }}
                             </a>
-                        @endif
-                        
-                    @else
-                        @if ($notification->notification_type === 'Event')
-                            The event {{ $notification->event_id }} had some changes made. Check them out!
-                            {{ $notification->timestamp }}
-                        @elseif ($notification->notification_type === 'Comment')
-                            A comment was made in the event {{ $notification->event_id }}.
-                            {{ $notification->timestamp }}                      
-                        @elseif ($notification->notification_type === 'Report')
-                            A report on a comment was made in the event {{ $notification->event_id }}.
-                            {{ $notification->timestamp }}
                         @endif
                     @endif
                     <hr>

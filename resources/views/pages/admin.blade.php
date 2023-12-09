@@ -2,11 +2,10 @@
 
 @section('content')
     <h1>Admin</h1>
-    <p>This is the admin page.</p>
 
     <h2 id="active_users_header">Active Users</h2>
     <div id="active_users_section">
-        <table>
+        <table class="table mx-auto">
             <thead>
                 <tr>
                     <th>Email</th>
@@ -30,7 +29,7 @@
 
     <h2 id="inactive_users_header">Inactive Users</h2>
     <div id="inactive_users_section">
-        <table>
+        <table class="table mx-auto">
             <thead>
                 <tr>
                     <th>Email</th>
@@ -45,6 +44,30 @@
                         <td>{{ $user->name }}</td>
                         <td>  
                             <button class="activate-btn" data-user-id="{{ $user->user_id }}">Activate</button>
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+
+    <h2 id="reported_comments_header">Reported Comments</h2>
+    <div id="reported_comments_section">
+        <table class="table mx-auto">
+            <thead>
+                <tr>
+                    <th>Comment ID</th>
+                    <th>Text</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($reportedComments as $reportedComment)
+                    <tr id="reported_comment_row_{{ $reportedComment->comment_id }}">
+                        <td>{{ $reportedComment->comment_id }}</td>
+                        <td>{{ $reportedComment->text }}</td>
+                        <td>
+                            <!-- Add actions for reported comments if needed -->
                         </td>
                     </tr>
                 @endforeach

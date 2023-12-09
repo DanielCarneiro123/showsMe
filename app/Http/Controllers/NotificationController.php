@@ -9,25 +9,37 @@ use Illuminate\Support\Facades\Auth;
 
 class NotificationController extends Controller
 {
+    // NotificationController.php
     public function getNotifications(Request $request)
     {
-        $notifications = Notification::with('event') // Eager load the associated event
+        $notifications = Notification::with(['event', 'report.comment.event']) // Eager load the associated relationships
             ->where('notified_user', auth()->id())
             ->latest('timestamp')
             ->get();
 
-        // Transform the notifications to include the event name
         $transformedNotifications = $notifications->map(function ($notification) {
+            $eventName = null;
+        
+            if ($notification->notification_type === 'Event' || $notification->notification_type === 'Comment') {
+                $eventName = $notification->event ? $notification->event->name : null;
+                $notificationId = $notification->event_id;
+            } elseif ($notification->notification_type === 'Report') {
+                $eventName = $notification->report->comment->event->name;
+                $notificationId = $notification->report->comment->event->event_id;
+            }
+        
             return [
-                'event_id' => $notification->event_id,
-                'event_name' => $notification->event ? $notification->event->name : null,
+                'event_id' => $notificationId,
+                'event_name' => $eventName,
                 'notification_type' => $notification->notification_type,
                 'timestamp' => $notification->timestamp,
             ];
         });
+            
 
         return response()->json(['notifications' => $transformedNotifications]);
     }
+
 
     public function markAsRead()
     {

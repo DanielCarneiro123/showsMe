@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use App\Models\Comment;
 
 class AdminController extends Controller
 {
@@ -13,7 +16,14 @@ class AdminController extends Controller
         $this->authorize('verifyAdmin', Admin::class);
         $activeUsers = User::where('active', true)->get();
         $inactiveUsers = User::where('active', false)->get();
-        return view('pages.admin', compact('activeUsers', 'inactiveUsers','notifications'));
+
+        $reportedComments = DB::table('Comment_')
+            ->join('Report', 'Comment_.comment_id', '=', 'Report.comment_id')
+            ->select('Comment_.*')
+            ->distinct()
+            ->get();
+
+        return view('pages.admin', compact('activeUsers', 'inactiveUsers','notifications', 'reportedComments'));
     }
 
     public function deactivateUser($id)
