@@ -32,6 +32,6 @@ class ReportController extends Controller
         $report->save();
 
        
-        return redirect()->route('view-event', ['id' => $request->input('event_id')]);
+        return redirect()->back()->with('success', 'Report successfull.');
     }
 }

@@ -36,6 +36,7 @@
         
         <script type="text/javascript" src={{ url('js/app.js') }} defer>
         </script>
+
     </head>
     <body>
         <main>

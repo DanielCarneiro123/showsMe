@@ -267,10 +267,11 @@ input[type="number"]:invalid {
     gap: 10px;
 }
 
-.report-textbox, .new-comment-textbox{
+.report-textbox, .new-comment-textbox, #editedCommentText{
     width: 100%;
     resize: none;
 }
+
 
 #submit-comment-button {
     display: block;

@@ -439,11 +439,22 @@ function toggleCheckoutSection() {
   showForm.style.display = 'none';
 }
 
+function showEditCommentModal() {
+  const comment = event.target.closest(".comment");
+
+  comment.querySelector('#commentText').style.display = 'none';
+  
+
+  comment.querySelector('#editCommentForm').style.display = 'block';
+ 
+}
+
+
 addEventListeners();
 
 function showReportPopUp(){
     const comment_id = event.target.closest('.comment').getAttribute('data-id');
-  console.log(comment_id);
+   
   
   document.getElementById('reportCommentId').value = comment_id;
 

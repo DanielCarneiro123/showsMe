@@ -59,7 +59,7 @@ class Event extends Model
             return $sum / $totalRatings;
         }
 
-        return 0; // Default value if there are no ratings
+        return "No Ratings Yet"; 
     }
     public function userRating()
     {

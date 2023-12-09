@@ -65,4 +65,13 @@ class Comment extends Model
     {
         return $this->hasMany(Report::class, 'comment_id');
     }
+
+    public function isReported()
+    {
+        $userId = auth()->user()->user_id;
+
+        return $this->reports()->where('author_id', $userId)->exists();
+    }
+
+
 }

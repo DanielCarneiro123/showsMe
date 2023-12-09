@@ -63,12 +63,32 @@
             <span class="star-icon">★</span>
         </p>
     @else
-        <p id="your-rating" class="mt-2">
+        <p id="your-rating" class="text-center">
             Give your Rating
         </p>
+        <form id="ratingForm" class="text-center">
+    <label>
+        <input type="radio" name="rating" value="1"> 1
+    </label>
+    <label>
+        <input type="radio" name="rating" value="2"> 2
+    </label>
+    <label>
+        <input type="radio" name="rating" value="3"> 3
+    </label>
+    <label>
+        <input type="radio" name="rating" value="4"> 4
+    </label>
+    <label>
+        <input type="radio" name="rating" value="5"> 5
+    </label>
+
+    <button class="btn btn-primary" onclick="">Submit</button>
+</form>
+
     @endif
 @endif
-    
+
 
     <h2 class="text-primary">Comments</h2>
 
@@ -80,18 +100,22 @@
             <p class="comment-author">{{ $comment->author->name }}</p>
             <div>
             @if(auth()->check())
+            @if((!$comment->isReported())&& (auth()->user()->user_id !== $comment->author->user_id))
             <i class="fa-solid fa-flag" onclick="showReportPopUp()"></i>
-            
+            @endif
             @if(auth()->user()->user_id === $comment->author->user_id)
-            <i class="fa-solid fa-pen-to-square"></i>
+            <i class="fa-solid fa-pen-to-square" onclick="showEditCommentModal()"></i>
             @endif
             @endif
             </div>
         </div>
         
        
-        <p class="comment-text">{{ $comment->text }}</p>
-            
+        <p class="comment-text" id="commentText">{{ $comment->text }}</p>
+        <form id="editCommentForm"  style="display: none;">
+            <textarea id="editedCommentText" class="edit-comment-textbox" rows="3" placeholder="{{ $comment->text }}"></textarea>
+            <button class="btn btn-primary" onclick="">Submit</button>
+        </form>
       
 
         </div>
@@ -113,18 +137,20 @@
 </form>
 @endif
 
-    <div class="pop-up-report">
+<div class="pop-up-report">
     <div class="report-section">
         <h3>Why are you reporting?</h3>
         
-        <input type="hidden" name="comment_id" id="reportCommentId" value="0">
+        
         <form action="{{ route('submitReport') }}" method="post">
             @csrf
+            <input type="hidden" name="comment_id" id="reportCommentId" value="0">
             <textarea id="reportReason" class="report-textbox" name="reportReason" rows="4" placeholder="Enter your reason here"></textarea>
             <button type="submit" class="btn btn-primary">Submit Report</button>
         </form>
     </div>
     </div>
+
    
 
 
