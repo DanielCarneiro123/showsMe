@@ -4,10 +4,10 @@
     <h1>Admin</h1>
     <p>This is the admin page.</p>
 
-    <h1>User Count</h1>
-
     <p>Total de usuários: {{ $userCount }}</p>
-    <p>Você não tem permissão para ver a contagem de usuários.</p>
+    <p>Total de eventos: {{ $eventCount }}</p>
+    <p>Total de eventos ativos: <span id="activeEventCount">{{ $activeEventCount }}</span></p>
+    <p>Total de eventos inativos: <span id="inactiveEventCount">{{ $inactiveEventCount }}</span></p>
 
     <h2 id="active_users_header">Active Users</h2>
     <h3 id="activeUserCount">Total de usuários ativos: {{ count($activeUsers) }}</h3>

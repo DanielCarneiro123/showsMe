@@ -232,6 +232,26 @@ class Event extends Model
             return $totalRevenue;
         }
 
-        
+        public static function countEvents()
+        {
+            try {
+                $count = self::query()->count();
+                return $count;
+            } catch (\Exception $e) {
+                echo '<script>console.error("countEvents - erro ao contar eventos: ' . $e->getMessage() . '");</script>';
+                return 0; 
+            }
+        }
 
+        public static function countActiveEvents()
+        {
+            $count = self::where('private', true)->count();
+            return $count;
+        }
+
+        public static function countInactiveEvents()
+        {
+            $count = self::where('private', false)->count();
+            return $count;
+        }
 }

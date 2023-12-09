@@ -66,7 +66,10 @@ Route::controller(AdminController::class)->group(function () {
     Route::put('/activateUser/{id}', [AdminController::class, 'activateUser'])->name('activateUser');
     Route::get('/count', [AdminController::class, 'showUserCount'])->name('count');
     Route::get('/getActiveUserCount', [AdminController::class, 'getActiveUserCount']);
-    Route::get('/getInactiveUserCount', [AdminController::class, 'getInactiveUserCount']);
+    Route::get('/getInactiveUserCount', [AdminController::class, 'getInactiveUserCount']); 
+    Route::get('/getActiveEventCount', [AdminController::class, 'getActiveEventCount']);
+    Route::get('/getInactiveEventCount', [AdminController::class, 'getInactiveEventCount']);
+
 });
 
 

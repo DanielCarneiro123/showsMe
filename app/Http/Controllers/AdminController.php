@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Models\User;
+use App\Models\Event;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -10,21 +11,25 @@ class AdminController extends Controller
     public function showAdminPage()
     {
         $this->authorize('verifyAdmin', Admin::class);
-        
+
         $userCount = null;
+        $eventCount = null;
+        $activeEventCount = null;
+        $inactiveEventCount = null;
         $activeUsers = [];
         $inactiveUsers = [];
-    
-        $userCount = User::countUsers();    
+
+        $userCount = User::countUsers();
+        $eventCount = Event::countEvents();
+        $activeEventCount = Event::countActiveEvents();
+        $inactiveEventCount = Event::countInactiveEvents();
         $activeUsers = User::where('active', true)->get();
         $inactiveUsers = User::where('active', false)->get();
-    
-        // Return the view with the appropriate variables
-        return view('pages.admin', compact('userCount', 'activeUsers', 'inactiveUsers'));
+
+        return view('pages.admin', compact('userCount', 'eventCount', 'activeEventCount', 'inactiveEventCount', 'activeUsers', 'inactiveUsers'));
     }
+
     
-
-
     public function deactivateUser($id)
 {
     // Find the user by ID
@@ -81,5 +86,17 @@ class AdminController extends Controller
     {
         $inactiveUserCount = User::where('active', false)->count();
         return response()->json(['count' => $inactiveUserCount]);
+    }
+
+    public function getActiveEventCount()
+    {
+        $activeEventCount = Event::countActiveEvents();
+        return response()->json(['count' => $activeEventCount]);
+    }
+
+    public function getInactiveEventCount()
+    {
+        $inactiveEventCount = Event::countInactiveEvents();
+        return response()->json(['count' => $inactiveEventCount]);
     }
 }

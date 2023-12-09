@@ -140,6 +140,8 @@ function deactivateUser(userId) {
 
   updateInactiveUserCount();
   updateActiveUserCount();
+  updateActiveEventCount();
+  updateInactiveEventCount();
 }
 
 function activateUser(userId) {
@@ -149,6 +151,8 @@ function activateUser(userId) {
   
   updateInactiveUserCount();
   updateActiveUserCount();
+  updateActiveEventCount();
+  updateInactiveEventCount();
 }
 
 function updateActiveUserCount() {
@@ -165,7 +169,20 @@ function updateInactiveUserCount() {
   });
 }
 
-  
+function updateActiveEventCount() {
+  sendAjaxRequest('GET', '/getActiveEventCount', null, function(event) {
+    let count = JSON.parse(event.target.responseText).count;
+    document.getElementById('activeEventCount').innerText = count;
+  });
+}
+
+function updateInactiveEventCount() {
+  sendAjaxRequest('GET', '/getInactiveEventCount', null, function(event) {
+    let count = JSON.parse(event.target.responseText).count;
+    document.getElementById('inactiveEventCount').innerText = count;
+  });
+}
+
 function updateEventPageContent(formData) {
     document.getElementById('name').innerHTML = formData.edit_name;
     document.getElementById('location').innerHTML =  formData.edit_location;
