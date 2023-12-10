@@ -9,10 +9,9 @@ use Illuminate\Support\Facades\Auth;
 
 class NotificationController extends Controller
 {
-    // NotificationController.php
     public function getNotifications(Request $request)
     {
-        $notifications = Notification::with(['event', 'report.comment.event']) // Eager load the associated relationships
+        $notifications = Notification::with(['event', 'report.comment.event']) 
             ->where('notified_user', auth()->id())
             ->latest('timestamp')
             ->get();

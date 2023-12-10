@@ -1,77 +1,91 @@
-@extends('layouts.app')  
+@extends('layouts.app')
 
 @section('content')
     <h1>Admin</h1>
+    <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+        <input type="radio" class="btn-check" name="sectionToggle" id="reportComments" autocomplete="off" checked data-section-id="report-comments">
+        <label class="btn btn-outline-primary" for="reportComments">Reported Comments</label>
 
-    <h2 id="active_users_header">Active Users</h2>
-    <div id="active_users_section">
-        <table class="table mx-auto">
-            <thead>
-                <tr>
-                    <th>Email</th>
-                    <th>Name</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($activeUsers as $user)
-                    <tr id="active_user_row_{{ $user->user_id }}">
-                        <td>{{ $user->email }}</td>
-                        <td>{{ $user->name }}</td>
-                        <td>
-                            <button class="deactivate-btn" data-user-id="{{ $user->user_id }}">Deactivate</button>
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
+        <input type="radio" class="btn-check" name="sectionToggle" id="manageUsers" autocomplete="off" data-section-id="manage-users">
+        <label class="btn btn-outline-primary" for="manageUsers">Activate/Deactivate Users</label>
     </div>
 
-    <h2 id="inactive_users_header">Inactive Users</h2>
-    <div id="inactive_users_section">
+    <div class="admin-section" id="report-comments">
+        <h2 id="reported_comments_header">Reported Comments</h2>
         <table class="table mx-auto">
             <thead>
                 <tr>
-                    <th>Email</th>
-                    <th>Name</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($inactiveUsers as $user)
-                    <tr id="inactive_user_row_{{ $user->user_id }}">
-                        <td>{{ $user->email }}</td>
-                        <td>{{ $user->name }}</td>
-                        <td>  
-                            <button class="activate-btn" data-user-id="{{ $user->user_id }}">Activate</button>
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-    </div>
-
-    <h2 id="reported_comments_header">Reported Comments</h2>
-    <div id="reported_comments_section">
-        <table class="table mx-auto">
-            <thead>
-                <tr>
-                    <th>Comment ID</th>
+                    <th>Event</th>
                     <th>Text</th>
+                    <th>Report reason</th>
                     <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach ($reportedComments as $reportedComment)
                     <tr id="reported_comment_row_{{ $reportedComment->comment_id }}">
-                        <td>{{ $reportedComment->comment_id }}</td>
+                        <td><a href="{{ route('view-event', ['id' => $reportedComment->event_id]) }}">
+                            {{ $reportedComment->event_name }}
+                        </a></td>
                         <td>{{ $reportedComment->text }}</td>
+                        <td>{{ $reportedComment->type }}</td>
                         <td>
-                            <!-- Add actions for reported comments if needed -->
+                            <i class="toggle-eye fa-solid fa-eye show-icon" id="show_{{ $reportedComment->event_id }}" onclick="toggleEye('show_{{ $reportedComment->event_id }}', 'hidden_{{ $reportedComment->event_id }}')" style="display: none;"></i>
+                            <i class="toggle-eye fa-solid fa-eye-slash hidden-icon" id="hidden_{{ $reportedComment->event_id }}" onclick="toggleEye('show_{{ $reportedComment->event_id }}', 'hidden_{{ $reportedComment->event_id }}')" ></i>
                         </td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
+    </div>
+
+    <div class="admin-section" id="manage-users">
+        <div id="active_users_section">
+            <h2 id="active_users_header">Active Users</h2>
+            <table class="table mx-auto">
+                <thead>
+                    <tr>
+                        <th>Email</th>
+                        <th>Name</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($activeUsers as $user)
+                        <tr id="active_user_row_{{ $user->user_id }}">
+                            <td>{{ $user->email }}</td>
+                            <td>{{ $user->name }}</td>
+                            <td>
+                                <button class="deactivate-btn" data-user-id="{{ $user->user_id }}">Deactivate</button>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+
+        <div id="inactive_users_section">
+            <h2 id="inactive_users_header">Inactive Users</h2>
+            <table class="table mx-auto">
+                <thead>
+                    <tr>
+                        <th>Email</th>
+                        <th>Name</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($inactiveUsers as $user)
+                        <tr id="inactive_user_row_{{ $user->user_id }}">
+                            <td>{{ $user->email }}</td>
+                            <td>{{ $user->name }}</td>
+                            <td>  
+                                <button class="activate-btn" data-user-id="{{ $user->user_id }}">Activate</button>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
     </div>
 @endsection

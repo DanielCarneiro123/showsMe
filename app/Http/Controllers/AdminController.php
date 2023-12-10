@@ -17,9 +17,10 @@ class AdminController extends Controller
         $activeUsers = User::where('active', true)->get();
         $inactiveUsers = User::where('active', false)->get();
 
-        $reportedComments = DB::table('Comment_')
-            ->join('Report', 'Comment_.comment_id', '=', 'Report.comment_id')
-            ->select('Comment_.*')
+        $reportedComments = DB::table('comment_')
+            ->join('report', 'comment_.comment_id', '=', 'report.comment_id')
+            ->join('event_', 'comment_.event_id', '=', 'event_.event_id')
+            ->select('comment_.*', 'event_.name as event_name', 'report.type as type')
             ->distinct()
             ->get();
 
@@ -27,19 +28,19 @@ class AdminController extends Controller
     }
 
     public function deactivateUser($id)
-{
+    {
 
-    $user = User::findOrFail($id);
+        $user = User::findOrFail($id);
 
-    $this->authorize('verifyAdmin', Admin::class);
+        $this->authorize('verifyAdmin', Admin::class);
 
-    $user->active = false;
-    $user->save();
+        $user->active = false;
+        $user->save();
 
-    $user->own_events()->update(['private' => true]);
+        $user->own_events()->update(['private' => true]);
 
-    return response()->json(['user_id' => $user->user_id]);
-}
+        return response()->json(['user_id' => $user->user_id]);
+    }
 
 
     public function activateUser($id)

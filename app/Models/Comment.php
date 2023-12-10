@@ -18,6 +18,7 @@ class Comment extends Model
     protected $fillable = [
         'text',
         'media',
+        'private',
         'event_id',
         'author_id',
     ];

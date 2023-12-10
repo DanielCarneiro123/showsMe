@@ -71,47 +71,63 @@
     
 
     <h2 class="text-primary">Comments</h2>
-
-    @forelse($event->comments as $comment)
-        <div class="comment" data-id="{{ $comment->comment_id}}">
-       
-        
+    @forelse($event->comments->where('private', false) as $comment)
+    <div class="comment" data-id="{{ $comment->comment_id }}">
         <div class="comment-icons-container">
             <p class="comment-author">{{ $comment->author->name }}</p>
             <div>
-            @if(auth()->check())
-            <i class="fa-solid fa-flag" onclick="showReportPopUp()"></i>
-            
-            @if(auth()->user()->user_id === $comment->author->user_id)
-            <i class="fa-solid fa-pen-to-square"></i>
+            @if(auth()->user() && auth()->user()->is_admin)
+                <i class="toggle-eye fa-solid fa-eye show-icon" id="show_{{ $comment->comment_id }}" onclick="toggleCommentVisibility('{{ $comment->comment_id }}', 'show')" style="display: none;"></i>
+                <i class="toggle-eye fa-solid fa-eye-slash hidden-icon" id="hidden_{{ $comment->comment_id }}" onclick="toggleCommentVisibility('{{ $comment->comment_id }}', 'hide')"></i>
             @endif
-            @endif
+                @if(auth()->check())
+                    <i class="fa-solid fa-flag" onclick="showReportPopUp()"></i>
+                    @if(auth()->user()->user_id === $comment->author->user_id)
+                        <i class="fa-solid fa-pen-to-square"></i>
+                    @endif
+                @endif
             </div>
         </div>
-        
-       
         <p class="comment-text">{{ $comment->text }}</p>
-            
-      
-
-        </div>
-       
-   
-
+    </div>
     @empty
-        <p>No comments yet.</p>
+        <p>No public comments yet.</p>
     @endforelse
 
+    @if(auth()->user() && auth()->user()->is_admin)
+        <h2 class="text-primary mt-4">Private Comments (visible to admins only)</h2>
+        @forelse($event->comments->where('private', true) as $comment)
+            <div class="comment" data-id="{{ $comment->comment_id }}">
+                <div class="comment-icons-container">
+                    <p class="comment-author">{{ $comment->author->name }}</p>
+                    <div>
+                        <i class="toggle-eye fa-solid fa-eye show-icon" id="show_{{ $comment->comment_id }}" onclick="toggleCommentVisibility('{{ $comment->comment_id }}', 'show')" ></i>
+                        <i class="toggle-eye fa-solid fa-eye-slash hidden-icon" id="hidden_{{ $comment->comment_id }}" onclick="toggleCommentVisibility('{{ $comment->comment_id }}', 'hide')" style="display: none;"></i>
+                        @if(auth()->check())
+                            <i class="fa-solid fa-flag" onclick="showReportPopUp()"></i>
+                            @if(auth()->user()->user_id === $comment->author->user_id)
+                                <i class="fa-solid fa-pen-to-square"></i>
+                            @endif
+                        @endif
+                    </div>
+                </div>
+                <p class="comment-text">{{ $comment->text }}</p>
+            </div>
+        @empty
+            <p>No private comments yet.</p>
+        @endforelse
+    @endif
+
     @if(auth()->check())
-    <form id="newCommentForm" action="{{ route('submitComment') }}" method="post">
-    @csrf
-    <div class="comment new-comment">
-        <textarea name="newCommentText" id="newCommentText" class="new-comment-textbox" rows="3" placeholder="Write a new comment"></textarea>
-    </div>
-    <input type="hidden" name="event_id"  value="{{$event->event_id}}">
-    <button type="submit" class="btn btn-primary" id="submit-comment-button">Submit Comment</button>
-</form>
-@endif
+        <form id="newCommentForm" action="{{ route('submitComment') }}" method="post">
+            @csrf
+            <div class="comment new-comment">
+                <textarea name="newCommentText" id="newCommentText" class="new-comment-textbox" rows="3" placeholder="Write a new comment"></textarea>
+            </div>
+            <input type="hidden" name="event_id" value="{{ $event->event_id }}">
+            <button type="submit" class="btn btn-primary" id="submit-comment-button">Submit Comment</button>
+        </form>
+    @endif
 
     <div class="pop-up-report">
     <div class="report-section">

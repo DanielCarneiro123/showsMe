@@ -52,6 +52,7 @@ CREATE TABLE Comment_ (
    comment_id SERIAL PRIMARY KEY,
    text TEXT,
    media BYTEA,
+   private BOOLEAN NOT NULL DEFAULT FALSE,
    event_id INT REFERENCES Event_ (event_id) ON UPDATE CASCADE,
    author_id INT REFERENCES users (user_id),
    CHECK (text IS NOT NULL OR media IS NOT NULL)

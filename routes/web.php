@@ -32,6 +32,8 @@ Route::redirect('/', '/all-events');
 
 
 Route::post('/submit-comment', [CommentController::class, 'submitComment'])->name('submitComment');
+Route::post('/hide-comment/{commentId}', [CommentController::class, 'hideComment'])->name('hideComment');
+Route::post('/show-comment/{commentId}', [CommentController::class, 'showComment'])->name('showComment');
 
 Route::post('/submit-report', [ReportController::class, 'submitReport'])->name('submitReport');
 
@@ -101,7 +103,6 @@ Route::post('/post/comment', [PostController::class, 'like']);
 
 Route::controller(NotificationController::class)->group(function (){
     Route::get('/get-notifications', 'getNotifications')->name('get-notifications')->middleware('auth');
-
     //Route::post('/notifications/mark-as-read', 'NotificationController@markAsRead')->name('notifications.markAsRead')->middleware('auth');
 });
 

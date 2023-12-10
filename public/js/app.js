@@ -324,41 +324,34 @@ function toggleProfileButtons() {
 }
 
 
-// Modifique a função toggleNotifications() no seu arquivo JavaScript
 function toggleNotifications() {
-  const notificationContainer = document.getElementById('notification-container');
-  const notificationsBody = document.getElementById('notifications-body');
+    const notificationContainer = document.getElementById('notification-container');
+    const notificationsBody = document.getElementById('notifications-body');
 
-  // Alternar entre exibir e ocultar o contêiner de notificações
-  if (notificationContainer.style.display === 'none') {
-      // Se o contêiner estiver oculto, carregue as notificações via AJAX
-      loadNotifications(notificationsBody);
-      //calculateNotificationPosition(); 
-      notificationContainer.style.display = 'block';
-  } else {
-      notificationContainer.style.display = 'none';
-  }
+    if (notificationContainer.style.display === 'none') {
+        loadNotifications(notificationsBody);
+        notificationContainer.style.maxHeight = (window.innerHeight - 90) + 'px';
+        notificationContainer.style.display = 'block';
+    } else {
+        notificationContainer.style.display = 'none';
+    }
 }
 
-// Adicione esta função para carregar notificações via AJAX
+
+
 function loadNotifications(notificationsBody) {
-  // Use AJAX to fetch notifications from the server (adjust the URL as needed)
-  fetch('/get-notifications')
+  fetch(`/get-notifications`)
       .then(response => response.json())
       .then(data => {
-          // Clear the existing content
           notificationsBody.innerHTML = '';
 
-          // Add notifications to the body of the container
           data.notifications.forEach(notification => {
               const notificationElement = document.createElement('div');
               notificationElement.classList.add('notification');
 
-              // Create an anchor tag for each notification
               const anchorTag = document.createElement('a');
               anchorTag.classList.add('event-link');
 
-              // Set the href attribute based on the notification type
               if (notification.notification_type === 'Event') {
                   anchorTag.href = `/view-event/${notification.event_id}`;
                   anchorTag.innerHTML = `The event <strong>${notification.event_name || 'Unknown Event'}</strong> had some changes made. Check them out! `;
@@ -366,17 +359,16 @@ function loadNotifications(notificationsBody) {
                   anchorTag.href = `/view-event/${notification.event_id}`;
                   anchorTag.innerHTML = `A comment was made in the event <strong>${notification.event_name || 'Unknown Event'}</strong>. `;
               } else if (notification.notification_type === 'Report') {
-                  anchorTag.href = `/view-event/${notification.event_id}`;
+                  anchorTag.href = `/admin`;
                   anchorTag.innerHTML = `A report on a comment was made in the event <strong>${notification.event_name || 'Unknown Event'}</strong>. `;
               }
 
-              // Append the anchor tag to the notification element
               notificationElement.appendChild(anchorTag);
 
               const horizontalLine = document.createElement('hr');
               notificationElement.appendChild(horizontalLine);
 
-              // Append the notification element to the body
+
               notificationsBody.appendChild(notificationElement);
           });
       })
@@ -404,10 +396,10 @@ function loadNotifications(notificationsBody) {
       notificationContainer.style.top = `${containerTop}px`;
       notificationContainer.style.right = `${containerRight}px`;
   }
-}
-*/
+}*/
 
-const pusher = new Pusher(pusherAppKey, {
+
+/*const pusher = new Pusher(pusherAppKey, {
   cluster: pusherCluster,
   encrypted: true
 });
@@ -415,7 +407,7 @@ const pusher = new Pusher(pusherAppKey, {
 const channel = pusher.subscribe('comment_posted');
   channel.bind('notification-postcomment', function(data) {
   console.log(`New notification: ${data.message}`);
-})
+})*/
 
 
 
@@ -465,7 +457,55 @@ function showSection() {
   });
 }
 
+
+function showAdminSection() {
+  var sectionButtons = document.querySelectorAll('.btn-check');
+  var eventSections = document.getElementsByClassName("admin-section"); 
+
+  if (!sectionButtons.length || !eventSections.length) {
+      return;
+  }
+
+  for (var j = 1; j < eventSections.length; j++) {
+    eventSections[j].style.display = "none";
+  }
+
+  sectionButtons.forEach(function(button) {
+    button.addEventListener("click", function() {
+      console.log(this);
+      
+      var sectionId = this.getAttribute("data-section-id");
+      console.log("Section ID:", sectionId);
+
+      var currentSection = document.getElementById(sectionId);
+
+      for (var j = 0; j < eventSections.length; j++) {
+        eventSections[j].style.display = "none";
+      }
+
+      if (currentSection) {
+        currentSection.style.display = "block";
+        console.log("Displaying section with ID:", sectionId);
+      } else {
+        console.log("Section not found with ID:", sectionId);
+      }
+
+      sectionButtons.forEach(function(btn) {
+        btn.parentElement.classList.remove("selected");
+      });
+
+      this.parentElement.classList.add("selected");
+      console.log("Button marked as selected");
+    });
+  });
+}
+
+
 showSection();
+
+
+showAdminSection();
+
 
 addEventListeners();
 
@@ -484,6 +524,33 @@ const reportPopUp = document.querySelector('.pop-up-report');
         }
     };
   }
+
+  function toggleEye(showIconId, hideIconId) {
+    const showIcon = document.getElementById(showIconId);
+    const hideIcon = document.getElementById(hideIconId);
+
+    if (showIcon.style.display !== 'none') {
+        showIcon.style.display = 'none';
+        hideIcon.style.display = 'inline-block';
+    } else {
+        showIcon.style.display = 'inline-block';
+        hideIcon.style.display = 'none';
+    }
+}
+
+function toggleCommentVisibility(commentId, action) {
+  let url = action === 'hide' ? `/hide-comment/${commentId}` : `/show-comment/${commentId}`;
+  sendAjaxRequest('POST', url, {}, function () {
+      if (this.status === 200) {
+          toggleEye(`show_${commentId}`, `hidden_${commentId}`);
+      } else {
+          console.error(`Error toggling comment visibility: ${this.responseText}`);
+      }
+  });
+}
+
+
+
 
   /*function showReportPopUp(commentId) {
     const reportPopUp = document.getElementById(`reportPopUp_${commentId}`);
