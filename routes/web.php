@@ -12,6 +12,7 @@ use App\Http\Controllers\AboutUsController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\RatingController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\CheckoutController;
 
@@ -30,10 +31,12 @@ use App\Http\Controllers\CheckoutController;
 Route::redirect('/', '/all-events');
 
 
-
+Route::post('/edit-comment', [CommentController::class, 'editComment'])->name('editComment');
 Route::post('/submit-comment', [CommentController::class, 'submitComment'])->name('submitComment');
 
 Route::post('/submit-report', [ReportController::class, 'submitReport'])->name('submitReport');
+
+Route::post('/submit-rating/{eventId}', [RatingController::class, 'submitRating'])->name('submitRating');
 
 
 

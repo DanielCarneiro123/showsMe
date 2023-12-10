@@ -449,6 +449,164 @@ function showEditCommentModal() {
  
 }
 
+function editComment(){
+  const comment = event.target.closest(".comment");
+  
+  
+  commentID = comment.getAttribute('data-id');
+  commentText = comment.querySelector('#editedCommentText').value;
+  
+  event.preventDefault();
+  sendAjaxRequest('post', '/edit-comment',{newCommentText: commentText,comment_id: commentID} , editCommentHandler);
+
+};
+
+function editCommentHandler() {
+  if (this.status === 200) {
+    const response = JSON.parse(this.responseText);
+    const editedComment = response.message;
+
+    // Ensure that editedComment.comment_id and editedComment.text are defined
+    if (editedComment && editedComment.comment_id && editedComment.text) {
+      // Find the comment element by data-id attribute
+      const commentElement = document.querySelector(`.comment[data-id="${editedComment.comment_id}"]`);
+
+      if (commentElement) {
+        // Update the displayed text of the comment
+        const commentTextElement = commentElement.querySelector('.comment-text');
+        if (commentTextElement) {
+          commentTextElement.textContent = editedComment.text;
+
+          // Hide the editCommentForm and display #commentText
+          const editCommentForm = commentElement.querySelector('#editCommentForm');
+          const commentText = commentElement.querySelector('#commentText');
+
+          if (editCommentForm && commentText) {
+            editCommentForm.style.display = 'none';
+            commentText.style.display = 'block';
+          } else {
+            console.error('editCommentForm or commentText element not found.');
+          }
+        }
+      } else {
+        console.error('Comment element not found.');
+      }
+    } else {
+      console.error('Invalid response structure or missing comment ID or text.');
+    }
+  }
+}
+
+
+function addNewComment(){
+  
+  eventID = document.querySelector('#newCommentEventID').value;
+  commentText = document.querySelector('#newCommentText').value;
+  
+  event.preventDefault();
+  sendAjaxRequest('post', '/submit-comment',{newCommentText: commentText,event_id: eventID} , addNewCommentHandler);
+
+};
+function addNewCommentHandler() {
+  if (this.status === 200) {
+    const response = JSON.parse(this.responseText);
+    const newComment = response.message;
+
+    // Ensure that newComment.text and newComment.author_id are defined
+    if (newComment && newComment.text && newComment.author && newComment.author.name) {
+      // Create a new comment element
+      const commentElement = document.createElement('div');
+      commentElement.className = 'comment';
+      commentElement.setAttribute('data-id', newComment.comment_id);
+
+      const commentIconsContainer = document.createElement('div');
+      commentIconsContainer.className = 'comment-icons-container';
+
+      const commentAuthor = document.createElement('p');
+      commentAuthor.className = 'comment-author';
+      commentAuthor.textContent = newComment.author.name; // Use actual author name
+
+      const iconsDiv = document.createElement('div');
+
+      const editIcon = document.createElement('i');
+      editIcon.className = 'fa-solid fa-pen-to-square';
+      editIcon.addEventListener('click', function () {
+        // Hide commentText when edit icon is clicked
+        const commentText = commentElement.querySelector('.comment-text');
+        if (commentText) {
+          commentText.style.display = 'none';
+        }
+
+        // Show the edit comment form
+        const editCommentForm = commentElement.querySelector('#editCommentForm');
+        if (editCommentForm) {
+          editCommentForm.style.display = 'block';
+        }
+      });
+      iconsDiv.appendChild(editIcon);
+
+      commentIconsContainer.appendChild(commentAuthor);
+      commentIconsContainer.appendChild(iconsDiv);
+
+      const commentText = document.createElement('p');
+      commentText.className = 'comment-text';
+      commentText.textContent = newComment.text;
+
+      const editCommentForm = document.createElement('form');
+      editCommentForm.id = 'editCommentForm';
+      editCommentForm.style.display = 'none';
+
+      const editedCommentText = document.createElement('textarea');
+      editedCommentText.id = 'editedCommentText';
+      editedCommentText.className = 'edit-comment-textbox';
+      editedCommentText.rows = '3';
+      editedCommentText.placeholder = newComment.text;
+
+      const submitButton = document.createElement('button');
+      submitButton.className = 'btn btn-primary';
+      submitButton.textContent = 'Submit';
+      submitButton.addEventListener('click', function () {
+        
+        const comment = event.target.closest(".comment");
+  
+  
+        commentID = comment.getAttribute('data-id');
+        commentText = comment.querySelector('#editedCommentText').value;
+        
+        event.preventDefault();
+        sendAjaxRequest('post', '/edit-comment',{newCommentText: commentText,comment_id: commentID} , editCommentHandler);
+      });
+
+      editCommentForm.appendChild(editedCommentText);
+      editCommentForm.appendChild(submitButton);
+
+      commentElement.appendChild(commentIconsContainer);
+      commentElement.appendChild(commentText);
+      commentElement.appendChild(editCommentForm);
+
+      // Append the new comment directly to the container
+      const commentsContainer = document.getElementById('commentsContainer');
+      if (commentsContainer) {
+        commentsContainer.appendChild(commentElement);
+      } else {
+        console.error('Comments container not found.');
+      }
+
+      // Clear the comment input
+      document.getElementById('newCommentText').value = '';
+    } else {
+      console.error('Invalid response structure or missing comment text or author ID.');
+    }
+  }
+}
+
+
+
+
+
+
+
+
 
 addEventListeners();
 
@@ -466,6 +624,8 @@ const reportPopUp = document.querySelector('.pop-up-report');
             reportPopUp.style.display = 'none';
         }
     };
+
+    
   }
 
   /*function showReportPopUp(commentId) {

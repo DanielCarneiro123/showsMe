@@ -26,17 +26,34 @@ class CommentController extends Controller
     }*/
     public function submitComment(Request $request)
     {
-       
-
-         $comment = new Comment();
-         $comment->text = $request->input('newCommentText');
-  
-         $comment->event_id = $request->input('event_id'); 
-         $comment->author_id = auth()->user()->user_id;
-         $comment->save();
- 
-        
-        return redirect()->back();
+        $comment = new Comment();
+        $comment->text = $request->input('newCommentText');
+        $comment->event_id = $request->input('event_id'); 
+        $comment->author_id = auth()->user()->user_id;
+        $comment->save();
+    
+     
+        $comment->load('author');
+    
+        return response()->json(['message' => $comment]);
     }
 
+    public function editComment(Request $request)
+    {
+        $commentID = $request->input('comment_id');
+        $newCommentText = $request->input('newCommentText');
+    
+        $comment = Comment::find($commentID);
+        if ($comment) {
+            $comment->text = $newCommentText;
+            $comment->save();
+        }
+    
+        
+        return response()->json(['message' => $comment]);
+    }
+    
+
+    
+    
 }

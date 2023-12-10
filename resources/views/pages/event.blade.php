@@ -63,35 +63,32 @@
             <span class="star-icon">★</span>
         </p>
     @else
-        <p id="your-rating" class="text-center">
-            Give your Rating
-        </p>
-        <form id="ratingForm" class="text-center">
-    <label>
-        <input type="radio" name="rating" value="1"> 1
-    </label>
-    <label>
-        <input type="radio" name="rating" value="2"> 2
-    </label>
-    <label>
-        <input type="radio" name="rating" value="3"> 3
-    </label>
-    <label>
-        <input type="radio" name="rating" value="4"> 4
-    </label>
-    <label>
-        <input type="radio" name="rating" value="5"> 5
-    </label>
+    <form id="ratingForm" class="text-center" method="POST" action="{{ route('submitRating', ['eventId' => $event->event_id]) }}">
+        @csrf
+        <label>
+            <input type="radio" name="rating" value="1"> 1
+        </label>
+        <label>
+            <input type="radio" name="rating" value="2"> 2
+        </label>
+        <label>
+            <input type="radio" name="rating" value="3"> 3
+        </label>
+        <label>
+            <input type="radio" name="rating" value="4"> 4
+        </label>
+        <label>
+            <input type="radio" name="rating" value="5"> 5
+        </label>
 
-    <button class="btn btn-primary" onclick="">Submit</button>
-</form>
-
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
     @endif
 @endif
 
 
     <h2 class="text-primary">Comments</h2>
-
+    
     @forelse($event->comments as $comment)
         <div class="comment" data-id="{{ $comment->comment_id}}">
        
@@ -114,26 +111,29 @@
         <p class="comment-text" id="commentText">{{ $comment->text }}</p>
         <form id="editCommentForm"  style="display: none;">
             <textarea id="editedCommentText" class="edit-comment-textbox" rows="3" placeholder="{{ $comment->text }}"></textarea>
-            <button class="btn btn-primary" onclick="">Submit</button>
+            <button class="btn btn-primary" onclick="editComment()">Submit</button>
         </form>
+
+        
       
 
         </div>
        
-   
+
 
     @empty
         <p>No comments yet.</p>
     @endforelse
-
+    <div id="commentsContainer">
+    </div>
     @if(auth()->check())
-    <form id="newCommentForm" action="{{ route('submitComment') }}" method="post">
+<form id="newCommentForm" action="{{ route('submitComment') }}" method="post">
     @csrf
     <div class="comment new-comment">
         <textarea name="newCommentText" id="newCommentText" class="new-comment-textbox" rows="3" placeholder="Write a new comment"></textarea>
     </div>
-    <input type="hidden" name="event_id"  value="{{$event->event_id}}">
-    <button type="submit" class="btn btn-primary" id="submit-comment-button">Submit Comment</button>
+    <input id="newCommentEventID" type="hidden" name="event_id"  value="{{$event->event_id}}">
+    <button onclick="addNewComment()" class="btn btn-primary" id="submit-comment-button">Submit Comment</button>
 </form>
 @endif
 
