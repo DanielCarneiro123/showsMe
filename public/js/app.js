@@ -535,7 +535,7 @@ function addNewCommentHandler() {
 
       const commentAuthor = document.createElement('p');
       commentAuthor.className = 'comment-author';
-      commentAuthor.textContent = newComment.author.name; // Use actual author name
+      commentAuthor.textContent = newComment.author.name; // Use the actual author name
 
       const iconsDiv = document.createElement('div');
 
@@ -559,51 +559,50 @@ function addNewCommentHandler() {
       commentIconsContainer.appendChild(commentAuthor);
       commentIconsContainer.appendChild(iconsDiv);
 
-      const commentTextb = document.createElement('p');
-      commentTextb.className = 'comment-text';
-      commentTextb.id = 'commentText';
-      commentTextb.textContent = newComment.text;
+      const commentText = document.createElement('p');
+      commentText.className = 'comment-text';
+      commentText.id = 'commentText';
+      commentText.textContent = newComment.text;
 
       const editCommentForm = document.createElement('form');
       editCommentForm.id = 'editCommentForm';
       editCommentForm.style.display = 'none';
-      
+
       const editedCommentText = document.createElement('textarea');
       editedCommentText.id = 'editedCommentText';
       editedCommentText.className = 'edit-comment-textbox';
       editedCommentText.rows = '3';
       editedCommentText.value = newComment.text;
       editedCommentText.required = true;
-      
+
       const submitButton = document.createElement('button');
       submitButton.className = 'btn btn-primary';
       submitButton.textContent = 'Submit';
       submitButton.addEventListener('click', function () {
-          const comment = event.target.closest(".comment");
-          const commentID = comment.getAttribute('data-id');
-          const editedCommentText = comment.querySelector('#editedCommentText').value;
-      
-          event.preventDefault();
-          sendAjaxRequest('post', '/edit-comment', { newCommentText: editedCommentText, comment_id: commentID }, editCommentHandler);
+        const comment = event.target.closest('.comment');
+        const commentID = comment.getAttribute('data-id');
+        const editedCommentText = comment.querySelector('#editedCommentText').value;
+
+        event.preventDefault();
+        sendAjaxRequest('post', '/edit-comment', { newCommentText: editedCommentText, comment_id: commentID }, editCommentHandler);
       });
-      
+
       const cancelButton = document.createElement('button');
       cancelButton.className = 'btn btn-danger';
       cancelButton.textContent = 'Cancel';
-      cancelButton.type = 'button'; 
-      cancelButton.addEventListener('click', function(){
-          const comment = event.target.closest(".comment"); 
-         comment.querySelector('#commentText').style.display = 'block';
-          comment.querySelector('#editCommentForm').style.display = 'none';
-
+      cancelButton.type = 'button';
+      cancelButton.addEventListener('click', function () {
+        const comment = event.target.closest('.comment');
+        comment.querySelector('#commentText').style.display = 'block';
+        comment.querySelector('#editCommentForm').style.display = 'none';
       });
-      
+
       editCommentForm.appendChild(editedCommentText);
       editCommentForm.appendChild(submitButton);
       editCommentForm.appendChild(cancelButton);
-      
+
       commentElement.appendChild(commentIconsContainer);
-      commentElement.appendChild(commentTextb);
+      commentElement.appendChild(commentText);
       commentElement.appendChild(editCommentForm);
 
       // Append the new comment directly to the container
@@ -621,6 +620,7 @@ function addNewCommentHandler() {
     }
   }
 }
+
 
 function showEditRatingForm() {
   document.getElementById('editRatingForm').style.display = 'block';

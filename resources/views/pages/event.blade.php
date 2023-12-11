@@ -113,9 +113,9 @@
 
 
     <h2 class="text-primary">Comments</h2>
-    
+    <div  id="commentsContainer">
     @forelse($event->comments as $comment)
-        <div class="comment" data-id="{{ $comment->comment_id}}">
+        <div class="comment"  data-id="{{ $comment->comment_id}}">
        
         
         <div class="comment-icons-container">
@@ -145,12 +145,11 @@
 
         </div>
        
-
+ 
 
     @empty
-        <p>No comments yet.</p>
+        <p class="text-center">No comments yet.</p>
     @endforelse
-    <div id="commentsContainer">
     </div>
     @if(auth()->check())
 <form id="newCommentForm" action="{{ route('submitComment') }}" method="post">
