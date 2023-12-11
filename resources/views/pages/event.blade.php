@@ -57,13 +57,34 @@
  
 @if(auth()->user())
     @if($userRating = $event->userRating())
-        <p  class="text-center">
+    <p id="yourRatingP" class="text-center">
+        Your Rating: {{ $userRating->rating }}
+        <span class="star-icon">★</span>
+        <button class="btn btn-primary" onclick="showEditRatingForm()">Edit</button>
+    </p>
+    
+    <form id="editRatingForm" class="text-center" method="POST" action="{{ route('editRating', ['eventId' => $event->event_id]) }}" style="display: none;">
+        @csrf
+
       
-            Your Rating: {{ $userRating->rating }}
-            <span class="star-icon">★</span>
-            <button  class="btn btn-primary">Edit</button>
-            
-        </p>
+        <label>
+            <input type="radio" name="rating" value="1" {{ $userRating->rating == 1 ? 'checked' : '' }}> 1
+        </label>
+        <label>
+            <input type="radio" name="rating" value="2" {{ $userRating->rating == 2 ? 'checked' : '' }}> 2
+        </label>
+        <label>
+            <input type="radio" name="rating" value="3" {{ $userRating->rating == 3 ? 'checked' : '' }}> 3
+        </label>
+        <label>
+            <input type="radio" name="rating" value="4" {{ $userRating->rating == 1 ? 'checked' : '' }}> 4
+        </label>
+        <label>
+            <input type="radio" name="rating" value="5" {{ $userRating->rating == 1 ? 'checked' : '' }}> 5
+        </label>
+
+        <button type="submit" class="btn btn-primary">Update</button>
+    </form>
         
     @else
     <p class="text-center"> Give us your Rating: </p>
@@ -114,8 +135,9 @@
        
         <p class="comment-text" id="commentText">{{ $comment->text }}</p>
         <form id="editCommentForm"  style="display: none;">
-            <textarea id="editedCommentText" class="edit-comment-textbox" rows="3" placeholder="{{ $comment->text }}"></textarea>
+        <textarea id="editedCommentText" class="edit-comment-textbox" rows="3" required>{{ $comment->text }}</textarea>
             <button class="btn btn-primary" onclick="editComment()">Submit</button>
+            <button type="button" class="btn btn-danger" onclick="hideEditCommentModal()">Cancel</button>
         </form>
 
         

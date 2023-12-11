@@ -23,4 +23,21 @@ class RatingController extends Controller
       
         return redirect()->back()->with('success', 'Rating submitted successfully');
     }
+
+    public function editRating(Request $request, $eventId)
+    {
+        
+
+        $userRating = Rating::where('event_id', $eventId)
+            ->where('author_id', auth()->user()->user_id)
+            ->first();
+
+        if ($userRating) {
+            $userRating->update([
+                'rating' => $request->input('rating'),
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'Rating edited successfully');
+    }
 }

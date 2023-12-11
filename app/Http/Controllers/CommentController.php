@@ -26,6 +26,7 @@ class CommentController extends Controller
     }*/
     public function submitComment(Request $request)
     {
+       
         $comment = new Comment();
         $comment->text = $request->input('newCommentText');
         $comment->event_id = $request->input('event_id'); 

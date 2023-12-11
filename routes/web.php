@@ -30,17 +30,21 @@ use App\Http\Controllers\CheckoutController;
 // Home
 Route::redirect('/', '/all-events');
 
-
-Route::post('/edit-comment', [CommentController::class, 'editComment'])->name('editComment');
+Route::controller(CommentController::class)->group(function (){
+    Route::post('/edit-comment', [CommentController::class, 'editComment'])->name('editComment');
 Route::post('/submit-comment', [CommentController::class, 'submitComment'])->name('submitComment');
+});
+
 
 Route::post('/submit-report', [ReportController::class, 'submitReport'])->name('submitReport');
 
+Route::controller(RatingController::class)->group(function (){
 Route::post('/submit-rating/{eventId}', [RatingController::class, 'submitRating'])->name('submitRating');
+Route::post('/edit-rating/{eventId}', [RatingController::class, 'editRating'])->name('editRating');
+});
 
 
 
-Route::post('/submit-comment', [CommentController::class, 'submitComment'])->name('submitComment');
 
 Route::post('/submit-report', [ReportController::class, 'submitReport'])->name('submitReport');
 
