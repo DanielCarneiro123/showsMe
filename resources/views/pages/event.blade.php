@@ -57,12 +57,16 @@
  
 @if(auth()->user())
     @if($userRating = $event->userRating())
-        <p id="your-rating" class="mt-2">
+        <p  class="text-center">
       
             Your Rating: {{ $userRating->rating }}
             <span class="star-icon">★</span>
+            <button  class="btn btn-primary">Edit</button>
+            
         </p>
+        
     @else
+    <p class="text-center"> Give us your Rating: </p>
     <form id="ratingForm" class="text-center" method="POST" action="{{ route('submitRating', ['eventId' => $event->event_id]) }}">
         @csrf
         <label>
@@ -80,7 +84,7 @@
         <label>
             <input type="radio" name="rating" value="5"> 5
         </label>
-
+        
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
     @endif

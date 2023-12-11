@@ -548,9 +548,10 @@ function addNewCommentHandler() {
       commentIconsContainer.appendChild(commentAuthor);
       commentIconsContainer.appendChild(iconsDiv);
 
-      const commentText = document.createElement('p');
-      commentText.className = 'comment-text';
-      commentText.textContent = newComment.text;
+      const commentTextb = document.createElement('p');
+      commentTextb.className = 'comment-text';
+      commentTextb.id = 'commentText';
+      commentTextb.textContent = newComment.text;
 
       const editCommentForm = document.createElement('form');
       editCommentForm.id = 'editCommentForm';
@@ -570,18 +571,18 @@ function addNewCommentHandler() {
         const comment = event.target.closest(".comment");
   
   
-        commentID = comment.getAttribute('data-id');
-        commentText = comment.querySelector('#editedCommentText').value;
+        const commentID = comment.getAttribute('data-id');
+        const editedCommentText = comment.querySelector('#editedCommentText').value;
         
         event.preventDefault();
-        sendAjaxRequest('post', '/edit-comment',{newCommentText: commentText,comment_id: commentID} , editCommentHandler);
+        sendAjaxRequest('post', '/edit-comment',{newCommentText:editedCommentText,comment_id: commentID} , editCommentHandler);
       });
 
       editCommentForm.appendChild(editedCommentText);
       editCommentForm.appendChild(submitButton);
 
       commentElement.appendChild(commentIconsContainer);
-      commentElement.appendChild(commentText);
+      commentElement.appendChild(commentTextb);
       commentElement.appendChild(editCommentForm);
 
       // Append the new comment directly to the container
