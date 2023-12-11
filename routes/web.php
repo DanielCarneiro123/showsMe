@@ -12,6 +12,7 @@ use App\Http\Controllers\AboutUsController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\FileController;
+use App\Http\Controllers\StripeController;
 
 
 /*
@@ -35,7 +36,7 @@ Route::controller(EventController::class)->group(function () {
     Route::get('/my-events', 'myEvents')->name('my-events');
     Route::post('/create-event', 'createEvent');
     Route::post('/update-event/{id}', 'updateEvent');
-    Route::post('/purchase-tickets/{event_id}', [EventController::class, 'purchaseTickets'])->name('purchase-tickets');
+    Route::get('/purchase-tickets', [EventController::class, 'purchaseTickets'])->name('purchase-tickets');
     Route::get('/create-event', [EventController::class, 'showCreateEvent'])->name('create-event');
     Route::post('/create-ticket-type/{event}', 'createTicketType')->name('create-ticket-type');
     Route::get('/search-events', [EventController::class, 'searchEvents'])->name('search-events');
@@ -94,5 +95,7 @@ Route::controller(RegisterController::class)->group(function () {
     Route::post('/register', 'register');
 });
 
-//Route::post('/purchase-tickets/{event_id}', [TicketController::class, 'purchase'])->name('purchase-tickets');
-
+Route::controller(StripeController::class)->group(function () {
+    Route::get('/payment', 'showPaymentForm')->name('payment');
+    Route::post('/payment/{event_id}', 'processPayment')->name('payment');
+});

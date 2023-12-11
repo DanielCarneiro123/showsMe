@@ -137,7 +137,7 @@ class FileController extends Controller
         return redirect()->back()->with('success', 'Success: upload completed!');
     }
 
-    static function get(String $type, int $userId) {
+    static function get(String $type, int $id) {
 
         // Validation: upload type
         if (!self::isValidType($type)) {
@@ -145,7 +145,7 @@ class FileController extends Controller
         }
 
         // Validation: file exists
-        $fileName = self::getFileName($type, $userId);
+        $fileName = self::getFileName($type, $id);
         if ($fileName) {
             return asset($type . '/' . $fileName);
         }

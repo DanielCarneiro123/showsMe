@@ -161,57 +161,60 @@ class EventController extends Controller
         return view('pages.create_event');
     }
 
-    public function purchaseTickets(Request $request, $eventId)
-{
-    try {
-        $event = Event::findOrFail($eventId);
+    public function purchaseTickets(){
+        $quantities = session('purchase_quantities');
+        session()->forget('purchase_quantities');
+        $eventId = session('purchase_event_id');
+        session()->forget('purchase_event_id');
 
-        $this->authorize('purchaseTickets', $event);
 
-        $quantities = $request->input('quantity', []);
+        try {
+            $event = Event::findOrFail($eventId);
 
-        if (empty(array_filter($quantities, function ($quantity) {
-            return $quantity > 0;
-        }))) {
-            return redirect()->route('view-event', ['id' => $eventId])->with('error', 'Select at least one ticket type.');
-        }
+            $this->authorize('purchaseTickets', $event);
 
-        $buyer = Auth::user();
+            if (empty(array_filter($quantities, function ($quantity) {
+                return $quantity > 0;
+            }))) {
+                return redirect()->route('view-event', ['id' => $eventId])->with('error', 'Select at least one ticket type.');
+            }
 
-        $order = new TicketOrder();
-        $order->timestamp = now();
-        $order->promo_code = null;
-        $order->buyer_id = $buyer->user_id;
-        $order->save();
+            $buyer = Auth::user();
 
-        foreach ($quantities as $ticketTypeId => $quantity) {
-            if ($quantity > 0) {
-                // Obtenha o TicketType associado ao ticketTypeId
-                $ticketType = TicketType::findOrFail($ticketTypeId);
+            $order = new TicketOrder();
+            $order->timestamp = now();
+            $order->promo_code = null;
+            $order->buyer_id = $buyer->user_id;
+            $order->save();
 
-                // Determine o mínimo entre stock e person_buying_limit
-                $minQuantity = min($ticketType->stock, $ticketType->person_buying_limit);
+            foreach ($quantities as $ticketTypeId => $quantity) {
+                if ($quantity > 0) {
+                    // Obtenha o TicketType associado ao ticketTypeId
+                    $ticketType = TicketType::findOrFail($ticketTypeId);
 
-                // Verifique se a quantidade é um número inteiro positivo e menor que o mínimo
-                if (is_numeric($quantity) && $quantity == (int) $quantity && $quantity > 0 && $quantity <= $minQuantity) {
-                    for ($i = 0; $i < $quantity; $i++) {
-                        $ticketInstance = new TicketInstance();
-                        $ticketInstance->ticket_type_id = $ticketTypeId;
-                        $ticketInstance->order_id = $order->order_id;
-                        $ticketInstance->save();
+                    // Determine o mínimo entre stock e person_buying_limit
+                    $minQuantity = min($ticketType->stock, $ticketType->person_buying_limit);
+
+                    // Verifique se a quantidade é um número inteiro positivo e menor que o mínimo
+                    if (is_numeric($quantity) && $quantity == (int) $quantity && $quantity > 0 && $quantity <= $minQuantity) {
+                        for ($i = 0; $i < $quantity; $i++) {
+                            $ticketInstance = new TicketInstance();
+                            $ticketInstance->ticket_type_id = $ticketTypeId;
+                            $ticketInstance->order_id = $order->order_id;
+                            $ticketInstance->save();
+                        }
+                    } else {
+                        return redirect()->route('view-event', ['id' => $eventId])->with('error', 'Invalid quantity for ticket type.');
                     }
-                } else {
-                    return redirect()->route('view-event', ['id' => $eventId])->with('error', 'Invalid quantity for ticket type.');
                 }
             }
-        }
 
-        return redirect()->route('my-tickets')->with('success', 'Tickets purchased successfully.');
-    } catch (AuthorizationException $e) {
-        return redirect()->route('login')->with('error', 'You must be logged in to purchase tickets.');
-    } catch (ModelNotFoundException $e) {
-        return redirect()->route('view-event', ['id' => $eventId])->with('error', 'Invalid ticket type.');
-    }
+            return redirect()->route('my-tickets')->with('success', 'Tickets purchased successfully.');
+        } catch (AuthorizationException $e) {
+            return redirect()->route('login')->with('error', 'You must be logged in to purchase tickets.');
+        } catch (ModelNotFoundException $e) {
+            return redirect()->route('view-event', ['id' => $eventId])->with('error', 'Invalid ticket type.');
+        }
 }
 
     

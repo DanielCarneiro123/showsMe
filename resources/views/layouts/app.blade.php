@@ -27,6 +27,7 @@
         <link href="{{ asset('css/create_event.css') }}" rel="stylesheet">
         <link href="{{ asset('../css/pagination.css') }}" rel="stylesheet">
         <link href="{{ asset('../css/edit_event.css') }}" rel="stylesheet">
+        <link href="{{ asset('../css/payment.css') }}" rel="stylesheet">
         <link href="{{ asset('css/style.css') }}" rel="stylesheet">
         <link rel="icon" type="image/png" href="{{ asset('images/logo1.png') }}">
         <script type="text/javascript">
@@ -38,6 +39,7 @@
         </script>
         <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.3.0/jquery.form.min.js" ></script>
+        <script src="https://js.stripe.com/v3/"></script>
     </head>
     <body>
         <main>

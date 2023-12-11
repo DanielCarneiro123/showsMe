@@ -20,7 +20,30 @@
             </form>
         @endif
     @endif
-    <img src="{{ asset('../media/event_image.jpg') }}" alt="Event Image">
+
+    <!-- Slideshow container -->
+    <div class="slideshow-container">
+        @php $index = 1; @endphp
+
+        @foreach ($event->images as $image)
+            <div class="mySlides faded">
+                <div class="numbertext">{{ $index }} / {{ count($event->images) }}</div>
+                <img src="{{ \App\Http\Controllers\FileController::get('event_image', $event->event_id) }}" alt="Event Image">
+            </div>
+            @php $index++; @endphp
+        @endforeach
+            <div class="mySlides faded">
+                <div class="numbertext">{{ $index }} / {{ count($event->images) }}</div>
+                <img src="{{ asset('../media/event_image.jpg') }}" alt="Event Image">
+            </div>
+        <!-- Next and previous buttons -->
+        <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+        <a class="next" onclick="plusSlides(1)">&#10095;</a>
+    </div>
+    <br>
+
+
+
     <div class="text">
         <h1 id ="name" >{{ $event->name }}</h1>
         <p id ="description" >{{ $event->description }}</p>
@@ -48,7 +71,7 @@
 
 <section id="ticket-types" class="event-section">
     <h2>Ticket <span>Types</span></h2>
-    <form method="POST" action="{{ url('/purchase-tickets/'.$event->event_id) }}">
+    <form method="POST" action="{{ url('/payment/'.$event->event_id) }}">
         @csrf
         <div id="ticket-types-container">
         @foreach ($event->ticketTypes as $ticketType)
