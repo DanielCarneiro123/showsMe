@@ -65,7 +65,7 @@ public function processPayment(Request $request, $eventId)
             $checkoutSession = Session::create([
                 "mode" => "payment",
                 "success_url" => url('/purchase-tickets/'),
-                "cancel_url" => url('/purchase-tickets/'),
+                "cancel_url" => url('/view-event/' . $eventId),
                 "line_items" => $lineItems,
             ]);
     
