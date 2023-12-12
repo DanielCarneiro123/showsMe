@@ -30,8 +30,8 @@
                         <td>{{ $reportedComment->text }}</td>
                         <td>{{ $reportedComment->type }}</td>
                         <td>
-                            <i class="toggle-eye fa-solid fa-eye show-icon" id="show_{{ $reportedComment->event_id }}" onclick="toggleEye('show_{{ $reportedComment->event_id }}', 'hidden_{{ $reportedComment->event_id }}')" style="display: none;"></i>
-                            <i class="toggle-eye fa-solid fa-eye-slash hidden-icon" id="hidden_{{ $reportedComment->event_id }}" onclick="toggleEye('show_{{ $reportedComment->event_id }}', 'hidden_{{ $reportedComment->event_id }}')" ></i>
+                            <i class="toggle-eye fa-solid fa-eye show-icon" id="show_{{ $reportedComment->comment_id }}" onclick="toggleAdminCommentVisibility('{{ $reportedComment->comment_id }}', 'public')" style="{{ $reportedComment->private ? 'display: inline-block;' : 'display: none;' }}"></i>
+                            <i class="toggle-eye fa-solid fa-eye-slash hidden-icon" id="hidden_{{ $reportedComment->comment_id }}" onclick="toggleAdminCommentVisibility('{{ $reportedComment->comment_id }}', 'private')" style="{{ $reportedComment->private ? 'display: none;' : 'display: inline-block;' }}"></i>
                         </td>
                     </tr>
                 @endforeach

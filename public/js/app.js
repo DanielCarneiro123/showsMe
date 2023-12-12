@@ -538,6 +538,22 @@ const reportPopUp = document.querySelector('.pop-up-report');
     }
 }
 
+
+function toggleAdminCommentVisibility(commentId, action) {
+  let url = action === 'private' ? `/hide-comment/${commentId}` : `/show-comment/${commentId}`;
+
+  sendAjaxRequest('POST', url, {}, function () {
+      if (this.status === 200) {
+          toggleEye(`show_${commentId}`, `hidden_${commentId}`);
+      } else {
+          console.error(`Error toggling event visibility: ${this.responseText}`);
+      }
+  });
+}
+
+
+
+
 function toggleCommentVisibility(commentId, action, visibility) {
   let url = action === 'hide' ? `/hide-comment/${commentId}` : `/show-comment/${commentId}`;
   
