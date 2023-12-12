@@ -27,6 +27,7 @@
         <link href="{{ asset('css/create_event.css') }}" rel="stylesheet">
         <link href="{{ asset('../css/pagination.css') }}" rel="stylesheet">
         <link href="{{ asset('../css/edit_event.css') }}" rel="stylesheet">
+        <link href="{{ asset('../css/payment.css') }}" rel="stylesheet">
         <link href="{{ asset('css/style.css') }}" rel="stylesheet">
         <link rel="icon" type="image/png" href="{{ asset('images/logo1.png') }}">
         <script type="text/javascript">
@@ -36,7 +37,7 @@
         
         <script type="text/javascript" src={{ url('js/app.js') }} defer>
         </script>
-
+        <script src="https://js.stripe.com/v3/"></script>
     </head>
     <body>
         <main>

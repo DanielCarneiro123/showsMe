@@ -35,8 +35,10 @@ CREATE TABLE users (
    is_admin BOOLEAN NOT NULL DEFAULT FALSE,
    active BOOLEAN NOT NULL DEFAULT TRUE,
    temporary BOOLEAN NOT NULL DEFAULT FALSE,
-   remember_token VARCHAR
+   remember_token VARCHAR,
+   profile_image VARCHAR
 );
+
 
 CREATE TABLE Event_ (
    event_id SERIAL PRIMARY KEY,
@@ -131,6 +133,13 @@ CREATE TABLE Notification_ (
       (notification_type = 'Report' AND event_id IS NULL AND comment_id IS NULL AND report_id IS NOT NULL)
    )
 );
+
+CREATE TABLE EventImage (
+   event_image_id SERIAL PRIMARY KEY,
+   event_id INT NOT NULL REFERENCES Event_ (event_id) ON UPDATE CASCADE,
+   image_path VARCHAR NOT NULL
+);
+
 
 CREATE INDEX start_timestamp_event ON Event_ USING btree (start_timestamp);
 

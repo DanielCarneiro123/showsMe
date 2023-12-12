@@ -77,4 +77,10 @@ class Event extends Model
         return TicketInstance::whereIn('ticket_type_id', $this->ticketTypes->pluck('ticket_type_id'))
             ->get();
     }
+
+
+    public function images()
+    {
+        return $this->hasMany(EventImage::class, 'event_id');
+    }
 }

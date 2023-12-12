@@ -20,7 +20,30 @@
             </form>
         @endif
     @endif
-    <img src="{{ asset('../media/event_image.jpg') }}" alt="Event Image">
+
+    <!-- Slideshow container -->
+    <div class="slideshow-container">
+        @php $index = 1; @endphp
+
+        @foreach ($event->images as $image)
+            <div class="mySlides faded">
+                <div class="numbertext">{{ $index }} / {{ count($event->images) }}</div>
+                <img src="{{ \App\Http\Controllers\FileController::get('event_image', $event->event_id) }}" alt="Event Image">
+            </div>
+            @php $index++; @endphp
+        @endforeach
+            <div class="mySlides faded">
+                <div class="numbertext">{{ $index }} / {{ count($event->images) }}</div>
+                <img src="{{ asset('../media/event_image.jpg') }}" alt="Event Image">
+            </div>
+        <!-- Next and previous buttons -->
+        <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+        <a class="next" onclick="plusSlides(1)">&#10095;</a>
+    </div>
+    <br>
+
+
+
     <div class="text">
         <h1 id ="name" >{{ $event->name }}</h1>
         <p id ="description" >{{ $event->description }}</p>
@@ -188,7 +211,7 @@
 
 <section id="ticket-types" class="event-section">
     <h2>Ticket <span>Types</span></h2>
-    <form method="POST" action="{{ url('/purchase-tickets/'.$event->event_id) }}">
+    <form method="POST" action="{{ url('/payment/'.$event->event_id) }}">
         @csrf
         @guest
         <div id="checkout-section" class="auth-form" style="display: none;">
@@ -287,6 +310,14 @@
         <section id="edit-event" class="event-section">
             <h2>Edit <span>Event</span></h2>
             <article>
+                <form method="POST" action="/file/upload" enctype="multipart/form-data">
+                    @csrf
+                    <input name="file" type="file" required>
+                    <input name="id" type="number" value="{{ $event->event_id }}" hidden>
+                    <input name="type" type="text" value="event_image" hidden>
+                    <button type="submit">Submit</button>
+                </form>
+
                 @csrf
                 <label for="edit_name">Event Name:</label>
                 <input type="text" id="edit_name" name="edit_name" value="{{ $event->name }}" required>

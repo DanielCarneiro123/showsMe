@@ -15,6 +15,9 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RatingController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\FileController;
+use App\Http\Controllers\StripeController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -56,7 +59,7 @@ Route::controller(EventController::class)->group(function () {
     Route::get('/my-events', 'myEvents')->name('my-events');
     Route::post('/create-event', 'createEvent');
     Route::post('/update-event/{id}', 'updateEvent');
-    Route::post('/purchase-tickets/{event_id}', [EventController::class, 'purchaseTickets'])->name('purchase-tickets')->middleware('web');
+    Route::get('/purchase-tickets', [EventController::class, 'purchaseTickets'])->name('purchase-tickets');
     Route::get('/create-event', [EventController::class, 'showCreateEvent'])->name('create-event');
     Route::post('/create-ticket-type/{event}', 'createTicketType')->name('create-ticket-type');
     Route::get('/search-events', [EventController::class, 'searchEvents'])->name('search-events');
@@ -96,6 +99,13 @@ Route::controller(UserController::class)->group(function () {
 
 
 
+
+// File Upload Route
+Route::controller(FileController::class)->group(function () {
+    Route::post('/file/upload', [FileController::class, 'upload'])->name('file.upload');
+});
+
+
 // API
 
 
@@ -111,7 +121,7 @@ Route::controller(RegisterController::class)->group(function () {
     Route::post('/register', 'register');
 });
 
-//Route::post('/purchase-tickets/{event_id}', [TicketController::class, 'purchase'])->name('purchase-tickets');
-
-
-//Route::get('/checkout/{eventId}', [CheckoutController::class, 'showCheckoutPage'])->name('checkout');
+Route::controller(StripeController::class)->group(function () {
+    Route::get('/payment', 'showPaymentForm')->name('payment');
+    Route::post('/payment/{event_id}', 'processPayment')->name('payment');
+});
