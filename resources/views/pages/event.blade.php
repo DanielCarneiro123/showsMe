@@ -1,29 +1,29 @@
-@extends('layouts.app')  
+@extends('layouts.app')
 
 @section('content')
 
 <section class="event-thumbnail">
     @if(auth()->user() && auth()->user()->is_admin)
-        @if ($event->private)
-            <form method="POST" action="{{ url('/activate-event/'.$event->event_id) }}">
-                @csrf
-                <button class="event-button" id="activate-button" type="submit">
-                    <i class="fa-solid fa-circle-check"></i> Activate Event
-                </button>
-            </form>
-        @else
-            <form method="POST" action="{{ url('/deactivate-event/'.$event->event_id) }}">
-                @csrf
-                <button class="event-button" id="deactivate-button" type="submit">
-                    <i class="fa-solid fa-ban"></i> Deactivate Event
-                </button>
-            </form>
-        @endif
+    @if ($event->private)
+    <form method="POST" action="{{ url('/activate-event/'.$event->event_id) }}">
+        @csrf
+        <button class="event-button" id="activate-button" type="submit">
+            <i class="fa-solid fa-circle-check"></i> Activate Event
+        </button>
+    </form>
+    @else
+    <form method="POST" action="{{ url('/deactivate-event/'.$event->event_id) }}">
+        @csrf
+        <button class="event-button" id="deactivate-button" type="submit">
+            <i class="fa-solid fa-ban"></i> Deactivate Event
+        </button>
+    </form>
+    @endif
     @endif
     <img src="{{ asset('../media/event_image.jpg') }}" alt="Event Image">
     <div class="text">
-        <h1 id ="name" >{{ $event->name }}</h1>
-        <p id ="description" >{{ $event->description }}</p>
+        <h1 id="name">{{ $event->name }}</h1>
+        <p id="description">{{ $event->description }}</p>
     </div>
     <!-- <img src="{{ $event->event_image }}" alt="Event Image" class="event-image"> -->
     <section class="event-info">
@@ -32,18 +32,22 @@
 </section>
 
 <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-  <input type="radio" class="btn-check" name="sectionToggle" id="eventInfo" autocomplete="off" checked data-section-id="event-info">
-  <label class="btn btn-outline-primary" for="eventInfo">Event Info</label>
-  
-  <input type="radio" class="btn-check" name="sectionToggle" id="ticketTypes" autocomplete="off" data-section-id="ticket-types">
-  <label class="btn btn-outline-primary" for="ticketTypes">Ticket Types</label>
-  @can('updateEvent', $event)
-    <input type="radio" class="btn-check" name="sectionToggle" id="editEvent" autocomplete="off" data-section-id="edit-event">
+    <input type="radio" class="btn-check" name="sectionToggle" id="eventInfo" autocomplete="off" checked
+        data-section-id="event-info">
+    <label class="btn btn-outline-primary" for="eventInfo">Event Info</label>
+
+    <input type="radio" class="btn-check" name="sectionToggle" id="ticketTypes" autocomplete="off"
+        data-section-id="ticket-types">
+    <label class="btn btn-outline-primary" for="ticketTypes">Ticket Types</label>
+    @can('updateEvent', $event)
+    <input type="radio" class="btn-check" name="sectionToggle" id="editEvent" autocomplete="off"
+        data-section-id="edit-event">
     <label class="btn btn-outline-primary" for="editEvent">Edit Event</label>
-    
-    <input type="radio" class="btn-check" name="sectionToggle" id="createTicketType" autocomplete="off" data-section-id="create-ticket-type">
+
+    <input type="radio" class="btn-check" name="sectionToggle" id="createTicketType" autocomplete="off"
+        data-section-id="create-ticket-type">
     <label class="btn btn-outline-primary" for="createTicketType">Create Ticket Type</label>
-  @endcan
+    @endcan
 </div>
 
 <section id="ticket-types" class="event-section">
@@ -56,12 +60,13 @@
             <div class="my-input-group">
                 <div class="icon-input">
                     <i class="fas fa-user"></i>
-                    <input id="name" type="text" placeholder="Type your name" name="name" value="{{ old('name') }}" required autofocus>
+                    <input id="name" type="text" placeholder="Type your name" name="name" value="{{ old('name') }}"
+                        required autofocus>
                 </div>
                 @if ($errors->has('name'))
-                    <span class="error">
-                        {{ $errors->first('name') }}
-                    </span>
+                <span class="error">
+                    {{ $errors->first('name') }}
+                </span>
                 @endif
             </div>
 
@@ -69,12 +74,13 @@
             <div class="my-input-group">
                 <div class="icon-input">
                     <i class="fas fa-envelope"></i>
-                    <input id="email" type="email" placeholder="Type your email" name="email" value="{{ old('email') }}" required>
+                    <input id="email" type="email" placeholder="Type your email" name="email" value="{{ old('email') }}"
+                        required>
                 </div>
                 @if ($errors->has('email'))
-                    <span class="error">
-                        {{ $errors->first('email') }}
-                    </span>
+                <span class="error">
+                    {{ $errors->first('email') }}
+                </span>
                 @endif
             </div>
 
@@ -82,39 +88,47 @@
             <div class="my-input-group">
                 <div class="icon-input">
                     <i class="fas fa-phone"></i>
-                    <input id="phone" type="tel" placeholder="Type your phone number" name="phone_number" value="{{ old('phone_number') }}" required pattern="[0-9]{9}">
+                    <input id="phone" type="tel" placeholder="Type your phone number" name="phone_number"
+                        value="{{ old('phone_number') }}" required pattern="[0-9]{9}">
                 </div>
                 @if ($errors->has('phone_number'))
-                    <span class="error">
-                        {{ $errors->first('phone_number') }}
-                    </span>
+                <span class="error">
+                    {{ $errors->first('phone_number') }}
+                </span>
                 @endif
             </div>
         </div>
         @endguest
         <br>
         <div id="ticket-types-container">
-        @foreach ($event->ticketTypes as $ticketType)
-            <article class="ticket-type" id="ticket-type-{{$ticketType->ticket_type_id}}" data-max="{{ min($ticketType->person_buying_limit, $ticketType->stock) }}">
+            @foreach ($event->ticketTypes as $ticketType)
+            <article class="ticket-type" id="ticket-type-{{$ticketType->ticket_type_id}}"
+                data-max="{{ min($ticketType->person_buying_limit, $ticketType->stock) }}">
                 <h3>{{ $ticketType->name }}</h3>
                 <p id="stock_display_{{ $ticketType->ticket_type_id }}">Stock: {{ $ticketType->stock }}</p>
-                <p id="event_description_{{ $ticketType->ticket_type_id }}">Description: {{ $ticketType->description }}</p>
+                <p id="event_description_{{ $ticketType->ticket_type_id }}">Description: {{ $ticketType->description }}
+                </p>
                 <p id="ticket_price_{{ $ticketType->ticket_type_id }}">Price: {{ $ticketType->price }} €</p>
                 @if (auth()->user() && auth()->user()->user_id == $event->creator_id)
-                    @csrf
-                    <p>New Stock:
-                    <input type="number" id="new_stock_{{ $ticketType->ticket_type_id }}" name="new_stock" value="{{ $ticketType->stock }}" required>
-                    </p>
-                    <button class="button-update-stock" onclick="updateStock({{ $ticketType->ticket_type_id }})" form="purchaseForm">Update Stock</button>
+                @csrf
+                <p>New Stock:
+                    <input type="number" id="new_stock_{{ $ticketType->ticket_type_id }}" name="new_stock"
+                        value="{{ $ticketType->stock }}" required>
+                </p>
+                <button class="button-update-stock" onclick="updateStock({{ $ticketType->ticket_type_id }})"
+                    form="purchaseForm">Update Stock</button>
                 @endif
                 @if ($ticketType->stock > 0)
-                    
-                    <label class="quant" id ="label{{$ticketType->ticket_type_id}}" for="quantity_{{ $ticketType->ticket_type_id }}">Quantity:</label>
-                    <input class="quant" id ="input{{$ticketType->ticket_type_id}}" type="number" id="quantity_{{ $ticketType->ticket_type_id }}" name="quantity[{{ $ticketType->ticket_type_id }}]" min="0" max="{{ min($ticketType->person_buying_limit, $ticketType->stock) }}">
-                    
+
+                <label class="quant" id="label{{$ticketType->ticket_type_id}}"
+                    for="quantity_{{ $ticketType->ticket_type_id }}">Quantity:</label>
+                <input class="quant" id="input{{$ticketType->ticket_type_id}}" type="number"
+                    id="quantity_{{ $ticketType->ticket_type_id }}" name="quantity[{{ $ticketType->ticket_type_id }}]"
+                    min="0" max="{{ min($ticketType->person_buying_limit, $ticketType->stock) }}">
+
                 @endif
             </article>
-        @endforeach
+            @endforeach
         </div>
         <br>
         @auth
@@ -138,216 +152,133 @@
 
 
 
-    @if(auth()->user() && auth()->user()->is_admin)
-        <button class="btn btn-success {{ $event->private ? 'active' : '' }}" id="activate-button" data-id="{{ $event->event_id }}">{{ $event->private ? 'Activate Event' : 'Deactivate Event' }}</button>
-    @endif
+@if(auth()->user() && auth()->user()->is_admin)
+<button class="btn btn-success {{ $event->private ? 'active' : '' }}" id="activate-button"
+    data-id="{{ $event->event_id }}">{{ $event->private ? 'Activate Event' : 'Deactivate Event' }}</button>
+@endif
 
-    <!-- Edit Event form (displayed only for the event creator) -->
-    @can('updateEvent', $event)
-        <section id="edit-event" class="event-section">
-            <h2>Edit <span>Event</span></h2>
-            <article>
-                @csrf
-                <label for="edit_name">Event Name:</label>
-                <input type="text" id="edit_name" name="edit_name" value="{{ $event->name }}" required>
+<!-- Edit Event form (displayed only for the event creator) -->
+@can('updateEvent', $event)
+<section id="edit-event" class="event-section">
+    <h2>Edit <span>Event</span></h2>
+    <article>
+        @csrf
+        <label for="edit_name">Event Name:</label>
+        <input type="text" id="edit_name" name="edit_name" value="{{ $event->name }}" required>
 
-                <label for="edit_description">Event Description:</label>
-                <textarea id="edit_description" name="edit_description">{{ $event->description }}</textarea>
+        <label for="edit_description">Event Description:</label>
+        <textarea id="edit_description" name="edit_description">{{ $event->description }}</textarea>
 
-                <label for="edit_location">Event Location:</label>
-                <input type="text" id="edit_location" name="edit_location" value="{{ $event->location }}" required>
+        <label for="edit_location">Event Location:</label>
+        <input type="text" id="edit_location" name="edit_location" value="{{ $event->location }}" required>
 
-                <label for="edit_start_timestamp">Start Timestamp:</label>
-                <input type="datetime-local" id="edit_start_timestamp" name="edit_start_timestamp" value="{{ $event->start_timestamp }}" required>
+        <label for="edit_start_timestamp">Start Timestamp:</label>
+        <input type="datetime-local" id="edit_start_timestamp" name="edit_start_timestamp"
+            value="{{ $event->start_timestamp }}" required>
 
-                <label for="edit_end_timestamp">End Timestamp:</label>
-                <input type="datetime-local" id="edit_end_timestamp" name="edit_end_timestamp" value="{{ $event->end_timestamp }}" required>
-                @error('edit_end_timestamp')
-                    <span class="text-danger">{{ $message }}</span>
-                @enderror
-                <button class="button-update-event" onclick="updateEvent({{ $event->event_id }})">Update Event</button>
-            </article>
-        </section>
+        <label for="edit_end_timestamp">End Timestamp:</label>
+        <input type="datetime-local" id="edit_end_timestamp" name="edit_end_timestamp"
+            value="{{ $event->end_timestamp }}" required>
+        @error('edit_end_timestamp')
+        <span class="text-danger">{{ $message }}</span>
+        @enderror
+        <button class="button-update-event" onclick="updateEvent({{ $event->event_id }})">Update Event</button>
+    </article>
+</section>
 
-        <section id="create-ticket-type" class = "event-section">
-            <h2>Create <span> TicketType </span> </h2>
-                <article class="">
-                    @csrf
+<section id="create-ticket-type" class="event-section">
+    <h2>Create <span> TicketType </span> </h2>
+    <article class="">
+        @csrf
 
-                    <label for="ticket_name">Ticket Name:</label>
-                    <input type="text" id="ticket_name" name="ticket_name" required>
+        <label for="ticket_name">Ticket Name:</label>
+        <input type="text" id="ticket_name" name="ticket_name" required>
 
-                    <label for="ticket_stock">Stock:</label>
-                    <input type="number" id="ticket_stock" name="ticket_stock" required>
+        <label for="ticket_stock">Stock:</label>
+        <input type="number" id="ticket_stock" name="ticket_stock" required>
 
-                    <label for="ticket_description">Ticket Description:</label>
-                    <textarea id="ticket_description" name="ticket_description"></textarea>
+        <label for="ticket_description">Ticket Description:</label>
+        <textarea id="ticket_description" name="ticket_description"></textarea>
 
-                    <label for="ticket_person_limit">Person Buying Limit:</label>
-                    <input type="number" id="ticket_person_limit" name="ticket_person_limit" required>
+        <label for="ticket_person_limit">Person Buying Limit:</label>
+        <input type="number" id="ticket_person_limit" name="ticket_person_limit" required>
 
-                    <label for="ticket_price">Ticket Price:</label>
-                    <input type="number" id="ticket_price" name="ticket_price" required>
+        <label for="ticket_price">Ticket Price:</label>
+        <input type="number" id="ticket_price" name="ticket_price" required>
 
-                    <label for="ticket_start_timestamp">Ticket Start Timestamp:</label>
-                    <input type="datetime-local" id="ticket_start_timestamp" name="ticket_start_timestamp" required>
+        <label for="ticket_start_timestamp">Ticket Start Timestamp:</label>
+        <input type="datetime-local" id="ticket_start_timestamp" name="ticket_start_timestamp" required>
 
-                    <label for="ticket_end_timestamp">Ticket End Timestamp:</label>
-                    <input type="datetime-local" id="ticket_end_timestamp" name="ticket_end_timestamp" required>
-                    @error('ticket_end_timestamp')
-                        <span class="text-danger">{{ $message }}</span>
-                    @enderror            <!-- You might want to add more fields based on your requirements -->
+        <label for="ticket_end_timestamp">Ticket End Timestamp:</label>
+        <input type="datetime-local" id="ticket_end_timestamp" name="ticket_end_timestamp" required>
+        @error('ticket_end_timestamp')
+        <span class="text-danger">{{ $message }}</span>
+        @enderror <!-- You might want to add more fields based on your requirements -->
 
-                        <button type="button" class="btn btn-primary" onclick="createTicketType({{ $event->event_id }})">Create TicketType</button>
-                </article>
-        </section>
+        <button type="button" class="btn btn-primary" onclick="createTicketType({{ $event->event_id }})">Create
+            TicketType</button>
+    </article>
+</section>
 
-            <section class="event-section" id="event-info">
-                <h2>Histórico de Compras</h2>
-                    @php $totalSoldTickets = 0; $purchaseNumber = 1; @endphp
-                    @foreach ($soldTickets->groupBy('order_id') as $orderTickets)
-                        @php
-                            $totalSoldTickets += $orderTickets->count();
-                        @endphp
-                    @endforeach
-                    <strong>Total de Bilhetes Vendidos:</strong> {{ $totalSoldTickets }}
-                    
-                    @foreach ($soldTickets->groupBy('order_id') as $orderTickets)
-                        @php
-                            $order = $orderTickets->first()->order;
-                            $buyer = $order->buyer;
-                        @endphp
-                        <div class="card text-white bg-secondary mb-3" style="max-width: 20rem;">
-                        <div class="card-header"><strong>Compra #{{ $purchaseNumber }}</strong></div>
-                        <div class="card-body compra-info">
-                            <div class="compra-data"><strong>Data:</strong> {{ $order->timestamp }}</div>
-                            <div class="compra-quanti"><strong>Total:</strong> {{ $orderTickets->count() }}</div>
-                            <div class="compra-tipos"><strong>Tipos:</strong>
-                                <ul>
-                                    @foreach ($orderTickets->groupBy('ticket_type_id') as $ticketType => $typeTickets)
-                                        @php
-                                            $ticketTypeName = $typeTickets->first()->ticketType->name;
-                                            $quantity = $typeTickets->count();
-                                        @endphp
-                                        <li class="compra-tipo-nome"> {{ $ticketTypeName }}  {{ $quantity }}</li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                        @php $purchaseNumber++; @endphp
-                    @endforeach
-            </section>
-
-            <div>
-                <canvas id="myChart"></canvas>
-            </div>
-        
-            @php
-                $chartData = $event->tickets_chart();
-            @endphp
-
-            <script>
-    const ctx = document.getElementById('myChart');
-
-    const chartData = @json($chartData);
-
-    // Encontre o valor máximo nos conjuntos de dados
-    const maxYValue = Math.max(...chartData.datasets.flatMap(dataset => dataset.data));
-
-    // Adicione 10 ao valor máximo
-    const adjustedMaxYValue = maxYValue + 10;
-
-    new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: chartData.labels,
-            datasets: chartData.datasets
-        },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    max: adjustedMaxYValue
-                }
-            }
-        }
-    });
-</script>
-
-<div>
-    <canvas id="myPieChart"></canvas>
-</div>
-
-@php
-    $pieChartData = $event->tickets_pie_chart();
-@endphp
-
-<script>
-    const pieCtx = document.getElementById('myPieChart');
-
-    const pieChartData = @json($pieChartData);
-
-    new Chart(pieCtx, {
-        type: 'pie',
-        data: pieChartData,
-        options: {
-            responsive: true,
-            maintainAspectRatio: false, // Se desejar manter a relação de aspecto
-            plugins: {
-                legend: {
-                    position: 'top',
-                },
-                title: {
-                    display: true,
-                    text: 'Distribution of Tickets by Type',
-                },
-            },
-        },
-    });
-</script>
-@foreach($event->tickets_pie_charts() as $pieChart)
-    <div>
-        <canvas id="myChart{{ $pieChart['key'] }}"></canvas>
-    </div>
-
+<section class="event-section" id="event-info">
+    <h2>Histórico de Compras</h2>
+    @php $totalSoldTickets = 0; $purchaseNumber = 1; @endphp
+    @foreach ($soldTickets->groupBy('order_id') as $orderTickets)
     @php
-        $pieChartData = $pieChart['data'];
+    $totalSoldTickets += $orderTickets->count();
     @endphp
+    @endforeach
+    <strong>Total de Bilhetes Vendidos:</strong> {{ $totalSoldTickets }}
 
-    <script>
-        const pieCtx{{ $pieChart['key'] }} = document.getElementById('myChart{{ $pieChart['key'] }}');
-        const pieChartData{{ $pieChart['key'] }} = @json($pieChartData);
+    @foreach ($soldTickets->groupBy('order_id') as $orderTickets)
+    @php
+    $order = $orderTickets->first()->order;
+    $buyer = $order->buyer;
+    @endphp
+    <div class="card text-white bg-secondary mb-3" style="max-width: 20rem;">
+        <div class="card-header"><strong>Compra #{{ $purchaseNumber }}</strong></div>
+        <div class="card-body compra-info">
+            <div class="compra-data"><strong>Data:</strong> {{ $order->timestamp }}</div>
+            <div class="compra-quanti"><strong>Total:</strong> {{ $orderTickets->count() }}</div>
+            <div class="compra-tipos"><strong>Tipos:</strong>
+                <ul>
+                    @foreach ($orderTickets->groupBy('ticket_type_id') as $ticketType => $typeTickets)
+                    @php
+                    $ticketTypeName = $typeTickets->first()->ticketType->name;
+                    $quantity = $typeTickets->count();
+                    @endphp
+                    <li class="compra-tipo-nome"> {{ $ticketTypeName }} {{ $quantity }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        </div>
+    </div>
+    @php $purchaseNumber++; @endphp
+    @endforeach
 
-        const chartOptions{{ $pieChart['key'] }} = {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    position: 'top',
-                },
-                title: {
-                    display: true,
-                    text: 'Distribution of Tickets for {{ $pieChart['label'] }}',
-                },
-            },
-        };
+    <div id="event-charts" data-id="{{ $event->event_id }}">
+        <div>
+            <canvas id="dif_tickets_chart"></canvas>
+        </div>
 
-        if (pieChartData{{ $pieChart['key'] }}.datasets[0].data[0] === 100) {
-            chartOptions{{ $pieChart['key'] }}.plugins.title.text = 'SOLD OUT';
-        } else {
-            chartOptions{{ $pieChart['key'] }}.plugins.title.text = Math.round(pieChartData{{ $pieChart['key'] }}.datasets[0].data[0]) + '% sold';
-        }
+        <div>
+            <canvas id="all_tickets_chart"></canvas>
+        </div>
 
-        new Chart(pieCtx{{ $pieChart['key'] }}, {
-            type: 'pie',
-            data: pieChartData{{ $pieChart['key'] }},
-            options: chartOptions{{ $pieChart['key'] }},
-        });
-    </script>
-@endforeach
+        <div>
+            <canvas id="myPieChart"></canvas>
+        </div>
 
-    <p>Faturação: {{ $event->calculateRevenue() }}€</p>
+        <div class="perc_sold_tickets_charts" id="">
+            @foreach ($event->ticketTypes as $ticketType)
+            <canvas id="{{ $ticketType->ticket_type_id }}"></canvas>
+            @endforeach
+        </div>
+
+    </div>
+</section>
+
+<p>Faturação: {{ $event->calculateRevenue() }}€</p>
 
 
 @endcan

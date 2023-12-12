@@ -1,7 +1,7 @@
 function addEventListeners() {
   let activeUsersSection = document.getElementById('active_users_section');
   if (activeUsersSection) {
-    activeUsersSection.addEventListener('click', function(event) {
+    activeUsersSection.addEventListener('click', function (event) {
       if (event.target.classList.contains('deactivate-btn')) {
         let userId = event.target.getAttribute('data-user-id');
         deactivateUser(userId);
@@ -11,7 +11,7 @@ function addEventListeners() {
 
   let inactiveUsersSection = document.getElementById('inactive_users_section');
   if (inactiveUsersSection) {
-    inactiveUsersSection.addEventListener('click', function(event) {
+    inactiveUsersSection.addEventListener('click', function (event) {
       if (event.target.classList.contains('activate-btn')) {
         let userId = event.target.getAttribute('data-user-id');
         activateUser(userId);
@@ -19,118 +19,118 @@ function addEventListeners() {
     });
   }
 }
-  
-  function encodeForAjax(data) {
-    if (data == null) return null;
-    return Object.keys(data).map(function(k){
-      return encodeURIComponent(k) + '=' + encodeURIComponent(data[k])
-    }).join('&');
+
+function encodeForAjax(data) {
+  if (data == null) return null;
+  return Object.keys(data).map(function (k) {
+    return encodeURIComponent(k) + '=' + encodeURIComponent(data[k])
+  }).join('&');
+}
+
+function sendAjaxRequest(method, url, data, handler) {
+  let request = new XMLHttpRequest();
+
+  request.open(method, url, true);
+  request.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').content);
+  request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+  request.addEventListener('load', handler);
+  request.send(encodeForAjax(data));
+}
+
+
+function updateStockContent(formData, ticketTypeId) {
+  document.getElementById('new_stock_' + ticketTypeId).innerHTML = formData['new_stock_' + ticketTypeId];
+  document.getElementById('stock_display_' + ticketTypeId).innerHTML = 'Stock: ' + formData['new_stock_' + ticketTypeId];
+  let newStock = document.getElementById('new_stock_' + ticketTypeId).value;
+  if (newStock == 0) {
+    const label = document.getElementById('label' + ticketTypeId);
+    const input = document.getElementById('input' + ticketTypeId);
+
+    label.style.display = 'none';
+    input.style.display = 'none';
   }
+  else {
 
-  function sendAjaxRequest(method, url, data, handler) {
-    let request = new XMLHttpRequest();
-
-    request.open(method, url, true);
-    request.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').content);
-    request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    request.addEventListener('load', handler);
-    request.send(encodeForAjax(data));
-  }
-
-
-  function updateStockContent(formData, ticketTypeId) {
-    document.getElementById('new_stock_' + ticketTypeId ).innerHTML = formData['new_stock_' + ticketTypeId];
-    document.getElementById('stock_display_' + ticketTypeId ).innerHTML = 'Stock: ' + formData['new_stock_' + ticketTypeId];
-    let newStock = document.getElementById('new_stock_' + ticketTypeId).value;
-    if (newStock == 0){
-      const label = document.getElementById('label' + ticketTypeId);
-      const input = document.getElementById('input' + ticketTypeId);
-
-      label.style.display = 'none';
-      input.style.display = 'none';
-    }
-    else {
-      
-      const label = document.getElementById('label' + ticketTypeId);
-      const input = document.getElementById('input' + ticketTypeId);
-      if (label){
-        label.style.display = 'flex';
-        input.style.display = 'flex';
-      } else {
-        const container = document.querySelector('#ticket-type-'+ticketTypeId);
-        const max = container.getAttribute('data-max');
-        console.log(container.innerHTML);
-        let original = container.innerHTML;
-        const update = original + ` <label class="quant" id ="label${ticketTypeId}" for="quantity_${ticketTypeId}">Quantity:</label>
+    const label = document.getElementById('label' + ticketTypeId);
+    const input = document.getElementById('input' + ticketTypeId);
+    if (label) {
+      label.style.display = 'flex';
+      input.style.display = 'flex';
+    } else {
+      const container = document.querySelector('#ticket-type-' + ticketTypeId);
+      const max = container.getAttribute('data-max');
+      console.log(container.innerHTML);
+      let original = container.innerHTML;
+      const update = original + ` <label class="quant" id ="label${ticketTypeId}" for="quantity_${ticketTypeId}">Quantity:</label>
         <input class="quant" id ="input${ticketTypeId}" type="number" id="quantity_${ticketTypeId}" name="quantity[${ticketTypeId}]" min="0" max="${max}">
         `;
-        container.innerHTML = update;
-      }
-   
+      container.innerHTML = update;
+    }
+
   }
 }
 
-  function moveUserToInactiveTable(userId) {
-    let activeUserRow = document.getElementById('active_user_row_' + userId);
+function moveUserToInactiveTable(userId) {
+  let activeUserRow = document.getElementById('active_user_row_' + userId);
 
-    if (activeUserRow) {
-        let activateButton = activeUserRow.querySelector('.deactivate-btn');
-        activeUserRow.parentNode.removeChild(activeUserRow);
-        activeUserRow.id = 'inactive_user_row_' + userId;
-        let inactiveUsersTable = document.getElementById('inactive_users_section').querySelector('tbody');
+  if (activeUserRow) {
+    let activateButton = activeUserRow.querySelector('.deactivate-btn');
+    activeUserRow.parentNode.removeChild(activeUserRow);
+    activeUserRow.id = 'inactive_user_row_' + userId;
+    let inactiveUsersTable = document.getElementById('inactive_users_section').querySelector('tbody');
 
-        inactiveUsersTable.appendChild(activeUserRow);
+    inactiveUsersTable.appendChild(activeUserRow);
 
-        activateButton.innerText = 'Activate';
-        activateButton.classList.remove('deactivate-btn');
-        activateButton.classList.add('activate-btn');
-        activateButton.removeEventListener('click', deactivateUser);
-        activateButton.addEventListener('click', function() {
-            activateUser(userId);
-        });
-    } else {
-        console.error('Active user row not found:', userId);
-    }
+    activateButton.innerText = 'Activate';
+    activateButton.classList.remove('deactivate-btn');
+    activateButton.classList.add('activate-btn');
+    activateButton.removeEventListener('click', deactivateUser);
+    activateButton.addEventListener('click', function () {
+      activateUser(userId);
+    });
+  } else {
+    console.error('Active user row not found:', userId);
+  }
 }
 
 function moveUserToActiveTable(userId) {
   let inactiveUserRow = document.getElementById('inactive_user_row_' + userId);
 
   if (inactiveUserRow) {
-      let deactivateButton = inactiveUserRow.querySelector('.activate-btn');
-      inactiveUserRow.parentNode.removeChild(inactiveUserRow);
-      inactiveUserRow.id = 'active_user_row_' + userId;
-      let activeUsersTable = document.getElementById('active_users_section').querySelector('tbody');
+    let deactivateButton = inactiveUserRow.querySelector('.activate-btn');
+    inactiveUserRow.parentNode.removeChild(inactiveUserRow);
+    inactiveUserRow.id = 'active_user_row_' + userId;
+    let activeUsersTable = document.getElementById('active_users_section').querySelector('tbody');
 
-      activeUsersTable.appendChild(inactiveUserRow);
+    activeUsersTable.appendChild(inactiveUserRow);
 
-      deactivateButton.innerText = 'Deactivate';
-      deactivateButton.classList.remove('activate-btn');
-      deactivateButton.classList.add('deactivate-btn');
-      deactivateButton.removeEventListener('click', activateUser);
-      deactivateButton.addEventListener('click', function() {
-          deactivateUser(userId);
-      });
+    deactivateButton.innerText = 'Deactivate';
+    deactivateButton.classList.remove('activate-btn');
+    deactivateButton.classList.add('deactivate-btn');
+    deactivateButton.removeEventListener('click', activateUser);
+    deactivateButton.addEventListener('click', function () {
+      deactivateUser(userId);
+    });
   } else {
-      console.error('Inactive user row not found:', userId);
+    console.error('Inactive user row not found:', userId);
   }
 }
 
-  function updateStock(ticketTypeId) {
-    let newStock = document.getElementById('new_stock_' + ticketTypeId).value;
+function updateStock(ticketTypeId) {
+  let newStock = document.getElementById('new_stock_' + ticketTypeId).value;
 
-    let formData = {
-      ['new_stock_' + ticketTypeId]: newStock
+  let formData = {
+    ['new_stock_' + ticketTypeId]: newStock
   };
 
-    sendAjaxRequest('POST', '/update-ticket-stock/' + ticketTypeId, formData, function () {
-        if (this.status === 200) {
-            let response = JSON.parse(this.responseText);
-            updateStockContent(response, ticketTypeId);
-        } else {
-            console.error('Error updating stock:', this.responseText);
-        }
-    });
+  sendAjaxRequest('POST', '/update-ticket-stock/' + ticketTypeId, formData, function () {
+    if (this.status === 200) {
+      let response = JSON.parse(this.responseText);
+      updateStockContent(response, ticketTypeId);
+    } else {
+      console.error('Error updating stock:', this.responseText);
+    }
+  });
 }
 
 function deactivateUser(userId) {
@@ -142,76 +142,82 @@ function deactivateUser(userId) {
   updateActiveUserCount();
   updateActiveEventCount();
   updateInactiveEventCount();
+  updateEventCountByMonth();
+  updateEventCountByDay();
+  updateEventCountByYear();
 }
 
 function activateUser(userId) {
   let formData = { 'user_id': userId };
 
   sendAjaxRequest('PUT', '/activateUser/' + userId, formData, moveUserToActiveTable(userId));
-  
+
   updateInactiveUserCount();
   updateActiveUserCount();
   updateActiveEventCount();
   updateInactiveEventCount();
+  updateEventCountByMonth();
+  updateEventCountByDay();
+  updateEventCountByYear();
 }
 
 function updateActiveUserCount() {
-  sendAjaxRequest('GET', '/getActiveUserCount', null, function(event) {
+  sendAjaxRequest('GET', '/getActiveUserCount', null, function (event) {
     let count = JSON.parse(event.target.responseText).count;
     document.getElementById('activeUserCount').innerText = 'Total de usuários ativos: ' + count;
   });
 }
 
 function updateInactiveUserCount() {
-  sendAjaxRequest('GET', '/getInactiveUserCount', null, function(event) {
+  sendAjaxRequest('GET', '/getInactiveUserCount', null, function (event) {
     let count = JSON.parse(event.target.responseText).count;
     document.getElementById('inactiveUserCount').innerText = 'Total de usuários inativos: ' + count;
   });
 }
 
 function updateActiveEventCount() {
-  sendAjaxRequest('GET', '/getActiveEventCount', null, function(event) {
+  sendAjaxRequest('GET', '/getActiveEventCount', null, function (event) {
     let count = JSON.parse(event.target.responseText).count;
     document.getElementById('activeEventCount').innerText = count;
   });
 }
 
 function updateInactiveEventCount() {
-  sendAjaxRequest('GET', '/getInactiveEventCount', null, function(event) {
+  sendAjaxRequest('GET', '/getInactiveEventCount', null, function (event) {
     let count = JSON.parse(event.target.responseText).count;
     document.getElementById('inactiveEventCount').innerText = count;
   });
 }
 
 function updateEventPageContent(formData) {
-    document.getElementById('name').innerHTML = formData.edit_name;
-    document.getElementById('location').innerHTML =  formData.edit_location;
-    document.getElementById('description').innerHTML =  formData.edit_description;
-    //document.getElementById('start_timestamp').innerHTML =  formData.edit_start_timestamp; //ainda não está display
-    //document.getElementById('end_timestamp').innerHTML =  formData.edit_end_timestamp;  //ainda não está display
+  document.getElementById('name').innerHTML = formData.edit_name;
+  document.getElementById('location').innerHTML = formData.edit_location;
+  document.getElementById('description').innerHTML = formData.edit_description;
+  //document.getElementById('start_timestamp').innerHTML =  formData.edit_start_timestamp; //ainda não está display
+  //document.getElementById('end_timestamp').innerHTML =  formData.edit_end_timestamp;  //ainda não está display
 }
 
-  function updateEvent(eventId) {
+function updateEvent(eventId) {
 
-      let formData = {
-          'edit_name': document.getElementById('edit_name').value,
-          'edit_description': document.getElementById('edit_description').value,
-          'edit_location': document.getElementById('edit_location').value,
-          'edit_start_timestamp': document.getElementById('edit_start_timestamp').value,
-          'edit_end_timestamp': document.getElementById('edit_end_timestamp').value
-      };
+  let formData = {
+    'edit_name': document.getElementById('edit_name').value,
+    'edit_description': document.getElementById('edit_description').value,
+    'edit_location': document.getElementById('edit_location').value,
+    'edit_start_timestamp': document.getElementById('edit_start_timestamp').value,
+    'edit_end_timestamp': document.getElementById('edit_end_timestamp').value
+  };
 
-      updateEventPageContent(formData);
+  updateEventPageContent(formData);
 
-      sendAjaxRequest('post', '../update-event/' + eventId, formData);
+  sendAjaxRequest('post', '../update-event/' + eventId, formData);
 
-      //colocar uma mensagem a dizer que foi alterado
-  }
+  //colocar uma mensagem a dizer que foi alterado
+}
 
 function updateProfilePageContent(formData) {
   document.getElementById('user-header-name').innerText = formData.edit_name;
 
-  }
+}
 
 function updateProfile() {
 
@@ -224,19 +230,19 @@ function updateProfile() {
 
 
   let formData = {
-      'edit_name': document.getElementById('edit_name').value,
-      'edit_email': document.getElementById('edit_email').value,
-      'edit_promotor_code': document.getElementById('edit_promotor_code').value,
-      'edit_phone_number': document.getElementById('edit_phone_number').value,
+    'edit_name': document.getElementById('edit_name').value,
+    'edit_email': document.getElementById('edit_email').value,
+    'edit_promotor_code': document.getElementById('edit_promotor_code').value,
+    'edit_phone_number': document.getElementById('edit_phone_number').value,
   };
 
   console.log(formData);
 
 
   sendAjaxRequest('post', '../update-profile', formData);
-  
+
   updateProfilePageContent(formData);
-  
+
   //depois tenho de colocar uma mensagem a dizer que foi alterado
 
 
@@ -246,7 +252,7 @@ function updateTicketPageContent(ticketType) {
   console.log(ticketType);
   let ticketTypesContainer = document.getElementById('ticket-types-container');
   let newTicketType = document.createElement('article');
-  newTicketType.className = 'ticket-type'; 
+  newTicketType.className = 'ticket-type';
   newTicketType.innerHTML = `
       <h3>${ticketType.name}</h3>
       <p>Stock: ${ticketType.stock}</p>
@@ -270,7 +276,7 @@ function updateTicketPageContent(ticketType) {
   document.getElementById('ticket_price').value = '';
   document.getElementById('ticket_start_timestamp').value = '';
   document.getElementById('ticket_end_timestamp').value = '';
-  
+
 }
 
 async function createTicketType(event_id) {
@@ -282,24 +288,24 @@ async function createTicketType(event_id) {
   let ticketEndTimestamp = document.getElementById('ticket_end_timestamp').value;
 
   if (!ticketName || !ticketStock || !ticketPersonLimit || !ticketStartTimestamp || !ticketEndTimestamp) {
-      alert("Todos os campos são obrigatórios.");
-      return;
+    alert("Todos os campos são obrigatórios.");
+    return;
   }
 
   if (isNaN(ticketPrice)) {
-      alert("O preço do ingresso deve ser um número.");
-      return;
+    alert("O preço do ingresso deve ser um número.");
+    return;
   }
 
   let currentDate = new Date().toISOString().split('T')[0];
   if (ticketStartTimestamp < currentDate) {
-      alert("A data de início do ingresso deve ser igual ou superior à data atual.");
-      return;
+    alert("A data de início do ingresso deve ser igual ou superior à data atual.");
+    return;
   }
 
   if (ticketEndTimestamp <= currentDate) {
-      alert("A data de término do ingresso deve ser superior à data atual.");
-      return;
+    alert("A data de término do ingresso deve ser superior à data atual.");
+    return;
   }
 
   if (ticketStartTimestamp.split('T')[0] === ticketEndTimestamp.split('T')[0] && ticketStartTimestamp.split('T')[1] >= ticketEndTimestamp.split('T')[1]) {
@@ -311,24 +317,24 @@ async function createTicketType(event_id) {
   let eventEndTimestamp = document.getElementById('edit_end_timestamp').value;
 
   if (ticketStartTimestamp < eventStartTimestamp || ticketStartTimestamp >= eventEndTimestamp) {
-      alert("A data de início do ingresso deve ser maior ou igual à data de início do evento e menor que a data de fim do evento.");
-      return;
+    alert("A data de início do ingresso deve ser maior ou igual à data de início do evento e menor que a data de fim do evento.");
+    return;
   }
 
   if ((ticketEndTimestamp && ticketEndTimestamp <= eventStartTimestamp) || (ticketEndTimestamp && ticketEndTimestamp > eventEndTimestamp)) {
-      alert("A data de término do ingresso deve ser maior que a data de início do evento e menor ou igual à data de fim do evento.");
-      return;
+    alert("A data de término do ingresso deve ser maior que a data de início do evento e menor ou igual à data de fim do evento.");
+    return;
   }
 
 
   let formData = {
-      'ticket_name': ticketName,
-      'ticket_stock': ticketStock,
-      'ticket_description': document.getElementById('ticket_description').value,
-      'ticket_person_limit': ticketPersonLimit,
-      'ticket_price': ticketPrice,
-      'ticket_start_timestamp': ticketStartTimestamp,
-      'ticket_end_timestamp': ticketEndTimestamp,
+    'ticket_name': ticketName,
+    'ticket_stock': ticketStock,
+    'ticket_description': document.getElementById('ticket_description').value,
+    'ticket_person_limit': ticketPersonLimit,
+    'ticket_price': ticketPrice,
+    'ticket_start_timestamp': ticketStartTimestamp,
+    'ticket_end_timestamp': ticketEndTimestamp,
   };
 
   sendAjaxRequest('post', `../create-ticket-type/${event_id}`, formData, createTypeHandler);
@@ -350,28 +356,28 @@ function createTypeHandler() {
 const activate = document.querySelector('#activate-button');
 
 if (activate) {
-  activate.addEventListener('click', function(){
+  activate.addEventListener('click', function () {
     const eventId = activate.getAttribute('data-id');
     if (activate.textContent == 'Activate Event') {
       sendAjaxRequest('post', '/activate-event/' + eventId, {}, eventHandler)
-     
+
     } else {
-     sendAjaxRequest('post', '/deactivate-event/' + eventId, {}, event2Handler)
-   }
+      sendAjaxRequest('post', '/deactivate-event/' + eventId, {}, event2Handler)
+    }
   })
 }
 
 
-function eventHandler(){
-  if (this.status == 200){
+function eventHandler() {
+  if (this.status == 200) {
     console.log('Ativado');
     activate.textContent = 'Deactivate Event'
     activate.classList.remove('active')
   }
 }
 
-function event2Handler(){
-  if (this.status == 200){
+function event2Handler() {
+  if (this.status == 200) {
     console.log('Desativado');
     activate.textContent = 'Activate Event'
     activate.classList.add('active')
@@ -382,10 +388,10 @@ function toggleProfileButtons() {
   document.getElementById('edit-profile-button').style.display = 'none';
   document.getElementById('update-profile-button').style.display = 'block';
 
-    document.getElementById('edit_name').disabled = false;
-    document.getElementById('edit_email').disabled = false;
-    document.getElementById('edit_promotor_code').disabled = false;
-    document.getElementById('edit_phone_number').disabled = false;
+  document.getElementById('edit_name').disabled = false;
+  document.getElementById('edit_email').disabled = false;
+  document.getElementById('edit_promotor_code').disabled = false;
+  document.getElementById('edit_phone_number').disabled = false;
 }
 
 
@@ -400,15 +406,15 @@ function showSection() {
   if (!sectionButtons.length || !eventSections.length) {
     return;
   }
-  
-  for (var j = 0; j < eventSections.length-1; j++) {
+
+  for (var j = 0; j < eventSections.length - 1; j++) {
     eventSections[j].style.display = "none";
   }
 
-  sectionButtons.forEach(function(button) {
-    button.addEventListener("click", function() {
+  sectionButtons.forEach(function (button) {
+    button.addEventListener("click", function () {
       console.log(this);
-      
+
       var sectionId = this.getAttribute("data-section-id");
       console.log("Section ID:", sectionId);
 
@@ -425,7 +431,7 @@ function showSection() {
         console.log("Section not found with ID:", sectionId);
       }
 
-      sectionButtons.forEach(function(btn) {
+      sectionButtons.forEach(function (btn) {
         btn.parentElement.classList.remove("selected");
       });
 
@@ -437,11 +443,11 @@ function showSection() {
 
 showSection();
 
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
   let totalFields = document.querySelectorAll(".form-field").length;
 
   function updateProgressBar() {
-    let filledFields = Array.from(document.querySelectorAll(".form-field")).filter(function(field) {
+    let filledFields = Array.from(document.querySelectorAll(".form-field")).filter(function (field) {
       return field.value.trim() !== "";
     }).length;
 
@@ -450,7 +456,7 @@ document.addEventListener("DOMContentLoaded", function() {
     document.querySelector("#progress-bar-container .progress-bar").setAttribute("aria-valuenow", progress);
   }
 
-  document.querySelectorAll(".form-field").forEach(function(field) {
+  document.querySelectorAll(".form-field").forEach(function (field) {
     field.addEventListener("input", updateProgressBar);
     field.addEventListener("change", updateProgressBar);
   });
@@ -468,4 +474,34 @@ function toggleCheckoutSection() {
   checkoutSection.style.display = 'block';
   buyButton.style.display = 'inline';
   showForm.style.display = 'none';
+}
+
+function updateEventCountByMonth() {
+  // Obtém o mês atual (você pode personalizar isso conforme necessário)
+  let currentMonth = new Date().getMonth() + 1;
+
+  sendAjaxRequest('GET', '/getEventCountByMonth/' + currentMonth, null, function (event) {
+    let count = JSON.parse(event.target.responseText).count;
+    document.getElementById('eventCountByMonth').innerText = count;
+  });
+}
+
+function updateEventCountByDay() {
+  // Obtém o dia atual (você pode personalizar isso conforme necessário)
+  let currentDay = new Date().getDate();
+
+  sendAjaxRequest('GET', '/getEventCountByDay/' + currentDay, null, function (event) {
+    let count = JSON.parse(event.target.responseText).count;
+    document.getElementById('eventCountByDay').innerText = count;
+  });
+}
+
+function updateEventCountByYear() {
+  // Obtém o ano atual (você pode personalizar isso conforme necessário)
+  let currentYear = new Date().getFullYear();
+
+  sendAjaxRequest('GET', '/getEventCountByYear/' + currentYear, null, function (event) {
+    let count = JSON.parse(event.target.responseText).count;
+    document.getElementById('eventCountByYear').innerText = count;
+  });
 }

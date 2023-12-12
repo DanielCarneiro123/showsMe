@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\User;
 use App\Models\Event;
 use Illuminate\Http\Request;
@@ -16,6 +17,9 @@ class AdminController extends Controller
         $eventCount = null;
         $activeEventCount = null;
         $inactiveEventCount = null;
+        $eventCountByMonth = Event::countEventsByMonth(date('n')); // Contagem para o mês atual
+        $eventCountByDay = Event::countEventsByDay(date('j')); // Contagem para o dia atual
+        $eventCountByYear = Event::countEventsByYear(date('Y')); // Contagem para o ano atual
         $activeUsers = [];
         $inactiveUsers = [];
 
@@ -26,27 +30,29 @@ class AdminController extends Controller
         $activeUsers = User::where('active', true)->get();
         $inactiveUsers = User::where('active', false)->get();
 
-        return view('pages.admin', compact('userCount', 'eventCount', 'activeEventCount', 'inactiveEventCount', 'activeUsers', 'inactiveUsers'));
+        // Passa as contagens para a view
+        return view('pages.admin', compact('userCount', 'eventCount', 'activeEventCount', 'inactiveEventCount', 'eventCountByMonth', 'eventCountByDay', 'eventCountByYear', 'activeUsers', 'inactiveUsers'));
     }
 
-    
+
+
     public function deactivateUser($id)
-{
-    // Find the user by ID
-    $user = User::findOrFail($id);
+    {
+        // Find the user by ID
+        $user = User::findOrFail($id);
 
-    $this->authorize('verifyAdmin', Admin::class);
+        $this->authorize('verifyAdmin', Admin::class);
 
-    // Deactivate the user
-    $user->active = false;
-    $user->save();
+        // Deactivate the user
+        $user->active = false;
+        $user->save();
 
-    // Deactivate all events created by the user
-    $user->own_events()->update(['private' => true]);
+        // Deactivate all events created by the user
+        $user->own_events()->update(['private' => true]);
 
-    // Return a JSON response
-    return response()->json(['user_id' => $user->user_id]);
-}
+        // Return a JSON response
+        return response()->json(['user_id' => $user->user_id]);
+    }
 
 
     public function activateUser($id)
@@ -81,7 +87,7 @@ class AdminController extends Controller
         $activeUserCount = User::where('active', true)->count();
         return response()->json(['count' => $activeUserCount]);
     }
-    
+
     public function getInactiveUserCount()
     {
         $inactiveUserCount = User::where('active', false)->count();
@@ -98,5 +104,23 @@ class AdminController extends Controller
     {
         $inactiveEventCount = Event::countInactiveEvents();
         return response()->json(['count' => $inactiveEventCount]);
+    }
+
+    public function getEventCountByMonth($month)
+    {
+        $eventCount = Event::countEventsByMonth($month);
+        return response()->json(['count' => $eventCount]);
+    }
+
+    public function getEventCountByDay($day)
+    {
+        $eventCount = Event::countEventsByDay($day);
+        return response()->json(['count' => $eventCount]);
+    }
+
+    public function getEventCountByYear($year)
+    {
+        $eventCount = Event::countEventsByYear($year);
+        return response()->json(['count' => $eventCount]);
     }
 }

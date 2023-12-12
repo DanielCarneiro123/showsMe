@@ -44,6 +44,7 @@ Route::controller(EventController::class)->group(function () {
     Route::get('/generate-qrcode/{ticketInstanceId}', [EventController::class, 'generateQRCode'])->name('generate-qrcode');
     Route::get('/view-event/{id}', [EventController::class, 'show'])->name('view-event');
     Route::get('/event/{eventId}', 'EventController@show');
+    Route::get('/api/events/{id}/charts/', [EventController::class, 'charts']);
 });
 
 Route::controller(FaqController::class)->group(function () {
@@ -66,10 +67,12 @@ Route::controller(AdminController::class)->group(function () {
     Route::put('/activateUser/{id}', [AdminController::class, 'activateUser'])->name('activateUser');
     Route::get('/count', [AdminController::class, 'showUserCount'])->name('count');
     Route::get('/getActiveUserCount', [AdminController::class, 'getActiveUserCount']);
-    Route::get('/getInactiveUserCount', [AdminController::class, 'getInactiveUserCount']); 
+    Route::get('/getInactiveUserCount', [AdminController::class, 'getInactiveUserCount']);
     Route::get('/getActiveEventCount', [AdminController::class, 'getActiveEventCount']);
     Route::get('/getInactiveEventCount', [AdminController::class, 'getInactiveEventCount']);
-
+    Route::get('/getEventCountByMonth/{month}', [AdminController::class, 'getEventCountByMonth']);
+    Route::get('/getEventCountByDay/{day}', [AdminController::class, 'getEventCountByDay']);
+    Route::get('/getEventCountByYear/{year}', [AdminController::class, 'getEventCountByYear']);
 });
 
 

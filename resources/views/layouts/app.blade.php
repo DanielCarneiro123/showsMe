@@ -35,6 +35,7 @@
         </script>
         
         <script type="text/javascript" src={{ url('js/app.js') }} defer></script>
+        <script type="text/javascript" src={{ url('js/charts.js') }} defer></script>
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     </head>
     <body>
