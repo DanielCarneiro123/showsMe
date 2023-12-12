@@ -35,9 +35,9 @@
             // See: http://stackoverflow.com/questions/18943276/html-5-autofocus-messes-up-css-loading/18945951#18945951
         </script>
         
-        <script type="text/javascript" src={{ url('js/app.js') }} defer>
-        </script>
-        <script src="https://js.stripe.com/v3/"></script>
+        <script type="text/javascript" src={{ url('js/app.js') }} defer></script>
+        <script type="text/javascript" src={{ url('js/charts.js') }} defer></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     </head>
     <body>
         <main>

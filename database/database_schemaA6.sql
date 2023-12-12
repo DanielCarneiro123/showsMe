@@ -478,10 +478,50 @@ VALUES
   ('2023-11-01 00:00:00', NULL, 18),
   ('2023-11-01 00:00:00', 'promo5', 19);
 
+INSERT INTO TicketOrder (timestamp, promo_code, buyer_id) 
+VALUES 
+  ('2023-11-01 00:00:00', NULL, 1),
+  ('2023-11-01 00:00:00', 'promo1', 1),
+  ('2023-11-01 00:00:00', NULL, 3),
+  ('2023-11-01 00:00:00', NULL, 4),
+  ('2023-11-01 00:00:00', NULL, 5),
+  ('2023-11-01 00:00:00', NULL, 6),
+  ('2023-11-01 00:00:00', 'promo1', 7),
+  ('2023-11-01 00:00:00', NULL, 8),
+  ('2023-11-01 00:00:00', 'promo2', 9),
+  ('2023-11-01 00:00:00', NULL, 10),
+  ('2023-11-01 00:00:00', NULL, 11),
+  ('2023-11-01 00:00:00', 'promo3', 12),
+  ('2023-11-01 00:00:00', NULL, 13),
+  ('2023-11-01 00:00:00', 'promo4', 14),
+  ('2023-11-01 00:00:00', NULL, 15),
+  ('2023-11-01 00:00:00', NULL, 16),
+  ('2023-11-01 00:00:00', 'promo5', 17),
+  ('2023-11-01 00:00:00', NULL, 18),
+  ('2023-11-01 00:00:00', 'promo5', 19);
+
 INSERT INTO TicketOrder (promo_code, buyer_id) 
 VALUES 
-  ( NULL, 20);
-
+  (NULL, 1),
+  ('promo1', 1),
+  (NULL, 3),
+  (NULL, 4),
+  (NULL, 5),
+  (NULL, 6),
+  ('promo1', 7),
+  (NULL, 8),
+  ('promo2', 9),
+  (NULL, 10),
+  (NULL, 11),
+  ('promo3', 12),
+  (NULL, 13),
+  ('promo4', 14),
+  (NULL, 15),
+  (NULL, 16),
+  ('promo5', 17),
+  (NULL, 18),
+  ('promo5', 19),
+  (NULL, 20);
 
 -- Inserts for Ticket Instances
 INSERT INTO TicketInstance (ticket_type_id, order_id) 

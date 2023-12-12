@@ -60,6 +60,18 @@ class User extends Authenticatable
      */
     protected $table = 'users';
 
+    public static function countUsers()
+    {
+        try {
+            $count = self::query()->count();
+            return $count;
+        } catch (\Exception $e) {
+            echo '<script>console.error("countUsers - erro ao contar usuários: ' . $e->getMessage() . '");</script>';
+            return 0; // Ou outro valor padrão apropriado
+        }
+    }
+    
+
     public function own_events()
     {
         return $this->hasMany(Event::class, 'creator_id');

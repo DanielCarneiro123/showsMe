@@ -305,5 +305,38 @@ private function createTemporaryAccount(Request $request)
         return view('pages.event', compact('event', 'soldTickets'));
     }
 
+    public function calculateAndDisplayRevenue($eventId)
+    {
+        $event = Event::findOrFail($eventId);
+        $revenue = $event->calculateRevenue();
+
+        return view('event.revenue', ['event' => $event, 'revenue' => $revenue]);
+    }
+    public function charts(Request $request, $eventId) {
+        $event = Event::findOrFail($eventId);
+    
+        if ($request->has('type')) {
+            $type = $request->type;
+    
+            if ($type == 'tickets_chart') {
+                $chartData = $event->tickets_chart();
+                return response()->json(['moucho' => $chartData]);
+            } else if ($type == 'all_tickets_chart') {
+                $chartData = $event->all_tickets_chart();
+                return response()->json(['moucho' => $chartData]);
+            } elseif ($type == 'distribution') {
+                $pieChartData = $event->tickets_pie_chart();
+                return response()->json(['moucho' => $pieChartData]);
+            }
+        } elseif ($request->has('canvaId')) {
+            $subtype = $request->canvaId; 
+            $canvas = $request->canva;  
+            $pieChartsData = $event->per_sold_tickets_pie_chart($subtype);
+            return response()->json(['moucho' => $pieChartsData, 'chart_id' => $subtype, 'canvas' => $canvas]);
+        }
+    
+        return response()->json(['error' => 'Invalid chart type']);
+    }    
+    
 }
 ?>

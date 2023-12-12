@@ -64,7 +64,4 @@ public function editProfile()
 
     return view('edit_profile', compact('user'));
 }
-
-
-
 }
