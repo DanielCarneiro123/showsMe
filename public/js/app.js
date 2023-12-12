@@ -538,16 +538,36 @@ const reportPopUp = document.querySelector('.pop-up-report');
     }
 }
 
-function toggleCommentVisibility(commentId, action) {
+function toggleCommentVisibility(commentId, action, visibility) {
   let url = action === 'hide' ? `/hide-comment/${commentId}` : `/show-comment/${commentId}`;
+  
+
   sendAjaxRequest('POST', url, {}, function () {
       if (this.status === 200) {
           toggleEye(`show_${commentId}`, `hidden_${commentId}`);
+          if (visibility === 'public') {
+              moveCommentToPrivate(commentId);
+          } else {
+              moveCommentToPublic(commentId);
+          }
       } else {
           console.error(`Error toggling comment visibility: ${this.responseText}`);
       }
   });
 }
+
+function moveCommentToPrivate(commentId) {
+  const commentElement = document.querySelector(`.comment[data-id="${commentId}"]`);
+  commentElement.parentNode.removeChild(commentElement);
+  document.getElementById('private-comments-section').appendChild(commentElement);
+}
+
+function moveCommentToPublic(commentId) {
+  const commentElement = document.querySelector(`.comment[data-id="${commentId}"]`);
+  commentElement.parentNode.removeChild(commentElement);
+  document.getElementById('public-comments-section').appendChild(commentElement);
+}
+
 
 
 

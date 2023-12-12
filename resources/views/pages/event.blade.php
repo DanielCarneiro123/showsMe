@@ -70,39 +70,42 @@
 @endif
     
 
-    <h2 class="text-primary">Comments</h2>
-    @forelse($event->comments->where('private', false) as $comment)
-    <div class="comment" data-id="{{ $comment->comment_id }}">
-        <div class="comment-icons-container">
-            <p class="comment-author">{{ $comment->author->name }}</p>
-            <div>
-            @if(auth()->user() && auth()->user()->is_admin)
-                <i class="toggle-eye fa-solid fa-eye show-icon" id="show_{{ $comment->comment_id }}" onclick="toggleCommentVisibility('{{ $comment->comment_id }}', 'show')" style="display: none;"></i>
-                <i class="toggle-eye fa-solid fa-eye-slash hidden-icon" id="hidden_{{ $comment->comment_id }}" onclick="toggleCommentVisibility('{{ $comment->comment_id }}', 'hide')"></i>
-            @endif
-                @if(auth()->check())
-                    <i class="fa-solid fa-flag" onclick="showReportPopUp()"></i>
-                    @if(auth()->user()->user_id === $comment->author->user_id)
-                        <i class="fa-solid fa-pen-to-square"></i>
-                    @endif
+    <h2 class="text-primary">Public Comments</h2>
+        <div id="public-comments-section">
+        @foreach($event->comments->where('private', false) as $comment)
+        <div class="comment" data-id="{{ $comment->comment_id }}">
+            <div class="comment-icons-container">
+                <p class="comment-author">{{ $comment->author->name }}</p>
+                <div>
+                @if(auth()->user() && auth()->user()->is_admin)
+                    <i class="toggle-eye fa-solid fa-eye show-icon" id="show_{{ $comment->comment_id }}" onclick="toggleCommentVisibility('{{ $comment->comment_id }}', 'show', 'private')" style="display: none;"></i>
+                    <i class="toggle-eye fa-solid fa-eye-slash hidden-icon" id="hidden_{{ $comment->comment_id }}" onclick="toggleCommentVisibility('{{ $comment->comment_id }}', 'hide', 'public')"></i>
                 @endif
+                    @if(auth()->check())
+                        <i class="fa-solid fa-flag" onclick="showReportPopUp()"></i>
+                        @if(auth()->user()->user_id === $comment->author->user_id)
+                            <i class="fa-solid fa-pen-to-square"></i>
+                        @endif
+                    @endif
+                </div>
             </div>
+            <p class="comment-text">{{ $comment->text }}</p>
         </div>
-        <p class="comment-text">{{ $comment->text }}</p>
+
+        @endforeach
     </div>
-    @empty
-        <p>No public comments yet.</p>
-    @endforelse
 
     @if(auth()->user() && auth()->user()->is_admin)
         <h2 class="text-primary mt-4">Private Comments (visible to admins only)</h2>
-        @forelse($event->comments->where('private', true) as $comment)
+        <div id="private-comments-section">
+
+        @foreach($event->comments->where('private', true) as $comment)
             <div class="comment" data-id="{{ $comment->comment_id }}">
                 <div class="comment-icons-container">
                     <p class="comment-author">{{ $comment->author->name }}</p>
                     <div>
-                        <i class="toggle-eye fa-solid fa-eye show-icon" id="show_{{ $comment->comment_id }}" onclick="toggleCommentVisibility('{{ $comment->comment_id }}', 'show')" ></i>
-                        <i class="toggle-eye fa-solid fa-eye-slash hidden-icon" id="hidden_{{ $comment->comment_id }}" onclick="toggleCommentVisibility('{{ $comment->comment_id }}', 'hide')" style="display: none;"></i>
+                        <i class="toggle-eye fa-solid fa-eye show-icon" id="show_{{ $comment->comment_id }}" onclick="toggleCommentVisibility('{{ $comment->comment_id }}', 'show', 'private')" ></i>
+                        <i class="toggle-eye fa-solid fa-eye-slash hidden-icon" id="hidden_{{ $comment->comment_id }}" onclick="toggleCommentVisibility('{{ $comment->comment_id }}', 'hide', 'public')" style="display: none;"></i>
                         @if(auth()->check())
                             <i class="fa-solid fa-flag" onclick="showReportPopUp()"></i>
                             @if(auth()->user()->user_id === $comment->author->user_id)
@@ -113,9 +116,8 @@
                 </div>
                 <p class="comment-text">{{ $comment->text }}</p>
             </div>
-        @empty
-            <p>No private comments yet.</p>
-        @endforelse
+        @endforeach
+        </div>
     @endif
 
     @if(auth()->check())
