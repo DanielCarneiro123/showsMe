@@ -286,6 +286,7 @@ input[type="number"]:invalid {
     'stats'
     'title'
     'hist';
+    padding-bottom:70px ;
 }
 
 .event-info-content .faturacao {
@@ -353,22 +354,22 @@ input[type="number"]:invalid {
 
 .event-info-content #hist-compras{
     display: grid;
-    grid-template-areas: 
-    'total'
-    'compras';
     grid-area: hist;
-
+    grid-template-columns: repeat(auto-fill, minmax(0, 240px));
+    column-gap: 30px;
+    justify-content: center;
 }
+
 .event-info-content #event-charts{
     display: grid;
     grid-area: stats;
     grid-template-areas: 
-    'div_all_tickets_chart .'
+    'div_all_tickets_chart div_myPieChart'
     'div_dif_tickets_chart div_myPieChart'
     'perc_sold_tickets_charts perc_sold_tickets_charts'
     ;
     grid-template-columns: 65% 35%;
-    grid-template-rows: 250px 250px 250px;
+    grid-template-rows: 250px 250px auto;
     row-gap: 50px;
     margin: 40px;
 }
@@ -386,11 +387,19 @@ input[type="number"]:invalid {
 .event-info-content #event-charts .div_myPieChart{
     grid-area: div_myPieChart;
 }
+
+.event-info-content #event-charts .div_myPieChart canvas {
+        width: 250px;
+        height: 250px;
+}
+
 .event-info-content #event-charts .perc_sold_tickets_charts{
     display: grid;
     grid-area: perc_sold_tickets_charts;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); 
-    grid-gap: 10px; 
+    grid-template-columns: repeat(auto-fill, minmax(0, 250px));
+    grid-auto-rows: minmax(0, 250px); 
+    justify-content: center; 
+    grid-gap: 10px;
 }
 .event-info-content #event-charts .perc_sold_tickets_charts canvas {
     width: 100%;
@@ -404,4 +413,16 @@ input[type="number"]:invalid {
     color: #593196;
     font-weight: bold; 
     font-size: 2.2em;
+}
+
+.event-info-content .hist-compras-cards {
+    display: grid;
+    margin: 10px;
+    padding: 10px;
+    background-color: #a991d4;
+    color: #ffffff;
+    border-radius: 10px; 
+    box-shadow: 0 6px 10px #806da3;
+    width: 240px;
+    height: 170px;
 }
