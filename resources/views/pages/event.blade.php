@@ -90,52 +90,60 @@
         <span class="star-icon">★</span>
         <button class="btn btn-primary" onclick="showEditRatingForm()">Edit</button>
     </p>
+    <div class="centered-form">
+    <form id="editRatingForm" class="rate" method="POST" action="{{ route('editRating', ['eventId' => $event->event_id]) }}" style="display: none;">
+        @csrf
+        
+        
+        <input type="radio" name="rate" id="star5" value="5" {{ $userRating->rating == 5 ? 'checked' : '' }}>
+        <label for="star5" >5 stars</label>
+   
     
-    <form id="editRatingForm" class="text-center" method="POST" action="{{ route('editRating', ['eventId' => $event->event_id]) }}" style="display: none;">
-        @csrf
-
+        <input type="radio" name="rate" id="star4" value="4" {{ $userRating->rating == 4 ? 'checked' : '' }}>
+        <label for="star4" >4 stars</label>
+   
+        <input type="radio" name="rate" id="star3" value="3" {{ $userRating->rating == 3 ? 'checked' : '' }}>
+        <label for="star3" >3 stars</label>
+    
+        <input type="radio" name="rate" id="star2" value="2" {{ $userRating->rating == 2 ? 'checked' : '' }}>
+        <label for="star2" >2 stars</label>    
       
-        <label>
-            <input type="radio" name="rating" value="1" {{ $userRating->rating == 1 ? 'checked' : '' }}> 1
-        </label>
-        <label>
-            <input type="radio" name="rating" value="2" {{ $userRating->rating == 2 ? 'checked' : '' }}> 2
-        </label>
-        <label>
-            <input type="radio" name="rating" value="3" {{ $userRating->rating == 3 ? 'checked' : '' }}> 3
-        </label>
-        <label>
-            <input type="radio" name="rating" value="4" {{ $userRating->rating == 1 ? 'checked' : '' }}> 4
-        </label>
-        <label>
-            <input type="radio" name="rating" value="5" {{ $userRating->rating == 1 ? 'checked' : '' }}> 5
-        </label>
-
+        <input type="radio" name="rate" id="star1" value="1" {{ $userRating->rating == 1 ? 'checked' : '' }}>
+        <label for="star1" >1 star</label>
+   
+        <br>
+        <div class="text-center">
         <button type="submit" class="btn btn-primary">Update</button>
+        </div>
     </form>
-        
+</div>
     @else
-    <p class="text-center"> Give us your Rating: </p>
-    <form id="ratingForm" class="text-center" method="POST" action="{{ route('submitRating', ['eventId' => $event->event_id]) }}">
-        @csrf
-        <label>
-            <input type="radio" name="rating" value="1"> 1
-        </label>
-        <label>
-            <input type="radio" name="rating" value="2"> 2
-        </label>
-        <label>
-            <input type="radio" name="rating" value="3"> 3
-        </label>
-        <label>
-            <input type="radio" name="rating" value="4"> 4
-        </label>
-        <label>
-            <input type="radio" name="rating" value="5"> 5
-        </label>
-        
-        <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
+    <p class="text-center rate"> Give us your Rating: </p>
+    <div class="centered-form">
+    <form id="ratingForm" class="rate" method="POST" action="{{ route('submitRating', ['eventId' => $event->event_id]) }}">
+    @csrf
+    
+        <input type="radio" name="rate" id="star5" value="5">
+        <label for="star5" >5 stars</label>
+   
+    
+        <input type="radio" name="rate" id="star4" value="4">
+        <label for="star4" >4 stars</label>
+   
+        <input type="radio" name="rate" id="star3" value="3">
+        <label for="star3" >3 stars</label>
+    
+        <input type="radio" name="rate" id="star2" value="2">
+        <label for="star2" >2 stars</label>    
+      
+        <input type="radio" name="rate" id="star1" value="1">
+        <label for="star1" >1 star</label>
+   
+    <div class="text-center">
+    <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+</form>
+</div>
     @endif
 @endif
 

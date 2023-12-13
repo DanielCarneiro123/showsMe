@@ -10,14 +10,14 @@ class RatingController extends Controller
     {
       
         $request->validate([
-            'rating' => 'required|integer|between:1,5',
+            'rate' => 'required|integer|between:1,5',
         ]);
 
       
         $rating = new Rating();
         $rating->event_id = $eventId;
         $rating->author_id = auth()->user()->user_id;
-        $rating->rating = $request->input('rating');
+        $rating->rating = $request->input('rate');
         $rating->save();
 
       
@@ -34,7 +34,7 @@ class RatingController extends Controller
 
         if ($userRating) {
             $userRating->update([
-                'rating' => $request->input('rating'),
+                'rating' => $request->input('rate'),
             ]);
         }
 
