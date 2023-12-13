@@ -23,26 +23,32 @@ class StripeController extends Controller
     }
 
 
-public function processPayment(Request $request, $eventId)
-    {
-        try {
-            // ... (Your existing code for finding the event and setting up Stripe)
-    
-            $quantities = $request->input('quantity', []);
-    
-            if (empty(array_filter($quantities, function ($quantity) {
-                return $quantity > 0;
-            }))) {
-                // Handle the case where no tickets are selected
-                return redirect()->route('view-event', ['id' => $eventId])->with('error', 'Select at least one ticket type.');
-            }
-    
-            $lineItems = [];
-    
-            foreach ($quantities as $ticketTypeId => $quantity) {
-                if ($quantity > 0) {
-                    $ticketType = TicketType::findOrFail($ticketTypeId);
-    
+    public function processPayment(Request $request, $eventId){
+        if (Auth::guest()) {
+            $user = EventController.createTemporaryAccount($request);
+        } else {
+            $user = Auth::user();
+        }
+        $quantities = $request->input('quantity', []);
+
+        if (empty(array_filter($quantities, function ($quantity) {
+            return $quantity > 0;
+        }))) {
+            return redirect()->route('view-event', ['id' => $eventId])->with('error', 'Select at least one ticket type.');
+        }
+
+        $lineItems = [];
+
+        foreach ($quantities as $ticketTypeId => $quantity) {
+            if ($quantity > 0) {
+                $ticketType = TicketType::findOrFail($ticketTypeId);
+
+                // Determine o mínimo entre stock e person_buying_limit
+                $minQuantity = min($ticketType->stock, $ticketType->person_buying_limit);
+
+                // Verifique se a quantidade é um número inteiro positivo e menor que o mínimo
+                if (is_numeric($quantity) && $quantity == (int) $quantity && $quantity > 0 && $quantity <= $minQuantity) {
+
                     // Add the ticket type to line_items
                     $lineItems[] = [
                         "quantity" => $quantity,
@@ -54,27 +60,25 @@ public function processPayment(Request $request, $eventId)
                             ],
                         ],
                     ];
+                }   
+                else {
+                    return redirect()->route('view-event', ['id' => $eventId])->with('error', 'Invalid quantity for ticket type');
                 }
             }
-
-
-            session(['purchase_event_id' => $eventId]);
-            session(['purchase_quantities' => $quantities]);
-            Stripe::setApiKey(env('STRIPE_SECRET'));
-
-            $checkoutSession = Session::create([
-                "mode" => "payment",
-                "success_url" => url('/purchase-tickets/'),
-                "cancel_url" => url('/view-event/' . $eventId),
-                "line_items" => $lineItems,
-            ]);
-    
-            return redirect()->to($checkoutSession->url);
-    
-        } catch (AuthorizationException $e) {
-            return redirect()->route('login')->with('error', 'You must be logged in to purchase tickets.');
-        } catch (ModelNotFoundException $e) {
-            return redirect()->route('view-event', ['id' => $eventId])->with('error', 'Invalid ticket type.');
         }
-    }
-} 
+
+        session(['purchase_user' => $user]);
+        session(['purchase_event_id' => $eventId]);
+        session(['purchase_quantities' => $quantities]);
+        Stripe::setApiKey(env('STRIPE_SECRET'));
+
+        $checkoutSession = Session::create([
+            "mode" => "payment",
+            "success_url" => url('/purchase-tickets/'),
+            "cancel_url" => url('/view-event/' . $eventId),
+            "line_items" => $lineItems,
+        ]);
+
+        return redirect()->to($checkoutSession->url);
+    } 
+}

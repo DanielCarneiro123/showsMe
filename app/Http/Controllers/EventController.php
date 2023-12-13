@@ -168,76 +168,51 @@ class EventController extends Controller
 
 
     public function purchaseTickets(){
+        $user = session('purchase_user');
+        session()->forget('purchase_user');
         $quantities = session('purchase_quantities');
         session()->forget('purchase_quantities');
         $eventId = session('purchase_event_id');
         session()->forget('purchase_event_id');
 
 
-        try {
-            $event = Event::findOrFail($eventId);
-
-            /*
-            // If the user is not logged in, create a temporary account
-            if (Auth::guest()) {
-                $user = $this->createTemporaryAccount($request);
-            } else {
-                $user = Auth::user();
-            }*/ 
-
-            $this->authorize('purchaseTickets', $event);
+        $event = Event::findOrFail($eventId);
 
 
-            if (empty(array_filter($quantities, function ($quantity) {
-                return $quantity > 0;
-            }))) {
-                return redirect()->route('view-event', ['id' => $eventId])->with('error', 'Select at least one ticket type.');
-            }
+        $this->authorize('purchaseTickets', $event);
 
-            $buyer = Auth::user();
 
-            $order = new TicketOrder();
-            $order->timestamp = now();
-            $order->promo_code = null;
-            $order->buyer_id = $buyer->user_id;
-            $order->save();
+        if (empty(array_filter($quantities, function ($quantity) {
+            return $quantity > 0;
+        }))) {
+            return redirect()->route('view-event', ['id' => $eventId])->with('error', 'Select at least one ticket type.');
+        }
 
-            foreach ($quantities as $ticketTypeId => $quantity) {
-                if ($quantity > 0) {
-                    // Obtenha o TicketType associado ao ticketTypeId
-                    $ticketType = TicketType::findOrFail($ticketTypeId);
+        //$buyer = Auth::user();
 
-                    // Determine o mínimo entre stock e person_buying_limit
-                    $minQuantity = min($ticketType->stock, $ticketType->person_buying_limit);
+        $order = new TicketOrder();
+        $order->timestamp = now();
+        $order->promo_code = null;
+        $order->buyer_id = $user->user_id;
+        $order->save();
 
-                    // Verifique se a quantidade é um número inteiro positivo e menor que o mínimo
-                    if (is_numeric($quantity) && $quantity == (int) $quantity && $quantity > 0 && $quantity <= $minQuantity) {
-                        for ($i = 0; $i < $quantity; $i++) {
-                            $ticketInstance = new TicketInstance();
-                            $ticketInstance->ticket_type_id = $ticketTypeId;
-                            $ticketInstance->order_id = $order->order_id;
-                            $qrCodePath = $this->generateQRCodePath($ticketInstance);
-                            $ticketInstance->qr_code_path = $qrCodePath;
-                            $ticketInstance->save();
-                       // Mail::to($user->email)->send(new TicketPurchaseConfirmation($ticketInstance));
-                        }
-                    } else {
-                        return redirect()->route('view-event', ['id' => $eventId])->with('error', 'Invalid quantity for ticket type.');
-                    }
+        foreach ($quantities as $ticketTypeId => $quantity) {
+            if ($quantity > 0) {
+                $ticketType = TicketType::findOrFail($ticketTypeId);
+
+                for ($i = 0; $i < $quantity; $i++) {
+                    $ticketInstance = new TicketInstance();
+                    $ticketInstance->ticket_type_id = $ticketTypeId;
+                    $ticketInstance->order_id = $order->order_id;
+                    $qrCodePath = $this->generateQRCodePath($ticketInstance);
+                    $ticketInstance->qr_code_path = $qrCodePath;
+                    $ticketInstance->save();
+                    Mail::to($user->email)->send(new TicketPurchaseConfirmation($ticketInstance));
                 }
             }
+        }
 
-        // Logout apenas se o usuário estiver autenticado - if errado
-        /*if (Auth::check() && $user->temporary) {
-            Auth::logout();
-        }*/
-
-        return redirect()->route('my-tickets')->with('success', 'Tickets purchased successfully.');
-    } catch (AuthorizationException $e) {
-        return redirect()->route('login')->with('error', 'You must be logged in to purchase tickets.');
-    } catch (ModelNotFoundException $e) {
-        return redirect()->route('view-event', ['id' => $eventId])->with('error', 'Invalid ticket type.');
-    }
+    return redirect()->route('my-tickets')->with('success', 'Tickets purchased successfully.');
 }
 
 private function createTemporaryAccount(Request $request)
