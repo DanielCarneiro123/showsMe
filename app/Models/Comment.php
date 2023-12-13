@@ -73,5 +73,11 @@ class Comment extends Model
         return $this->reports()->where('author_id', $userId)->exists();
     }
 
+    public function notifications()
+{
+    return $this->hasMany(Notification::class, 'comment_id');
+}
+
+
 
 }

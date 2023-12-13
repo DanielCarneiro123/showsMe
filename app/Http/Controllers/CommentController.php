@@ -53,7 +53,35 @@ class CommentController extends Controller
         
         return response()->json(['message' => $comment]);
     }
-    
+
+    public function deleteComment(Request $request)
+{
+    $commentID = $request->input('comment_id');
+
+    $comment = Comment::find($commentID);
+
+    if ($comment) {
+        // Delete reports associated with the comment
+        $comment->reports()->each(function ($report) {
+            // Delete notifications associated with the report
+            $report->notifications()->delete();
+
+            // Delete the report
+            $report->delete();
+        });
+
+        // Delete notifications associated with the comment
+        $comment->notifications()->delete();
+
+        // Perform the deletion logic for the comment
+        $comment->delete();
+
+        return response()->json(['message' => $comment]);
+    }
+
+    return response()->json(['message' => 'Comment not found'], 404);
+}
+
 
     
     

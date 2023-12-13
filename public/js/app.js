@@ -497,6 +497,34 @@ function hideEditCommentModal() {
  
 }
 
+function deleteComment(){
+  const comment = event.target.closest(".comment");
+
+  const commentID = comment.getAttribute('data-id');
+
+  event.preventDefault();
+  sendAjaxRequest('post', '/delete-comment',{comment_id: commentID} , deleteCommentHandler);
+}
+function deleteCommentHandler() {
+  const response = JSON.parse(this.responseText);
+  const message = response.message;
+
+  if (message && message.comment_id) {
+    const commentId = message.comment_id;
+    
+    
+    const commentElement = document.querySelector(`.comment[data-id="${commentId}"]`);
+    
+    if (commentElement) {
+      commentElement.remove();
+    } else {
+      console.error('Comment element not found in HTML:', commentId);
+    }
+  } else {
+    console.error('Invalid response structure or missing comment_id.');
+  }
+}
+
 function editComment(){
   const comment = event.target.closest(".comment");
   
@@ -576,6 +604,7 @@ function addNewCommentHandler() {
 
       const iconsDiv = document.createElement('div');
 
+      // Edit icon
       const editIcon = document.createElement('i');
       editIcon.className = 'fa-solid fa-pen-to-square';
       editIcon.addEventListener('click', function () {
@@ -592,6 +621,16 @@ function addNewCommentHandler() {
         }
       });
       iconsDiv.appendChild(editIcon);
+
+      // Trash can icon
+      const deleteIcon = document.createElement('i');
+      deleteIcon.className = 'fa-solid fa-trash-can';
+      deleteIcon.addEventListener('click', function () {
+        const commentID = commentElement.getAttribute('data-id');
+        event.preventDefault();
+        sendAjaxRequest('post', '/delete-comment', { comment_id: commentID }, deleteCommentHandler);
+      });
+      iconsDiv.appendChild(deleteIcon);
 
       commentIconsContainer.appendChild(commentAuthor);
       commentIconsContainer.appendChild(iconsDiv);
@@ -657,6 +696,7 @@ function addNewCommentHandler() {
     }
   }
 }
+
 
 
 function showEditRatingForm() {

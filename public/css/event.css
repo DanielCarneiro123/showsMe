@@ -238,8 +238,9 @@ input[type="number"]:invalid {
     gap: 10px;
 }
 
-.fa-flag,.fa-pen-to-square:hover{
+.fa-flag:hover,.fa-pen-to-square:hover, .fa-trash-can:hover{
     cursor: pointer;
+    transform: scale(1.1);
 }
 
 .pop-up-report {

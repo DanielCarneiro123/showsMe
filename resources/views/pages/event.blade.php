@@ -155,6 +155,7 @@
             @endif
             @if(auth()->user()->user_id === $comment->author->user_id)
             <i class="fa-solid fa-pen-to-square" onclick="showEditCommentModal()"></i>
+            <i class="fa-solid fa-trash-can" onclick="deleteComment()"></i>
             @endif
             @endif
             </div>
