@@ -20,36 +20,37 @@
     </form>
     @endif
     @endif
-
-    <!-- Slideshow container -->
-    <div class="slideshow-container">
+    
+<!-- Slideshow container -->
+<div class="slideshow-container">
         @php $index = 1; @endphp
 
         @foreach ($event->images as $image)
-            <div class="mySlides faded">
-                <div class="numbertext">{{ $index }} / {{ count($event->images) }}</div>
-                <img src="{{ \App\Http\Controllers\FileController::get('event_image', $event->event_id) }}" alt="Event Image">
-            </div>
-            @php $index++; @endphp
+        <div class="mySlides faded">
+            <div class="numbertext">{{ $index }} / {{ count($event->images) }}</div>
+            <img src="{{ \App\Http\Controllers\FileController::get('event_image', $event->event_id) }}"
+                alt="Event Image">
+        </div>
+        @php $index++; @endphp
         @endforeach
-            <div class="mySlides faded">
-                <div class="numbertext">{{ $index }} / {{ count($event->images) }}</div>
-                <img src="{{ asset('../media/event_image.jpg') }}" alt="Event Image">
-            </div>
+        <div class="mySlides faded">
+            <div class="numbertext">{{ $index }} / {{ count($event->images) }}</div>
+            <img src="{{ asset('../media/event_image.jpg') }}" alt="Event Image">
+        </div>
         <!-- Next and previous buttons -->
         <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
         <a class="next" onclick="plusSlides(1)">&#10095;</a>
-    </div>
+   </div>
     <br>
 
 
 
     <div class="text">
-        <h1 id ="name" >{{ $event->name }}</h1>
-        <p id ="description" >{{ $event->description }}</p>
+        <h1 id="name">{{ $event->name }}</h1>
+        <p id="description">{{ $event->description }}</p>
         <section class="ratings-event">
-        <p id="average-rating"> Rating: {{ $event->averageRating }} <span class="star-icon">★</span></p>
-       
+            <p id="average-rating"> Rating: {{ $event->averageRating }} <span class="star-icon">★</span></p>
+
         </section>
         <h1 id="name">{{ $event->name }}</h1>
         <p id="description">{{ $event->description }}</p>
@@ -57,7 +58,6 @@
     <!-- <img src="{{ $event->event_image }}" alt="Event Image" class="event-image"> -->
     <section class="event-info">
         <p id="location">Location: {{ $event->location }}</p>
-        
     </section>
 </section>
 
@@ -316,27 +316,28 @@
 
 
 
+
 @if(auth()->user() && auth()->user()->is_admin)
 <button class="btn btn-success {{ $event->private ? 'active' : '' }}" id="activate-button"
     data-id="{{ $event->event_id }}">{{ $event->private ? 'Activate Event' : 'Deactivate Event' }}</button>
 @endif
 
-    <!-- Edit Event form (displayed only for the event creator) -->
-    @can('updateEvent', $event)
-        <section id="edit-event" class="event-section">
-            <h2>Edit <span>Event</span></h2>
-            <article>
-                <form method="POST" action="/file/upload" enctype="multipart/form-data">
-                    @csrf
-                    <input name="file" type="file" required>
-                    <input name="id" type="number" value="{{ $event->event_id }}" hidden>
-                    <input name="type" type="text" value="event_image" hidden>
-                    <button type="submit">Submit</button>
-                </form>
+<!-- Edit Event form (displayed only for the event creator) -->
+@can('updateEvent', $event)
+<section id="edit-event" class="event-section">
+    <h2>Edit <span>Event</span></h2>
+    <article>
+        <form method="POST" action="/file/upload" enctype="multipart/form-data">
+            @csrf
+            <input name="file" type="file" required>
+            <input name="id" type="number" value="{{ $event->event_id }}" hidden>
+            <input name="type" type="text" value="event_image" hidden>
+            <button type="submit">Submit</button>
+        </form>
 
-                @csrf
-                <label for="edit_name">Event Name:</label>
-                <input type="text" id="edit_name" name="edit_name" value="{{ $event->name }}" required>
+        @csrf
+        <label for="edit_name">Event Name:</label>
+        <input type="text" id="edit_name" name="edit_name" value="{{ $event->name }}" required>
 
         <label for="edit_description">Event Description:</label>
         <textarea id="edit_description" name="edit_description">{{ $event->description }}</textarea>
@@ -392,52 +393,62 @@
     </article>
 </section>
 
-<section class="event-section" id="event-info">
-    <h2>Histórico de Compras</h2>
-    @php $totalSoldTickets = 0; $purchaseNumber = 1; @endphp
-    @foreach ($soldTickets->groupBy('order_id') as $orderTickets)
-    @php
-    $totalSoldTickets += $orderTickets->count();
-    @endphp
-    @endforeach
-    <strong>Total de Bilhetes Vendidos:</strong> {{ $totalSoldTickets }}
+<section class="event-section event-info-content" id="event-info">
+    <h2 id="hist">Histórico de Compras</h2>
 
-    @foreach ($soldTickets->groupBy('order_id') as $orderTickets)
-    @php
-    $order = $orderTickets->first()->order;
-    $buyer = $order->buyer;
-    @endphp
-    <div class="card text-white bg-secondary mb-3" style="max-width: 20rem;">
-        <div class="card-header"><strong>Compra #{{ $purchaseNumber }}</strong></div>
-        <div class="card-body compra-info">
-            <div class="compra-data"><strong>Data:</strong> {{ $order->timestamp }}</div>
-            <div class="compra-quanti"><strong>Total:</strong> {{ $orderTickets->count() }}</div>
-            <div class="compra-tipos"><strong>Tipos:</strong>
-                <ul>
-                    @foreach ($orderTickets->groupBy('ticket_type_id') as $ticketType => $typeTickets)
-                    @php
-                    $ticketTypeName = $typeTickets->first()->ticketType->name;
-                    $quantity = $typeTickets->count();
-                    @endphp
-                    <li class="compra-tipo-nome"> {{ $ticketTypeName }} {{ $quantity }}</li>
-                    @endforeach
-                </ul>
+    <section id="hist-compras">
+        @php
+        $totalSoldTickets = 0;
+        $purchaseNumber = 1;
+        @endphp
+
+        @foreach ($soldTickets->groupBy('order_id') as $orderTickets)
+        @php
+        $order = $orderTickets->first()->order;
+        @endphp
+
+        <div class="hist-compras-cards">
+            <div class="compra-header">Compra #{{ $purchaseNumber }}</div>
+            <div class="compra-info">
+                <div class="compra-data"><strong>Data:</strong> {{ $order->timestamp }}</div>
+                <div class="compra-quanti"><strong>Total:</strong> {{ $orderTickets->count() }}</div>
+                <div class="compra-tipos"><strong>Tipos:</strong>
+                    <ul>
+                        @foreach ($orderTickets->groupBy('ticket_type_id') as $ticketType => $typeTickets)
+                        @php
+                        $ticketTypeName = $typeTickets->first()->ticketType->name;
+                        $quantity = $typeTickets->count();
+                        @endphp
+                        <li class="compra-tipo-nome"> {{ $ticketTypeName }} {{ $quantity }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+                <div class="compra-valor"><strong>Valor Total:</strong> {{ $order->totalPurchaseAmount }}€</div>
             </div>
         </div>
-    </div>
-    @php $purchaseNumber++; @endphp
-    @endforeach
 
-    <div id="event-charts" data-id="{{ $event->event_id }}">
-        <div>
+        @php
+        $totalSoldTickets += $orderTickets->count();
+        $purchaseNumber++;
+        @endphp
+        @endforeach
+
+
+
+    </section>
+
+    <h2 id="title-charts">Stats</h2>
+
+    <section id="event-charts" data-id="{{ $event->event_id }}">
+        <div class="div_dif_tickets_chart">
             <canvas id="dif_tickets_chart"></canvas>
         </div>
 
-        <div>
+        <div class="div_all_tickets_chart">
             <canvas id="all_tickets_chart"></canvas>
         </div>
 
-        <div>
+        <div class="div_myPieChart">
             <canvas id="myPieChart"></canvas>
         </div>
 
@@ -447,10 +458,16 @@
             @endforeach
         </div>
 
-    </div>
-</section>
+    </section>
 
-<p>Faturação: {{ $event->calculateRevenue() }}€</p>
+    <div class="faturacao">
+        <p id="revenue">Revenue</p>
+        <p id="val_revenue"> {{ $event->calculateRevenue() }}€</p>
+        <p id="tickets">Tickets</p>
+        <p id="total_tickets"> {{ $totalSoldTickets }} </p>
+    </div>
+
+</section>
 
 
 @endcan

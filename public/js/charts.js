@@ -58,6 +58,8 @@ if (dif_tickets_chart) {
                         datasets: dif_tickets_chartChartData.datasets
                     },
                     options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
                         scales: {
                             x: {
                                 type: 'category',
@@ -100,6 +102,8 @@ if (all_tickets_chart) {
                         datasets: all_tickets_ChartData.datasets
                     },
                     options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
                         scales: {
                             x: {
                                 type: 'category',
@@ -166,7 +170,7 @@ function per_sold_ctx_handler() {
             data: per_sold_pieChartData.data,
             options: {
                 responsive: false,
-                maintainAspectRatio: false,
+                maintainAspectRatio: true,
                 plugins: chartOptions.plugins,
             },
         });

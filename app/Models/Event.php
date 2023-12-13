@@ -77,52 +77,6 @@ class Event extends Model
             ->get();
     }
 
-
-    /*public function tickets_chart()
-    {
-        $ticketInstances = TicketInstance::whereIn('ticket_type_id', $this->ticketTypes->pluck('ticket_type_id'))->get();
-    
-        // Agrupar os dados por data
-        $dataByDate = $ticketInstances->groupBy('purchase_date');
-    
-        // Calcular as datas desde o início do evento até o momento atual
-        $eventStart = $this->start_timestamp;
-        $eventEnd = now(); // ou use a data de término do evento se disponível
-    
-        // Calcular a diferença em dias
-        $daysDifference = $eventEnd->diffInDays($eventStart);
-    
-        // Gerar o intervalo de datas
-        $dateRange = [];
-        for ($i = 0; $i <= $daysDifference; $i++) {
-            $dateRange[] = $eventStart->addDays($i)->format('Y-m-d');
-        }
-    
-        // Preparar dados para o gráfico
-        $labels = $dateRange; // Dates as labels
-        $datasets = [];
-    
-        foreach ($this->ticketTypes as $ticketType) {
-            $typeData = [];
-    
-            foreach ($dateRange as $date) {
-                $typeData[] = $dataByDate->has($date) ? $dataByDate[$date]->where('ticket_type_id', $ticketType->ticket_type_id)->count() : 0;
-            }
-    
-            $datasets[] = [
-                'label' => $ticketType->name,
-                'data' => $typeData,
-                'borderWidth' => 1,
-            ];
-        }
-    
-        return [
-            'labels' => $labels,
-            'datasets' => $datasets,
-        ];
-    }
-    */
-
     public function tickets_chart()
     {
         // Obter todas as instâncias de ingressos relacionadas aos tipos de ingressos do evento
@@ -139,7 +93,7 @@ class Event extends Model
         $datasets = [];
         
         // Paleta de cores para os gráficos de linha
-        $colorPalette = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf', '#FF5733', '#33FF57', '#5733FF', '#FF33ED', '#FF3371'];
+        $colorPalette = [ '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf', '#FF5733', '#33FF57', '#5733FF', '#FF33ED', '#FF3371'];
     
         foreach ($this->ticketTypes as $key => $ticketType) {
             $typeData = $dataByDate->map(function ($items) use ($ticketType) {
@@ -215,7 +169,7 @@ class Event extends Model
         $totalTickets = $ticketInstances->count();
     
         // Definir a paleta de cores
-        $colorPalette = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf', '#FF5733', '#33FF57', '#5733FF', '#FF33ED', '#FF3371'];
+        $colorPalette = ['#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf', '#FF5733', '#33FF57', '#5733FF', '#FF33ED', '#FF3371'];
     
         // Se houver mais tipos de bilhetes do que cores na paleta, gere cores adicionais
         while (count($this->ticketTypes) > count($colorPalette)) {
@@ -269,14 +223,14 @@ class Event extends Model
     
         // Preparar dados para o gráfico
 
-        $colorPalette = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf', '#FF5733', '#33FF57', '#5733FF', '#FF33ED', '#FF3371'];
+        $colorPalette = [ '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf', '#FF5733', '#33FF57', '#5733FF', '#FF33ED', '#FF3371'];
 
 
 
         $pieChartData = [
             'label' => $ticketType->name,
             'data' => [
-                'labels' => [$ticketType->name, 'Remaining'],
+                'labels' => [$ticketType->name],
                 'datasets' => [
                     [
                         'data' => [$percentageFilled, 100 - $percentageFilled],
@@ -296,54 +250,6 @@ class Event extends Model
         return $pieChartData;
     }
     
-
-/*
-    public function tickets_pie_charts()
-    {
-        $pieChartsData = [];
-
-        foreach ($this->ticketTypes as $key => $ticketType) {
-            // Recuperar instâncias de bilhetes para o tipo atual
-            $typeTicketInstances = TicketInstance::where('ticket_type_id', $ticketType->ticket_type_id)->get();
-
-            // Contar o número de bilhetes vendidos e o estoque
-            $ticketsSold = $typeTicketInstances->count();
-            $stock = $ticketType->stock;
-
-            // Calcular a porcentagem preenchida
-            $percentageFilled = ($ticketsSold * 100) / ($stock + $ticketsSold);
-
-            // Preparar dados para o gráfico
-            $pieChartsData[] = [
-                'key' => $key,
-                'label' => $ticketType->name,
-                'data' => [
-                    'labels' => [$ticketType->name, 'Remaining'],
-                    'datasets' => [
-                        [
-                            'data' => [$percentageFilled, 100 - $percentageFilled],
-                            'backgroundColor' => [
-                                '#a991d4', // Color for percentage of tickets sold
-                                '#ffffff', // Color for percentage of stock remaining (white)
-                            ],
-                            'borderColor' => '#a991d4', // Border color for the chart
-                            'borderWidth' => 1, // Border width for the chart
-                            'hoverOffset' => 4,
-                        ],
-                    ],
-                ],
-                'options' => [
-                    'maintainAspectRatio' => false,
-                    'width' => 200, // Defina o tamanho desejado
-                    'height' => 200, // Defina o tamanho desejado
-                ],
-            ];
-
-        }
-
-        return $pieChartsData;
-    }
-*/
     public function calculateRevenue()
     {
         $totalRevenue = 0;

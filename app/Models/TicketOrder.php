@@ -57,4 +57,16 @@ class TicketOrder extends Model
     {
         return $this->belongsTo(User::class, 'buyer_id', 'user_id');
     }
+
+    public function getTotalPurchaseAmountAttribute()
+    {
+        return $this->ticketInstances->sum(function ($ticketInstance) {
+            return $ticketInstance->ticketType->price;
+        });
+    }
+
+    public function ticketInstances()
+    {
+        return $this->hasMany(TicketInstance::class, 'order_id', 'order_id');
+    }
 }
