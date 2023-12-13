@@ -37,6 +37,7 @@ Route::controller(CommentController::class)->group(function (){
     Route::post('/edit-comment', [CommentController::class, 'editComment'])->name('editComment');
 Route::post('/submit-comment', [CommentController::class, 'submitComment'])->name('submitComment');
 Route::post('/delete-comment', [CommentController::class, 'deleteComment'])->name('deleteComment');
+Route::post('/like-comment', [CommentController::class, 'likeComment'])->name('likeComment');
 });
 
 

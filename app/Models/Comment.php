@@ -20,6 +20,7 @@ class Comment extends Model
         'media',
         'event_id',
         'author_id',
+        'likes',
     ];
 
     /**
@@ -77,6 +78,14 @@ class Comment extends Model
 {
     return $this->hasMany(Notification::class, 'comment_id');
 }
+
+
+
+public function likes()
+    {
+        return $this->hasMany(UserLikes::class, 'comment_id');
+    }
+
 
 
 

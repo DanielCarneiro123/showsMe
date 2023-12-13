@@ -156,6 +156,7 @@
             @if(auth()->user()->user_id === $comment->author->user_id)
             <i class="fa-solid fa-pen-to-square" onclick="showEditCommentModal()"></i>
             <i class="fa-solid fa-trash-can" onclick="deleteComment()"></i>
+            
             @endif
             @endif
             </div>
@@ -163,7 +164,20 @@
         
        
         <p class="comment-text" id="commentText">{{ $comment->text }}</p>
+
+        <div class="comment-likes-section">
+            <p class="comment-likes">{{ $comment->likes }} 
+            @if(auth()->check() && auth()->user()->likes($comment->comment_id))
+                
+                    <i class="fas fa-thumbs-up fa-solid"></i>
+                @else
+                    <i class="far fa-thumbs-up fa-regular" onclick="likeComment()"></i>
+                @endif
+            </p>
+        </div>
+
         <form id="editCommentForm"  style="display: none;">
+
         <textarea id="editedCommentText" class="edit-comment-textbox" rows="3" required>{{ $comment->text }}</textarea>
             <button class="btn btn-primary" onclick="editComment()">Submit</button>
             <button type="button" class="btn btn-danger" onclick="hideEditCommentModal()">Cancel</button>

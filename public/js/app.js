@@ -497,6 +497,35 @@ function hideEditCommentModal() {
  
 }
 
+function likeComment(){
+  const comment = event.target.closest(".comment");
+
+  const commentID = comment.getAttribute('data-id');
+
+  event.preventDefault();
+  sendAjaxRequest('post', '/like-comment',{comment_id: commentID} , likeCommentHandler);
+}
+
+function likeCommentHandler() {
+  const response = JSON.parse(this.responseText);
+  const message = response.message;
+
+  if (message && message.comment_id) {
+    const commentId = message.comment_id;
+    
+    
+    const commentElement = document.querySelector(`.comment[data-id="${commentId}"]`);
+    
+    if (commentElement) {
+      console.log('WOrked');
+    } else {
+      console.error('Comment element not found in HTML:', commentId);
+    }
+  } else {
+    console.error('Invalid response structure or missing comment_id.');
+  }
+}
+
 function deleteComment(){
   const comment = event.target.closest(".comment");
 
@@ -583,6 +612,8 @@ function addNewComment(){
   sendAjaxRequest('post', '/submit-comment',{newCommentText: commentText,event_id: eventID} , addNewCommentHandler);
 
 };
+
+
 function addNewCommentHandler() {
   if (this.status === 200) {
     const response = JSON.parse(this.responseText);

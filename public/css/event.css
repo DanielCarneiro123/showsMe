@@ -238,9 +238,13 @@ input[type="number"]:invalid {
     gap: 10px;
 }
 
-.fa-flag:hover,.fa-pen-to-square:hover, .fa-trash-can:hover{
+.fa-flag:hover,.fa-pen-to-square:hover, .fa-trash-can:hover, .fa-thumbs-up:hover{
     cursor: pointer;
     transform: scale(1.1);
+}
+
+.comment-likes-section {
+    margin-left:1em;
 }
 
 .pop-up-report {

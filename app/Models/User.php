@@ -80,5 +80,14 @@ class User extends Authenticatable
     public function getProfileImage() {
         return FileController::get('profile', $this->id);
     }
-    
+
+    public function likes($comment_id): bool
+    {
+        return $this->newQuery()
+            ->from('userlikes')
+            ->where('user_id', $this->user_id)
+            ->where('comment_id', $comment_id)
+            ->exists();
+    }
+  
 }

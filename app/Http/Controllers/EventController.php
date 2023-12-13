@@ -28,8 +28,10 @@ class EventController extends Controller
     public function view($id): View
     { 
         $event = Event::findOrFail($id);
-
-        return view('pages.event', compact('event'));
+    
+       
+    
+        return view('pages.event', compact('event', 'comments'));
     }
 
     public function index(): View
