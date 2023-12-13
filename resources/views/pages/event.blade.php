@@ -169,7 +169,7 @@
             <p class="comment-likes">{{ $comment->likes }} 
             @if(auth()->check() && auth()->user()->likes($comment->comment_id))
                 
-                    <i class="fas fa-thumbs-up fa-solid"></i>
+                    <i class="fas fa-thumbs-up fa-solid" onclick="unlikeComment()"></i>
                 @else
                     <i class="far fa-thumbs-up fa-regular" onclick="likeComment()"></i>
                 @endif

@@ -56,6 +56,7 @@ class CommentController extends Controller
     }
 
     public function likeComment(Request $request){
+        
         $commentID = $request->input('comment_id');
 
         $comment = Comment::find($commentID);
@@ -70,6 +71,10 @@ class CommentController extends Controller
         }
         return response()->json(['message' => 'Comment not found'], 404);
     }
+
+   
+   
+
 
     public function deleteComment(Request $request)
 {

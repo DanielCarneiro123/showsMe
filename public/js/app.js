@@ -497,6 +497,10 @@ function hideEditCommentModal() {
  
 }
 
+
+
+
+
 function likeComment(){
   const comment = event.target.closest(".comment");
 
