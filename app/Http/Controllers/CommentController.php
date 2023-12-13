@@ -81,20 +81,16 @@ class CommentController extends Controller
          
         $userID = auth()->user()->user_id;
 
-        $userLikes = UserLikes::where('user_id', $userID)
-            ->where('comment_id', $commentID)
-            ->first();
+        $userLikes = UserLikes::where([
+            'user_id' => $userID,
+            'comment_id' => $commentID,
+        ])->delete();
 
-        if ($userLikes) {
-            $userLikes->delete();
-
+       
             return response()->json(['message' => $comment]);
-        }
-
-        return response()->json(['message' => 'Comment not found'], 404);
-
-        
     }
+
+       
    
 
 

@@ -507,7 +507,7 @@ function unlikeComment(){
 }
 
 function unlikeCommentHandler() {
-  console.log(this.message);
+  console.log(this.responseText);
   
 }
 

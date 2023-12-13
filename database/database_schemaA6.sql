@@ -322,6 +322,25 @@ AFTER INSERT ON userlikes
 FOR EACH ROW
 EXECUTE FUNCTION increment_comment_likes();
 
+CREATE OR REPLACE FUNCTION decrement_comment_likes()
+RETURNS TRIGGER AS $$
+BEGIN
+    UPDATE comment_
+    SET likes = likes - 1
+    WHERE comment_id = OLD.comment_id;
+
+    RETURN OLD;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Create a trigger to decrement likes after deletion in userlikes
+CREATE TRIGGER decrement_comment_likes_trigger
+AFTER DELETE ON userlikes
+FOR EACH ROW
+EXECUTE FUNCTION decrement_comment_likes();
+
+
+
 
 -- Inserts for Users
 INSERT INTO users (email, name, password, phone_number, promotor_code, is_admin, active, temporary) 
