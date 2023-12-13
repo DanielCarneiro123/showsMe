@@ -162,10 +162,10 @@ CREATE OR REPLACE FUNCTION event_search_update() RETURNS TRIGGER AS $$
 BEGIN
   IF TG_OP = 'INSERT' THEN
     NEW.tsvectors = (
-      setweight(to_tsvector('english', NEW.name), 'A') ||
-      setweight(to_tsvector('english', NEW.description), 'B') ||
-      setweight(to_tsvector('english', COALESCE((SELECT string_agg(Tag.name, ' ') FROM TagEvent JOIN Tag ON TagEvent.tag_id = Tag.tag_id WHERE TagEvent.event_id = NEW.event_id),' ')), 'C') ||
-      setweight(to_tsvector('english', NEW.location), 'D')
+      setweight(to_tsvector('simple', NEW.name), 'A') ||
+      setweight(to_tsvector('simple', NEW.description), 'B') ||
+      setweight(to_tsvector('simple', COALESCE((SELECT string_agg(Tag.name, ' ') FROM TagEvent JOIN Tag ON TagEvent.tag_id = Tag.tag_id WHERE TagEvent.event_id = NEW.event_id),' ')), 'C') ||
+      setweight(to_tsvector('simple', NEW.location), 'D')
     );
   END IF;
 
@@ -183,10 +183,10 @@ BEGIN
          NEW.location <> OLD.location) THEN
 
       NEW.tsvectors = (
-        setweight(to_tsvector('english', NEW.name), 'A') ||
-        setweight(to_tsvector('english', NEW.description), 'B') ||
-        setweight(to_tsvector('english', COALESCE((SELECT string_agg(Tag.name, ' ') FROM TagEvent JOIN Tag ON TagEvent.tag_id = Tag.tag_id WHERE TagEvent.event_id = NEW.event_id),' ')), 'C') ||
-        setweight(to_tsvector('english', NEW.location), 'D')
+        setweight(to_tsvector('simple', NEW.name), 'A') ||
+        setweight(to_tsvector('simple', NEW.description), 'B') ||
+        setweight(to_tsvector('simple', COALESCE((SELECT string_agg(Tag.name, ' ') FROM TagEvent JOIN Tag ON TagEvent.tag_id = Tag.tag_id WHERE TagEvent.event_id = NEW.event_id),' ')), 'C') ||
+        setweight(to_tsvector('simple', NEW.location), 'D')
       );
 
     END IF;

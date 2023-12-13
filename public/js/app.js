@@ -497,9 +497,19 @@ function hideEditCommentModal() {
  
 }
 
+function unlikeComment(){
+  const comment = event.target.closest(".comment");
+  console.log(comment);
+  const commentID = comment.getAttribute('data-id');
+  console.log(commentID);
+  event.preventDefault();
+  sendAjaxRequest('post', '/unlike-comment', {comment_id: commentID} , unlikeCommentHandler);
+}
 
-
-
+function unlikeCommentHandler() {
+  console.log(this.message);
+  
+}
 
 function likeComment(){
   const comment = event.target.closest(".comment");

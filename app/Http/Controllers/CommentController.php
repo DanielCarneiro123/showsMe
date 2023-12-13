@@ -72,7 +72,29 @@ class CommentController extends Controller
         return response()->json(['message' => 'Comment not found'], 404);
     }
 
-   
+    public function unlikeComment(Request $request){
+        
+        $commentID = $request->input('comment_id');
+         
+      
+         $comment = Comment::find($commentID);
+         
+        $userID = auth()->user()->user_id;
+
+        $userLikes = UserLikes::where('user_id', $userID)
+            ->where('comment_id', $commentID)
+            ->first();
+
+        if ($userLikes) {
+            $userLikes->delete();
+
+            return response()->json(['message' => $comment]);
+        }
+
+        return response()->json(['message' => 'Comment not found'], 404);
+
+        
+    }
    
 
 
