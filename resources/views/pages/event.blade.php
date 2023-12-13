@@ -20,14 +20,45 @@
     </form>
     @endif
     @endif
-    <img src="{{ asset('../media/event_image.jpg') }}" alt="Event Image">
+
+    <!-- Slideshow container -->
+    <div class="slideshow-container">
+        @php $index = 1; @endphp
+
+        @foreach ($event->images as $image)
+        <div class="mySlides faded">
+            <div class="numbertext">{{ $index }} / {{ count($event->images) }}</div>
+            <img src="{{ \App\Http\Controllers\FileController::get('event_image', $event->event_id) }}"
+                alt="Event Image">
+        </div>
+        @php $index++; @endphp
+        @endforeach
+        <div class="mySlides faded">
+            <div class="numbertext">{{ $index }} / {{ count($event->images) }}</div>
+            <img src="{{ asset('../media/event_image.jpg') }}" alt="Event Image">
+        </div>
+        <!-- Next and previous buttons -->
+        <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+        <a class="next" onclick="plusSlides(1)">&#10095;</a>
+    </div>
+    <br>
+
+
+
     <div class="text">
+        <h1 id ="name" >{{ $event->name }}</h1>
+        <p id ="description" >{{ $event->description }}</p>
+        <section class="ratings-event">
+        <p id="average-rating"> Rating: {{ $event->averageRating }} <span class="star-icon">★</span></p>
+       
+        </section>
         <h1 id="name">{{ $event->name }}</h1>
         <p id="description">{{ $event->description }}</p>
     </div>
     <!-- <img src="{{ $event->event_image }}" alt="Event Image" class="event-image"> -->
     <section class="event-info">
         <p id="location">Location: {{ $event->location }}</p>
+        
     </section>
 </section>
 
@@ -49,6 +80,140 @@
     <label class="btn btn-outline-primary" for="createTicketType">Create Ticket Type</label>
     @endcan
 </div>
+
+<section id="event-info" class="event-section">
+
+ 
+@if(auth()->user())
+    @if($userRating = $event->userRating())
+    <p id="yourRatingP" class="text-center">
+        Your Rating: {{ $userRating->rating }}
+        <span class="star-icon">★</span>
+        <button class="btn btn-primary" onclick="showEditRatingForm()">Edit</button>
+    </p>
+    
+    <form id="editRatingForm" class="text-center" method="POST" action="{{ route('editRating', ['eventId' => $event->event_id]) }}" style="display: none;">
+        @csrf
+
+      
+        <label>
+            <input type="radio" name="rating" value="1" {{ $userRating->rating == 1 ? 'checked' : '' }}> 1
+        </label>
+        <label>
+            <input type="radio" name="rating" value="2" {{ $userRating->rating == 2 ? 'checked' : '' }}> 2
+        </label>
+        <label>
+            <input type="radio" name="rating" value="3" {{ $userRating->rating == 3 ? 'checked' : '' }}> 3
+        </label>
+        <label>
+            <input type="radio" name="rating" value="4" {{ $userRating->rating == 1 ? 'checked' : '' }}> 4
+        </label>
+        <label>
+            <input type="radio" name="rating" value="5" {{ $userRating->rating == 1 ? 'checked' : '' }}> 5
+        </label>
+
+        <button type="submit" class="btn btn-primary">Update</button>
+    </form>
+        
+    @else
+    <p class="text-center"> Give us your Rating: </p>
+    <form id="ratingForm" class="text-center" method="POST" action="{{ route('submitRating', ['eventId' => $event->event_id]) }}">
+        @csrf
+        <label>
+            <input type="radio" name="rating" value="1"> 1
+        </label>
+        <label>
+            <input type="radio" name="rating" value="2"> 2
+        </label>
+        <label>
+            <input type="radio" name="rating" value="3"> 3
+        </label>
+        <label>
+            <input type="radio" name="rating" value="4"> 4
+        </label>
+        <label>
+            <input type="radio" name="rating" value="5"> 5
+        </label>
+        
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+    @endif
+@endif
+
+
+    <h2 class="text-primary">Comments</h2>
+    <div  id="commentsContainer">
+    @forelse($event->comments as $comment)
+        <div class="comment"  data-id="{{ $comment->comment_id}}">
+       
+        
+        <div class="comment-icons-container">
+            <p class="comment-author">{{ $comment->author->name }}</p>
+            <div>
+            @if(auth()->check())
+            @if((!$comment->isReported())&& (auth()->user()->user_id !== $comment->author->user_id))
+            <i class="fa-solid fa-flag" onclick="showReportPopUp()"></i>
+            @endif
+            @if(auth()->user()->user_id === $comment->author->user_id)
+            <i class="fa-solid fa-pen-to-square" onclick="showEditCommentModal()"></i>
+            @endif
+            @endif
+            </div>
+        </div>
+        
+       
+        <p class="comment-text" id="commentText">{{ $comment->text }}</p>
+        <form id="editCommentForm"  style="display: none;">
+        <textarea id="editedCommentText" class="edit-comment-textbox" rows="3" required>{{ $comment->text }}</textarea>
+            <button class="btn btn-primary" onclick="editComment()">Submit</button>
+            <button type="button" class="btn btn-danger" onclick="hideEditCommentModal()">Cancel</button>
+        </form>
+
+        
+      
+
+        </div>
+       
+ 
+
+    @empty
+        <p class="text-center">No comments yet.</p>
+    @endforelse
+    </div>
+    @if(auth()->check())
+<form id="newCommentForm" action="{{ route('submitComment') }}" method="post">
+    @csrf
+    <div class="comment new-comment">
+        <textarea name="newCommentText" id="newCommentText" class="new-comment-textbox" rows="3" placeholder="Write a new comment"></textarea>
+    </div>
+    <input id="newCommentEventID" type="hidden" name="event_id"  value="{{$event->event_id}}">
+    <button onclick="addNewComment()" class="btn btn-primary" id="submit-comment-button">Submit Comment</button>
+</form>
+@endif
+
+<div class="pop-up-report">
+    <div class="report-section">
+        <h3>Why are you reporting?</h3>
+        
+        
+        <form action="{{ route('submitReport') }}" method="post">
+            @csrf
+            <input type="hidden" name="comment_id" id="reportCommentId" value="0">
+            <textarea id="reportReason" class="report-textbox" name="reportReason" rows="4" placeholder="Enter your reason here"></textarea>
+            <button type="submit" class="btn btn-primary">Submit Report</button>
+        </form>
+    </div>
+    </div>
+
+   
+
+
+    
+
+
+
+
+</section>
 
 <section id="ticket-types" class="event-section">
     <h2>Ticket <span>Types</span></h2>
@@ -157,14 +322,22 @@
     data-id="{{ $event->event_id }}">{{ $event->private ? 'Activate Event' : 'Deactivate Event' }}</button>
 @endif
 
-<!-- Edit Event form (displayed only for the event creator) -->
-@can('updateEvent', $event)
-<section id="edit-event" class="event-section">
-    <h2>Edit <span>Event</span></h2>
-    <article>
-        @csrf
-        <label for="edit_name">Event Name:</label>
-        <input type="text" id="edit_name" name="edit_name" value="{{ $event->name }}" required>
+    <!-- Edit Event form (displayed only for the event creator) -->
+    @can('updateEvent', $event)
+        <section id="edit-event" class="event-section">
+            <h2>Edit <span>Event</span></h2>
+            <article>
+                <form method="POST" action="/file/upload" enctype="multipart/form-data">
+                    @csrf
+                    <input name="file" type="file" required>
+                    <input name="id" type="number" value="{{ $event->event_id }}" hidden>
+                    <input name="type" type="text" value="event_image" hidden>
+                    <button type="submit">Submit</button>
+                </form>
+
+                @csrf
+                <label for="edit_name">Event Name:</label>
+                <input type="text" id="edit_name" name="edit_name" value="{{ $event->name }}" required>
 
         <label for="edit_description">Event Description:</label>
         <textarea id="edit_description" name="edit_description">{{ $event->description }}</textarea>
@@ -220,52 +393,57 @@
     </article>
 </section>
 
-<section class="event-section" id="event-info">
-    <h2>Histórico de Compras</h2>
-    @php $totalSoldTickets = 0; $purchaseNumber = 1; @endphp
-    @foreach ($soldTickets->groupBy('order_id') as $orderTickets)
-    @php
-    $totalSoldTickets += $orderTickets->count();
-    @endphp
-    @endforeach
-    <strong>Total de Bilhetes Vendidos:</strong> {{ $totalSoldTickets }}
+<section class="event-section event-info-content" id="event-info">
+    <h2 id="hist" >Histórico de Compras</h2>
 
-    @foreach ($soldTickets->groupBy('order_id') as $orderTickets)
-    @php
-    $order = $orderTickets->first()->order;
-    $buyer = $order->buyer;
-    @endphp
-    <div class="card text-white bg-secondary mb-3" style="max-width: 20rem;">
-        <div class="card-header"><strong>Compra #{{ $purchaseNumber }}</strong></div>
-        <div class="card-body compra-info">
-            <div class="compra-data"><strong>Data:</strong> {{ $order->timestamp }}</div>
-            <div class="compra-quanti"><strong>Total:</strong> {{ $orderTickets->count() }}</div>
-            <div class="compra-tipos"><strong>Tipos:</strong>
-                <ul>
-                    @foreach ($orderTickets->groupBy('ticket_type_id') as $ticketType => $typeTickets)
-                    @php
-                    $ticketTypeName = $typeTickets->first()->ticketType->name;
-                    $quantity = $typeTickets->count();
-                    @endphp
-                    <li class="compra-tipo-nome"> {{ $ticketTypeName }} {{ $quantity }}</li>
-                    @endforeach
-                </ul>
+    <section id="hist-compras">
+        @php $totalSoldTickets = 0; $purchaseNumber = 1; @endphp
+        @foreach ($soldTickets->groupBy('order_id') as $orderTickets)
+        @php
+        $totalSoldTickets += $orderTickets->count();
+        @endphp
+        @endforeach
+
+        @foreach ($soldTickets->groupBy('order_id') as $orderTickets)
+        @php
+        $order = $orderTickets->first()->order;
+        $buyer = $order->buyer;
+        @endphp
+        <div class="card text-white bg-secondary mb-3" style="max-width: 20rem;">
+            <div class="card-header"><strong>Compra #{{ $purchaseNumber }}</strong></div>
+            <div class="card-body compra-info">
+                <div class="compra-data"><strong>Data:</strong> {{ $order->timestamp }}</div>
+                <div class="compra-quanti"><strong>Total:</strong> {{ $orderTickets->count() }}</div>
+                <div class="compra-tipos"><strong>Tipos:</strong>
+                    <ul>
+                        @foreach ($orderTickets->groupBy('ticket_type_id') as $ticketType => $typeTickets)
+                        @php
+                        $ticketTypeName = $typeTickets->first()->ticketType->name;
+                        $quantity = $typeTickets->count();
+                        @endphp
+                        <li class="compra-tipo-nome"> {{ $ticketTypeName }} {{ $quantity }}</li>
+                        @endforeach
+                    </ul>
+                </div>
             </div>
         </div>
-    </div>
-    @php $purchaseNumber++; @endphp
-    @endforeach
+        @php $purchaseNumber++; @endphp
+        @endforeach
 
-    <div id="event-charts" data-id="{{ $event->event_id }}">
-        <div>
+    </section>
+
+    <h2 id="title-charts" >Stats</h2>
+
+    <section id="event-charts" data-id="{{ $event->event_id }}">
+        <div class="div_dif_tickets_chart">
             <canvas id="dif_tickets_chart"></canvas>
         </div>
 
-        <div>
+        <div class="div_all_tickets_chart">
             <canvas id="all_tickets_chart"></canvas>
         </div>
 
-        <div>
+        <div class="div_myPieChart">
             <canvas id="myPieChart"></canvas>
         </div>
 
@@ -275,10 +453,16 @@
             @endforeach
         </div>
 
-    </div>
-</section>
+    </section>
 
-<p>Faturação: {{ $event->calculateRevenue() }}€</p>
+    <div class="faturacao">
+        <p id="revenue">Revenue</p> 
+        <p id="val_revenue"> {{ $event->calculateRevenue() }}€</p>
+        <p id="tickets">Tickets</p> 
+        <p id="total_tickets"> {{ $totalSoldTickets }} </p>
+    </div>
+
+</section>
 
 
 @endcan

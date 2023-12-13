@@ -118,7 +118,7 @@ class Event extends Model
         $datasets = [];
         
         // Paleta de cores para os gráficos de linha
-        $colorPalette = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf', '#FF5733', '#33FF57', '#5733FF', '#FF33ED', '#FF3371'];
+        $colorPalette = [ '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf', '#FF5733', '#33FF57', '#5733FF', '#FF33ED', '#FF3371'];
     
         foreach ($this->ticketTypes as $key => $ticketType) {
             $typeData = $dataByDate->map(function ($items) use ($ticketType) {
@@ -194,7 +194,7 @@ class Event extends Model
         $totalTickets = $ticketInstances->count();
     
         // Definir a paleta de cores
-        $colorPalette = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf', '#FF5733', '#33FF57', '#5733FF', '#FF33ED', '#FF3371'];
+        $colorPalette = ['#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf', '#FF5733', '#33FF57', '#5733FF', '#FF33ED', '#FF3371'];
     
         // Se houver mais tipos de bilhetes do que cores na paleta, gere cores adicionais
         while (count($this->ticketTypes) > count($colorPalette)) {
@@ -248,14 +248,14 @@ class Event extends Model
     
         // Preparar dados para o gráfico
 
-        $colorPalette = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf', '#FF5733', '#33FF57', '#5733FF', '#FF33ED', '#FF3371'];
+        $colorPalette = [ '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf', '#FF5733', '#33FF57', '#5733FF', '#FF33ED', '#FF3371'];
 
 
 
         $pieChartData = [
             'label' => $ticketType->name,
             'data' => [
-                'labels' => [$ticketType->name, 'Remaining'],
+                'labels' => [$ticketType->name],
                 'datasets' => [
                     [
                         'data' => [$percentageFilled, 100 - $percentageFilled],

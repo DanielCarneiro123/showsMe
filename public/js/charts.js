@@ -58,6 +58,8 @@ if (dif_tickets_chart) {
                         datasets: dif_tickets_chartChartData.datasets
                     },
                     options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
                         scales: {
                             x: {
                                 type: 'category',
