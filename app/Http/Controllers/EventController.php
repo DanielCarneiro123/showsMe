@@ -261,8 +261,8 @@ private function createTemporaryAccount(Request $request)
 
         $query = $request->input('query');
 
-        $events = Event::whereRaw('tsvectors @@ plainto_tsquery(?)', [$query])
-            ->orderByRaw('ts_rank(tsvectors, plainto_tsquery(?)) DESC', [$query])
+        $events = Event::whereRaw('tsvectors @@ to_tsquery(\'english\', ?)', [$query])
+            ->orderByRaw('ts_rank(tsvectors, to_tsquery(\'english\', ?)) DESC', [$query])
             ->paginate(10);
 
         return view('pages.all_events', compact('events', 'notifications'));

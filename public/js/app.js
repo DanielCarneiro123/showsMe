@@ -632,6 +632,9 @@ function unlikeCommentHandler() {
   
 }
 
+function goToLogin(){
+  sendAjaxRequest('get', '/login');
+}
 function likeComment(){
   const comment = event.target.closest(".comment");
 
