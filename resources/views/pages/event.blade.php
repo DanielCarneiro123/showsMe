@@ -174,14 +174,14 @@
         <p class="comment-text" id="commentText">{{ $comment->text }}</p>
 
         <div class="comment-likes-section">
-            <p class="comment-likes">{{ $comment->likes }} 
+            <p class="comment-likes">{{ $comment->likes }} </p>
             @if(auth()->check() && auth()->user()->likes($comment->comment_id))
                 
                     <i class="fas fa-thumbs-up fa-solid" id="liked" onclick="unlikeComment()"></i>
                 @else
                     <i class="far fa-thumbs-up fa-regular" id="unliked" onclick="likeComment()"></i>
                 @endif
-            </p>
+            
         </div>
 
         <form id="editCommentForm"  style="display: none;">

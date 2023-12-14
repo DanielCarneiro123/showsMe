@@ -499,9 +499,9 @@ function hideEditCommentModal() {
 
 function unlikeComment(){
   const comment = event.target.closest(".comment");
-  console.log(comment);
+  
   const commentID = comment.getAttribute('data-id');
-  console.log(commentID);
+
   event.preventDefault();
   sendAjaxRequest('post', '/unlike-comment', {comment_id: commentID} , unlikeCommentHandler);
 }
@@ -515,9 +515,21 @@ function likeComment(){
   const comment = event.target.closest(".comment");
 
   const commentID = comment.getAttribute('data-id');
-
+  
   event.preventDefault();
+
   sendAjaxRequest('post', '/like-comment',{comment_id: commentID} , likeCommentHandler);
+  
+  let likes = comment.querySelector('.comment-likes').textContent;
+  likes = parseInt(likes, 10);
+  likes = likes + 1;
+  comment.querySelector('.comment-likes').textContent = likes.toString();
+  
+  event.target.classList.remove("far", "fa-regular");
+  event.target.classList.add("fas", "fa-solid");
+
+  
+
 }
 
 function likeCommentHandler() {
@@ -531,7 +543,8 @@ function likeCommentHandler() {
     const commentElement = document.querySelector(`.comment[data-id="${commentId}"]`);
     
     if (commentElement) {
-      console.log('WOrked');
+     
+      
     } else {
       console.error('Comment element not found in HTML:', commentId);
     }
