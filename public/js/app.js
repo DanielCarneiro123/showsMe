@@ -732,7 +732,7 @@ function addRatingHandler() {
     console.log("Hi");
 }*/
 
-
+/*
 let slideIndex = 1;
 showSlides(slideIndex);
 
@@ -740,6 +740,7 @@ showSlides(slideIndex);
 function plusSlides(n) {
   showSlides(slideIndex += n);
 }
+
 
 // Thumbnail image controls
 function currentSlide(n) {
@@ -763,6 +764,7 @@ function showSlides(n) {
 } 
 
 
+
 var stripe = Stripe('your-publishable-key');
 var elements = stripe.elements();
 var card = elements.create('card');
@@ -778,7 +780,7 @@ card.addEventListener('change', function(event) {
     }
 });
 
-
+*/
 
 
 function updateEventCountByMonth() {
@@ -810,3 +812,30 @@ function updateEventCountByYear() {
     document.getElementById('eventCountByYear').innerText = count;
   });
 }
+
+document.addEventListener('DOMContentLoaded', function () {
+  // Obtém todos os elementos com a classe 'hist-compras-cards'
+  var cards = document.querySelectorAll('.hist-compras-cards');
+
+  // Adiciona um ouvinte de evento de clique a cada card
+  cards.forEach(function (card) {
+      card.addEventListener('click', function () {
+          // Define todos os elementos com a classe 'div-compra-tipos' para display: none
+          var allTiposDivs = document.querySelectorAll('.div-compra-tipos');
+          allTiposDivs.forEach(function (tiposDiv) {
+              tiposDiv.style.display = 'none';
+          });
+
+          // Obtém o elemento .div-compra-tipos específico para este card
+          var tiposDiv = card.querySelector('.div-compra-tipos');
+
+          // Alterna entre 'grid' e 'none' ao clicar
+          if (tiposDiv.style.display === 'grid') {
+              tiposDiv.style.display = 'none';
+          } else {
+              tiposDiv.style.display = 'grid';
+          }
+      });
+  });
+});
+

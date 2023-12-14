@@ -417,6 +417,12 @@ input[type="number"]:invalid {
 
 .event-info-content .hist-compras-cards {
     display: grid;
+    grid-template-areas:
+    'nr data'
+    'total total'
+    'tipos tipos';
+    grid-template-rows: auto auto 1fr;
+    row-gap: 14px;
     margin: 10px;
     padding: 10px;
     background-color: #a991d4;
@@ -424,5 +430,92 @@ input[type="number"]:invalid {
     border-radius: 10px; 
     box-shadow: 0 6px 10px #806da3;
     width: 240px;
-    height: 170px;
+    min-height: 170px;
+    height: fit-content;
+}
+
+.event-info-content .hist-compras-cards:hover {
+    cursor: pointer;
+    background-color: #8c78b2;
+    box-shadow: 0 6px 10px #60527b;
+}
+
+
+.event-info-content .compra-nr{
+    grid-area: nr;
+    justify-self: start;
+}
+
+.event-info-content .compra-data{
+    grid-area: data;
+    justify-self: end;
+}
+
+.event-info-content .compra-quanti-valor{
+    grid-area: total;
+    display: grid;
+    grid-template-areas: 
+    'bil-total val-total'
+    'bil       val';
+    width: 100%;
+}
+
+.event-info-content .compra-quanti-valor .bil{
+    font-size: 15px;
+    justify-self: center;
+    grid-area: bil;
+    margin: 0;
+    align-self: end;
+}
+.event-info-content .compra-quanti-valor .bil-total{
+    font-size: 30px;
+    justify-self: center;
+    grid-area: bil-total;
+    margin-bottom: 0px;
+    font-weight: bold;
+}
+
+.event-info-content .compra-quanti-valor .val{
+    font-size: 15px;
+    justify-self: center;
+    grid-area: val;
+    margin: 0;
+    align-self: end;
+}
+
+.event-info-content .compra-quanti-valor .val-total{
+    font-size: 30px;
+    justify-self: center;
+    grid-area: val-total;
+    margin-bottom: 0px;
+    font-weight: bold;
+}
+
+.event-info-content .div-compra-tipos{
+    grid-area: tipos;
+    display: none;
+    padding-top: 20px;
+    margin: 0;
+}
+
+.event-info-content .compra-tipos{
+    display: grid;
+    grid-template-areas: 'nome quant';
+    grid-template-columns: 1fr auto;
+    padding: 0;
+    margin: 0;
+}
+
+.event-info-content .compra-tipos .tipo-nome{
+    grid-area: nome;
+    display: flex;
+    justify-self: start;
+    margin: 0;
+}
+
+.event-info-content .compra-tipos .quant{
+    grid-area: quant;
+    display: flex;
+    justify-self: end;
+    margin: 0;
 }

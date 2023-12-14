@@ -20,9 +20,9 @@
     </form>
     @endif
     @endif
-    
-<!-- Slideshow container -->
-<div class="slideshow-container">
+
+    <!-- Slideshow container -->
+    <div class="slideshow-container">
         @php $index = 1; @endphp
 
         @foreach ($event->images as $image)
@@ -82,19 +82,20 @@
 
 <section id="event-info" class="event-section">
 
- 
-@if(auth()->user())
+
+    @if(auth()->user())
     @if($userRating = $event->userRating())
     <p id="yourRatingP" class="text-center">
         Your Rating: {{ $userRating->rating }}
         <span class="star-icon">★</span>
         <button class="btn btn-primary" onclick="showEditRatingForm()">Edit</button>
     </p>
-    
-    <form id="editRatingForm" class="text-center" method="POST" action="{{ route('editRating', ['eventId' => $event->event_id]) }}" style="display: none;">
+
+    <form id="editRatingForm" class="text-center" method="POST"
+        action="{{ route('editRating', ['eventId' => $event->event_id]) }}" style="display: none;">
         @csrf
 
-      
+
         <label>
             <input type="radio" name="rating" value="1" {{ $userRating->rating == 1 ? 'checked' : '' }}> 1
         </label>
@@ -113,10 +114,11 @@
 
         <button type="submit" class="btn btn-primary">Update</button>
     </form>
-        
+
     @else
     <p class="text-center"> Give us your Rating: </p>
-    <form id="ratingForm" class="text-center" method="POST" action="{{ route('submitRating', ['eventId' => $event->event_id]) }}">
+    <form id="ratingForm" class="text-center" method="POST"
+        action="{{ route('submitRating', ['eventId' => $event->event_id]) }}">
         @csrf
         <label>
             <input type="radio" name="rating" value="1"> 1
@@ -133,81 +135,84 @@
         <label>
             <input type="radio" name="rating" value="5"> 5
         </label>
-        
+
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
     @endif
-@endif
+    @endif
 
 
     <h2 class="text-primary">Comments</h2>
-    <div  id="commentsContainer">
-    @forelse($event->comments as $comment)
-        <div class="comment"  data-id="{{ $comment->comment_id}}">
-       
-        
-        <div class="comment-icons-container">
-            <p class="comment-author">{{ $comment->author->name }}</p>
-            <div>
-            @if(auth()->check())
-            @if((!$comment->isReported())&& (auth()->user()->user_id !== $comment->author->user_id))
-            <i class="fa-solid fa-flag" onclick="showReportPopUp()"></i>
-            @endif
-            @if(auth()->user()->user_id === $comment->author->user_id)
-            <i class="fa-solid fa-pen-to-square" onclick="showEditCommentModal()"></i>
-            @endif
-            @endif
+    <div id="commentsContainer">
+        @forelse($event->comments as $comment)
+        <div class="comment" data-id="{{ $comment->comment_id}}">
+
+
+            <div class="comment-icons-container">
+                <p class="comment-author">{{ $comment->author->name }}</p>
+                <div>
+                    @if(auth()->check())
+                    @if((!$comment->isReported())&& (auth()->user()->user_id !== $comment->author->user_id))
+                    <i class="fa-solid fa-flag" onclick="showReportPopUp()"></i>
+                    @endif
+                    @if(auth()->user()->user_id === $comment->author->user_id)
+                    <i class="fa-solid fa-pen-to-square" onclick="showEditCommentModal()"></i>
+                    @endif
+                    @endif
+                </div>
             </div>
+
+
+            <p class="comment-text" id="commentText">{{ $comment->text }}</p>
+            <form id="editCommentForm" style="display: none;">
+                <textarea id="editedCommentText" class="edit-comment-textbox" rows="3"
+                    required>{{ $comment->text }}</textarea>
+                <button class="btn btn-primary" onclick="editComment()">Submit</button>
+                <button type="button" class="btn btn-danger" onclick="hideEditCommentModal()">Cancel</button>
+            </form>
+
+
+
+
         </div>
-        
-       
-        <p class="comment-text" id="commentText">{{ $comment->text }}</p>
-        <form id="editCommentForm"  style="display: none;">
-        <textarea id="editedCommentText" class="edit-comment-textbox" rows="3" required>{{ $comment->text }}</textarea>
-            <button class="btn btn-primary" onclick="editComment()">Submit</button>
-            <button type="button" class="btn btn-danger" onclick="hideEditCommentModal()">Cancel</button>
-        </form>
 
-        
-      
 
-        </div>
-       
- 
 
-    @empty
+        @empty
         <p class="text-center">No comments yet.</p>
-    @endforelse
+        @endforelse
     </div>
     @if(auth()->check())
-<form id="newCommentForm" action="{{ route('submitComment') }}" method="post">
-    @csrf
-    <div class="comment new-comment">
-        <textarea name="newCommentText" id="newCommentText" class="new-comment-textbox" rows="3" placeholder="Write a new comment"></textarea>
+    <form id="newCommentForm" action="{{ route('submitComment') }}" method="post">
+        @csrf
+        <div class="comment new-comment">
+            <textarea name="newCommentText" id="newCommentText" class="new-comment-textbox" rows="3"
+                placeholder="Write a new comment"></textarea>
+        </div>
+        <input id="newCommentEventID" type="hidden" name="event_id" value="{{$event->event_id}}">
+        <button onclick="addNewComment()" class="btn btn-primary" id="submit-comment-button">Submit Comment</button>
+    </form>
+    @endif
+
+    <div class="pop-up-report">
+        <div class="report-section">
+            <h3>Why are you reporting?</h3>
+
+
+            <form action="{{ route('submitReport') }}" method="post">
+                @csrf
+                <input type="hidden" name="comment_id" id="reportCommentId" value="0">
+                <textarea id="reportReason" class="report-textbox" name="reportReason" rows="4"
+                    placeholder="Enter your reason here"></textarea>
+                <button type="submit" class="btn btn-primary">Submit Report</button>
+            </form>
+        </div>
     </div>
-    <input id="newCommentEventID" type="hidden" name="event_id"  value="{{$event->event_id}}">
-    <button onclick="addNewComment()" class="btn btn-primary" id="submit-comment-button">Submit Comment</button>
-</form>
-@endif
-
-<div class="pop-up-report">
-    <div class="report-section">
-        <h3>Why are you reporting?</h3>
-        
-        
-        <form action="{{ route('submitReport') }}" method="post">
-            @csrf
-            <input type="hidden" name="comment_id" id="reportCommentId" value="0">
-            <textarea id="reportReason" class="report-textbox" name="reportReason" rows="4" placeholder="Enter your reason here"></textarea>
-            <button type="submit" class="btn btn-primary">Submit Report</button>
-        </form>
-    </div>
-    </div>
-
-   
 
 
-    
+
+
+
 
 
 
@@ -327,14 +332,6 @@
 <section id="edit-event" class="event-section">
     <h2>Edit <span>Event</span></h2>
     <article>
-        <form method="POST" action="/file/upload" enctype="multipart/form-data">
-            @csrf
-            <input name="file" type="file" required>
-            <input name="id" type="number" value="{{ $event->event_id }}" hidden>
-            <input name="type" type="text" value="event_image" hidden>
-            <button type="submit">Submit</button>
-        </form>
-
         @csrf
         <label for="edit_name">Event Name:</label>
         <input type="text" id="edit_name" name="edit_name" value="{{ $event->name }}" required>
@@ -408,22 +405,25 @@
         @endphp
 
         <div class="hist-compras-cards">
-            <div class="compra-header">Compra #{{ $purchaseNumber }}</div>
-            <div class="compra-info">
-                <div class="compra-data"><strong>Data:</strong> {{ $order->timestamp }}</div>
-                <div class="compra-quanti"><strong>Total:</strong> {{ $orderTickets->count() }}</div>
-                <div class="compra-tipos"><strong>Tipos:</strong>
-                    <ul>
-                        @foreach ($orderTickets->groupBy('ticket_type_id') as $ticketType => $typeTickets)
-                        @php
-                        $ticketTypeName = $typeTickets->first()->ticketType->name;
-                        $quantity = $typeTickets->count();
-                        @endphp
-                        <li class="compra-tipo-nome"> {{ $ticketTypeName }} {{ $quantity }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-                <div class="compra-valor"><strong>Valor Total:</strong> {{ $order->totalPurchaseAmount }}€</div>
+            <div class="compra-nr">#{{ $purchaseNumber }}</div>
+            <div class="compra-data"> {{ $order->timestamp->format('d/m/Y') }}</div>
+            <div class="compra-quanti-valor">
+                <p class="bil">Bilhetes</p>
+                <p class="bil-total">{{ $orderTickets->count() }}</p>
+                <p class="val">Valor Total </p>
+                <p class="val-total">{{ $order->totalPurchaseAmount }}€</p>
+            </div>
+            <div class="div-compra-tipos">
+                @foreach ($orderTickets->groupBy('ticket_type_id') as $ticketType => $typeTickets)
+                @php
+                $ticketTypeName = $typeTickets->first()->ticketType->name;
+                $quantity = $typeTickets->count();
+                @endphp
+                <ul class="compra-tipos">
+                    <p class="tipo-nome"> {{ $ticketTypeName }} </p>
+                    <p class="quant"> {{ $quantity }} </p>
+                </ul>
+                @endforeach
             </div>
         </div>
 
@@ -432,9 +432,6 @@
         $purchaseNumber++;
         @endphp
         @endforeach
-
-
-
     </section>
 
     <h2 id="title-charts">Stats</h2>
