@@ -517,17 +517,18 @@ function likeComment(){
   const commentID = comment.getAttribute('data-id');
   
   event.preventDefault();
-
+  
   sendAjaxRequest('post', '/like-comment',{comment_id: commentID} , likeCommentHandler);
   
   let likes = comment.querySelector('.comment-likes').textContent;
   likes = parseInt(likes, 10);
   likes = likes + 1;
+
   comment.querySelector('.comment-likes').textContent = likes.toString();
   
-  event.target.classList.remove("far", "fa-regular");
-  event.target.classList.add("fas", "fa-solid");
+event.target.outerHTML = '<i class="fas fa-thumbs-up fa-solid" id="liked" onclick="unlikeComment(event)"></i>';
 
+  
   
 
 }
