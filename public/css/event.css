@@ -214,6 +214,7 @@ input[type="number"]:invalid {
     font-style: italic;
     font-weight: bold;
     font-size: 18px;
+    color: #593196;
 }
 
 .comment p.comment-text {
@@ -243,8 +244,22 @@ input[type="number"]:invalid {
     transform: scale(1.1);
 }
 
+.fa-thumbs-up{
+    margin-right: 5px;
+    padding-left:5px;
+    color:  #593196;
+}
+.comment-likes{
+    color: #593196;
+   
+}
 .comment-likes-section {
-    margin-left:1em;
+    display: flex;
+    align-items: center;
+ 
+    width: fit-content;
+    min-width: 45px;
+  
 }
 
 .pop-up-report {

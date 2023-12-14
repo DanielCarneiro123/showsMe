@@ -49,13 +49,13 @@
         <h1 id="name">{{ $event->name }}</h1>
         <p id="description">{{ $event->description }}</p>
         <section class="ratings-event">
-            <p id="average-rating"> Rating: {{ $event->averageRating }} <span class="star-icon">★</span></p>
-
+        <p id="average-rating"> Rating: {{ number_format($event->averageRating, 1) }} <span class="star-icon">★</span></p>
+       
         </section>
         <h1 id="name">{{ $event->name }}</h1>
         <p id="description">{{ $event->description }}</p>
     </div>
-    <!-- <img src="{{ $event->event_image }}" alt="Event Image" class="event-image"> -->
+    <img src="{{ $event->event_image }}" alt="Event Image" class="event-image"> 
     <section class="event-info">
         <p id="location">Location: {{ $event->location }}</p>
     </section>
@@ -169,16 +169,7 @@
                     </div>
                 </div>
                 <p class="comment-text" id="commentText">{{ $comment->text }}</p>
-                <div class="comment-likes-section">
-                    <p class="comment-likes">{{ $comment->likes }} </p>
-                    @if(auth()->check() && auth()->user()->likes($comment->comment_id))
-                        
-                            <i class="fas fa-thumbs-up fa-solid" id="liked" onclick="unlikeComment()"></i>
-                        @else
-                            <i class="far fa-thumbs-up fa-regular" id="unliked" onclick="likeComment()"></i>
-                        @endif
-                    
-                    </div>
+            
 
                     <form id="editCommentForm"  style="display: none;">
 
@@ -186,6 +177,17 @@
                         <button class="btn btn-primary" onclick="editComment()">Submit</button>
                         <button type="button" class="btn btn-danger" onclick="hideEditCommentModal()">Cancel</button>
                     </form>
+
+                    <div class="comment-likes-section">
+    
+                        @if(auth()->check() && auth()->user()->likes($comment->comment_id))
+                            <i class="fas fa-thumbs-up fa-solid" id="liked" onclick="unlikeComment()"></i>
+                        @else
+                            <i class="far fa-thumbs-up fa-regular" id="unliked" onclick="likeComment()"></i>
+                        @endif
+                        <p class="comment-likes">{{ $comment->likes }}</p>
+
+                    </div>
 
             </div>
         @endforeach
@@ -214,16 +216,6 @@
                     </div>
                 </div>
                 <p class="comment-text" id="commentText">{{ $comment->text }}</p>
-                <div class="comment-likes-section">
-                    <p class="comment-likes">{{ $comment->likes }} </p>
-                    @if(auth()->check() && auth()->user()->likes($comment->comment_id))
-                        
-                            <i class="fas fa-thumbs-up fa-solid" id="liked" onclick="unlikeComment()"></i>
-                        @else
-                            <i class="far fa-thumbs-up fa-regular" id="unliked" onclick="likeComment()"></i>
-                        @endif
-                    
-                    </div>
 
                     <form id="editCommentForm"  style="display: none;">
 
@@ -231,6 +223,17 @@
                         <button class="btn btn-primary" onclick="editComment()">Submit</button>
                         <button type="button" class="btn btn-danger" onclick="hideEditCommentModal()">Cancel</button>
                     </form>
+
+                    <div class="comment-likes-section">
+    
+                        @if(auth()->check() && auth()->user()->likes($comment->comment_id))
+                            <i class="fas fa-thumbs-up fa-solid" id="liked" onclick="unlikeComment()"></i>
+                        @else
+                            <i class="far fa-thumbs-up fa-regular" id="unliked" onclick="likeComment()"></i>
+                        @endif
+                        <p class="comment-likes">{{ $comment->likes }}</p>
+
+                    </div>
 
             </div>
         @endforeach
