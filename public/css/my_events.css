@@ -1,4 +1,4 @@
-#ticket-instance {
+/*#ticket-instance {
     max-width: 600px;
     margin: 8% auto;
     padding: 20px;
@@ -11,9 +11,9 @@
     margin: 10px 0;
 }
 
-/* Add this to your CSS file */
+
 .purple-text h3,
 .purple-text p {
     color: purple;
     text-decoration: none;
-}
+}*/

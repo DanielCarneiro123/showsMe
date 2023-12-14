@@ -3,26 +3,27 @@
 }
 
 .ticket-instance {
-    display: inline-block;
-    padding: 3em;
-    width: 23%;
-    height: 30%; 
-    max-height: 30%;
-    margin: 10px; 
-    margin-left: 15px;
-    border: 3px solid #ddd;
-    border-radius: 10px;
+    padding: 20px;
     background-color: #ddd;
-    overflow: hidden;
+    border-radius: 10px;
+    border: 2px solid rgb(233, 233, 233);
+    margin: 10px;
+}
+
+.purple-text h3,
+.purple-text p {
+    color: purple;
+    text-decoration: none;
 }
 
 .ticket-instance p {
     margin: 10px 0;
 }
+
 .ticket-instance h3 {
     text-align: center;
 }
 
-.ticket-instance h3 i{
+.ticket-instance h3 i {
     margin-right: 10px;
 }

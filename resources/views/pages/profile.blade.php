@@ -20,7 +20,7 @@
             <input name="file" type="file" required>
             <input name="id" type="number" value="{{ $user->user_id }}" hidden>
             <input name="type" type="text" value="profile_image" hidden>
-            <button type="submit">Submit</button>
+            <button type="submit" class="btn btn-outline-primary">Submit</button>
         </form>
 
 

@@ -4,6 +4,10 @@
 
 <section class="event-thumbnail">
     @if(auth()->user() && auth()->user()->is_admin)
+    <button class="event-button {{ $event->private ? 'active' : '' }}" id="activate-button"
+        data-id="{{ $event->event_id }}">{{ $event->private ? 'Activate Event' : 'Deactivate Event' }}</button>
+    @endif
+    <!--@if(auth()->user() && auth()->user()->is_admin)
     @if ($event->private)
     <form method="POST" action="{{ url('/activate-event/'.$event->event_id) }}">
         @csrf
@@ -19,7 +23,7 @@
         </button>
     </form>
     @endif
-    @endif
+    @endif-->
     
 <!-- Slideshow container -->
 <div class="slideshow-container">
@@ -62,13 +66,12 @@
 </section>
 
 <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-    <input type="radio" class="btn-check" name="sectionToggle" id="eventInfo" autocomplete="off" checked
-        data-section-id="event-info">
-    <label class="btn btn-outline-primary" for="eventInfo">Event Info</label>
-
-    <input type="radio" class="btn-check" name="sectionToggle" id="ticketTypes" autocomplete="off"
+    <input type="radio" class="btn-check" name="sectionToggle" id="ticketTypes" autocomplete="off" checked
         data-section-id="ticket-types">
     <label class="btn btn-outline-primary" for="ticketTypes">Ticket Types</label>
+    <input type="radio" class="btn-check" name="sectionToggle" id="eventInfo" autocomplete="off" 
+        data-section-id="event-info">
+    <label class="btn btn-outline-primary" for="eventInfo">Event Info</label>
     @can('updateEvent', $event)
     <input type="radio" class="btn-check" name="sectionToggle" id="editEvent" autocomplete="off"
         data-section-id="edit-event">
@@ -140,7 +143,7 @@
 @endif
 
 
-    <h2 class="text-primary">Public Comments</h2>
+    <h2 class="text-primary text-center">Public Comments</h2>
         <div id="public-comments-section" class="commentsContainer">
         @foreach($event->comments->where('private', false) as $comment)
         <div class="comment" data-id="{{ $comment->comment_id }}">
@@ -168,7 +171,7 @@
     </div>
 
     @if(auth()->user() && auth()->user()->is_admin)
-        <h2 class="text-primary mt-4">Private Comments (visible to admins only)</h2>
+        <h2 class="text-primary mt-4 text-center">Private Comments (visible to admins only)</h2>
         <div id="private-comments-section" class="commentsContainer">
 
         @foreach($event->comments->where('private', true) as $comment)
@@ -218,15 +221,6 @@
         </form>
     </div>
     </div>
-
-   
-
-
-    
-
-
-
-
 </section>
 
 <section id="ticket-types" class="event-section">
@@ -332,10 +326,7 @@
 
 
 
-@if(auth()->user() && auth()->user()->is_admin)
-<button class="btn btn-success {{ $event->private ? 'active' : '' }}" id="activate-button"
-    data-id="{{ $event->event_id }}">{{ $event->private ? 'Activate Event' : 'Deactivate Event' }}</button>
-@endif
+
 
 <!-- Edit Event form (displayed only for the event creator) -->
 @can('updateEvent', $event)

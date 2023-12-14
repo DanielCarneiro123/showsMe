@@ -47,11 +47,11 @@
 }
 
 .ticket-types h2 {
-    font-size: 3em;
+    font-size: 3em; 
 }
 
 h2 span {
-    color: rgb(192, 148, 198);;
+    color: rgb(192, 148, 198);
 }
 
 .ticket-type {
@@ -425,4 +425,24 @@ input[type="number"]:invalid {
     box-shadow: 0 6px 10px #806da3;
     width: 240px;
     height: 170px;
+}
+
+.warning-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 40vh; 
+}
+
+@media (max-width: 1000px) {
+    .warning-section {
+        font-size: 14px; 
+        height: 44vh;
+
+    }
+
+    .fa-circle-exclamation {
+        font-size: 2em; 
+    }
 }
