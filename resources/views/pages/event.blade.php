@@ -24,36 +24,32 @@
     </form>
     @endif
     @endif-->
-    
-<div class="slideshow-container">
+
+    <div class="slideshow-container">
         @php $index = 1; @endphp
 
         @foreach ($event->images as $image)
         <div class="mySlides faded">
             <div class="numbertext">{{ $index }} / {{ count($event->images) }}</div>
-            <img src="{{ \App\Http\Controllers\FileController::get('event_image', $event->event_id) }}"
-                alt="Event Image">
+            <img src="{{ \App\Http\Controllers\FileController::get('event_image', $event->event_id) }}" alt="Event Image">
         </div>
         @php $index++; @endphp
         @endforeach
-        
+
         <!-- Next and previous buttons -->
         <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
         <a class="next" onclick="plusSlides(1)">&#10095;</a>
-</div>
-<br>
-
-
-
+    </div>
+    <br>
     <div class="text">
         <h1 id="name">{{ $event->name }}</h1>
         <p id="description">{{ $event->description }}</p>
         <section class="ratings-event">
-        <p id="average-rating"> Rating: {{ number_format($event->averageRating, 1) }} <span class="star-icon">★</span></p>
-       
+            <p id="average-rating"> Rating: {{ number_format($event->averageRating, 1) }} <span
+                    class="star-icon">★</span></p>
+
         </section>
     </div>
-    <img src="{{ $event->event_image }}" alt="Event Image" class="event-image"> 
     <section class="event-info">
         <p id="location">Location: {{ $event->location }}</p>
     </section>
@@ -65,7 +61,7 @@
             <input type="radio" class="btn-check" name="sectionToggle" id="ticketTypes" autocomplete="off" checked
                 data-section-id="ticket-types">
             <label class="btn btn-outline-primary" for="ticketTypes">Ticket Types</label>
-            <input type="radio" class="btn-check" name="sectionToggle" id="eventComments" autocomplete="off" 
+            <input type="radio" class="btn-check" name="sectionToggle" id="eventComments" autocomplete="off"
                 data-section-id="event-comments">
             <label class="btn btn-outline-primary" for="eventComments">Event Comments</label>
             @can('updateEvent', $event)
@@ -76,7 +72,7 @@
             <input type="radio" class="btn-check" name="sectionToggle" id="createTicketType" autocomplete="off"
                 data-section-id="create-ticket-type">
             <label class="btn btn-outline-primary" for="createTicketType">Create Ticket Type</label>
-            <input type="radio" class="btn-check" name="sectionToggle" id="eventInfo" autocomplete="off" 
+            <input type="radio" class="btn-check" name="sectionToggle" id="eventInfo" autocomplete="off"
                 data-section-id="event-info">
             <label class="btn btn-outline-primary" for="eventInfo">Event Info</label>
             @endcan
@@ -155,7 +151,7 @@
 
 
     <h2 class="text-primary text-center">Public Comments</h2>
-        <div id="public-comments-section" class="commentsContainer">
+    <div id="public-comments-section" class="commentsContainer">
         @foreach($event->comments->where('private', false) as $comment)
         <div class="comment" data-id="{{ $comment->comment_id }}">
             <div class="comment-icons-container">
@@ -181,7 +177,7 @@
 
             <form id="editCommentForm" style="display: none;">
 
-            
+
 
                 <textarea id="editedCommentText" class="edit-comment-textbox" rows="3"
                     required>{{ $comment->text }}</textarea>
@@ -190,23 +186,23 @@
             </form>
 
             <div class="comment-likes-section">
-    
-                        @if(auth()->check() && auth()->user()->likes($comment->comment_id))
-                            <i class="fas fa-thumbs-up fa-solid" id="liked" onclick="unlikeComment()"></i>
-                        @else
-                            <i class="far fa-thumbs-up fa-regular" id="unliked" onclick="likeComment()"></i>
-                        @endif
-                        <p class="comment-likes">{{ $comment->likes }}</p>
 
-                    </div>
+                @if(auth()->check() && auth()->user()->likes($comment->comment_id))
+                <i class="fas fa-thumbs-up fa-solid" id="liked" onclick="unlikeComment()"></i>
+                @else
+                <i class="far fa-thumbs-up fa-regular" id="unliked" onclick="likeComment()"></i>
+                @endif
+                <p class="comment-likes">{{ $comment->likes }}</p>
 
             </div>
+
+        </div>
         @endforeach
     </div>
 
     @if(auth()->user() && auth()->user()->is_admin)
-        <h2 class="text-primary mt-4 text-center">Private Comments (visible to admins only)</h2>
-        <div id="private-comments-section" class="commentsContainer">
+    <h2 class="text-primary mt-4 text-center">Private Comments (visible to admins only)</h2>
+    <div id="private-comments-section" class="commentsContainer">
 
         @foreach($event->comments->where('private', true) as $comment)
         <div class="comment" data-id="{{ $comment->comment_id }}">
@@ -239,16 +235,16 @@
                 <button type="button" class="btn btn-danger" onclick="hideEditCommentModal()">Cancel</button>
             </form>
             <div class="comment-likes-section">
-    
-    @if(auth()->check() && auth()->user()->likes($comment->comment_id))
-        <i class="fas fa-thumbs-up fa-solid" id="liked" onclick="unlikeComment()"></i>
-    @else
-        <i class="far fa-thumbs-up fa-regular" id="unliked" onclick="likeComment()"></i>
-    @endif
-    <p class="comment-likes">{{ $comment->likes }}</p>
 
-    </div>
+                @if(auth()->check() && auth()->user()->likes($comment->comment_id))
+                <i class="fas fa-thumbs-up fa-solid" id="liked" onclick="unlikeComment()"></i>
+                @else
+                <i class="far fa-thumbs-up fa-regular" id="unliked" onclick="likeComment()"></i>
+                @endif
+                <p class="comment-likes">{{ $comment->likes }}</p>
+
             </div>
+        </div>
         @endforeach
     </div>
     @endif
@@ -364,15 +360,15 @@
         <br>
         <div class="d-flex justify-content-center">
             @auth
-                <button type="submit" class="btn btn-success event-button" id="buy-button">
-                    <i class="fa-solid fa-credit-card"></i> Buy Tickets
-                </button>
+            <button type="submit" class="btn btn-success event-button" id="buy-button">
+                <i class="fa-solid fa-credit-card"></i> Buy Tickets
+            </button>
             @endauth
 
             @guest
-                <button type="button" class="btn btn-success event-button" id="show-form" onclick="toggleCheckoutSection()">
-                    <i class="fa-solid fa-credit-card"></i> Buy Tickets
-                </button>
+            <button type="button" class="btn btn-success event-button" id="show-form" onclick="toggleCheckoutSection()">
+                <i class="fa-solid fa-credit-card"></i> Buy Tickets
+            </button>
             @endguest
         </div>
 
@@ -393,6 +389,16 @@
     <h2>Edit <span>Event</span></h2>
     <article>
         @csrf
+
+        <form method="POST" action="/file/upload" enctype="multipart/form-data">
+            @csrf
+            <input name="file" type="file" required>
+            <input name="id" type="number" value="{{ $event->event_id }}" hidden>
+            <input name="type" type="text" value="event_image" hidden>
+            <button type="submit">Submit</button>
+        </form>
+
+
         <label for="edit_name">Event Name:</label>
         <input type="text" id="edit_name" name="edit_name" value="{{ $event->name }}" required>
 

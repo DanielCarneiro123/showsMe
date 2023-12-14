@@ -969,49 +969,9 @@ function moveCommentToPublic(commentId) {
 
 
 
-  /*function showReportPopUp(commentId) {
-    const reportPopUp = document.getElementById(`reportPopUp_${commentId}`);
-    const reportCommentIdInput = document.getElementById('reportCommentId');
-
-    // Set the value of the hidden input
-    reportCommentIdInput.value = commentId;
-
-    // Display the report pop-up
-    reportPopUp.style.display = 'block';
-
-    // Close the pop-up when clicking outside of it
-    window.onclick = function(event) {
-        if (event.target == reportPopUp) {
-            reportPopUp.style.display = 'none';
-        }
-    };
-}*/
-/*
-
-const userRatingSubmitButton = document.querySelector('#submit-rating');
-
-if (userRatingSubmitButton) {
-  console.log('the button exsuts')
-  userRatingSubmitButton.addEventListener('click', addRating);
-}
 
 
-function addRating() {
-  event.preventDefault();
- let formData = {
-    'event_id': '9',
-    'rating': '2',
- };
 
-  sendAjaxRequest('post', '/add-rating', formData, addRatingHandler);
-}
-
-
-function addRatingHandler() {
-    console.log("Hi");
-}*/
-
-/*
 let slideIndex = 1;
 showSlides(slideIndex);
 
@@ -1059,7 +1019,7 @@ card.addEventListener('change', function(event) {
     }
 });
 
-*/
+
 
 
 function updateEventCountByMonth() {
