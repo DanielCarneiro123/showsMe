@@ -499,11 +499,21 @@ function hideEditCommentModal() {
 
 function unlikeComment(){
   const comment = event.target.closest(".comment");
-  
-  const commentID = comment.getAttribute('data-id');
 
+  const commentID = comment.getAttribute('data-id');
+  
   event.preventDefault();
-  sendAjaxRequest('post', '/unlike-comment', {comment_id: commentID} , unlikeCommentHandler);
+  
+  sendAjaxRequest('post', '/unlike-comment',{comment_id: commentID});
+  
+  let likes = comment.querySelector('.comment-likes').textContent;
+  likes = parseInt(likes, 10);
+  likes = likes - 1;
+
+  comment.querySelector('.comment-likes').textContent = likes.toString();
+
+event.target.outerHTML = '<i class="far fa-thumbs-up fa-regular" id="unliked" onclick="likeComment(event)"></i>';
+  
 }
 
 function unlikeCommentHandler() {
@@ -518,41 +528,20 @@ function likeComment(){
   
   event.preventDefault();
   
-  sendAjaxRequest('post', '/like-comment',{comment_id: commentID} , likeCommentHandler);
+  sendAjaxRequest('post', '/like-comment',{comment_id: commentID});
   
   let likes = comment.querySelector('.comment-likes').textContent;
   likes = parseInt(likes, 10);
   likes = likes + 1;
 
   comment.querySelector('.comment-likes').textContent = likes.toString();
-  
+
 event.target.outerHTML = '<i class="fas fa-thumbs-up fa-solid" id="liked" onclick="unlikeComment(event)"></i>';
-
-  
   
 
 }
 
-function likeCommentHandler() {
-  const response = JSON.parse(this.responseText);
-  const message = response.message;
 
-  if (message && message.comment_id) {
-    const commentId = message.comment_id;
-    
-    
-    const commentElement = document.querySelector(`.comment[data-id="${commentId}"]`);
-    
-    if (commentElement) {
-     
-      
-    } else {
-      console.error('Comment element not found in HTML:', commentId);
-    }
-  } else {
-    console.error('Invalid response structure or missing comment_id.');
-  }
-}
 
 function deleteComment(){
   const comment = event.target.closest(".comment");
@@ -732,14 +721,31 @@ function addNewCommentHandler() {
         comment.querySelector('#commentText').style.display = 'block';
         comment.querySelector('#editCommentForm').style.display = 'none';
       });
+      
+
 
       editCommentForm.appendChild(editedCommentText);
       editCommentForm.appendChild(submitButton);
       editCommentForm.appendChild(cancelButton);
+      
+      const commentLikesSection = document.createElement('div');
+commentLikesSection.className = 'comment-likes-section';
+
+const commentLikes = document.createElement('p');
+commentLikes.className = 'comment-likes';
+commentLikes.textContent = '0'; // You may want to set the initial likes count
+
+const likeIcon = document.createElement('i');
+likeIcon.className = 'far fa-thumbs-up fa-regular';
+likeIcon.addEventListener('click', likeComment);
+
+commentLikesSection.appendChild(commentLikes);
+commentLikesSection.appendChild(likeIcon);
 
       commentElement.appendChild(commentIconsContainer);
       commentElement.appendChild(commentText);
       commentElement.appendChild(editCommentForm);
+      commentElement.appendChild(commentLikesSection);
 
       // Append the new comment directly to the container
       const commentsContainer = document.getElementById('commentsContainer');
@@ -748,7 +754,7 @@ function addNewCommentHandler() {
       } else {
         console.error('Comments container not found.');
       }
-
+     
       // Clear the comment input
       document.getElementById('newCommentText').value = '';
     } else {
