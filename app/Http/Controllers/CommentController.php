@@ -47,6 +47,32 @@ class CommentController extends Controller
         return response()->json(['message' => $comment]);
     }
 
+    public function hideComment($commentId)
+    {
+        $comment = Comment::findOrFail($commentId);
+
+        if (!$comment) {
+            return response()->json(['status' => 'error', 'message' => 'Comment not found']);
+        }
+        $comment->update(['private' => true]);
+
+        return response()->json(['status' => 'success', 'message' => 'Comment hidden successfully']);
+    }
+
+    public function showComment($commentId)
+    {
+        $comment = Comment::findOrFail($commentId);
+
+        if (!$comment) {
+            return response()->json(['status' => 'error', 'message' => 'Comment not found']);
+        }
+        $comment->update(['private' => false]);
+
+        return response()->json(['status' => 'success', 'message' => 'Comment shown successfully']);
+    }
+
+
+
     public function editComment(Request $request)
     {
         $commentID = $request->input('comment_id');

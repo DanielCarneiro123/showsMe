@@ -30,8 +30,13 @@
                         <td>{{ $reportedComment->text }}</td>
                         <td>{{ $reportedComment->type }}</td>
                         <td>
-                            <i class="toggle-eye fa-solid fa-eye show-icon" id="show_{{ $reportedComment->comment_id }}" onclick="toggleAdminCommentVisibility('{{ $reportedComment->comment_id }}', 'public')" style="{{ $reportedComment->private ? 'display: inline-block;' : 'display: none;' }}"></i>
-                            <i class="toggle-eye fa-solid fa-eye-slash hidden-icon" id="hidden_{{ $reportedComment->comment_id }}" onclick="toggleAdminCommentVisibility('{{ $reportedComment->comment_id }}', 'private')" style="{{ $reportedComment->private ? 'display: none;' : 'display: inline-block;' }}"></i>
+                            @if($reportedComment->private)
+                                <i class="toggle-eye fa-solid fa-eye show-icon" id="show_{{ $reportedComment->comment_id }}" onclick="toggleAdminCommentVisibility('{{ $reportedComment->comment_id }}', 'public')" style="{{ $reportedComment->private ? 'display: flex;' : 'display: none;' }}"></i>
+                                <i class="toggle-eye fa-solid fa-eye-slash hidden-icon" id="hidden_{{ $reportedComment->comment_id }}" onclick="toggleAdminCommentVisibility('{{ $reportedComment->comment_id }}', 'private')" style="{{ $reportedComment->private ? 'display: none;' : 'display: flex;' }}"></i>
+                            @else
+                                <i class="toggle-eye fa-solid fa-eye show-icon" id="show_{{ $reportedComment->comment_id }}" onclick="toggleAdminCommentVisibility('{{ $reportedComment->comment_id }}', 'public')" style="{{ $reportedComment->private ? 'display: flex;' : 'display: none;' }}"></i>
+                                <i class="toggle-eye fa-solid fa-eye-slash hidden-icon" id="hidden_{{ $reportedComment->comment_id }}" onclick="toggleAdminCommentVisibility('{{ $reportedComment->comment_id }}', 'private')" style="{{ $reportedComment->private ? 'display: none;' : 'display: flex;' }}"></i>
+                            @endif
                         </td>
                     </tr>
                 @endforeach

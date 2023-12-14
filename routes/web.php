@@ -36,9 +36,9 @@ Route::redirect('/', '/all-events');
 
 Route::controller(CommentController::class)->group(function (){
     Route::post('/edit-comment', [CommentController::class, 'editComment'])->name('editComment');
-Route::post('/submit-comment', [CommentController::class, 'submitComment'])->name('submitComment');
-Route::post('/hide-comment/{commentId}', [CommentController::class, 'hideComment'])->name('hideComment');
-Route::post('/show-comment/{commentId}', [CommentController::class, 'showComment'])->name('showComment');
+    Route::post('/submit-comment', [CommentController::class, 'submitComment'])->name('submitComment');
+    Route::post('/hide-comment/{commentId}', [CommentController::class, 'hideComment'])->name('hideComment');
+    Route::post('/show-comment/{commentId}', [CommentController::class, 'showComment'])->name('showComment');
 });
 
 
