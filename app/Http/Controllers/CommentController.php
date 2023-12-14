@@ -100,7 +100,10 @@ class CommentController extends Controller
 
     $comment = Comment::find($commentID);
 
+    
+
     if ($comment) {
+        $comment->likes()->delete();
         
         $comment->reports()->each(function ($report) {
            

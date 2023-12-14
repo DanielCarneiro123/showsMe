@@ -544,12 +544,10 @@ event.target.outerHTML = '<i class="fas fa-thumbs-up fa-solid" id="liked" onclic
 
 
 function deleteComment(){
-  const comment = event.target.closest(".comment");
-
-  const commentID = comment.getAttribute('data-id');
-
+   const commentID = event.target.closest('.comment').getAttribute('data-id');
+   console.log(commentID);
   event.preventDefault();
-  sendAjaxRequest('post', '/delete-comment',{comment_id: commentID} , deleteCommentHandler);
+  sendAjaxRequest('post', '/delete-comment', { comment_id: commentID }, deleteCommentHandler);
 }
 function deleteCommentHandler() {
   const response = JSON.parse(this.responseText);
@@ -670,7 +668,6 @@ function addNewCommentHandler() {
       });
       iconsDiv.appendChild(editIcon);
 
-      // Trash can icon
       const deleteIcon = document.createElement('i');
       deleteIcon.className = 'fa-solid fa-trash-can';
       deleteIcon.addEventListener('click', function () {
@@ -679,6 +676,7 @@ function addNewCommentHandler() {
         sendAjaxRequest('post', '/delete-comment', { comment_id: commentID }, deleteCommentHandler);
       });
       iconsDiv.appendChild(deleteIcon);
+
 
       commentIconsContainer.appendChild(commentAuthor);
       commentIconsContainer.appendChild(iconsDiv);
