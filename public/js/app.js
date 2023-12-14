@@ -457,9 +457,16 @@ function showSection() {
     return;
   }
 
-  for (var j = 0; j < eventSections.length - 1; j++) {
+  for (var j = 0; j < eventSections.length ; j++) {
     eventSections[j].style.display = "none";
   }
+
+  var initialSection = document.getElementById('ticket-types');
+
+  if (initialSection) {
+    initialSection.style.display = "block"; 
+  }
+
 
   sectionButtons.forEach(function (button) {
     button.addEventListener("click", function () {
@@ -475,7 +482,12 @@ function showSection() {
       }
 
       if (currentSection) {
-        currentSection.style.display = "block";
+        if(sectionId =='event-info'){
+          currentSection.style.display = "grid";
+        }
+        else{
+          currentSection.style.display = "block";
+        }
         console.log("Displaying section with ID:", sectionId);
       } else {
         console.log("Section not found with ID:", sectionId);
