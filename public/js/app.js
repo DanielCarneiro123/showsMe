@@ -727,25 +727,26 @@ function addNewCommentHandler() {
       editCommentForm.appendChild(cancelButton);
       
       const commentLikesSection = document.createElement('div');
-commentLikesSection.className = 'comment-likes-section';
+      commentLikesSection.className = 'comment-likes-section';
 
-const commentLikes = document.createElement('p');
-commentLikes.className = 'comment-likes';
-commentLikes.textContent = '0'; // You may want to set the initial likes count
+      const commentLikes = document.createElement('p');
+      commentLikes.className = 'comment-likes';
+      commentLikes.textContent = '0'; 
 
-const likeIcon = document.createElement('i');
-likeIcon.className = 'far fa-thumbs-up fa-regular';
-likeIcon.addEventListener('click', likeComment);
+      const likeIcon = document.createElement('i');
+      likeIcon.className = 'far fa-thumbs-up fa-regular';
+      likeIcon.addEventListener('click', likeComment);
 
-commentLikesSection.appendChild(commentLikes);
-commentLikesSection.appendChild(likeIcon);
+      commentLikesSection.appendChild(likeIcon);
+      commentLikesSection.appendChild(commentLikes);
+      
 
       commentElement.appendChild(commentIconsContainer);
       commentElement.appendChild(commentText);
       commentElement.appendChild(editCommentForm);
       commentElement.appendChild(commentLikesSection);
 
-      // Append the new comment directly to the container
+      
       const commentsContainer = document.getElementById('commentsContainer');
       if (commentsContainer) {
         commentsContainer.appendChild(commentElement);
@@ -753,7 +754,7 @@ commentLikesSection.appendChild(likeIcon);
         console.error('Comments container not found.');
       }
      
-      // Clear the comment input
+      
       document.getElementById('newCommentText').value = '';
     } else {
       console.error('Invalid response structure or missing comment text or author ID.');
