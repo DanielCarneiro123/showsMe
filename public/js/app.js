@@ -712,6 +712,7 @@ function addNewCommentHandler() {
       cancelButton.className = 'btn btn-danger';
       cancelButton.textContent = 'Cancel';
       cancelButton.type = 'button';
+      cancelButton.style = 'margin-left: 4px;'
       cancelButton.addEventListener('click', function () {
         const comment = event.target.closest('.comment');
         comment.querySelector('#commentText').style.display = 'block';
