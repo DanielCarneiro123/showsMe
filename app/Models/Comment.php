@@ -21,6 +21,7 @@ class Comment extends Model
         'private',
         'event_id',
         'author_id',
+        'likes',
     ];
 
     /**
@@ -73,6 +74,20 @@ class Comment extends Model
 
         return $this->reports()->where('author_id', $userId)->exists();
     }
+
+    public function notifications()
+{
+    return $this->hasMany(Notification::class, 'comment_id');
+}
+
+
+
+public function likes()
+    {
+        return $this->hasMany(UserLikes::class, 'comment_id');
+    }
+
+
 
 
 }

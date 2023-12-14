@@ -90,52 +90,60 @@
         <span class="star-icon">★</span>
         <button class="btn btn-primary" onclick="showEditRatingForm()">Edit</button>
     </p>
+    <div class="centered-form">
+    <form id="editRatingForm" class="rate" method="POST" action="{{ route('editRating', ['eventId' => $event->event_id]) }}" style="display: none;">
+        @csrf
+        
+        
+        <input type="radio" name="rate" id="star5" value="5" {{ $userRating->rating == 5 ? 'checked' : '' }}>
+        <label for="star5" >5 stars</label>
+   
     
-    <form id="editRatingForm" class="text-center" method="POST" action="{{ route('editRating', ['eventId' => $event->event_id]) }}" style="display: none;">
-        @csrf
-
+        <input type="radio" name="rate" id="star4" value="4" {{ $userRating->rating == 4 ? 'checked' : '' }}>
+        <label for="star4" >4 stars</label>
+   
+        <input type="radio" name="rate" id="star3" value="3" {{ $userRating->rating == 3 ? 'checked' : '' }}>
+        <label for="star3" >3 stars</label>
+    
+        <input type="radio" name="rate" id="star2" value="2" {{ $userRating->rating == 2 ? 'checked' : '' }}>
+        <label for="star2" >2 stars</label>    
       
-        <label>
-            <input type="radio" name="rating" value="1" {{ $userRating->rating == 1 ? 'checked' : '' }}> 1
-        </label>
-        <label>
-            <input type="radio" name="rating" value="2" {{ $userRating->rating == 2 ? 'checked' : '' }}> 2
-        </label>
-        <label>
-            <input type="radio" name="rating" value="3" {{ $userRating->rating == 3 ? 'checked' : '' }}> 3
-        </label>
-        <label>
-            <input type="radio" name="rating" value="4" {{ $userRating->rating == 1 ? 'checked' : '' }}> 4
-        </label>
-        <label>
-            <input type="radio" name="rating" value="5" {{ $userRating->rating == 1 ? 'checked' : '' }}> 5
-        </label>
-
+        <input type="radio" name="rate" id="star1" value="1" {{ $userRating->rating == 1 ? 'checked' : '' }}>
+        <label for="star1" >1 star</label>
+   
+        <br>
+        <div class="text-center">
         <button type="submit" class="btn btn-primary">Update</button>
+        </div>
     </form>
-        
+</div>
     @else
-    <p class="text-center"> Give us your Rating: </p>
-    <form id="ratingForm" class="text-center" method="POST" action="{{ route('submitRating', ['eventId' => $event->event_id]) }}">
-        @csrf
-        <label>
-            <input type="radio" name="rating" value="1"> 1
-        </label>
-        <label>
-            <input type="radio" name="rating" value="2"> 2
-        </label>
-        <label>
-            <input type="radio" name="rating" value="3"> 3
-        </label>
-        <label>
-            <input type="radio" name="rating" value="4"> 4
-        </label>
-        <label>
-            <input type="radio" name="rating" value="5"> 5
-        </label>
-        
-        <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
+    <p class="text-center rate"> Give us your Rating: </p>
+    <div class="centered-form">
+    <form id="ratingForm" class="rate" method="POST" action="{{ route('submitRating', ['eventId' => $event->event_id]) }}">
+    @csrf
+    
+        <input type="radio" name="rate" id="star5" value="5">
+        <label for="star5" >5 stars</label>
+   
+    
+        <input type="radio" name="rate" id="star4" value="4">
+        <label for="star4" >4 stars</label>
+   
+        <input type="radio" name="rate" id="star3" value="3">
+        <label for="star3" >3 stars</label>
+    
+        <input type="radio" name="rate" id="star2" value="2">
+        <label for="star2" >2 stars</label>    
+      
+        <input type="radio" name="rate" id="star1" value="1">
+        <label for="star1" >1 star</label>
+   
+    <div class="text-center">
+    <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+</form>
+</div>
     @endif
 @endif
 
@@ -143,27 +151,43 @@
     <h2 class="text-primary">Public Comments</h2>
         <div id="public-comments-section" class="commentsContainer">
         @foreach($event->comments->where('private', false) as $comment)
-        <div class="comment" data-id="{{ $comment->comment_id }}">
-            <div class="comment-icons-container">
-                <p class="comment-author">{{ $comment->author->name }}</p>
-                <div>
-                @if(auth()->user() && auth()->user()->is_admin)
-                    <i class="toggle-eye fa-solid fa-eye show-icon" id="show_{{ $comment->comment_id }}" onclick="toggleCommentVisibility('{{ $comment->comment_id }}', 'show', 'private')" style="display: none;"></i>
-                    <i class="toggle-eye fa-solid fa-eye-slash hidden-icon" id="hidden_{{ $comment->comment_id }}" onclick="toggleCommentVisibility('{{ $comment->comment_id }}', 'hide', 'public')"></i>
-                @endif
-                    @if(auth()->check())
-                        @if((!$comment->isReported())&& (auth()->user()->user_id !== $comment->author->user_id))
-                            <i class="fa-solid fa-flag" onclick="showReportPopUp()"></i>
+            <div class="comment" data-id="{{ $comment->comment_id }}">
+                <div class="comment-icons-container">
+                    <p class="comment-author">{{ $comment->author->name }}</p>
+                    <div>
+                        <i class="toggle-eye fa-solid fa-eye show-icon" id="show_{{ $comment->comment_id }}" onclick="toggleCommentVisibility('{{ $comment->comment_id }}', 'show', 'private')" ></i>
+                        <i class="toggle-eye fa-solid fa-eye-slash hidden-icon" id="hidden_{{ $comment->comment_id }}" onclick="toggleCommentVisibility('{{ $comment->comment_id }}', 'hide', 'public')" style="display: none;"></i>
+                        @if(auth()->check())
+                            @if((!$comment->isReported())&& (auth()->user()->user_id !== $comment->author->user_id))
+                                <i class="fa-solid fa-flag" onclick="showReportPopUp()"></i>
+                            @endif
+                            @if(auth()->user()->user_id === $comment->author->user_id)
+                                <i class="fa-solid fa-pen-to-square" onclick="showEditCommentModal()"></i>
+                                <i class="fa-solid fa-trash-can" onclick="deleteComment()"></i>
+                            @endif
                         @endif
-                        @if(auth()->user()->user_id === $comment->author->user_id)
-                            <i class="fa-solid fa-pen-to-square" onclick="showEditCommentModal()"></i>
-                        @endif
-                    @endif
+                    </div>
                 </div>
-            </div>
-            <p class="comment-text">{{ $comment->text }}</p>
-        </div>
+                <p class="comment-text" id="commentText">{{ $comment->text }}</p>
+                <div class="comment-likes-section">
+                    <p class="comment-likes">{{ $comment->likes }} </p>
+                    @if(auth()->check() && auth()->user()->likes($comment->comment_id))
+                        
+                            <i class="fas fa-thumbs-up fa-solid" id="liked" onclick="unlikeComment()"></i>
+                        @else
+                            <i class="far fa-thumbs-up fa-regular" id="unliked" onclick="likeComment()"></i>
+                        @endif
+                    
+                    </div>
 
+                    <form id="editCommentForm"  style="display: none;">
+
+                        <textarea id="editedCommentText" class="edit-comment-textbox" rows="3" required>{{ $comment->text }}</textarea>
+                        <button class="btn btn-primary" onclick="editComment()">Submit</button>
+                        <button type="button" class="btn btn-danger" onclick="hideEditCommentModal()">Cancel</button>
+                    </form>
+
+            </div>
         @endforeach
     </div>
 
@@ -184,11 +208,30 @@
                             @endif
                             @if(auth()->user()->user_id === $comment->author->user_id)
                                 <i class="fa-solid fa-pen-to-square" onclick="showEditCommentModal()"></i>
+                                <i class="fa-solid fa-trash-can" onclick="deleteComment()"></i>
                             @endif
                         @endif
                     </div>
                 </div>
-                <p class="comment-text">{{ $comment->text }}</p>
+                <p class="comment-text" id="commentText">{{ $comment->text }}</p>
+                <div class="comment-likes-section">
+                    <p class="comment-likes">{{ $comment->likes }} </p>
+                    @if(auth()->check() && auth()->user()->likes($comment->comment_id))
+                        
+                            <i class="fas fa-thumbs-up fa-solid" id="liked" onclick="unlikeComment()"></i>
+                        @else
+                            <i class="far fa-thumbs-up fa-regular" id="unliked" onclick="likeComment()"></i>
+                        @endif
+                    
+                    </div>
+
+                    <form id="editCommentForm"  style="display: none;">
+
+                        <textarea id="editedCommentText" class="edit-comment-textbox" rows="3" required>{{ $comment->text }}</textarea>
+                        <button class="btn btn-primary" onclick="editComment()">Submit</button>
+                        <button type="button" class="btn btn-danger" onclick="hideEditCommentModal()">Cancel</button>
+                    </form>
+
             </div>
         @endforeach
         </div>

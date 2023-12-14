@@ -595,6 +595,80 @@ function hideEditCommentModal() {
  
 }
 
+function unlikeComment(){
+  const comment = event.target.closest(".comment");
+
+  const commentID = comment.getAttribute('data-id');
+  
+  event.preventDefault();
+  
+  sendAjaxRequest('post', '/unlike-comment',{comment_id: commentID});
+  
+  let likes = comment.querySelector('.comment-likes').textContent;
+  likes = parseInt(likes, 10);
+  likes = likes - 1;
+
+  comment.querySelector('.comment-likes').textContent = likes.toString();
+
+event.target.outerHTML = '<i class="far fa-thumbs-up fa-regular" id="unliked" onclick="likeComment(event)"></i>';
+  
+}
+
+function unlikeCommentHandler() {
+  console.log(this.responseText);
+  
+}
+
+function likeComment(){
+  const comment = event.target.closest(".comment");
+
+  const commentID = comment.getAttribute('data-id');
+  
+  event.preventDefault();
+  
+  sendAjaxRequest('post', '/like-comment',{comment_id: commentID});
+  
+  let likes = comment.querySelector('.comment-likes').textContent;
+  likes = parseInt(likes, 10);
+  likes = likes + 1;
+
+  comment.querySelector('.comment-likes').textContent = likes.toString();
+
+event.target.outerHTML = '<i class="fas fa-thumbs-up fa-solid" id="liked" onclick="unlikeComment(event)"></i>';
+  
+
+}
+
+
+
+function deleteComment(){
+  const comment = event.target.closest(".comment");
+
+  const commentID = comment.getAttribute('data-id');
+
+  event.preventDefault();
+  sendAjaxRequest('post', '/delete-comment',{comment_id: commentID} , deleteCommentHandler);
+}
+function deleteCommentHandler() {
+  const response = JSON.parse(this.responseText);
+  const message = response.message;
+
+  if (message && message.comment_id) {
+    const commentId = message.comment_id;
+    
+    
+    const commentElement = document.querySelector(`.comment[data-id="${commentId}"]`);
+    
+    if (commentElement) {
+      commentElement.remove();
+    } else {
+      console.error('Comment element not found in HTML:', commentId);
+    }
+  } else {
+    console.error('Invalid response structure or missing comment_id.');
+  }
+}
+
 function editComment(){
   const comment = event.target.closest(".comment");
   
@@ -653,6 +727,8 @@ function addNewComment(){
   sendAjaxRequest('post', '/submit-comment',{newCommentText: commentText,event_id: eventID} , addNewCommentHandler);
 
 };
+
+
 function addNewCommentHandler() {
   if (this.status === 200) {
     const response = JSON.parse(this.responseText);
@@ -674,6 +750,7 @@ function addNewCommentHandler() {
 
       const iconsDiv = document.createElement('div');
 
+      // Edit icon
       const editIcon = document.createElement('i');
       editIcon.className = 'fa-solid fa-pen-to-square';
       editIcon.addEventListener('click', function () {
@@ -690,6 +767,16 @@ function addNewCommentHandler() {
         }
       });
       iconsDiv.appendChild(editIcon);
+
+      // Trash can icon
+      const deleteIcon = document.createElement('i');
+      deleteIcon.className = 'fa-solid fa-trash-can';
+      deleteIcon.addEventListener('click', function () {
+        const commentID = commentElement.getAttribute('data-id');
+        event.preventDefault();
+        sendAjaxRequest('post', '/delete-comment', { comment_id: commentID }, deleteCommentHandler);
+      });
+      iconsDiv.appendChild(deleteIcon);
 
       commentIconsContainer.appendChild(commentAuthor);
       commentIconsContainer.appendChild(iconsDiv);
@@ -726,28 +813,46 @@ function addNewCommentHandler() {
       cancelButton.className = 'btn btn-danger';
       cancelButton.textContent = 'Cancel';
       cancelButton.type = 'button';
+      cancelButton.style = 'margin-left: 4px;'
       cancelButton.addEventListener('click', function () {
         const comment = event.target.closest('.comment');
         comment.querySelector('#commentText').style.display = 'block';
         comment.querySelector('#editCommentForm').style.display = 'none';
       });
+      
+
 
       editCommentForm.appendChild(editedCommentText);
       editCommentForm.appendChild(submitButton);
       editCommentForm.appendChild(cancelButton);
+      
+      const commentLikesSection = document.createElement('div');
+commentLikesSection.className = 'comment-likes-section';
+
+const commentLikes = document.createElement('p');
+commentLikes.className = 'comment-likes';
+commentLikes.textContent = '0'; // You may want to set the initial likes count
+
+const likeIcon = document.createElement('i');
+likeIcon.className = 'far fa-thumbs-up fa-regular';
+likeIcon.addEventListener('click', likeComment);
+
+commentLikesSection.appendChild(commentLikes);
+commentLikesSection.appendChild(likeIcon);
 
       commentElement.appendChild(commentIconsContainer);
       commentElement.appendChild(commentText);
       commentElement.appendChild(editCommentForm);
+      commentElement.appendChild(commentLikesSection);
 
       // Append the new comment directly to the container
-      const commentsContainer = document.getElementById('commentsContainer');
+      const commentsContainer = document.querySelector('.commentsContainer');
       if (commentsContainer) {
         commentsContainer.appendChild(commentElement);
       } else {
         console.error('Comments container not found.');
       }
-
+     
       // Clear the comment input
       document.getElementById('newCommentText').value = '';
     } else {
@@ -755,6 +860,7 @@ function addNewCommentHandler() {
     }
   }
 }
+
 
 
 function showEditRatingForm() {
