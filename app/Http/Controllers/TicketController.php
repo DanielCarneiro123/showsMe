@@ -31,12 +31,14 @@ class TicketController extends Controller
 
     public function myTickets(): View
     {
+        $user = Auth::user();
+        $notifications = $user->notifications;
         $ticketInstances = TicketInstance::with(['order', 'ticketType.event'])
             ->whereHas('order', function ($query) {
                 $query->where('buyer_id', Auth::user()->user_id);
             })->get();
 
-        return view('pages.my_tickets', compact('ticketInstances'));
+        return view('pages.my_tickets', compact('ticketInstances', 'notifications'));
     }
 
     

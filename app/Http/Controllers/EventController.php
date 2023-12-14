@@ -10,13 +10,14 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use App\Models\TicketOrder;
 use App\Models\TicketInstance;
+use App\Models\Notification; 
+use App\Models\User;
 use Illuminate\Auth\Access\AuthorizationException; 
 use Illuminate\Support\Facades\Mail;
 use App\Mail\TicketPurchaseConfirmation;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use App\Models\User;
 use Illuminate\Support\Facades\Hash; 
 
 
@@ -28,8 +29,11 @@ class EventController extends Controller
     public function view($id): View
     { 
         $event = Event::findOrFail($id);
+        $user = Auth::user();
+        
+        $notifications = $user ? $user->notifications : [];
 
-        return view('pages.event', compact('event'));
+        return view('pages.event', compact('event', 'notifications'));
     }
 
     public function index(): View
@@ -42,17 +46,24 @@ class EventController extends Controller
             $events = Event::where('private', false)->paginate(8);
         }
 
-        return view('pages.all_events', compact('events', 'user'));
+        $notifications = $user ? $user->notifications : [];
+
+
+        return view('pages.all_events', compact('events', 'user', 'notifications'));
     }
 
     public function myEvents(): View
     {
         if (Auth::check()) {
+            $user = Auth::user();
             $events = Event::where('creator_id', Auth::user()->user_id)->get();
+            $notifications = $user ? $user->notifications : [];
+            return view('pages.my_events', compact('events', 'notifications'));
         } else {
             $events = collect();
+            return view('pages.my_events', compact('events'));
         }
-        return view('pages.my_events', compact('events'));
+        
     }
     
 
@@ -162,82 +173,58 @@ class EventController extends Controller
 
     public function showCreateEvent()
     {
-    
-        return view('pages.create_event');
+        $user = Auth::user();
+        $notifications = $user ? $user->notifications : [];
+        return view('pages.create_event', compact('notifications'));
     }
 
 
     public function purchaseTickets(){
+        $user = session('purchase_user');
+        session()->forget('purchase_user');
         $quantities = session('purchase_quantities');
         session()->forget('purchase_quantities');
         $eventId = session('purchase_event_id');
         session()->forget('purchase_event_id');
 
 
-        try {
-            $event = Event::findOrFail($eventId);
-
-            /*
-            // If the user is not logged in, create a temporary account
-            if (Auth::guest()) {
-                $user = $this->createTemporaryAccount($request);
-            } else {
-                $user = Auth::user();
-            }*/ 
-
-            $this->authorize('purchaseTickets', $event);
+        $event = Event::findOrFail($eventId);
 
 
-            if (empty(array_filter($quantities, function ($quantity) {
-                return $quantity > 0;
-            }))) {
-                return redirect()->route('view-event', ['id' => $eventId])->with('error', 'Select at least one ticket type.');
-            }
+        $this->authorize('purchaseTickets', $event);
 
-            $buyer = Auth::user();
 
-            $order = new TicketOrder();
-            $order->timestamp = now();
-            $order->promo_code = null;
-            $order->buyer_id = $buyer->user_id;
-            $order->save();
+        if (empty(array_filter($quantities, function ($quantity) {
+            return $quantity > 0;
+        }))) {
+            return redirect()->route('view-event', ['id' => $eventId])->with('error', 'Select at least one ticket type.');
+        }
 
-            foreach ($quantities as $ticketTypeId => $quantity) {
-                if ($quantity > 0) {
-                    // Obtenha o TicketType associado ao ticketTypeId
-                    $ticketType = TicketType::findOrFail($ticketTypeId);
+        //$buyer = Auth::user();
 
-                    // Determine o mínimo entre stock e person_buying_limit
-                    $minQuantity = min($ticketType->stock, $ticketType->person_buying_limit);
+        $order = new TicketOrder();
+        $order->timestamp = now();
+        $order->promo_code = null;
+        $order->buyer_id = $user->user_id;
+        $order->save();
 
-                    // Verifique se a quantidade é um número inteiro positivo e menor que o mínimo
-                    if (is_numeric($quantity) && $quantity == (int) $quantity && $quantity > 0 && $quantity <= $minQuantity) {
-                        for ($i = 0; $i < $quantity; $i++) {
-                            $ticketInstance = new TicketInstance();
-                            $ticketInstance->ticket_type_id = $ticketTypeId;
-                            $ticketInstance->order_id = $order->order_id;
-                            $qrCodePath = $this->generateQRCodePath($ticketInstance);
-                            $ticketInstance->qr_code_path = $qrCodePath;
-                            $ticketInstance->save();
-                       // Mail::to($user->email)->send(new TicketPurchaseConfirmation($ticketInstance));
-                        }
-                    } else {
-                        return redirect()->route('view-event', ['id' => $eventId])->with('error', 'Invalid quantity for ticket type.');
-                    }
+        foreach ($quantities as $ticketTypeId => $quantity) {
+            if ($quantity > 0) {
+                $ticketType = TicketType::findOrFail($ticketTypeId);
+
+                for ($i = 0; $i < $quantity; $i++) {
+                    $ticketInstance = new TicketInstance();
+                    $ticketInstance->ticket_type_id = $ticketTypeId;
+                    $ticketInstance->order_id = $order->order_id;
+                    $qrCodePath = $this->generateQRCodePath($ticketInstance);
+                    $ticketInstance->qr_code_path = $qrCodePath;
+                    $ticketInstance->save();
+                    Mail::to($user->email)->send(new TicketPurchaseConfirmation($ticketInstance));
                 }
             }
+        }
 
-        // Logout apenas se o usuário estiver autenticado - if errado
-        /*if (Auth::check() && $user->temporary) {
-            Auth::logout();
-        }*/
-
-        return redirect()->route('my-tickets')->with('success', 'Tickets purchased successfully.');
-    } catch (AuthorizationException $e) {
-        return redirect()->route('login')->with('error', 'You must be logged in to purchase tickets.');
-    } catch (ModelNotFoundException $e) {
-        return redirect()->route('view-event', ['id' => $eventId])->with('error', 'Invalid ticket type.');
-    }
+    return redirect()->route('my-tickets')->with('success', 'Tickets purchased successfully.');
 }
 
 private function createTemporaryAccount(Request $request)
@@ -268,20 +255,18 @@ private function createTemporaryAccount(Request $request)
     
     public function searchEvents(Request $request)
     {
-        $query = $request->input('query');
-    {
+
+        $user = Auth::user();
+        $notifications = $user->notifications;
+
         $query = $request->input('query');
 
         $events = Event::whereRaw('tsvectors @@ plainto_tsquery(?)', [$query])
             ->orderByRaw('ts_rank(tsvectors, plainto_tsquery(?)) DESC', [$query])
             ->paginate(10);
-        $events = Event::whereRaw('tsvectors @@ plainto_tsquery(?)', [$query])
-            ->orderByRaw('ts_rank(tsvectors, plainto_tsquery(?)) DESC', [$query])
-            ->paginate(10);
 
-        return view('pages.all_events', compact('events'));
-    }
-}
+        return view('pages.all_events', compact('events', 'notifications'));
+    }  
 
     private function generateQRCodePath(TicketInstance $ticketInstance)
     {
@@ -299,10 +284,13 @@ private function createTemporaryAccount(Request $request)
 
     public function show($eventId)
     {
+        $user = Auth::user();
         $event = Event::findOrFail($eventId);
         $soldTickets = $event->soldTickets();
 
-        return view('pages.event', compact('event', 'soldTickets'));
+        $notifications = $user ? $user->notifications : [];
+
+        return view('pages.event', compact('event', 'soldTickets', 'notifications'));
     }
 
     public function calculateAndDisplayRevenue($eventId)
@@ -336,7 +324,6 @@ private function createTemporaryAccount(Request $request)
         }
     
         return response()->json(['error' => 'Invalid chart type']);
-    }    
-    
+    }  
 }
 ?>

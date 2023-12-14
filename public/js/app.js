@@ -395,6 +395,56 @@ function toggleProfileButtons() {
 }
 
 
+function toggleNotifications() {
+    const notificationContainer = document.getElementById('notification-container');
+    const notificationsBody = document.getElementById('notifications-body');
+
+    if (notificationContainer.style.display === 'none') {
+        loadNotifications(notificationsBody);
+        notificationContainer.style.maxHeight = (window.innerHeight - 90) + 'px';
+        notificationContainer.style.display = 'block';
+    } else {
+        notificationContainer.style.display = 'none';
+    }
+}
+
+
+
+function loadNotifications(notificationsBody) {
+  fetch(`/get-notifications`)
+      .then(response => response.json())
+      .then(data => {
+          notificationsBody.innerHTML = '';
+
+          data.notifications.forEach(notification => {
+              const notificationElement = document.createElement('div');
+              notificationElement.classList.add('notification');
+
+              const anchorTag = document.createElement('a');
+              anchorTag.classList.add('event-link');
+
+              if (notification.notification_type === 'Event') {
+                  anchorTag.href = `/view-event/${notification.event_id}`;
+                  anchorTag.innerHTML = `The event <strong>${notification.event_name || 'Unknown Event'}</strong> had some changes made. Check them out! `;
+              } else if (notification.notification_type === 'Comment') {
+                  anchorTag.href = `/view-event/${notification.event_id}`;
+                  anchorTag.innerHTML = `A comment was made in the event <strong>${notification.event_name || 'Unknown Event'}</strong>. `;
+              } else if (notification.notification_type === 'Report') {
+                  anchorTag.href = `/admin`;
+                  anchorTag.innerHTML = `A report on a comment was made in the event <strong>${notification.event_name || 'Unknown Event'}</strong>. `;
+              }
+
+              notificationElement.appendChild(anchorTag);
+
+              const horizontalLine = document.createElement('hr');
+              notificationElement.appendChild(horizontalLine);
+
+
+              notificationsBody.appendChild(notificationElement);
+          });
+      })
+      .catch(error => console.error('Error fetching notifications:', error));
+}
 
 
 //Immediate Execution on Page Load (To follow this approach later, if there is time)
@@ -441,7 +491,55 @@ function showSection() {
   });
 }
 
+
+function showAdminSection() {
+  var sectionButtons = document.querySelectorAll('.btn-check');
+  var eventSections = document.getElementsByClassName("admin-section"); 
+
+  if (!sectionButtons.length || !eventSections.length) {
+      return;
+  }
+
+  for (var j = 1; j < eventSections.length; j++) {
+    eventSections[j].style.display = "none";
+  }
+
+  sectionButtons.forEach(function(button) {
+    button.addEventListener("click", function() {
+      console.log(this);
+      
+      var sectionId = this.getAttribute("data-section-id");
+      console.log("Section ID:", sectionId);
+
+      var currentSection = document.getElementById(sectionId);
+
+      for (var j = 0; j < eventSections.length; j++) {
+        eventSections[j].style.display = "none";
+      }
+
+      if (currentSection) {
+        currentSection.style.display = "block";
+        console.log("Displaying section with ID:", sectionId);
+      } else {
+        console.log("Section not found with ID:", sectionId);
+      }
+
+      sectionButtons.forEach(function(btn) {
+        btn.parentElement.classList.remove("selected");
+      });
+
+      this.parentElement.classList.add("selected");
+      console.log("Button marked as selected");
+    });
+  });
+}
+
+
 showSection();
+
+
+showAdminSection();
+
 
 document.addEventListener("DOMContentLoaded", function () {
   let totalFields = document.querySelectorAll(".form-field").length;
@@ -495,6 +593,80 @@ function hideEditCommentModal() {
 
   comment.querySelector('#editCommentForm').style.display = 'none';
  
+}
+
+function unlikeComment(){
+  const comment = event.target.closest(".comment");
+
+  const commentID = comment.getAttribute('data-id');
+  
+  event.preventDefault();
+  
+  sendAjaxRequest('post', '/unlike-comment',{comment_id: commentID});
+  
+  let likes = comment.querySelector('.comment-likes').textContent;
+  likes = parseInt(likes, 10);
+  likes = likes - 1;
+
+  comment.querySelector('.comment-likes').textContent = likes.toString();
+
+event.target.outerHTML = '<i class="far fa-thumbs-up fa-regular" id="unliked" onclick="likeComment(event)"></i>';
+  
+}
+
+function unlikeCommentHandler() {
+  console.log(this.responseText);
+  
+}
+
+function likeComment(){
+  const comment = event.target.closest(".comment");
+
+  const commentID = comment.getAttribute('data-id');
+  
+  event.preventDefault();
+  
+  sendAjaxRequest('post', '/like-comment',{comment_id: commentID});
+  
+  let likes = comment.querySelector('.comment-likes').textContent;
+  likes = parseInt(likes, 10);
+  likes = likes + 1;
+
+  comment.querySelector('.comment-likes').textContent = likes.toString();
+
+event.target.outerHTML = '<i class="fas fa-thumbs-up fa-solid" id="liked" onclick="unlikeComment(event)"></i>';
+  
+
+}
+
+
+
+function deleteComment(){
+  const comment = event.target.closest(".comment");
+
+  const commentID = comment.getAttribute('data-id');
+
+  event.preventDefault();
+  sendAjaxRequest('post', '/delete-comment',{comment_id: commentID} , deleteCommentHandler);
+}
+function deleteCommentHandler() {
+  const response = JSON.parse(this.responseText);
+  const message = response.message;
+
+  if (message && message.comment_id) {
+    const commentId = message.comment_id;
+    
+    
+    const commentElement = document.querySelector(`.comment[data-id="${commentId}"]`);
+    
+    if (commentElement) {
+      commentElement.remove();
+    } else {
+      console.error('Comment element not found in HTML:', commentId);
+    }
+  } else {
+    console.error('Invalid response structure or missing comment_id.');
+  }
 }
 
 function editComment(){
@@ -555,6 +727,8 @@ function addNewComment(){
   sendAjaxRequest('post', '/submit-comment',{newCommentText: commentText,event_id: eventID} , addNewCommentHandler);
 
 };
+
+
 function addNewCommentHandler() {
   if (this.status === 200) {
     const response = JSON.parse(this.responseText);
@@ -576,6 +750,7 @@ function addNewCommentHandler() {
 
       const iconsDiv = document.createElement('div');
 
+      // Edit icon
       const editIcon = document.createElement('i');
       editIcon.className = 'fa-solid fa-pen-to-square';
       editIcon.addEventListener('click', function () {
@@ -592,6 +767,16 @@ function addNewCommentHandler() {
         }
       });
       iconsDiv.appendChild(editIcon);
+
+      // Trash can icon
+      const deleteIcon = document.createElement('i');
+      deleteIcon.className = 'fa-solid fa-trash-can';
+      deleteIcon.addEventListener('click', function () {
+        const commentID = commentElement.getAttribute('data-id');
+        event.preventDefault();
+        sendAjaxRequest('post', '/delete-comment', { comment_id: commentID }, deleteCommentHandler);
+      });
+      iconsDiv.appendChild(deleteIcon);
 
       commentIconsContainer.appendChild(commentAuthor);
       commentIconsContainer.appendChild(iconsDiv);
@@ -628,28 +813,46 @@ function addNewCommentHandler() {
       cancelButton.className = 'btn btn-danger';
       cancelButton.textContent = 'Cancel';
       cancelButton.type = 'button';
+      cancelButton.style = 'margin-left: 4px;'
       cancelButton.addEventListener('click', function () {
         const comment = event.target.closest('.comment');
         comment.querySelector('#commentText').style.display = 'block';
         comment.querySelector('#editCommentForm').style.display = 'none';
       });
+      
+
 
       editCommentForm.appendChild(editedCommentText);
       editCommentForm.appendChild(submitButton);
       editCommentForm.appendChild(cancelButton);
+      
+      const commentLikesSection = document.createElement('div');
+commentLikesSection.className = 'comment-likes-section';
+
+const commentLikes = document.createElement('p');
+commentLikes.className = 'comment-likes';
+commentLikes.textContent = '0'; // You may want to set the initial likes count
+
+const likeIcon = document.createElement('i');
+likeIcon.className = 'far fa-thumbs-up fa-regular';
+likeIcon.addEventListener('click', likeComment);
+
+commentLikesSection.appendChild(commentLikes);
+commentLikesSection.appendChild(likeIcon);
 
       commentElement.appendChild(commentIconsContainer);
       commentElement.appendChild(commentText);
       commentElement.appendChild(editCommentForm);
+      commentElement.appendChild(commentLikesSection);
 
       // Append the new comment directly to the container
-      const commentsContainer = document.getElementById('commentsContainer');
+      const commentsContainer = document.querySelector('.commentsContainer');
       if (commentsContainer) {
         commentsContainer.appendChild(commentElement);
       } else {
         console.error('Comments container not found.');
       }
-
+     
       // Clear the comment input
       document.getElementById('newCommentText').value = '';
     } else {
@@ -657,6 +860,7 @@ function addNewCommentHandler() {
     }
   }
 }
+
 
 
 function showEditRatingForm() {
@@ -686,9 +890,72 @@ const reportPopUp = document.querySelector('.pop-up-report');
             reportPopUp.style.display = 'none';
         }
     };
-
-    
   }
+
+
+
+  function toggleEye(showIconId, hideIconId) {
+    const showIcon = document.getElementById(showIconId);
+    const hideIcon = document.getElementById(hideIconId);
+
+    if (showIcon.style.display !== 'none') {
+        showIcon.style.display = 'none';
+        hideIcon.style.display = 'inline-block';
+    } else {
+        showIcon.style.display = 'inline-block';
+        hideIcon.style.display = 'none';
+    }
+}
+
+
+function toggleAdminCommentVisibility(commentId, action) {
+  let url = action === 'private' ? `/hide-comment/${commentId}` : `/show-comment/${commentId}`;
+
+  sendAjaxRequest('POST', url, {}, function () {
+      if (this.status === 200) {
+          toggleEye(`show_${commentId}`, `hidden_${commentId}`);
+      } else {
+          console.error(`Error toggling event visibility: ${this.responseText}`);
+      }
+  });
+}
+
+
+
+
+function toggleCommentVisibility(commentId, action, visibility) {
+  let url = action === 'hide' ? `/hide-comment/${commentId}` : `/show-comment/${commentId}`;
+  
+
+  sendAjaxRequest('POST', url, {}, function () {
+      if (this.status === 200) {
+          toggleEye(`show_${commentId}`, `hidden_${commentId}`);
+          if (visibility === 'public') {
+              moveCommentToPrivate(commentId);
+          } else {
+              moveCommentToPublic(commentId);
+          }
+      } else {
+          console.error(`Error toggling comment visibility: ${this.responseText}`);
+      }
+  });
+}
+
+function moveCommentToPrivate(commentId) {
+  const commentElement = document.querySelector(`.comment[data-id="${commentId}"]`);
+  commentElement.parentNode.removeChild(commentElement);
+  document.getElementById('private-comments-section').appendChild(commentElement);
+}
+
+function moveCommentToPublic(commentId) {
+  const commentElement = document.querySelector(`.comment[data-id="${commentId}"]`);
+  commentElement.parentNode.removeChild(commentElement);
+  document.getElementById('public-comments-section').appendChild(commentElement);
+}
+
+
+
+
 
   /*function showReportPopUp(commentId) {
     const reportPopUp = document.getElementById(`reportPopUp_${commentId}`);

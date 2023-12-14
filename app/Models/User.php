@@ -77,8 +77,27 @@ class User extends Authenticatable
         return $this->hasMany(Event::class, 'creator_id');
     }
 
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class, 'notified_user');
+    }
+
+    public function unreadNotifications()
+    {
+        return $this->notifications()->where('viewed', false);
+    }
+
     public function getProfileImage() {
         return FileController::get('profile', $this->id);
     }
-    
+
+    public function likes($comment_id): bool
+    {
+        return $this->newQuery()
+            ->from('userlikes')
+            ->where('user_id', $this->user_id)
+            ->where('comment_id', $comment_id)
+            ->exists();
+    }
+  
 }

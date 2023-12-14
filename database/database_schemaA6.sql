@@ -15,6 +15,7 @@ DROP TABLE IF EXISTS Tag;
 DROP TABLE IF EXISTS FAQ;
 DROP TABLE IF EXISTS Event_;
 DROP TABLE IF EXISTS TicketOrder;
+DROP TABLE IF EXISTS UserLikes;
 DROP TABLE IF EXISTS users;
 
 
@@ -55,8 +56,10 @@ CREATE TABLE Comment_ (
    comment_id SERIAL PRIMARY KEY,
    text TEXT,
    media BYTEA,
+   private BOOLEAN NOT NULL DEFAULT FALSE,
    event_id INT REFERENCES Event_ (event_id) ON UPDATE CASCADE,
    author_id INT REFERENCES users (user_id),
+   likes INT DEFAULT 0,
    CHECK (text IS NOT NULL OR media IS NOT NULL)
 );
 
@@ -128,16 +131,22 @@ CREATE TABLE Notification_ (
    viewed BOOLEAN NOT NULL DEFAULT FALSE,
    notification_type NotificationType NOT NULL,
    CHECK (
-      (notification_type = 'Event' AND event_id IS NOT NULL AND comment_id IS NULL AND report_id IS NULL) OR
-      (notification_type = 'Comment' AND event_id IS NULL AND comment_id IS NOT NULL AND report_id IS NULL) OR
-      (notification_type = 'Report' AND event_id IS NULL AND comment_id IS NULL AND report_id IS NOT NULL)
-   )
+    (notification_type = 'Event' AND event_id IS NOT NULL AND comment_id IS NULL AND report_id IS NULL) OR
+    (notification_type = 'Comment' AND event_id IS NOT NULL AND comment_id IS NOT NULL AND report_id IS NULL) OR
+    (notification_type = 'Report' AND event_id IS NULL AND comment_id IS NULL AND report_id IS NOT NULL)
+  )
 );
 
 CREATE TABLE EventImage (
    event_image_id SERIAL PRIMARY KEY,
    event_id INT NOT NULL REFERENCES Event_ (event_id) ON UPDATE CASCADE,
    image_path VARCHAR NOT NULL
+);
+
+CREATE TABLE UserLikes (
+   user_id INT REFERENCES users (user_id) ON UPDATE CASCADE,
+   comment_id INT REFERENCES Comment_ (comment_id) ON UPDATE CASCADE,
+   PRIMARY KEY (user_id, comment_id)
 );
 
 
@@ -154,10 +163,10 @@ CREATE OR REPLACE FUNCTION event_search_update() RETURNS TRIGGER AS $$
 BEGIN
   IF TG_OP = 'INSERT' THEN
     NEW.tsvectors = (
-      setweight(to_tsvector('english', NEW.name), 'A') ||
-      setweight(to_tsvector('english', NEW.description), 'B') ||
-      setweight(to_tsvector('english', COALESCE((SELECT string_agg(Tag.name, ' ') FROM TagEvent JOIN Tag ON TagEvent.tag_id = Tag.tag_id WHERE TagEvent.event_id = NEW.event_id),' ')), 'C') ||
-      setweight(to_tsvector('english', NEW.location), 'D')
+      setweight(to_tsvector('simple', NEW.name), 'A') ||
+      setweight(to_tsvector('simple', NEW.description), 'B') ||
+      setweight(to_tsvector('simple', COALESCE((SELECT string_agg(Tag.name, ' ') FROM TagEvent JOIN Tag ON TagEvent.tag_id = Tag.tag_id WHERE TagEvent.event_id = NEW.event_id),' ')), 'C') ||
+      setweight(to_tsvector('simple', NEW.location), 'D')
     );
   END IF;
 
@@ -175,10 +184,10 @@ BEGIN
          NEW.location <> OLD.location) THEN
 
       NEW.tsvectors = (
-        setweight(to_tsvector('english', NEW.name), 'A') ||
-        setweight(to_tsvector('english', NEW.description), 'B') ||
-        setweight(to_tsvector('english', COALESCE((SELECT string_agg(Tag.name, ' ') FROM TagEvent JOIN Tag ON TagEvent.tag_id = Tag.tag_id WHERE TagEvent.event_id = NEW.event_id),' ')), 'C') ||
-        setweight(to_tsvector('english', NEW.location), 'D')
+        setweight(to_tsvector('simple', NEW.name), 'A') ||
+        setweight(to_tsvector('simple', NEW.description), 'B') ||
+        setweight(to_tsvector('simple', COALESCE((SELECT string_agg(Tag.name, ' ') FROM TagEvent JOIN Tag ON TagEvent.tag_id = Tag.tag_id WHERE TagEvent.event_id = NEW.event_id),' ')), 'C') ||
+        setweight(to_tsvector('simple', NEW.location), 'D')
       );
 
     END IF;
@@ -188,6 +197,8 @@ BEGIN
 
   RETURN NEW;
 END $$ LANGUAGE plpgsql;
+
+
 
 CREATE TRIGGER event_search_update
 
@@ -200,8 +211,8 @@ CREATE OR REPLACE FUNCTION send_comment_notification()
 RETURNS TRIGGER AS $$
 BEGIN
   -- Insert a new notification for the event owner
-  INSERT INTO Notification_ (notified_user, comment_id, notification_type, timestamp)
-  VALUES ((SELECT creator_id FROM Event_ WHERE event_id = NEW.event_id), NEW.comment_id, 'Comment', NOW());
+  INSERT INTO Notification_ (notified_user, event_id, comment_id, notification_type, timestamp)
+  VALUES ((SELECT creator_id FROM Event_ WHERE event_id = NEW.event_id), NEW.event_id, NEW.comment_id, 'Comment', NOW());
 
   RETURN NEW;
 END;
@@ -244,10 +255,12 @@ CREATE OR REPLACE FUNCTION send_report_notification()
 RETURNS TRIGGER AS $$
 BEGIN
   -- Insert a new 'Report' type notification for every user with isAdmin = TRUE
-  INSERT INTO Notification_ (notified_user, report_id, notification_type, timestamp)
-  SELECT user_id, NEW.report_id, 'Report'::NotificationType, NOW()
-  FROM users
-  WHERE is_admin = TRUE;
+  IF NEW.report_id IS NOT NULL THEN
+    INSERT INTO Notification_ (notified_user, report_id, notification_type, timestamp)
+    SELECT user_id, NEW.report_id, 'Report'::NotificationType, NOW()
+    FROM users
+    WHERE is_admin = TRUE;
+  END IF;
 
   RETURN NEW;
 END;
@@ -293,6 +306,42 @@ CREATE TRIGGER check_duplicate_report_trigger
 BEFORE INSERT ON Report
 FOR EACH ROW
 EXECUTE FUNCTION check_duplicate_report();
+
+-- Create a trigger after insert on userlikes
+CREATE OR REPLACE FUNCTION increment_comment_likes()
+RETURNS TRIGGER AS $$
+BEGIN
+   
+    UPDATE comment_
+    SET likes = likes + 1
+    WHERE comment_id = NEW.comment_id;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER increment_comment_likes_trigger
+AFTER INSERT ON userlikes
+FOR EACH ROW
+EXECUTE FUNCTION increment_comment_likes();
+
+CREATE OR REPLACE FUNCTION decrement_comment_likes()
+RETURNS TRIGGER AS $$
+BEGIN
+    UPDATE comment_
+    SET likes = likes - 1
+    WHERE comment_id = OLD.comment_id;
+
+    RETURN OLD;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Create a trigger to decrement likes after deletion in userlikes
+CREATE TRIGGER decrement_comment_likes_trigger
+AFTER DELETE ON userlikes
+FOR EACH ROW
+EXECUTE FUNCTION decrement_comment_likes();
+
 
 
 
@@ -627,3 +676,7 @@ VALUES
   ('How do I leave a comment or review for an event?', 'To leave a comment or review for an event, you must be a registered user. Once logged in, navigate to the event page and use the comment section to share your thoughts or ask questions.'),
   ('Can I get a refund for purchased tickets?', 'Refund policies vary by event. Check the event details and terms and conditions before purchasing tickets. If you have questions about a specific event, contact the event organizer for more information.'),
   ('How can I promote my own event on this platform?', 'If you are interested in promoting your event on this platform, you can create an organizer account and follow the steps to add and promote your event. The platform provides tools to manage and market your events effectively.');
+
+INSERT INTO UserLikes (user_id, comment_id) 
+VALUES 
+  (2, 1);

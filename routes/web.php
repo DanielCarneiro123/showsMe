@@ -11,6 +11,7 @@ use App\Http\Controllers\FaqController;
 use App\Http\Controllers\AboutUsController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RatingController;
 use App\Http\Controllers\CommentController;
@@ -35,7 +36,13 @@ Route::redirect('/', '/all-events');
 
 Route::controller(CommentController::class)->group(function (){
     Route::post('/edit-comment', [CommentController::class, 'editComment'])->name('editComment');
-Route::post('/submit-comment', [CommentController::class, 'submitComment'])->name('submitComment');
+    Route::post('/submit-comment', [CommentController::class, 'submitComment'])->name('submitComment');
+    Route::post('/hide-comment/{commentId}', [CommentController::class, 'hideComment'])->name('hideComment');
+    Route::post('/show-comment/{commentId}', [CommentController::class, 'showComment'])->name('showComment');
+Route::post('/delete-comment', [CommentController::class, 'deleteComment'])->name('deleteComment');
+Route::post('/like-comment', [CommentController::class, 'likeComment'])->name('likeComment');
+Route::post('/unlike-comment', [CommentController::class, 'unlikeComment'])->name('unlikeComment');
+
 });
 
 
@@ -74,6 +81,7 @@ Route::controller(EventController::class)->group(function () {
 Route::controller(FaqController::class)->group(function () {
     Route::get('/faq', [FaqController::class, 'index'])->name('faq');
 });
+
 
 Route::controller(AboutUsController::class)->group(function () {
     Route::get('/about-us', [AboutUsController::class, 'index'])->name('about-us');
@@ -129,6 +137,15 @@ Route::controller(RegisterController::class)->group(function () {
     Route::get('/register', 'showRegistrationForm')->name('register');
     Route::post('/register', 'register');
 });
+
+//ver o nome da função que faz isto
+Route::post('/post/comment', [PostController::class, 'like']);
+
+Route::controller(NotificationController::class)->group(function (){
+    Route::get('/get-notifications', 'getNotifications')->name('get-notifications')->middleware('auth');
+    //Route::post('/notifications/mark-as-read', 'NotificationController@markAsRead')->name('notifications.markAsRead')->middleware('auth');
+});
+
 
 Route::controller(StripeController::class)->group(function () {
     Route::get('/payment', 'showPaymentForm')->name('payment');
