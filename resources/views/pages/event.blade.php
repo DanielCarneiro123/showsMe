@@ -37,10 +37,7 @@
         </div>
         @php $index++; @endphp
         @endforeach
-        <div class="mySlides faded">
-            <div class="numbertext">{{ $index }} / {{ count($event->images) }}</div>
-            <img src="{{ asset('../media/event_image.jpg') }}" alt="Event Image">
-        </div>
+        
         <!-- Next and previous buttons -->
         <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
         <a class="next" onclick="plusSlides(1)">&#10095;</a>
@@ -56,8 +53,6 @@
             <p id="average-rating"> Rating: {{ $event->averageRating }} <span class="star-icon">★</span></p>
 
         </section>
-        <h1 id="name">{{ $event->name }}</h1>
-        <p id="description">{{ $event->description }}</p>
     </div>
     <!-- <img src="{{ $event->event_image }}" alt="Event Image" class="event-image"> -->
     <section class="event-info">
