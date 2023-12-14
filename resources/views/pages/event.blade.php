@@ -4,6 +4,10 @@
 
 <section class="event-thumbnail">
     @if(auth()->user() && auth()->user()->is_admin)
+    <button class="event-button {{ $event->private ? 'active' : '' }}" id="activate-button"
+        data-id="{{ $event->event_id }}">{{ $event->private ? 'Activate Event' : 'Deactivate Event' }}</button>
+    @endif
+    <!--@if(auth()->user() && auth()->user()->is_admin)
     @if ($event->private)
     <form method="POST" action="{{ url('/activate-event/'.$event->event_id) }}">
         @csrf
@@ -19,10 +23,9 @@
         </button>
     </form>
     @endif
-    @endif
-
-    <!-- Slideshow container -->
-    <div class="slideshow-container">
+    @endif-->
+    
+<div class="slideshow-container">
         @php $index = 1; @endphp
 
         @foreach ($event->images as $image)
@@ -33,15 +36,12 @@
         </div>
         @php $index++; @endphp
         @endforeach
-        <div class="mySlides faded">
-            <div class="numbertext">{{ $index }} / {{ count($event->images) }}</div>
-            <img src="{{ asset('../media/event_image.jpg') }}" alt="Event Image">
-        </div>
+        
         <!-- Next and previous buttons -->
         <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
         <a class="next" onclick="plusSlides(1)">&#10095;</a>
-    </div>
-    <br>
+</div>
+<br>
 
 
 
@@ -52,8 +52,6 @@
         <p id="average-rating"> Rating: {{ number_format($event->averageRating, 1) }} <span class="star-icon">★</span></p>
        
         </section>
-        <h1 id="name">{{ $event->name }}</h1>
-        <p id="description">{{ $event->description }}</p>
     </div>
     <img src="{{ $event->event_image }}" alt="Event Image" class="event-image"> 
     <section class="event-info">
@@ -61,31 +59,32 @@
     </section>
 </section>
 
-<div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+<div class="container-fluid">
+    <div class="d-flex justify-content-center text-center">
+        <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+            <input type="radio" class="btn-check" name="sectionToggle" id="ticketTypes" autocomplete="off" checked
+                data-section-id="ticket-types">
+            <label class="btn btn-outline-primary" for="ticketTypes">Ticket Types</label>
+            <input type="radio" class="btn-check" name="sectionToggle" id="eventComments" autocomplete="off" 
+                data-section-id="event-comments">
+            <label class="btn btn-outline-primary" for="eventComments">Event Comments</label>
+            @can('updateEvent', $event)
+            <input type="radio" class="btn-check" name="sectionToggle" id="editEvent" autocomplete="off"
+                data-section-id="edit-event">
+            <label class="btn btn-outline-primary" for="editEvent">Edit Event</label>
 
-    <input type="radio" class="btn-check" name="sectionToggle" id="ticketTypes" autocomplete="off" checked
-        data-section-id="ticket-types">
-    <label class="btn btn-outline-primary" for="ticketTypes">Ticket Types</label>
-
-    <input type="radio" class="btn-check" name="sectionToggle" id="eventComments" autocomplete="off" 
-        data-section-id="event-comments">
-    <label class="btn btn-outline-primary" for="eventComments">Event Comments</label>
-
-    @can('updateEvent', $event)
-    <input type="radio" class="btn-check" name="sectionToggle" id="editEvent" autocomplete="off"
-        data-section-id="edit-event">
-    <label class="btn btn-outline-primary" for="editEvent">Edit Event</label>
-
-    <input type="radio" class="btn-check" name="sectionToggle" id="createTicketType" autocomplete="off"
-        data-section-id="create-ticket-type">
-    <label class="btn btn-outline-primary" for="createTicketType">Create Ticket Type</label>
-
-    <input type="radio" class="btn-check" name="sectionToggle" id="eventInfo" autocomplete="off" 
-        data-section-id="event-info">
-    <label class="btn btn-outline-primary" for="eventInfo">Event Info</label>
-    @endcan
+            <input type="radio" class="btn-check" name="sectionToggle" id="createTicketType" autocomplete="off"
+                data-section-id="create-ticket-type">
+            <label class="btn btn-outline-primary" for="createTicketType">Create Ticket Type</label>
+            <input type="radio" class="btn-check" name="sectionToggle" id="eventInfo" autocomplete="off" 
+                data-section-id="event-info">
+            <label class="btn btn-outline-primary" for="eventInfo">Event Info</label>
+            @endcan
+        </div>
+    </div>
 </div>
 
+<div class="mt-4"></div>
 
 <section id="event-comments" class="event-section">
     @if(auth()->user())
@@ -155,8 +154,8 @@
     @endif
 
 
-    <h2 class="text-primary">Public Comments</h2>
-    <div id="public-comments-section" class="commentsContainer">
+    <h2 class="text-primary text-center">Public Comments</h2>
+        <div id="public-comments-section" class="commentsContainer">
         @foreach($event->comments->where('private', false) as $comment)
         <div class="comment" data-id="{{ $comment->comment_id }}">
             <div class="comment-icons-container">
@@ -206,8 +205,8 @@
     </div>
 
     @if(auth()->user() && auth()->user()->is_admin)
-    <h2 class="text-primary mt-4">Private Comments (visible to admins only)</h2>
-    <div id="private-comments-section" class="commentsContainer">
+        <h2 class="text-primary mt-4 text-center">Private Comments (visible to admins only)</h2>
+        <div id="private-comments-section" class="commentsContainer">
 
         @foreach($event->comments->where('private', true) as $comment)
         <div class="comment" data-id="{{ $comment->comment_id }}">
@@ -248,7 +247,7 @@
     @endif
     <p class="comment-likes">{{ $comment->likes }}</p>
 
-</div>
+    </div>
             </div>
         @endforeach
     </div>
@@ -283,7 +282,7 @@
 </section>
 
 <section id="ticket-types" class="event-section">
-    <h2>Ticket <span>Types</span></h2>
+    <h2 class="text-center">Ticket <span>Types</span></h2>
     <form method="POST" action="{{ url('/payment/'.$event->event_id) }}">
         @csrf
         @guest
@@ -332,7 +331,7 @@
         </div>
         @endguest
         <br>
-        <div id="ticket-types-container">
+        <div id="ticket-types-container" class="text-center">
             @foreach ($event->ticketTypes as $ticketType)
             <article class="ticket-type" id="ticket-type-{{$ticketType->ticket_type_id}}"
                 data-max="{{ min($ticketType->person_buying_limit, $ticketType->stock) }}">
@@ -363,19 +362,20 @@
             @endforeach
         </div>
         <br>
-        @auth
-        <button type="submit" class="btn btn-success event-button" id="buy-button">
-            <i class="fa-solid fa-credit-card"></i> Buy Tickets
-        </button>
-        @endauth
-        @guest
-        <button type="button" class="btn btn-success event-button" id="show-form" onclick="toggleCheckoutSection()">
-            <i class="fa-solid fa-credit-card"></i> Buy Tickets
-        </button>
-        <button type="submit" class="btn btn-success event-button" id="buy-button" style="display: none;">
-            <i class="fa-solid fa-credit-card"></i> Buy Tickets
-        </button>
-        @endguest
+        <div class="d-flex justify-content-center">
+            @auth
+                <button type="submit" class="btn btn-success event-button" id="buy-button">
+                    <i class="fa-solid fa-credit-card"></i> Buy Tickets
+                </button>
+            @endauth
+
+            @guest
+                <button type="button" class="btn btn-success event-button" id="show-form" onclick="toggleCheckoutSection()">
+                    <i class="fa-solid fa-credit-card"></i> Buy Tickets
+                </button>
+            @endguest
+        </div>
+
     </form>
 </section>
 
@@ -385,10 +385,7 @@
 
 
 
-@if(auth()->user() && auth()->user()->is_admin)
-<button class="btn btn-success {{ $event->private ? 'active' : '' }}" id="activate-button"
-    data-id="{{ $event->event_id }}">{{ $event->private ? 'Activate Event' : 'Deactivate Event' }}</button>
-@endif
+
 
 <!-- Edit Event form (displayed only for the event creator) -->
 @can('updateEvent', $event)

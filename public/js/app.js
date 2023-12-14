@@ -503,6 +503,7 @@ function showSection() {
   });
 }
 
+showSection();
 
 function showAdminSection() {
   var sectionButtons = document.querySelectorAll('.btn-check');
@@ -547,7 +548,7 @@ function showAdminSection() {
 }
 
 
-showSection();
+
 
 
 showAdminSection();

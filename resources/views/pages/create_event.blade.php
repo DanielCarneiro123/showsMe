@@ -11,12 +11,13 @@
             <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>
         </div>
 
-
+        <div class="mt-4"></div>
+        
         <!-- Conteúdo do formulário de criação de evento para utilizadores autenticados -->
         <form method="POST" id="create-event-form" action="{{ url('/create-event') }}">
             @csrf
 
-            <div class="form-group">
+            <div class="form-group container-fluid">
                 <label for="name" class="form-label mt-4">Event Name:</label>
                     <input type="text" class="form-control form-field" id="name" name="name" placeholder="Type the name of the event" required>
                 </div>
@@ -68,10 +69,15 @@
 
     @else
         <!-- Mensagem para utilizadores não autenticados -->
-        <section class="warning-section">
-            <i class="fa-solid fa-circle-exclamation"></i>
-            <p>Junta-te a nós e cria os teus eventos!</p>
-            <p>Deves fazer <a href="{{ route('login') }}" class="auth-link">login </a> primeiro.</p>
-        </section>
+        <div class="container">
+            <div class="row">
+            <section class="warning-section text-center">
+                <i class="fa-solid fa-circle-exclamation fa-3x"></i>
+                <p class="text-sm">Junta-te a nós e cria os teus eventos!</p>
+                <p class="text-sm">Deves fazer <a href="{{ route('login') }}" class="auth-link">login </a> primeiro.</p>
+            </section>
+            </div>
+        </div>
+
     @endauth
 @endsection

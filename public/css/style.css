@@ -48,7 +48,7 @@ h1 span {
 .event-container {
   padding: 0 auto;
 
-}
+}*/
 
 
 
@@ -56,8 +56,8 @@ h1 span {
   flex: 0 0 calc(33.33% - 20px); 
   box-sizing: border-box;
   margin-bottom: 40px;
-  margin-left: 2px;
-  margin-right: 2px;
+  /*margin-left: 2px;
+  margin-right: 2px;*/
 }
 .event-card {
   display: flex;
@@ -74,7 +74,7 @@ h1 span {
 }
 
 .event-card img {
-  width: 100%;
+  max-width: 100%;
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
 }
@@ -323,31 +323,31 @@ button:hover {
 }
 
 /* Next & previous buttons */
-.prev, .next {
+.previous, .next, .page-item {
   cursor: pointer;
-  position: absolute;
-  top: 50%;
+  /*position: absolute;*/
+  /*top: 50%;
   width: auto;
-  margin-top: -22px;
-  padding: 16px;
+  margin-top: -22px;*/
+  /*padding: 16px;*/
   color: white;
   font-weight: bold;
-  font-size: 18px;
-  transition: 0.6s ease;
+  /*font-size: 18px;*/
+  /*transition: 0.6s ease;
   border-radius: 0 3px 3px 0;
-  user-select: none;
+  user-select: none;*/
 }
 
 /* Position the "next button" to the right */
-.next {
+/*.next {
   right: 0;
   border-radius: 3px 0 0 3px;
-}
+}*/
 
 /* On hover, add a black background color with a little bit see-through */
-.prev:hover, .next:hover {
+/*.prev:hover, .next:hover {
   background-color: rgba(0,0,0,0.8);
-}
+}*/
 
 /* Caption text */
 .text {

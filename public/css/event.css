@@ -47,11 +47,11 @@
 }
 
 .ticket-types h2 {
-    font-size: 3em;
+    font-size: 3em; 
 }
 
 h2 span {
-    color: rgb(192, 148, 198);;
+    color: rgb(192, 148, 198);
 }
 
 .ticket-type {
@@ -453,6 +453,48 @@ input[type="number"]:invalid {
     min-height: 170px;
     height: fit-content;
 }
+
+.warning-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 40vh; 
+}
+
+@media (max-width: 1000px) {
+    .warning-section {
+        font-size: 14px; 
+        height: 44vh;
+
+    }
+
+    .fa-circle-exclamation {
+        font-size: 2em; 
+    }
+}
+
+
+.warning-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 40vh; 
+}
+
+@media (max-width: 1000px) {
+    .warning-section {
+        font-size: 14px; 
+        height: 44vh;
+
+    }
+
+    .fa-circle-exclamation {
+        font-size: 2em; 
+    }
+}
+
 
 .event-info-content .hist-compras-cards:hover {
     cursor: pointer;
