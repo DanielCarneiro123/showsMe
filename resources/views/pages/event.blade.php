@@ -65,23 +65,29 @@
     </section>
 </section>
 
-<div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-    <input type="radio" class="btn-check" name="sectionToggle" id="ticketTypes" autocomplete="off" checked
-        data-section-id="ticket-types">
-    <label class="btn btn-outline-primary" for="ticketTypes">Ticket Types</label>
-    <input type="radio" class="btn-check" name="sectionToggle" id="eventInfo" autocomplete="off" 
-        data-section-id="event-info">
-    <label class="btn btn-outline-primary" for="eventInfo">Event Info</label>
-    @can('updateEvent', $event)
-    <input type="radio" class="btn-check" name="sectionToggle" id="editEvent" autocomplete="off"
-        data-section-id="edit-event">
-    <label class="btn btn-outline-primary" for="editEvent">Edit Event</label>
+<div class="container-fluid">
+    <div class="d-flex justify-content-center text-center">
+        <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+            <input type="radio" class="btn-check" name="sectionToggle" id="ticketTypes" autocomplete="off" checked
+                data-section-id="ticket-types">
+            <label class="btn btn-outline-primary" for="ticketTypes">Ticket Types</label>
+            <input type="radio" class="btn-check" name="sectionToggle" id="eventInfo" autocomplete="off" 
+                data-section-id="event-info">
+            <label class="btn btn-outline-primary" for="eventInfo">Event Info</label>
+            @can('updateEvent', $event)
+            <input type="radio" class="btn-check" name="sectionToggle" id="editEvent" autocomplete="off"
+                data-section-id="edit-event">
+            <label class="btn btn-outline-primary" for="editEvent">Edit Event</label>
 
-    <input type="radio" class="btn-check" name="sectionToggle" id="createTicketType" autocomplete="off"
-        data-section-id="create-ticket-type">
-    <label class="btn btn-outline-primary" for="createTicketType">Create Ticket Type</label>
-    @endcan
+            <input type="radio" class="btn-check" name="sectionToggle" id="createTicketType" autocomplete="off"
+                data-section-id="create-ticket-type">
+            <label class="btn btn-outline-primary" for="createTicketType">Create Ticket Type</label>
+            @endcan
+        </div>
+    </div>
 </div>
+
+<div class="mt-4"></div>
 
 <section id="event-info" class="event-section">
 
@@ -224,7 +230,7 @@
 </section>
 
 <section id="ticket-types" class="event-section">
-    <h2>Ticket <span>Types</span></h2>
+    <h2 class="text-center">Ticket <span>Types</span></h2>
     <form method="POST" action="{{ url('/payment/'.$event->event_id) }}">
         @csrf
         @guest
@@ -273,7 +279,7 @@
         </div>
         @endguest
         <br>
-        <div id="ticket-types-container">
+        <div id="ticket-types-container" class="text-center">
             @foreach ($event->ticketTypes as $ticketType)
             <article class="ticket-type" id="ticket-type-{{$ticketType->ticket_type_id}}"
                 data-max="{{ min($ticketType->person_buying_limit, $ticketType->stock) }}">
@@ -304,19 +310,20 @@
             @endforeach
         </div>
         <br>
-        @auth
-        <button type="submit" class="btn btn-success event-button" id="buy-button">
-            <i class="fa-solid fa-credit-card"></i> Buy Tickets
-        </button>
-        @endauth
-        @guest
-        <button type="button" class="btn btn-success event-button" id="show-form" onclick="toggleCheckoutSection()">
-            <i class="fa-solid fa-credit-card"></i> Buy Tickets
-        </button>
-        <button type="submit" class="btn btn-success event-button" id="buy-button" style="display: none;">
-            <i class="fa-solid fa-credit-card"></i> Buy Tickets
-        </button>
-        @endguest
+        <div class="d-flex justify-content-center">
+            @auth
+                <button type="submit" class="btn btn-success event-button" id="buy-button">
+                    <i class="fa-solid fa-credit-card"></i> Buy Tickets
+                </button>
+            @endauth
+
+            @guest
+                <button type="button" class="btn btn-success event-button" id="show-form" onclick="toggleCheckoutSection()">
+                    <i class="fa-solid fa-credit-card"></i> Buy Tickets
+                </button>
+            @endguest
+        </div>
+
     </form>
 </section>
 
