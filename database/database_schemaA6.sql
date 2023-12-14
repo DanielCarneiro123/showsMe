@@ -55,6 +55,7 @@ CREATE TABLE Comment_ (
    comment_id SERIAL PRIMARY KEY,
    text TEXT,
    media BYTEA,
+   private BOOLEAN NOT NULL DEFAULT FALSE,
    event_id INT REFERENCES Event_ (event_id) ON UPDATE CASCADE,
    author_id INT REFERENCES users (user_id),
    CHECK (text IS NOT NULL OR media IS NOT NULL)
@@ -128,10 +129,10 @@ CREATE TABLE Notification_ (
    viewed BOOLEAN NOT NULL DEFAULT FALSE,
    notification_type NotificationType NOT NULL,
    CHECK (
-      (notification_type = 'Event' AND event_id IS NOT NULL AND comment_id IS NULL AND report_id IS NULL) OR
-      (notification_type = 'Comment' AND event_id IS NULL AND comment_id IS NOT NULL AND report_id IS NULL) OR
-      (notification_type = 'Report' AND event_id IS NULL AND comment_id IS NULL AND report_id IS NOT NULL)
-   )
+    (notification_type = 'Event' AND event_id IS NOT NULL AND comment_id IS NULL AND report_id IS NULL) OR
+    (notification_type = 'Comment' AND event_id IS NOT NULL AND comment_id IS NOT NULL AND report_id IS NULL) OR
+    (notification_type = 'Report' AND event_id IS NULL AND comment_id IS NULL AND report_id IS NOT NULL)
+  )
 );
 
 CREATE TABLE EventImage (
@@ -200,8 +201,8 @@ CREATE OR REPLACE FUNCTION send_comment_notification()
 RETURNS TRIGGER AS $$
 BEGIN
   -- Insert a new notification for the event owner
-  INSERT INTO Notification_ (notified_user, comment_id, notification_type, timestamp)
-  VALUES ((SELECT creator_id FROM Event_ WHERE event_id = NEW.event_id), NEW.comment_id, 'Comment', NOW());
+  INSERT INTO Notification_ (notified_user, event_id, comment_id, notification_type, timestamp)
+  VALUES ((SELECT creator_id FROM Event_ WHERE event_id = NEW.event_id), NEW.event_id, NEW.comment_id, 'Comment', NOW());
 
   RETURN NEW;
 END;
@@ -244,10 +245,12 @@ CREATE OR REPLACE FUNCTION send_report_notification()
 RETURNS TRIGGER AS $$
 BEGIN
   -- Insert a new 'Report' type notification for every user with isAdmin = TRUE
-  INSERT INTO Notification_ (notified_user, report_id, notification_type, timestamp)
-  SELECT user_id, NEW.report_id, 'Report'::NotificationType, NOW()
-  FROM users
-  WHERE is_admin = TRUE;
+  IF NEW.report_id IS NOT NULL THEN
+    INSERT INTO Notification_ (notified_user, report_id, notification_type, timestamp)
+    SELECT user_id, NEW.report_id, 'Report'::NotificationType, NOW()
+    FROM users
+    WHERE is_admin = TRUE;
+  END IF;
 
   RETURN NEW;
 END;

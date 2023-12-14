@@ -140,45 +140,60 @@
 @endif
 
 
-    <h2 class="text-primary">Comments</h2>
-    <div  id="commentsContainer">
-    @forelse($event->comments as $comment)
-        <div class="comment"  data-id="{{ $comment->comment_id}}">
-       
-        
-        <div class="comment-icons-container">
-            <p class="comment-author">{{ $comment->author->name }}</p>
-            <div>
-            @if(auth()->check())
-            @if((!$comment->isReported())&& (auth()->user()->user_id !== $comment->author->user_id))
-            <i class="fa-solid fa-flag" onclick="showReportPopUp()"></i>
-            @endif
-            @if(auth()->user()->user_id === $comment->author->user_id)
-            <i class="fa-solid fa-pen-to-square" onclick="showEditCommentModal()"></i>
-            @endif
-            @endif
+    <h2 class="text-primary">Public Comments</h2>
+        <div id="public-comments-section" class="commentsContainer">
+        @foreach($event->comments->where('private', false) as $comment)
+        <div class="comment" data-id="{{ $comment->comment_id }}">
+            <div class="comment-icons-container">
+                <p class="comment-author">{{ $comment->author->name }}</p>
+                <div>
+                @if(auth()->user() && auth()->user()->is_admin)
+                    <i class="toggle-eye fa-solid fa-eye show-icon" id="show_{{ $comment->comment_id }}" onclick="toggleCommentVisibility('{{ $comment->comment_id }}', 'show', 'private')" style="display: none;"></i>
+                    <i class="toggle-eye fa-solid fa-eye-slash hidden-icon" id="hidden_{{ $comment->comment_id }}" onclick="toggleCommentVisibility('{{ $comment->comment_id }}', 'hide', 'public')"></i>
+                @endif
+                    @if(auth()->check())
+                        @if((!$comment->isReported())&& (auth()->user()->user_id !== $comment->author->user_id))
+                            <i class="fa-solid fa-flag" onclick="showReportPopUp()"></i>
+                        @endif
+                        @if(auth()->user()->user_id === $comment->author->user_id)
+                            <i class="fa-solid fa-pen-to-square" onclick="showEditCommentModal()"></i>
+                        @endif
+                    @endif
+                </div>
             </div>
+            <p class="comment-text">{{ $comment->text }}</p>
         </div>
-        
-       
-        <p class="comment-text" id="commentText">{{ $comment->text }}</p>
-        <form id="editCommentForm"  style="display: none;">
-        <textarea id="editedCommentText" class="edit-comment-textbox" rows="3" required>{{ $comment->text }}</textarea>
-            <button class="btn btn-primary" onclick="editComment()">Submit</button>
-            <button type="button" class="btn btn-danger" onclick="hideEditCommentModal()">Cancel</button>
-        </form>
 
-        
-      
-
-        </div>
-       
- 
-
-    @empty
-        <p class="text-center">No comments yet.</p>
-    @endforelse
+        @endforeach
     </div>
+
+    @if(auth()->user() && auth()->user()->is_admin)
+        <h2 class="text-primary mt-4">Private Comments (visible to admins only)</h2>
+        <div id="private-comments-section" class="commentsContainer">
+
+        @foreach($event->comments->where('private', true) as $comment)
+            <div class="comment" data-id="{{ $comment->comment_id }}">
+                <div class="comment-icons-container">
+                    <p class="comment-author">{{ $comment->author->name }}</p>
+                    <div>
+                        <i class="toggle-eye fa-solid fa-eye show-icon" id="show_{{ $comment->comment_id }}" onclick="toggleCommentVisibility('{{ $comment->comment_id }}', 'show', 'private')" ></i>
+                        <i class="toggle-eye fa-solid fa-eye-slash hidden-icon" id="hidden_{{ $comment->comment_id }}" onclick="toggleCommentVisibility('{{ $comment->comment_id }}', 'hide', 'public')" style="display: none;"></i>
+                        @if(auth()->check())
+                            @if((!$comment->isReported())&& (auth()->user()->user_id !== $comment->author->user_id))
+                                <i class="fa-solid fa-flag" onclick="showReportPopUp()"></i>
+                            @endif
+                            @if(auth()->user()->user_id === $comment->author->user_id)
+                                <i class="fa-solid fa-pen-to-square" onclick="showEditCommentModal()"></i>
+                            @endif
+                        @endif
+                    </div>
+                </div>
+                <p class="comment-text">{{ $comment->text }}</p>
+            </div>
+        @endforeach
+        </div>
+    @endif
+
     @if(auth()->check())
 <form id="newCommentForm" action="{{ route('submitComment') }}" method="post">
     @csrf

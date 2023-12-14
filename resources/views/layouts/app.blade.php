@@ -48,59 +48,70 @@
                 <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarColor01">
-                <ul class="navbar-nav me-auto">
-                @auth   
-                <li class="nav-item">
-                   <a class="nav-link" href="{{ route('my-events') }}">MyEvents</a> 
-                </li> 
-                <li class="nav-item">  
-                   <a class="nav-link" href="{{ route('my-tickets') }}">MyTickets</a> 
-                </li> 
+                    <ul class="navbar-nav me-auto">
+                    @auth   
+                    <li class="nav-item">
+                    <a class="nav-link" href="{{ route('my-events') }}">MyEvents</a> 
+                    </li> 
+                    <li class="nav-item">  
+                    <a class="nav-link" href="{{ route('my-tickets') }}">MyTickets</a> 
+                    </li> 
+                    
+                    @endauth
+                    <li class="nav-item">
+                    <a class="nav-link" href="{{ route('create-event') }}">Create Event</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('faq') }}">FAQs</a> 
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('about-us') }}">About Us</a> 
+                    </li>
                 
-                @endauth
-                <li class="nav-item">
-                   <a class="nav-link" href="{{ route('create-event') }}">Create Event</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('faq') }}">FAQs</a> 
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('about-us') }}">About Us</a> 
-                </li>
-            
-                @if(auth()->user() && auth()->user()->is_admin)
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('admin') }}">Admin</a> 
-                </li>
-                @endif   
-                </ul>
-                <section id='header-buttons'>
-                    @if (Auth::check())
-                        <a id="user-header-name" class="text-light"  href="{{ route('profile') }}">{{ Auth::user()->name}}</a>
-                        <a class="btn btn-outline-secondary" href="{{ url('/logout') }}"> Logout </a>
-                    @else
-                        <a class="btn btn-primary" href="{{ url('/login') }}"> Login </a>
-                        <a class="btn btn-primary" href="{{ url('/register') }}"> Register </a>
-                    @endif
-                </section>
+                    @if(auth()->user() && auth()->user()->is_admin)
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('admin') }}">Admin</a> 
+                    </li>
+                    @endif   
+                    </ul>
+                    <section id='header-buttons'>
+                        @if (Auth::check())
+                        @include('partials.notification')
+                        <div class="notification-icon me-3" onclick="toggleNotifications()">
+                            <button class="btn btn-link" data-bs-toggle="modal" data-bs-target="#notificationsModal">
+                                <i class="fa-solid fa-bell fa-2x"></i>
+                            </button>
+                        </div>
+                        <div class="user-info">
+                            <a id="user-header-name" class="text-light me-2" href="{{ route('profile') }}">{{ Auth::user()->name}}</a>
+                            <a class="btn btn-outline-secondary" href="{{ url('/logout') }}">Logout</a>
+                        </div>
+                        @else
+                            <a class="btn btn-primary" href="{{ url('/login') }}"> Login </a>
+                            <a class="btn btn-primary" href="{{ url('/register') }}"> Register </a>
+                        @endif
+                    </section>
                 </div>
             </div>
         </nav>
 
-            @if(session('error'))
-            <div class="alert alert-danger" style="color: red;">
-                    {{ session('error') }}
-                </div>
-            @endif
+        
 
-            @if(session('success'))
-                <div class="alert alert-success" style="color: green;">
-                    {{ session('success') }}
-                </div>
-            @endif
-            <section id="content">
-                @yield('content')
-            </section>
+        @if(session('error'))
+        <div class="alert alert-danger" style="color: red;">
+                {{ session('error') }}
+            </div>
+        @endif
+
+        @if(session('success'))
+            <div class="alert alert-success" style="color: green;">
+                {{ session('success') }}
+            </div>
+        @endif
+        <section id="content">
+            @yield('content')
+        </section>
+
         </main>
     </body>
 </html>

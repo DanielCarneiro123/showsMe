@@ -10,13 +10,14 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use App\Models\TicketOrder;
 use App\Models\TicketInstance;
+use App\Models\Notification; 
+use App\Models\User;
 use Illuminate\Auth\Access\AuthorizationException; 
 use Illuminate\Support\Facades\Mail;
 use App\Mail\TicketPurchaseConfirmation;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use App\Models\User;
 use Illuminate\Support\Facades\Hash; 
 
 
@@ -28,8 +29,11 @@ class EventController extends Controller
     public function view($id): View
     { 
         $event = Event::findOrFail($id);
+        $user = Auth::user();
+        
+        $notifications = $user ? $user->notifications : [];
 
-        return view('pages.event', compact('event'));
+        return view('pages.event', compact('event', 'notifications'));
     }
 
     public function index(): View
@@ -42,17 +46,24 @@ class EventController extends Controller
             $events = Event::where('private', false)->paginate(8);
         }
 
-        return view('pages.all_events', compact('events', 'user'));
+        $notifications = $user ? $user->notifications : [];
+
+
+        return view('pages.all_events', compact('events', 'user', 'notifications'));
     }
 
     public function myEvents(): View
     {
         if (Auth::check()) {
+            $user = Auth::user();
             $events = Event::where('creator_id', Auth::user()->user_id)->get();
+            $notifications = $user ? $user->notifications : [];
+            return view('pages.my_events', compact('events', 'notifications'));
         } else {
             $events = collect();
+            return view('pages.my_events', compact('events'));
         }
-        return view('pages.my_events', compact('events'));
+        
     }
     
 
@@ -162,8 +173,9 @@ class EventController extends Controller
 
     public function showCreateEvent()
     {
-    
-        return view('pages.create_event');
+        $user = Auth::user();
+        $notifications = $user ? $user->notifications : [];
+        return view('pages.create_event', compact('notifications'));
     }
 
 
@@ -243,20 +255,18 @@ private function createTemporaryAccount(Request $request)
     
     public function searchEvents(Request $request)
     {
-        $query = $request->input('query');
-    {
+
+        $user = Auth::user();
+        $notifications = $user->notifications;
+
         $query = $request->input('query');
 
         $events = Event::whereRaw('tsvectors @@ plainto_tsquery(?)', [$query])
             ->orderByRaw('ts_rank(tsvectors, plainto_tsquery(?)) DESC', [$query])
             ->paginate(10);
-        $events = Event::whereRaw('tsvectors @@ plainto_tsquery(?)', [$query])
-            ->orderByRaw('ts_rank(tsvectors, plainto_tsquery(?)) DESC', [$query])
-            ->paginate(10);
 
-        return view('pages.all_events', compact('events'));
-    }
-}
+        return view('pages.all_events', compact('events', 'notifications'));
+    }  
 
     private function generateQRCodePath(TicketInstance $ticketInstance)
     {
@@ -274,10 +284,13 @@ private function createTemporaryAccount(Request $request)
 
     public function show($eventId)
     {
+        $user = Auth::user();
         $event = Event::findOrFail($eventId);
         $soldTickets = $event->soldTickets();
 
-        return view('pages.event', compact('event', 'soldTickets'));
+        $notifications = $user ? $user->notifications : [];
+
+        return view('pages.event', compact('event', 'soldTickets', 'notifications'));
     }
 
     public function calculateAndDisplayRevenue($eventId)
@@ -311,7 +324,6 @@ private function createTemporaryAccount(Request $request)
         }
     
         return response()->json(['error' => 'Invalid chart type']);
-    }    
-    
+    }  
 }
 ?>

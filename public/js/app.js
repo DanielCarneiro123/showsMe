@@ -395,6 +395,56 @@ function toggleProfileButtons() {
 }
 
 
+function toggleNotifications() {
+    const notificationContainer = document.getElementById('notification-container');
+    const notificationsBody = document.getElementById('notifications-body');
+
+    if (notificationContainer.style.display === 'none') {
+        loadNotifications(notificationsBody);
+        notificationContainer.style.maxHeight = (window.innerHeight - 90) + 'px';
+        notificationContainer.style.display = 'block';
+    } else {
+        notificationContainer.style.display = 'none';
+    }
+}
+
+
+
+function loadNotifications(notificationsBody) {
+  fetch(`/get-notifications`)
+      .then(response => response.json())
+      .then(data => {
+          notificationsBody.innerHTML = '';
+
+          data.notifications.forEach(notification => {
+              const notificationElement = document.createElement('div');
+              notificationElement.classList.add('notification');
+
+              const anchorTag = document.createElement('a');
+              anchorTag.classList.add('event-link');
+
+              if (notification.notification_type === 'Event') {
+                  anchorTag.href = `/view-event/${notification.event_id}`;
+                  anchorTag.innerHTML = `The event <strong>${notification.event_name || 'Unknown Event'}</strong> had some changes made. Check them out! `;
+              } else if (notification.notification_type === 'Comment') {
+                  anchorTag.href = `/view-event/${notification.event_id}`;
+                  anchorTag.innerHTML = `A comment was made in the event <strong>${notification.event_name || 'Unknown Event'}</strong>. `;
+              } else if (notification.notification_type === 'Report') {
+                  anchorTag.href = `/admin`;
+                  anchorTag.innerHTML = `A report on a comment was made in the event <strong>${notification.event_name || 'Unknown Event'}</strong>. `;
+              }
+
+              notificationElement.appendChild(anchorTag);
+
+              const horizontalLine = document.createElement('hr');
+              notificationElement.appendChild(horizontalLine);
+
+
+              notificationsBody.appendChild(notificationElement);
+          });
+      })
+      .catch(error => console.error('Error fetching notifications:', error));
+}
 
 
 //Immediate Execution on Page Load (To follow this approach later, if there is time)
@@ -441,7 +491,55 @@ function showSection() {
   });
 }
 
+
+function showAdminSection() {
+  var sectionButtons = document.querySelectorAll('.btn-check');
+  var eventSections = document.getElementsByClassName("admin-section"); 
+
+  if (!sectionButtons.length || !eventSections.length) {
+      return;
+  }
+
+  for (var j = 1; j < eventSections.length; j++) {
+    eventSections[j].style.display = "none";
+  }
+
+  sectionButtons.forEach(function(button) {
+    button.addEventListener("click", function() {
+      console.log(this);
+      
+      var sectionId = this.getAttribute("data-section-id");
+      console.log("Section ID:", sectionId);
+
+      var currentSection = document.getElementById(sectionId);
+
+      for (var j = 0; j < eventSections.length; j++) {
+        eventSections[j].style.display = "none";
+      }
+
+      if (currentSection) {
+        currentSection.style.display = "block";
+        console.log("Displaying section with ID:", sectionId);
+      } else {
+        console.log("Section not found with ID:", sectionId);
+      }
+
+      sectionButtons.forEach(function(btn) {
+        btn.parentElement.classList.remove("selected");
+      });
+
+      this.parentElement.classList.add("selected");
+      console.log("Button marked as selected");
+    });
+  });
+}
+
+
 showSection();
+
+
+showAdminSection();
+
 
 document.addEventListener("DOMContentLoaded", function () {
   let totalFields = document.querySelectorAll(".form-field").length;
@@ -686,9 +784,72 @@ const reportPopUp = document.querySelector('.pop-up-report');
             reportPopUp.style.display = 'none';
         }
     };
-
-    
   }
+
+
+
+  function toggleEye(showIconId, hideIconId) {
+    const showIcon = document.getElementById(showIconId);
+    const hideIcon = document.getElementById(hideIconId);
+
+    if (showIcon.style.display !== 'none') {
+        showIcon.style.display = 'none';
+        hideIcon.style.display = 'inline-block';
+    } else {
+        showIcon.style.display = 'inline-block';
+        hideIcon.style.display = 'none';
+    }
+}
+
+
+function toggleAdminCommentVisibility(commentId, action) {
+  let url = action === 'private' ? `/hide-comment/${commentId}` : `/show-comment/${commentId}`;
+
+  sendAjaxRequest('POST', url, {}, function () {
+      if (this.status === 200) {
+          toggleEye(`show_${commentId}`, `hidden_${commentId}`);
+      } else {
+          console.error(`Error toggling event visibility: ${this.responseText}`);
+      }
+  });
+}
+
+
+
+
+function toggleCommentVisibility(commentId, action, visibility) {
+  let url = action === 'hide' ? `/hide-comment/${commentId}` : `/show-comment/${commentId}`;
+  
+
+  sendAjaxRequest('POST', url, {}, function () {
+      if (this.status === 200) {
+          toggleEye(`show_${commentId}`, `hidden_${commentId}`);
+          if (visibility === 'public') {
+              moveCommentToPrivate(commentId);
+          } else {
+              moveCommentToPublic(commentId);
+          }
+      } else {
+          console.error(`Error toggling comment visibility: ${this.responseText}`);
+      }
+  });
+}
+
+function moveCommentToPrivate(commentId) {
+  const commentElement = document.querySelector(`.comment[data-id="${commentId}"]`);
+  commentElement.parentNode.removeChild(commentElement);
+  document.getElementById('private-comments-section').appendChild(commentElement);
+}
+
+function moveCommentToPublic(commentId) {
+  const commentElement = document.querySelector(`.comment[data-id="${commentId}"]`);
+  commentElement.parentNode.removeChild(commentElement);
+  document.getElementById('public-comments-section').appendChild(commentElement);
+}
+
+
+
+
 
   /*function showReportPopUp(commentId) {
     const reportPopUp = document.getElementById(`reportPopUp_${commentId}`);
