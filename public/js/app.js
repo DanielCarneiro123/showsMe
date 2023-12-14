@@ -654,12 +654,10 @@ event.target.outerHTML = '<i class="fas fa-thumbs-up fa-solid" id="liked" onclic
 
 
 function deleteComment(){
-  const comment = event.target.closest(".comment");
-
-  const commentID = comment.getAttribute('data-id');
-
+   const commentID = event.target.closest('.comment').getAttribute('data-id');
+   console.log(commentID);
   event.preventDefault();
-  sendAjaxRequest('post', '/delete-comment',{comment_id: commentID} , deleteCommentHandler);
+  sendAjaxRequest('post', '/delete-comment', { comment_id: commentID }, deleteCommentHandler);
 }
 function deleteCommentHandler() {
   const response = JSON.parse(this.responseText);
@@ -780,7 +778,6 @@ function addNewCommentHandler() {
       });
       iconsDiv.appendChild(editIcon);
 
-      // Trash can icon
       const deleteIcon = document.createElement('i');
       deleteIcon.className = 'fa-solid fa-trash-can';
       deleteIcon.addEventListener('click', function () {
@@ -789,6 +786,7 @@ function addNewCommentHandler() {
         sendAjaxRequest('post', '/delete-comment', { comment_id: commentID }, deleteCommentHandler);
       });
       iconsDiv.appendChild(deleteIcon);
+
 
       commentIconsContainer.appendChild(commentAuthor);
       commentIconsContainer.appendChild(iconsDiv);
@@ -839,18 +837,19 @@ function addNewCommentHandler() {
       editCommentForm.appendChild(cancelButton);
       
       const commentLikesSection = document.createElement('div');
-commentLikesSection.className = 'comment-likes-section';
+      commentLikesSection.className = 'comment-likes-section';
 
-const commentLikes = document.createElement('p');
-commentLikes.className = 'comment-likes';
-commentLikes.textContent = '0'; // You may want to set the initial likes count
+      const commentLikes = document.createElement('p');
+      commentLikes.className = 'comment-likes';
+      commentLikes.textContent = '0'; 
 
-const likeIcon = document.createElement('i');
-likeIcon.className = 'far fa-thumbs-up fa-regular';
-likeIcon.addEventListener('click', likeComment);
+      const likeIcon = document.createElement('i');
+      likeIcon.className = 'far fa-thumbs-up fa-regular';
+      likeIcon.addEventListener('click', likeComment);
 
-commentLikesSection.appendChild(commentLikes);
-commentLikesSection.appendChild(likeIcon);
+      commentLikesSection.appendChild(likeIcon);
+      commentLikesSection.appendChild(commentLikes);
+      
 
       commentElement.appendChild(commentIconsContainer);
       commentElement.appendChild(commentText);
@@ -865,7 +864,7 @@ commentLikesSection.appendChild(likeIcon);
         console.error('Comments container not found.');
       }
      
-      // Clear the comment input
+      
       document.getElementById('newCommentText').value = '';
     } else {
       console.error('Invalid response structure or missing comment text or author ID.');
