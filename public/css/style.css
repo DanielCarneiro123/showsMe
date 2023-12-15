@@ -413,3 +413,10 @@ button:hover {
 .notification-content {
   padding: 10px;
 }
+
+.fixed-top-right {
+  position: fixed;
+  top: 10px; /* Adjust the top position as needed */
+  right: 10px; /* Adjust the right position as needed */
+  z-index: 1000; /* Adjust the z-index as needed */
+}

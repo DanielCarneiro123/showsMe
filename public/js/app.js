@@ -198,7 +198,6 @@ function updateEventPageContent(formData) {
 }
 
 function updateEvent(eventId) {
-
   let formData = {
     'edit_name': document.getElementById('edit_name').value,
     'edit_description': document.getElementById('edit_description').value,
@@ -211,9 +210,36 @@ function updateEvent(eventId) {
 
   sendAjaxRequest('post', '../update-event/' + eventId, formData);
 
-  //colocar uma mensagem a dizer que foi alterado
+  
+  displaySuccessMessage();
+
+  
+  setTimeout(function () {
+    removeSuccessMessage();
+  }, 3500);
 }
 
+function displaySuccessMessage() {
+  // Create a div element with the success message content
+  let successDiv = document.createElement('div');
+  successDiv.classList.add('alert', 'alert-dismissible', 'alert-success', 'fixed-top-right');
+  successDiv.innerHTML = `
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    <strong>Well done!</strong> You successfully <a href="#" class="alert-link">updated your event</a>.
+  `;
+
+  // Append the div to the body
+  document.body.appendChild(successDiv);
+}
+
+
+function removeSuccessMessage() {
+  // Find and remove the success message div
+  let successDiv = document.querySelector('.alert-success');
+  if (successDiv) {
+    successDiv.remove();
+  }
+}
 function updateProfilePageContent(formData) {
   document.getElementById('user-header-name').innerText = formData.edit_name;
 
@@ -585,6 +611,15 @@ function toggleCheckoutSection() {
   checkoutSection.style.display = 'block';
   buyButton.style.display = 'inline';
   showForm.style.display = 'none';
+}
+
+
+
+function confirmDeleteComment() {
+  const comment = event.target.closest(".comment");
+
+  comment.querySelector('#confirmDeleteComment').style.display = 'block';
+ 
 }
 
 function showEditCommentModal() {

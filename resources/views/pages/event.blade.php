@@ -169,7 +169,7 @@
                     @endif
                     @if(auth()->user()->user_id === $comment->author->user_id)
                     <i class="fa-solid fa-pen-to-square" onclick="showEditCommentModal()"></i>
-                    <i class="fa-solid fa-trash-can" onclick="deleteComment()"></i>
+                    <i class="fa-solid fa-trash-can" onclick="confirmDeleteComment()"></i>
                     @endif
                     @endif
                 </div>
@@ -221,7 +221,7 @@
                     @endif
                     @if(auth()->user()->user_id === $comment->author->user_id)
                     <i class="fa-solid fa-pen-to-square" onclick="showEditCommentModal()"></i>
-                    <i class="fa-solid fa-trash-can" onclick="deleteComment()"></i>
+                    <i class="fa-solid fa-trash-can" onclick="confirmDeleteComment()"></i>
                     @endif
                     @endif
                 </div>
@@ -235,6 +235,8 @@
                 <button class="btn btn-primary" onclick="editComment()">Submit</button>
                 <button type="button" class="btn btn-danger" onclick="hideEditCommentModal()">Cancel</button>
             </form>
+
+            
             <div class="comment-likes-section">
 
                 @if(auth()->check() && auth()->user()->likes($comment->comment_id))
@@ -501,8 +503,13 @@
         @endforeach
     </section>
 
-    <h2 id="title-charts">Stats</h2>
+    @if ($totalSoldTickets == 0)
+    <h2 class="text-center no-tickets-stat">No tickets sold yet,come back later!</h2>
+    @else
 
+    <h2 id="title-charts">Stats</h2>
+    
+    
     <section id="event-charts" data-id="{{ $event->event_id }}">
         <div class="div_dif_tickets_chart">
             <canvas id="dif_tickets_chart"></canvas>
@@ -533,7 +540,7 @@
 
 </section>
 
-
+@endif
 @endcan
 
 @endsection
