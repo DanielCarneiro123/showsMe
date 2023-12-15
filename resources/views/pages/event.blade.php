@@ -2,62 +2,13 @@
 
 @section('content')
 
-<section class="event-thumbnail">
-    @if(auth()->user() && auth()->user()->is_admin)
-    <button class="event-button {{ $event->private ? 'active' : '' }}" id="activate-button"
-        data-id="{{ $event->event_id }}">{{ $event->private ? 'Activate Event' : 'Deactivate Event' }}</button>
-    @endif
-    <!--@if(auth()->user() && auth()->user()->is_admin)
-    @if ($event->private)
-    <form method="POST" action="{{ url('/activate-event/'.$event->event_id) }}">
-        @csrf
-        <button class="event-button" id="activate-button" type="submit">
-            <i class="fa-solid fa-circle-check"></i> Activate Event
-        </button>
-    </form>
-    @else
-    <form method="POST" action="{{ url('/deactivate-event/'.$event->event_id) }}">
-        @csrf
-        <button class="event-button" id="deactivate-button" type="submit">
-            <i class="fa-solid fa-ban"></i> Deactivate Event
-        </button>
-    </form>
-    @endif
-    @endif-->
-
-    <div class="slideshow-container">
-        @php $index = 1; @endphp
-
-        @foreach ($event->images as $image)
-        <div class="mySlides faded">
-            <div class="numbertext">{{ $index }} / {{ count($event->images) }}</div>
-            <img src="{{ \App\Http\Controllers\FileController::get('event_image', $event->event_id) }}" alt="Event Image">
-        </div>
-        @php $index++; @endphp
-        @endforeach
-
-        <!-- Next and previous buttons -->
-        <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
-        <a class="next" onclick="plusSlides(1)">&#10095;</a>
-    </div>
-    <br>
-    <div class="text">
-        <h1 id="name">{{ $event->name }}</h1>
-        <p id="description">{{ $event->description }}</p>
-        <section class="ratings-event">
-            <p id="average-rating"> Rating: {{ number_format($event->averageRating, 1) }} <span
-                    class="star-icon">★</span></p>
-
-        </section>
-    </div>
-    <section class="event-info">
-        <p id="location">Location: {{ $event->location }}</p>
-    </section>
-</section>
 
 <div class="container-fluid">
     <div class="d-flex justify-content-center text-center">
         <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+            <input type="radio" class="btn-check" name="sectionToggle" id="eventOverview" autocomplete="off" checked
+                data-section-id="event-overview">
+            <label class="btn btn-outline-primary" for="eventOverview">Overview</label>
             <input type="radio" class="btn-check" name="sectionToggle" id="ticketTypes" autocomplete="off" checked
                 data-section-id="ticket-types">
             <label class="btn btn-outline-primary" for="ticketTypes">Ticket Types</label>
@@ -81,6 +32,56 @@
 </div>
 
 <div class="mt-4"></div>
+
+<section id="event-overview" class="event-section">
+    @if(auth()->user() && auth()->user()->is_admin)
+    <button class="event-button {{ $event->private ? 'active' : '' }}" id="activate-button"
+        data-id="{{ $event->event_id }}">{{ $event->private ? 'Activate Event' : 'Deactivate Event' }}</button>
+    @endif
+    <!--@if(auth()->user() && auth()->user()->is_admin)
+    @if ($event->private)
+    <form method="POST" action="{{ url('/activate-event/'.$event->event_id) }}">
+        @csrf
+        <button class="event-button" id="activate-button" type="submit">
+            <i class="fa-solid fa-circle-check"></i> Activate Event
+        </button>
+    </form>
+    @else
+    <form method="POST" action="{{ url('/deactivate-event/'.$event->event_id) }}">
+        @csrf
+        <button class="event-button" id="deactivate-button" type="submit">
+            <i class="fa-solid fa-ban"></i> Deactivate Event
+        </button>
+    </form>
+    @endif
+    @endif-->
+    <section>
+        <h1 id="name">{{ $event->name }}</h1>
+        <p id="description">{{ $event->description }}</p>
+        <section class="ratings-event">
+            <p id="average-rating"> Rating: {{ number_format($event->averageRating, 1) }} <span
+                    class="star-icon">★</span></p>
+
+        </section>
+        <p id="location">Location: {{ $event->location }}</p>
+    </section>
+    
+    <div class="slideshow-container">
+        @php $index = 1; @endphp
+
+        @foreach ($event->images as $image)
+        <div class="mySlides faded">
+            <div class="numbertext">{{ $index }} / {{ count($event->images) }}</div>
+            <img src="{{ \App\Http\Controllers\FileController::get('event_image', $event->event_id) }}" alt="Event Image">
+        </div>
+        @php $index++; @endphp
+        @endforeach
+
+        <!-- Next and previous buttons -->
+        <a class="prev-img" onclick="plusSlides(-1)">&#10094;</a>
+        <a class="next-img" onclick="plusSlides(1)">&#10095;</a>
+    </div>
+</section>
 
 <section id="event-comments" class="event-section">
     @if(auth()->user())
