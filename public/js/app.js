@@ -1078,3 +1078,33 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 });
 
+
+
+function deleteImage(deleteIcon) {
+  // Retrieve the event_image_id from the data attribute
+  const eventImageId = deleteIcon.getAttribute('data-event-image-id');
+
+  // Confirm deletion (you may want to add a confirmation dialog here)
+
+  // Prepare data for the AJAX request
+  const data = {
+      event_image_id: eventImageId,
+  };
+  // Make an AJAX request to delete the image
+  sendAjaxRequest('DELETE', `/delete/event_image/${eventImageId}`, null, function () {
+      // Handle the response
+      if (this.status === 200) {
+          const responseData = JSON.parse(this.responseText);
+
+          // Assuming you want to remove the deleted image from the UI
+          const slideToRemove = deleteIcon.closest('.mySlides');
+          slideToRemove.parentNode.removeChild(slideToRemove);
+
+          // Optionally, display a success message or perform other actions
+          console.log('Image deleted successfully:', responseData.message);
+      } else {
+          // Handle errors (e.g., show an error message)
+          console.error('Error deleting image:', this.statusText);
+      }
+  });
+}

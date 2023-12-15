@@ -120,6 +120,7 @@ Route::controller(UserController::class)->group(function () {
 // File Upload Route
 Route::controller(FileController::class)->group(function () {
     Route::post('/file/upload', [FileController::class, 'upload'])->name('file.upload');
+    Route::delete('/delete/{type}/{id}', [FileController::class, 'delete'])->name('file.delete');
 });
 
 

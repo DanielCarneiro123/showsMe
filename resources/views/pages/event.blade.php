@@ -65,14 +65,19 @@
         </section>
         <p id="location">Location: {{ $event->location }}</p>
     </section>
-    
+
     <div class="slideshow-container">
         @php $index = 1; @endphp
 
         @foreach ($event->images as $image)
         <div class="mySlides faded">
-            <div class="numbertext">{{ $index }} / {{ count($event->images) }}</div>
-            <img src="{{ \App\Http\Controllers\FileController::get('event_image', $event->event_id) }}" alt="Event Image">
+            <div class="numbertext">
+                {{ $index }} / {{ count($event->images) }}
+            </div>
+            <img src="{{ asset('event_image/' . $image->image_path) }}" alt="Event Image">
+            <span class="delete-icon" data-event-image-id="{{ $image->event_image_id }}" onclick="deleteImage(this)">
+                    &#10006;
+            </span>
         </div>
         @php $index++; @endphp
         @endforeach
