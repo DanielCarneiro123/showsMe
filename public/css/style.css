@@ -19,11 +19,6 @@ html,body{
 body{
   max-width: 120em;
   margin: 0 auto;
-  --light-blue: #36aaf7;
-  --dark-blue: #1279bd;
-  --darkest-blue: #073c5f;
-  --dark-gray: #1f1f1f;
-  --gray: #fff;
 }
 
 h1 {

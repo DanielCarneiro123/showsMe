@@ -1,4 +1,4 @@
-header {
+/*header {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -6,20 +6,11 @@ header {
     background-color: var(--dark-gray);
     color: var(--gray);
 }
-
 header a {
     text-decoration: none;
     color: #fff; 
-    font-size: 1.5em;
+    font-size: 4em;
     transition: transform 0.3s ease; 
-}
-
-#logo {
-    text-decoration: none;
-    color: #fff;
-    font-size: 2.2em;
-    font-weight: bold;
-    display: inline-block;
 }
 
 header a:hover {
@@ -27,10 +18,6 @@ header a:hover {
     color: var(--light-blue);
 }
 
-
-#logo > span {
-    color: rgb(192, 148, 198);
-}
 #header-nav {
     display: flex;
     font-family: 'Plus Jakarta Sans', sans-serif;
@@ -38,11 +25,6 @@ header a:hover {
 
 #header-nav a {
     margin: 0px 15px;
-}
-
-#header-buttons {
-    display: flex;
-    align-items: center;
 }
 
 #header-buttons a.button {
@@ -53,26 +35,23 @@ header a:hover {
     border-radius: 15px;
     margin-left: 1em;
 }
+*/
 
-.login {
-    background-color: var(--light-blue);
-    border: 2px solid var(--light-blue);
+#logo {
+    text-decoration: none;
     color: #fff;
+    font-size: 2.2em;
+    font-weight: bold;
+    display: inline-block;
 }
 
-#register {
-    background-color: rgba(0, 0, 0, 0);
-    border: 2px solid var(--light-blue);
-    color: #36aaf7;
+#logo > span {
+    color: rgb(192, 148, 198);
 }
 
-#register:hover{
-    color: #fff;
-}
-
-#header-buttons a.button:hover {
-    background-color: var(--light-blue);
-    color:white;
+#header-buttons {
+    display: flex;
+    align-items: center;
 }
 
 #header-buttons a {
