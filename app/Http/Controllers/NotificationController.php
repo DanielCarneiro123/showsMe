@@ -2,8 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use Illuminate\Support\ServiceProvider;
+use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\URL;
 use App\Models\Notification;
+use Illuminate\Http\Request; 
+
 
 use Illuminate\Support\Facades\Auth;
 
@@ -11,10 +16,11 @@ class NotificationController extends Controller
 {
     public function getNotifications(Request $request)
     {
-        $notifications = Notification::with(['event', 'report.comment.event']) 
+
+        $notifications = Notification::with(['event', 'report.comment.event'])
             ->where('notified_user', auth()->id())
             ->latest('timestamp')
-            ->get();
+            ->paginate(10000);
 
         $transformedNotifications = $notifications->map(function ($notification) {
             $eventName = null;
@@ -36,7 +42,9 @@ class NotificationController extends Controller
         });
             
 
-        return response()->json(['notifications' => $transformedNotifications]);
+        return response()->json([
+            'notifications' => $transformedNotifications,
+        ]);
     }
 
 
