@@ -618,7 +618,16 @@ function toggleCheckoutSection() {
 function confirmDeleteComment() {
   const comment = event.target.closest(".comment");
 
-  comment.querySelector('#confirmDeleteComment').style.display = 'block';
+  comment.querySelector('#confirmDeleteCommentForm').style.display = 'block';
+ 
+}
+
+
+function hideDeleteCommentModal() {
+  const comment = event.target.closest(".comment");
+  
+
+  comment.querySelector('#confirmDeleteCommentForm').style.display = 'none';
  
 }
 
@@ -667,9 +676,7 @@ function unlikeCommentHandler() {
   
 }
 
-function goToLogin(){
-  sendAjaxRequest('get', '/login');
-}
+
 function likeComment(){
   const comment = event.target.closest(".comment");
 
@@ -819,11 +826,13 @@ function addNewCommentHandler() {
 
       const deleteIcon = document.createElement('i');
       deleteIcon.className = 'fa-solid fa-trash-can';
-      deleteIcon.addEventListener('click', function () {
-        const commentID = commentElement.getAttribute('data-id');
-        event.preventDefault();
-        sendAjaxRequest('post', '/delete-comment', { comment_id: commentID }, deleteCommentHandler);
-      });
+      
+      deleteIcon.addEventListener('click', function(){
+       
+  commentElement.querySelector('#confirmDeleteCommentForm').style.display = 'block';
+      }) ;
+
+
       iconsDiv.appendChild(deleteIcon);
 
 
@@ -834,7 +843,7 @@ function addNewCommentHandler() {
       commentText.className = 'comment-text';
       commentText.id = 'commentText';
       commentText.textContent = newComment.text;
-
+     
       const editCommentForm = document.createElement('form');
       editCommentForm.id = 'editCommentForm';
       editCommentForm.style.display = 'none';
@@ -898,7 +907,7 @@ function addNewCommentHandler() {
       // Append the new comment directly to the container
       const commentsContainer = document.querySelector('.commentsContainer');
       if (commentsContainer) {
-        commentsContainer.appendChild(commentElement);
+        commentsContainer.prepend(commentElement);
       } else {
         console.error('Comments container not found.');
       }

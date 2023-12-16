@@ -35,7 +35,9 @@ class CommentController extends Controller
     }*/
     public function submitComment(Request $request)
     {
-       
+        $request->validate([
+            'newCommentText' => 'required',
+        ]);
         $comment = new Comment();
         $comment->text = $request->input('newCommentText');
         $comment->event_id = $request->input('event_id'); 
@@ -89,7 +91,7 @@ class CommentController extends Controller
         return response()->json(['message' => $comment]);
     }
 
-    public function likeComment(Request $request){
+      public function likeComment(Request $request){
         
         $commentID = $request->input('comment_id');
 
@@ -105,6 +107,7 @@ class CommentController extends Controller
         }
         return response()->json(['message' => 'Comment not found'], 404);
     }
+
 
     public function unlikeComment(Request $request){
         
