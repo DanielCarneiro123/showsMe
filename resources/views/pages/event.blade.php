@@ -55,8 +55,31 @@
     </form>
     @endif
     @endif-->
+    <h1 id="name">{{ $event->name }}</h1>
+
+    <section id="event-slider">
+        <div class="swiper" id="event-swiper">
+            <div class="swiper-wrapper">
+            @foreach ($event->images as $image)
+                <div class="swiper-slide">
+                        <figure>
+                                <img src="{{ \App\Http\Controllers\FileController::get('event_image', $image->event_image_id) }}" alt="Event Image">
+                                <figcaption>
+                                    Image Test
+                                </figcaption>
+                        </figure>
+                </div>
+            @endforeach
+            </div>
+            <div class="swiper-custom-nav">
+                <i id="nav-left" class="fa-solid fa-circle-arrow-left"></i>
+                <i id="nav-right" class="fa-solid fa-circle-arrow-right"></i>
+            </div>
+            <div class="swiper-custom-pagination"></div>
+        </div>
+    </section>
+
     <section>
-        <h1 id="name">{{ $event->name }}</h1>
         <p id="description">{{ $event->description }}</p>
         <section class="ratings-event">
             <p id="average-rating"> Rating: {{ number_format($event->averageRating, 1) }} <span
@@ -65,27 +88,6 @@
         </section>
         <p id="location">Location: {{ $event->location }}</p>
     </section>
-
-    <div class="slideshow-container">
-        @php $index = 1; @endphp
-
-        @foreach ($event->images as $image)
-        <div class="mySlides faded">
-            <div class="numbertext">
-                {{ $index }} / {{ count($event->images) }}
-            </div>
-            <img src="{{ asset('event_image/' . $image->image_path) }}" alt="Event Image">
-            <span class="delete-icon" data-event-image-id="{{ $image->event_image_id }}" onclick="deleteImage(this)">
-                    &#10006;
-            </span>
-        </div>
-        @php $index++; @endphp
-        @endforeach
-
-        <!-- Next and previous buttons -->
-        <a class="prev-img" onclick="plusSlides(-1)">&#10094;</a>
-        <a class="next-img" onclick="plusSlides(1)">&#10095;</a>
-    </div>
 </section>
 
 <section id="event-comments" class="event-section">

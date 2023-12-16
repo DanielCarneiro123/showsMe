@@ -965,45 +965,6 @@ function moveCommentToPublic(commentId) {
   document.getElementById('public-comments-section').appendChild(commentElement);
 }
 
-
-
-
-
-
-
-
-let slideIndex = 1;
-showSlides(slideIndex);
-
-// Next/previous controls
-function plusSlides(n) {
-  showSlides(slideIndex += n);
-}
-
-
-// Thumbnail image controls
-function currentSlide(n) {
-  showSlides(slideIndex = n);
-}
-
-function showSlides(n) {
-  let i;
-  let slides = document.getElementsByClassName("mySlides");
-  let dots = document.getElementsByClassName("dot");
-  if (n > slides.length) {slideIndex = 1}
-  if (n < 1) {slideIndex = slides.length}
-  for (i = 0; i < slides.length; i++) {
-    slides[i].style.display = "none";
-  }
-  for (i = 0; i < dots.length; i++) {
-    dots[i].className = dots[i].className.replace(" active", "");
-  }
-  slides[slideIndex-1].style.display = "block";
-  dots[slideIndex-1].className += " active";
-} 
-
-
-
 var stripe = Stripe('your-publishable-key');
 var elements = stripe.elements();
 var card = elements.create('card');
@@ -1095,15 +1056,10 @@ function deleteImage(deleteIcon) {
       // Handle the response
       if (this.status === 200) {
           const responseData = JSON.parse(this.responseText);
-
-          // Assuming you want to remove the deleted image from the UI
           const slideToRemove = deleteIcon.closest('.mySlides');
           slideToRemove.parentNode.removeChild(slideToRemove);
-
-          // Optionally, display a success message or perform other actions
           console.log('Image deleted successfully:', responseData.message);
       } else {
-          // Handle errors (e.g., show an error message)
           console.error('Error deleting image:', this.statusText);
       }
   });
