@@ -219,7 +219,7 @@ class EventController extends Controller
                     $qrCodePath = $this->generateQRCodePath($ticketInstance);
                     $ticketInstance->qr_code_path = $qrCodePath;
                     $ticketInstance->save();
-                    Mail::to($user->email)->send(new TicketPurchaseConfirmation($ticketInstance));
+                    //Mail::to($user->email)->send(new TicketPurchaseConfirmation($ticketInstance));
                 }
             }
         }

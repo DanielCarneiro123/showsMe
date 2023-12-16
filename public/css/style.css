@@ -21,6 +21,10 @@ body{
   margin: 0 auto;
 }
 
+#content{
+  display: grid;
+}
+
 h1 {
   font-size: 3em;
   text-align: center;
