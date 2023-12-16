@@ -965,23 +965,6 @@ function moveCommentToPublic(commentId) {
   document.getElementById('public-comments-section').appendChild(commentElement);
 }
 
-var stripe = Stripe('your-publishable-key');
-var elements = stripe.elements();
-var card = elements.create('card');
-
-card.mount('#card-element');
-
-card.addEventListener('change', function(event) {
-    var displayError = document.getElementById('card-errors');
-    if (event.error) {
-        displayError.textContent = event.error.message;
-    } else {
-        displayError.textContent = '';
-    }
-});
-
-
-
 
 function updateEventCountByMonth() {
   // Obtém o mês atual (você pode personalizar isso conforme necessário)
@@ -1042,25 +1025,25 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 function deleteImage(deleteIcon) {
-  // Retrieve the event_image_id from the data attribute
   const eventImageId = deleteIcon.getAttribute('data-event-image-id');
-
-  // Confirm deletion (you may want to add a confirmation dialog here)
-
-  // Prepare data for the AJAX request
   const data = {
       event_image_id: eventImageId,
   };
-  // Make an AJAX request to delete the image
   sendAjaxRequest('DELETE', `/delete/event_image/${eventImageId}`, null, function () {
-      // Handle the response
       if (this.status === 200) {
           const responseData = JSON.parse(this.responseText);
-          const slideToRemove = deleteIcon.closest('.mySlides');
-          slideToRemove.parentNode.removeChild(slideToRemove);
+          const imageToRemove = deleteIcon.closest('.image-container');
+          imageToRemove.parentNode.removeChild(imageToRemove);
           console.log('Image deleted successfully:', responseData.message);
       } else {
           console.error('Error deleting image:', this.statusText);
       }
   });
 }
+
+
+
+document.getElementById("file-input").addEventListener("change", function() {
+  // Automatically submit the form when a file is chosen
+  document.getElementById("upload-form").submit();
+});

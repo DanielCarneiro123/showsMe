@@ -393,20 +393,30 @@
 
 <!-- Edit Event form (displayed only for the event creator) -->
 @can('updateEvent', $event)
-<section id="edit-event" class="event-section edit-or-create">
+<section id="edit-event" class="event-section">
     <h2>Edit <span>Event</span></h2>
-    <article>
-        @csrf
+    <section id="edit-event-images">
+        @foreach ($event->images as $image)
+            <div class="image-container">
+                <img src="{{ \App\Http\Controllers\FileController::get('event_image', $image->event_image_id) }}" alt="Event Image">
+                <i class="fa-solid fa-trash" data-event-image-id="{{ $image->event_image_id }}" onclick="deleteImage(this)"></i>
+            </div>
+        @endforeach
 
-        <form method="POST" action="/file/upload" enctype="multipart/form-data">
+        <!-- Form to upload new image -->
+        <form id="upload-form" method="POST" action="/file/upload" enctype="multipart/form-data">
             @csrf
-            <input name="file" type="file" required>
-            <input name="id" type="number" value="{{ $event->event_id }}" hidden>
-            <input name="type" type="text" value="event_image" hidden>
-            <button type="submit">Submit</button>
+            <div class="image-container add-image">
+                <label for="file-input" class="add-image-label">Click to add image</label>
+                <input id="file-input" name="file" type="file" required>
+                <input name="id" type="number" value="{{ $event->event_id }}" hidden>
+                <input name="type" type="text" value="event_image" hidden>
+            </div>
+            <button type="submit" id="submit-btn">Submit</button>
         </form>
+    </section>
 
-
+    <article class="edit-or-create">
         <label for="edit_name">Event Name:</label>
         <input type="text" id="edit_name" name="edit_name" value="{{ $event->name }}" required>
 
