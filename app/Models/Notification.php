@@ -46,6 +46,13 @@ class Notification extends Model
     protected $table = 'notification_';
 
     /**
+     * Primary key
+     *
+     * @var string
+     */
+    protected $primaryKey = 'notification_id';
+    
+    /**
      * Get the user that was notified.
      */
     public function user(): BelongsTo
