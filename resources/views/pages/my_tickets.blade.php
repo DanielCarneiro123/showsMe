@@ -6,11 +6,15 @@
 @foreach ($ticketInstances->groupBy('ticketType.event.name') as $eventName => $eventTickets)
 <div class="my-tickets-container">
 
-    <div class="my-tickets-event" style="background-image: url('{{ asset("media/event_image.jpg") }}');">
-        <h2 id="my-tickets-event-title">{{ $eventName }}</h2>
-        <p id="my-tickets-event-local">{{ $eventTickets->first()->ticketType->event->location }}</p>
-        <p id="my-tickets-event-Sdate">{!! $eventTickets->first()->ticketType->event->start_timestamp->format('H:i, F j') !!}<br></p>
+    <div class="my-tickets-event">
+    <div class="event-image" style="background-image: url('{{ asset('media/event_image.jpg') }}');"></div>
+        <a href="{{ route('view-event', ['id' => $eventTickets->first()->ticketType->event->event_id]) }}" class="event-info">
+            <h2 id="my-tickets-event-title">{{ $eventName }}</h2>
+            <p id="my-tickets-event-local">{{ $eventTickets->first()->ticketType->event->location }}</p>
+            <p id="my-tickets-event-Sdate">{!! $eventTickets->first()->ticketType->event->start_timestamp->format('H:i,F j') !!}<br></p>
+        </a>
     </div>
+    
     <div class="my-tickets-per-event">
         @foreach ($eventTickets as $index => $ticketInstance)
         <article class="ticket-instance">
