@@ -398,6 +398,7 @@ function toggleProfileButtons() {
 function toggleNotifications() {
   const notificationContainer = document.getElementById('notification-container');
   const notificationsBody = document.getElementById('notifications-body');
+  const bodyElement = document.body;
 
   if (notificationContainer.style.display === 'none') {
     notificationContainer.style.display = 'grid';
@@ -419,10 +420,17 @@ function toggleNotifications() {
       notificationContainer.style.maxHeight = (window.innerHeight - 90) + 'px';
     }
 
+    notificationContainer.style.maxHeight = '90%';
     loadNotifications(notificationsBody);
+    notificationContainer.style.position = 'fixed';
+    bodyElement.style.overflow = 'hidden';
+
   } else {
     //notificationsBody.innerHTML = ''; 
     notificationContainer.style.display = 'none';
+    notificationContainer.style.position = 'relative';
+    bodyElement.style.overflow = 'auto';
+
   }
 }
 
