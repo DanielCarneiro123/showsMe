@@ -2,8 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use Illuminate\Support\ServiceProvider;
+use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\URL;
 use App\Models\Notification;
+use Illuminate\Http\Request; 
+
 
 use Illuminate\Support\Facades\Auth;
 
@@ -11,32 +16,37 @@ class NotificationController extends Controller
 {
     public function getNotifications(Request $request)
     {
-        $notifications = Notification::with(['event', 'report.comment.event']) 
+
+        $notifications = Notification::with(['event', 'report.comment.event'])
             ->where('notified_user', auth()->id())
             ->latest('timestamp')
-            ->get();
+            ->paginate(10000);
 
         $transformedNotifications = $notifications->map(function ($notification) {
             $eventName = null;
         
             if ($notification->notification_type === 'Event' || $notification->notification_type === 'Comment') {
                 $eventName = $notification->event ? $notification->event->name : null;
-                $notificationId = $notification->event_id;
+                $event_notificationId = $notification->event_id;
             } elseif ($notification->notification_type === 'Report') {
                 $eventName = $notification->report->comment->event->name;
-                $notificationId = $notification->report->comment->event->event_id;
+                $event_notificationId = $notification->report->comment->event->event_id;
             }
         
             return [
-                'event_id' => $notificationId,
+                'id' => $notification->notification_id,
+                'event_id' => $event_notificationId,
                 'event_name' => $eventName,
                 'notification_type' => $notification->notification_type,
                 'timestamp' => $notification->timestamp,
+                'viewed' => $notification->viewed,
             ];
         });
             
 
-        return response()->json(['notifications' => $transformedNotifications]);
+        return response()->json([
+            'notifications' => $transformedNotifications,
+        ]);
     }
 
 
@@ -47,4 +57,16 @@ class NotificationController extends Controller
         return redirect()->route('notifications.index');
     }
 
+    public function dismissNotification($notificationId)
+    {
+        try {
+            $notification = Notification::findOrFail($notificationId);
+            $notification->viewed = true;
+            $notification->save();
+
+            return response()->json(['message' => 'Notification dismissed successfully']);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
 }

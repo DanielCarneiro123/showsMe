@@ -396,54 +396,115 @@ function toggleProfileButtons() {
 
 
 function toggleNotifications() {
-    const notificationContainer = document.getElementById('notification-container');
-    const notificationsBody = document.getElementById('notifications-body');
+  const notificationContainer = document.getElementById('notification-container');
+  const notificationsBody = document.getElementById('notifications-body');
+  const bodyElement = document.body;
 
-    if (notificationContainer.style.display === 'none') {
-        loadNotifications(notificationsBody);
-        notificationContainer.style.maxHeight = (window.innerHeight - 90) + 'px';
-        notificationContainer.style.display = 'block';
-    } else {
-        notificationContainer.style.display = 'none';
+  if (notificationContainer.style.display === 'none') {
+    notificationContainer.style.display = 'grid';
+
+    let loading = false;
+
+    notificationsBody.addEventListener('scroll', function () {
+      if (notificationsBody.scrollHeight - notificationsBody.scrollTop <= notificationsBody.clientHeight + 10) {
+        if (!loading) {
+          loading = true;
+          loadNotifications(notificationsBody, function () {
+            loading = false;
+          });
+        }
+      }
+    });
+
+    if (!notificationContainer.style.maxHeight) {
+      notificationContainer.style.maxHeight = (window.innerHeight - 90) + 'px';
     }
+
+    notificationContainer.style.maxHeight = '90%';
+    loadNotifications(notificationsBody);
+    notificationContainer.style.position = 'fixed';
+    bodyElement.style.overflow = 'hidden';
+
+  } else {
+    //notificationsBody.innerHTML = ''; 
+    notificationContainer.style.display = 'none';
+    notificationContainer.style.position = 'relative';
+    bodyElement.style.overflow = 'auto';
+
+  }
 }
 
 
-
-function loadNotifications(notificationsBody) {
+function loadNotifications(notificationsBody, callback) {
   fetch(`/get-notifications`)
-      .then(response => response.json())
-      .then(data => {
-          notificationsBody.innerHTML = '';
+    .then(response => response.json())
+    .then(data => {
+      console.log(data);
 
-          data.notifications.forEach(notification => {
-              const notificationElement = document.createElement('div');
-              notificationElement.classList.add('notification');
+      data.notifications.forEach(notification => {
+        if (notification.viewed === false){
+          const notificationElement = document.createElement('div');
+        
+          notificationElement.setAttribute('id', `notification-${notification.id}`);
+          
+          notificationElement.classList.add(`notification-${notification.id}`);
 
-              const anchorTag = document.createElement('a');
-              anchorTag.classList.add('event-link');
+          const iconElement = document.createElement('i');
 
-              if (notification.notification_type === 'Event') {
-                  anchorTag.href = `/view-event/${notification.event_id}`;
-                  anchorTag.innerHTML = `The event <strong>${notification.event_name || 'Unknown Event'}</strong> had some changes made. Check them out! `;
-              } else if (notification.notification_type === 'Comment') {
-                  anchorTag.href = `/view-event/${notification.event_id}`;
-                  anchorTag.innerHTML = `A comment was made in the event <strong>${notification.event_name || 'Unknown Event'}</strong>. `;
-              } else if (notification.notification_type === 'Report') {
-                  anchorTag.href = `/admin`;
-                  anchorTag.innerHTML = `A report on a comment was made in the event <strong>${notification.event_name || 'Unknown Event'}</strong>. `;
-              }
-
-              notificationElement.appendChild(anchorTag);
-
-              const horizontalLine = document.createElement('hr');
-              notificationElement.appendChild(horizontalLine);
-
-
-              notificationsBody.appendChild(notificationElement);
+          iconElement.classList.add('fa-solid');
+          iconElement.classList.add('fa-xmark');
+          iconElement.addEventListener('click', function () {
+            dismissNotification(notification.id);
           });
-      })
-      .catch(error => console.error('Error fetching notifications:', error));
+
+          notificationElement.appendChild(iconElement);
+
+          const horizontalSpace = document.createElement('br');
+
+          notificationElement.appendChild(horizontalSpace);
+          notificationElement.appendChild(horizontalSpace);
+
+          const anchorTag = document.createElement('a');
+          anchorTag.classList.add('event-link');
+          if (notification.notification_type === 'Event') {
+            anchorTag.href = `/view-event/${notification.event_id}`;
+            anchorTag.innerHTML = `The event <strong>${notification.event_name || 'Unknown Event'}</strong> had some changes made. Check them out! `;
+          } else if (notification.notification_type === 'Comment') {
+            anchorTag.href = `/view-event/${notification.event_id}`;
+            anchorTag.innerHTML = `A comment was made in the event <strong>${notification.event_name || 'Unknown Event'}</strong>. `;
+          } else if (notification.notification_type === 'Report') {
+            anchorTag.href = `/admin`;
+            anchorTag.innerHTML = `A report on a comment was made in the event <strong>${notification.event_name || 'Unknown Event'}</strong>. `;
+          }
+
+          notificationElement.appendChild(anchorTag);
+
+          notificationsBody.appendChild(notificationElement);
+
+          const horizontalLine = document.createElement('hr');
+          notificationElement.appendChild(horizontalLine);
+
+        }
+        
+      });
+
+      if (callback) {
+        callback();
+      }
+    })
+    .catch(error => console.error('Error fetching notifications:', error));
+}
+
+function dismissNotification(notificationId) {
+  sendAjaxRequest('POST', `/dismiss-notification/${notificationId}`, null, function () {
+    const notificationsContainer = document.getElementById('notificationsContainer');
+
+    const notificationElement = document.getElementById(`notification-${notificationId}`);
+
+    if (notificationElement && notificationElement.parentNode) {
+      notificationElement.parentNode.removeChild(notificationElement);
+    }
+  });
 }
 
 

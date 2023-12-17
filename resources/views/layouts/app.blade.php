@@ -76,7 +76,7 @@
                         @if (Auth::check())
                         @include('partials.notification')
                         <div class="notification-icon me-3" onclick="toggleNotifications()">
-                            <button class="btn btn-link" data-bs-toggle="modal" data-bs-target="#notificationsModal">
+                            <button id="bell-button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#notificationsModal">
                                 <i class="fa-solid fa-bell fa-2x"></i>
                             </button>
                         </div>
