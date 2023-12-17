@@ -131,12 +131,6 @@ h1 span {
   transition: transform 0.8s ease, filter 0.8s ease; 
 }
 
-.new-event-info {
-  padding: 20px;
-  text-align: center;
-  color: white;
-  margin:auto;
-}
 
 /*fim all events*/
 

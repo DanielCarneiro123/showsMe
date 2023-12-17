@@ -22,6 +22,7 @@
         <link href="{{ asset('css/login.css') }}" rel="stylesheet">
         <link href="{{ asset('css/header.css') }}" rel="stylesheet">
         <link href="{{ asset('css/my_ticket.css') }}" rel="stylesheet">
+        <link href="{{ asset('css/my_events.css') }}" rel="stylesheet">
         <link href="{{ asset('css/create_event.css') }}" rel="stylesheet">
         <link href="{{ asset('../css/pagination.css') }}" rel="stylesheet">
         <link href="{{ asset('../css/edit_event.css') }}" rel="stylesheet">
