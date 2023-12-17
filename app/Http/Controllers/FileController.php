@@ -60,12 +60,12 @@ class FileController extends Controller
     function delete(String $type, int $id) {
         $existingFileName = self::getFileName($type, $id);
         $response = ['message' => '', 'error' => false]; // Initialize response array
-    
+
         if ($existingFileName) {
             try {
                 // Attempt to delete the file
                 Storage::disk(self::$diskName)->delete($type . '/' . $existingFileName);
-    
+
                 switch($type) {
                     case 'profile_image':
                         User::find($id)->profile_image = null;
@@ -77,19 +77,20 @@ class FileController extends Controller
                         }
                         break;
                 }
-    
+
                 $response['message'] = 'File deleted successfully';
             } catch (\Exception $e) {
                 $response['message'] = 'Error deleting file: ' . $e->getMessage();
                 $response['error'] = true;
             }
         }
-    
+
+        // Send the JSON response
         header('Content-Type: application/json');
         echo json_encode($response);
         exit();
     }
-    
+
     function upload(Request $request) {
 
         // Validation: has file

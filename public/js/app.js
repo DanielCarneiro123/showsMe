@@ -1023,27 +1023,20 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 
-
-function deleteImage(deleteIcon) {
-  const eventImageId = deleteIcon.getAttribute('data-event-image-id');
-  const data = {
-      event_image_id: eventImageId,
-  };
-  sendAjaxRequest('DELETE', `/delete/event_image/${eventImageId}`, null, function () {
-      if (this.status === 200) {
-          const responseData = JSON.parse(this.responseText);
-          const imageToRemove = deleteIcon.closest('.image-container');
-          imageToRemove.parentNode.removeChild(imageToRemove);
-          console.log('Image deleted successfully:', responseData.message);
-      } else {
-          console.error('Error deleting image:', this.statusText);
-      }
+function submitFormOnFileChange() {
+  document.getElementById("file-input").addEventListener("change", function() {
+      document.getElementById("upload-form").submit();
   });
 }
 
+function makeFileContainerClickable() {
+  const fileInput = document.getElementById('file-input');
+  const fileContainer = document.getElementById('file-container');
 
+  fileContainer.addEventListener('click', function () {
+      fileInput.click();
+  });
+}
 
-document.getElementById("file-input").addEventListener("change", function() {
-  // Automatically submit the form when a file is chosen
-  document.getElementById("upload-form").submit();
-});
+submitFormOnFileChange();
+makeFileContainerClickable();

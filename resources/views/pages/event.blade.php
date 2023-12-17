@@ -63,7 +63,7 @@
             @foreach ($event->images as $image)
                 <div class="swiper-slide">
                         <figure>
-                                <img src="{{ \App\Http\Controllers\FileController::get('event_image', $image->event_image_id) }}" alt="Event Image">
+                                <img src="{{ \App\Http\Controllers\FileController::get('event_image', $image->event_image_id) }}" data-event-image-id= "{{ $image->event_image_id }}" alt="Event Image">
                                 <figcaption>
                                     Image Test
                                 </figcaption>
@@ -406,7 +406,7 @@
         <!-- Form to upload new image -->
         <form id="upload-form" method="POST" action="/file/upload" enctype="multipart/form-data">
             @csrf
-            <div class="image-container add-image">
+            <div class="image-container add-image" id="file-container">
                 <label for="file-input" class="add-image-label">Click to add image</label>
                 <input id="file-input" name="file" type="file" required>
                 <input name="id" type="number" value="{{ $event->event_id }}" hidden>
