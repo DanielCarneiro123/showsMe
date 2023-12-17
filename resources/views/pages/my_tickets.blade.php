@@ -32,6 +32,11 @@
         </article>
         @endforeach
     </div>
+    @if ($index > 0)
+    <button class="my-tickets-btn my-tickets-btn-see-more">See more</button>
+    <button class="my-tickets-btn my-tickets-btn-hidden" style="display: none;">Hide</button>
+    @endif
+
 </div>
 
 @endforeach

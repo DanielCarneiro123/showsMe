@@ -16,8 +16,6 @@
        
         <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
    
-        <link href="{{ asset('css/auth.css') }}" rel="stylesheet" >
-        <link href="{{ asset('css/contact.css') }}" rel="stylesheet">
         <link href="{{ asset('css/event.css') }}" rel="stylesheet">
         <link href="{{ asset('css/faq.css') }}" rel="stylesheet">
         <link href="{{ asset('css/profile.css') }}" rel="stylesheet">

@@ -1,9 +1,13 @@
 .my-tickets-container {
     display: grid;
-    grid-template-areas: 'evento bilhetes';
+    grid-template-areas: 
+    'evento bilhetes'
+    '. btn';
     grid-template-columns: auto 1fr;
-    padding: 40px;
+    grid-template-rows: 1fr auto;
+    padding: 30px;
 }
+
 .my-tickets-event{
     grid-area: evento;
     display: grid;
@@ -30,15 +34,36 @@
 .my-tickets-per-event{
     display: grid;
     grid-area: bilhetes;
-    grid-template-columns: repeat(auto-fill, minmax(0, 550px)); 
+    grid-template-columns: repeat(auto-fill, minmax(0, 530px)); 
     row-gap: 15px;
-    justify-content: center;
+    max-height: 340px;
+    overflow: scroll;
+    border-radius: 40px;
     /*
     border: 2px solid #fff;
-    border-radius: 40px;
     box-shadow: 0 4px 8px #656269;
     */
 }
+
+.my-tickets-btn{
+    display: none;
+    grid-area: btn;
+    justify-self: start;
+    align-self: flex-end;
+    border:none;
+    padding-left: 0.5%;
+    padding-right: 0.5%;
+    margin: 0.5%;
+    border-radius: 10px;
+    color: #25015e;
+    text-decoration: underline;
+    background-color: transparent;
+}
+
+.my-tickets-btn:hover{
+    color: #a991d4;
+}
+
 
 .my-tickets-event #my-tickets-event-title{
     grid-area: my-tickets-event-title;
@@ -66,7 +91,7 @@
     align-self: center;
     z-index: 1;
     margin:0;
-    font-weight: 500;
+    font-weight: 600;
 }
 
 
@@ -78,6 +103,7 @@
     padding: 20px;
     border-radius: 20px;
     min-height: 275px;
+    height: min-content;
 }
 
 .ticket-instance .line {

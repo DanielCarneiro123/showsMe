@@ -974,7 +974,7 @@ function moveCommentToPublic(commentId) {
 
 
 
-
+/*
 let slideIndex = 1;
 showSlides(slideIndex);
 
@@ -1021,7 +1021,7 @@ card.addEventListener('change', function(event) {
         displayError.textContent = '';
     }
 });
-
+*/
 
 
 
@@ -1081,3 +1081,70 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 });
 
+document.addEventListener('DOMContentLoaded', function () {
+  var allContainers = document.querySelectorAll('.my-tickets-container');
+
+  allContainers.forEach(function (container) {
+    var ticketsPerEvent = container.querySelector('.my-tickets-per-event');
+    var seeMoreButton = container.querySelector('.my-tickets-btn-see-more');
+    var hiddenButton = container.querySelector('.my-tickets-btn-hidden');
+
+    if (ticketsPerEvent && seeMoreButton && hiddenButton) {
+      // Adicionar evento de clique ao botão "See more"
+      seeMoreButton.addEventListener('click', function () {
+        // Fechar todas as outras linhas
+        allContainers.forEach(function (otherContainer) {
+          var otherTicketsPerEvent = otherContainer.querySelector('.my-tickets-per-event');
+          var otherSeeMoreButton = otherContainer.querySelector('.my-tickets-btn-see-more');
+          var otherHiddenButton = otherContainer.querySelector('.my-tickets-btn-hidden');
+
+          if (otherTicketsPerEvent && otherSeeMoreButton && otherHiddenButton) {
+
+                var hasOverflow = otherTicketsPerEvent.scrollHeight > otherTicketsPerEvent.clientHeight;
+
+              if (hasOverflow) {
+                console.log("oi");
+
+                otherTicketsPerEvent.style.maxHeight = '340px';
+                otherTicketsPerEvent.style.overflow = 'scroll';
+                otherSeeMoreButton.style.display = 'flex';
+                otherHiddenButton.style.display = 'none';
+              }
+              else {
+                seeMoreButton.style.display = 'none';
+                hiddenButton.style.display = 'none';
+              }
+            
+          }
+        });
+
+        // Abrir a linha atual
+        ticketsPerEvent.style.maxHeight = 'fit-content';
+        ticketsPerEvent.style.overflow = 'visible';
+        seeMoreButton.style.display = 'none';
+        hiddenButton.style.display = 'flex';
+      });
+
+      // Adicionar evento de clique ao botão "Hidden"
+      hiddenButton.addEventListener('click', function () {
+        // Fechar a linha atual
+        ticketsPerEvent.style.maxHeight = '340px';
+        ticketsPerEvent.style.overflow = 'scroll';
+        hiddenButton.style.display = 'none';
+        seeMoreButton.style.display = 'flex';
+      });
+
+      // Verificar inicialmente se há overflow na altura
+      var hasOverflow = ticketsPerEvent.scrollHeight > ticketsPerEvent.clientHeight;
+
+      // Mostrar ou ocultar botões com base na verificação de overflow
+      if (hasOverflow) {
+        seeMoreButton.style.display = 'flex';
+        hiddenButton.style.display = 'none';
+      } else {
+        seeMoreButton.style.display = 'none';
+        hiddenButton.style.display = 'none';
+      }
+    }
+  });
+});
