@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-    <h1>Admin</h1>
-    <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+    <h1 class="mt-4">Admin</h1>
+    <div class="btn-group d-flex justify-content-center mt-3 mx-auto" role="group" aria-label="Basic radio toggle button group">
         <input type="radio" class="btn-check" name="sectionToggle" id="reportComments" autocomplete="off" checked data-section-id="report-comments">
         <label class="btn btn-outline-primary" for="reportComments">Reported Comments</label>
 
@@ -10,8 +10,10 @@
         <label class="btn btn-outline-primary" for="manageUsers">Activate/Deactivate Users</label>
     </div>
 
-    <div class="admin-section" id="report-comments">
+
+    <div class="admin-section text-center mt-4 mx-auto" id="report-comments">
         <h2 id="reported_comments_header">Reported Comments</h2>
+        <div class="mt-4"></div>
         <table class="table mx-auto">
             <thead>
                 <tr>
@@ -29,7 +31,7 @@
                         </a></td>
                         <td>{{ $reportedComment->text }}</td>
                         <td>{{ $reportedComment->type }}</td>
-                        <td>
+                        <td class="d-flex justify-content-center">
                             @if($reportedComment->private)
                                 <i class="toggle-eye fa-solid fa-eye show-icon" id="show_{{ $reportedComment->comment_id }}" onclick="toggleAdminCommentVisibility('{{ $reportedComment->comment_id }}', 'public')" style="{{ $reportedComment->private ? 'display: flex;' : 'display: none;' }}"></i>
                                 <i class="toggle-eye fa-solid fa-eye-slash hidden-icon" id="hidden_{{ $reportedComment->comment_id }}" onclick="toggleAdminCommentVisibility('{{ $reportedComment->comment_id }}', 'private')" style="{{ $reportedComment->private ? 'display: none;' : 'display: flex;' }}"></i>
@@ -57,8 +59,8 @@
         <p>Total de eventos no ano atual: <span id="eventCountByYear">{{ $eventCountByYear }}</span></p>
     </div>
 
-    <div class="admin-section" id="manage-users">
-        <div id="active_users_section">
+    <div class="admin-section text-center mt-4 " id="manage-users">
+        <div id="active_users_section mx-auto">
             <h2 id="active_users_header">Active Users</h2>
             <h3 id="activeUserCount">Total de usuários ativos: {{ count($activeUsers) }}</h3>
             <table class="table mx-auto">
@@ -83,7 +85,7 @@
             </table>
         </div>
 
-        <div id="inactive_users_section">
+        <div id="inactive_users_section" class="mt-4 mx-auto">
             <h2 id="inactive_users_header">Inactive Users</h2>
             <h3 id="inactiveUserCount">Total de usuários inativos: {{ count($inactiveUsers) }}</h3>
             <table class="table mx-auto">
