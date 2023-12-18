@@ -131,6 +131,25 @@ function updateStock(ticketTypeId) {
       console.error('Error updating stock:', this.responseText);
     }
   });
+  displaySuccessMessageTicketUpdateStock();
+  
+  setTimeout(function () {
+    removeSuccessMessage();
+  }, 3500);
+  
+}
+
+function displaySuccessMessageTicketUpdateStock() {
+  
+  let successDiv = document.createElement('div');
+  successDiv.classList.add('alert', 'alert-dismissible', 'alert-success', 'fixed-top-right');
+  successDiv.innerHTML = `
+    
+    <strong>Well done!</strong> You successfully <a href="#" class="alert-link">updated your ticket's stock</a>.
+  `;
+
+  
+  document.body.appendChild(successDiv);
 }
 
 function deactivateUser(userId) {
@@ -211,7 +230,7 @@ function updateEvent(eventId) {
   sendAjaxRequest('post', '../update-event/' + eventId, formData);
 
   
-  displaySuccessMessage();
+  displaySuccessMessageEventChange();
 
   
   setTimeout(function () {
@@ -219,22 +238,22 @@ function updateEvent(eventId) {
   }, 3500);
 }
 
-function displaySuccessMessage() {
-  // Create a div element with the success message content
+function displaySuccessMessageEventChange() {
+  
   let successDiv = document.createElement('div');
   successDiv.classList.add('alert', 'alert-dismissible', 'alert-success', 'fixed-top-right');
   successDiv.innerHTML = `
-    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    
     <strong>Well done!</strong> You successfully <a href="#" class="alert-link">updated your event</a>.
   `;
 
-  // Append the div to the body
+  
   document.body.appendChild(successDiv);
 }
 
 
 function removeSuccessMessage() {
-  // Find and remove the success message div
+  
   let successDiv = document.querySelector('.alert-success');
   if (successDiv) {
     successDiv.remove();
