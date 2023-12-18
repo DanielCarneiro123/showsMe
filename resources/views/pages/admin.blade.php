@@ -25,13 +25,19 @@
             </thead>
             <tbody>
             @foreach ($reportedComments as $reportedComment)
-                <tr id="reported_comment_row_{{ $reportedComment->report_id }}" data-report-id="{{ $reportedComment->report_id }}">
+                <tr id="reported_comment_row_{{ $reportedComment->comment_id }}" data-report-id="{{ $reportedComment->comment_id }}">
                     <td><a href="{{ route('view-event', ['id' => $reportedComment->event_id]) }}">
                         {{ $reportedComment->event_name }}
                     </a></td>
                     <td>{{ $reportedComment->type }}</td>
                     <td data-report-id="{{ $reportedComment->report_id }}">
                         <i class="fa-solid fa-xmark delete-report" data-report-id="{{ $reportedComment->report_id }}"></i>
+                        <i class="fa-solid fa-trash" onclick="confirmAdminDeleteComment()"></i>
+                        <form id="confirmAdminDeleteCommentForm" style="display: none;">
+                            <p class="text-danger">Are you sure you want to delete the reported comment?</p>
+                            <button class="btn btn-danger" onclick="deleteAdminComment(event, {{ $reportedComment->comment_id }})">Delete</button>
+                            <button type="button" class="btn btn-primary" onclick="hideAdminDeleteCommentModal()">Cancel</button>
+                        </form>
                     </td>
                 </tr>
             @endforeach

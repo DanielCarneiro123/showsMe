@@ -622,12 +622,27 @@ function confirmDeleteComment() {
  
 }
 
+function confirmAdminDeleteComment() {
+  const comment = event.target.closest("tr");
+
+  comment.querySelector('#confirmAdminDeleteCommentForm').style.display = 'block';
+}
+
 
 function hideDeleteCommentModal() {
   const comment = event.target.closest(".comment");
   
 
   comment.querySelector('#confirmDeleteCommentForm').style.display = 'none';
+ 
+}
+
+
+function hideAdminDeleteCommentModal() {
+  const comment = event.target.closest("tr");
+  
+
+  comment.querySelector('#confirmAdminDeleteCommentForm').style.display = 'none';
  
 }
 
@@ -722,6 +737,30 @@ function deleteCommentHandler() {
     }
   } else {
     console.error('Invalid response structure or missing comment_id.');
+  }
+}
+
+function deleteAdminComment(event, reportedComment) {
+  event.preventDefault();
+  sendAjaxRequest('post', '/delete-comment', { comment_id: reportedComment }, deleteAdminCommentHandler);
+}
+
+function deleteAdminCommentHandler() {
+  const response = JSON.parse(this.responseText);
+  const message = response.message;
+
+  if (message && message.comment_id) {
+      const commentId = message.comment_id;
+
+      const commentElement = document.querySelector(`tr[data-report-id="${commentId}"]`);
+
+      if (commentElement) {
+          commentElement.remove();
+      } else {
+          console.error('Comment element not found in HTML:', commentId);
+      }
+  } else {
+      console.error('Invalid response structure or missing comment_id.');
   }
 }
 
