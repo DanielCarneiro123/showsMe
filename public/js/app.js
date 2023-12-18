@@ -530,11 +530,26 @@ function dismissNotification(notificationId) {
     if (notificationElement && notificationElement.parentNode) {
       notificationElement.parentNode.removeChild(notificationElement);
     }
+    updateNotificationCount();
   });
 }
 
+function updateNotificationCount() {
+  sendAjaxRequest('POST', '/update-notifications', null, function(event) {
+      if (event.target.status === 200) {
+          const responseData = JSON.parse(event.target.responseText);
+          const notificationCount = responseData.count;
 
-//Immediate Execution on Page Load (To follow this approach later, if there is time)
+          document.querySelector('.notification-count').textContent = notificationCount;
+      }
+  });
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+  updateNotificationCount();
+});
+
+
 
 function showSection() {
   var sectionButtons = document.querySelectorAll('.btn-check');

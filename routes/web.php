@@ -147,6 +147,7 @@ Route::post('/post/comment', [PostController::class, 'like']);
 Route::controller(NotificationController::class)->group(function (){
     Route::get('/get-notifications', 'getNotifications')->name('get-notifications')->middleware('auth');
     Route::post('/dismiss-notification/{notificationId}', [NotificationController::class, 'dismissNotification']);
+    Route::post('/update-notifications', [NotificationController::class, 'updateNotifications'])->name('update-notifications');
     //Route::post('/notifications/mark-as-read', 'NotificationController@markAsRead')->name('notifications.markAsRead')->middleware('auth');
 });
 
