@@ -65,14 +65,15 @@
         </section>
         <p id="location">Location: {{ $event->location }}</p>
     </section>
-    
+
     <div class="slideshow-container">
         @php $index = 1; @endphp
 
         @foreach ($event->images as $image)
         <div class="mySlides faded">
             <div class="numbertext">{{ $index }} / {{ count($event->images) }}</div>
-            <img src="{{ \App\Http\Controllers\FileController::get('event_image', $event->event_id) }}" alt="Event Image">
+            <img src="{{ \App\Http\Controllers\FileController::get('event_image', $event->event_id) }}"
+                alt="Event Image">
         </div>
         @php $index++; @endphp
         @endforeach
@@ -457,7 +458,7 @@
     </article>
 </section>
 
-<section class="event-section event-info-content" id="event-info">
+<!-- <section class="event-section event-info-content" id="event-info">
     <h2 id="hist">Histórico de Compras</h2>
 
     <section id="hist-compras">
@@ -499,7 +500,65 @@
         $purchaseNumber++;
         @endphp
         @endforeach
-    </section>
+    </section> -->
+
+<section class="event-section event-info-content" id="event-info">
+    <h2 id="hist">Histórico de Compras</h2>
+
+    <table class="hist-compras">
+        <thead>
+            <tr>
+                <th>Nº</th>
+                <th>Data</th>
+                <th>Bilhetes</th>
+                <th>Valor Total</th>
+                <th>Tipos</th>
+            </tr>
+        </thead>
+        <tbody>
+            @php
+            $totalSoldTickets = 0;
+            $purchaseNumber = 1;
+            @endphp
+
+            @foreach ($soldTickets->groupBy('order_id') as $orderTickets)
+            @php
+            $order = $orderTickets->first()->order;
+            @endphp
+
+            <tr class="see-all-buyed-row">
+                <td>{{ $purchaseNumber }}</td>
+                <td>{{ $order->timestamp->format('d/m/Y') }}</td>
+                <td>{{ $orderTickets->count() }}</td>
+                <td>{{ $order->totalPurchaseAmount }}€</td>
+                <td>
+                    <p>Details</p>
+                    <div class="additional-info" style="display: none;">
+                        <!-- Include the additional information here -->
+                        <div class="div-compra-tipos">
+                            @foreach ($orderTickets->groupBy('ticket_type_id') as $ticketType => $typeTickets)
+                            @php
+                            $ticketTypeName = $typeTickets->first()->ticketType->name;
+                            $quantity = $typeTickets->count();
+                            @endphp
+                            <div>
+                                <span>{{ $ticketTypeName }}:</span>
+                                <span>{{ $quantity }}</span>
+                            </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </td>
+            </tr>
+
+
+            @php
+            $totalSoldTickets += $orderTickets->count();
+            $purchaseNumber++;
+            @endphp
+            @endforeach
+        </tbody>
+    </table>
 
     <h2 id="title-charts">Stats</h2>
 

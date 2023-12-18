@@ -1117,30 +1117,23 @@ function updateEventCountByYear() {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-  // Obtém todos os elementos com a classe 'hist-compras-cards'
-  var cards = document.querySelectorAll('.hist-compras-cards');
+  // Add event listener to toggle the visibility and background color of the additional information
+  document.querySelectorAll('.see-all-buyed-row').forEach(function (row) {
+      row.addEventListener('click', function () {
+          // Toggle the visibility of the additional information
+          let detailsSection = row.querySelector('.additional-info');
+          detailsSection.style.display = detailsSection.style.display === 'none' ? 'table-row' : 'none';
 
-  // Adiciona um ouvinte de evento de clique a cada card
-  cards.forEach(function (card) {
-      card.addEventListener('click', function () {
-          // Define todos os elementos com a classe 'div-compra-tipos' para display: none
-          var allTiposDivs = document.querySelectorAll('.div-compra-tipos');
-          allTiposDivs.forEach(function (tiposDiv) {
-              tiposDiv.style.display = 'none';
-          });
+          // Toggle the background color of the entire row and tbody
+          row.classList.toggle('row-open');
+          let tbody = row.parentNode;
+          tbody.classList.toggle('tbody-open');
 
-          // Obtém o elemento .div-compra-tipos específico para este card
-          var tiposDiv = card.querySelector('.div-compra-tipos');
-
-          // Alterna entre 'grid' e 'none' ao clicar
-          if (tiposDiv.style.display === 'grid') {
-              tiposDiv.style.display = 'none';
-          } else {
-              tiposDiv.style.display = 'grid';
-          }
       });
   });
 });
+
+
 
 document.addEventListener('DOMContentLoaded', function () {
   var allContainers = document.querySelectorAll('.my-tickets-container');
