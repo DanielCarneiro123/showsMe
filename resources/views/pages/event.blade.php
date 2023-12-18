@@ -152,57 +152,75 @@
     @endif
 
 
-    <h2 class="text-primary text-center">Public Comments</h2>
+    <h2 class="text-primary text-center">Comments</h2>
+    @if(auth()->check())
+    <form id="newCommentForm" action="{{ route('submitComment') }}" method="post">
+        @csrf
+        <div class="comment new-comment">
+            <textarea name="newCommentText" id="newCommentText" class="new-comment-textbox" rows="3"
+                placeholder="Write a new comment" required></textarea>
+                
+        </div>
+       
+        <input id="newCommentEventID" type="hidden" name="event_id" value="{{$event->event_id}}">
+        <button onclick="addNewComment()" class="btn btn-primary" id="submit-comment-button">Submit Comment</button>
+    </form>
+    @endif
     <div id="public-comments-section" class="commentsContainer">
         @foreach($event->comments->where('private', false) as $comment)
         <div class="comment" data-id="{{ $comment->comment_id }}">
             <div class="comment-icons-container">
                 <p class="comment-author">{{ $comment->author->name }}</p>
                 <div>
-                    <i class="toggle-eye fa-solid fa-eye show-icon" id="show_{{ $comment->comment_id }}"
-                        onclick="toggleCommentVisibility('{{ $comment->comment_id }}', 'show', 'private')"></i>
-                    <i class="toggle-eye fa-solid fa-eye-slash hidden-icon" id="hidden_{{ $comment->comment_id }}"
-                        onclick="toggleCommentVisibility('{{ $comment->comment_id }}', 'hide', 'public')"
-                        style="display: none;"></i>
                     @if(auth()->check())
-                    @if((!$comment->isReported())&& (auth()->user()->user_id !== $comment->author->user_id))
-                    <i class="fa-solid fa-flag" onclick="showReportPopUp()"></i>
-                    @endif
-                    @if(auth()->user()->user_id === $comment->author->user_id)
-                    <i class="fa-solid fa-pen-to-square" onclick="showEditCommentModal()"></i>
-                    <i class="fa-solid fa-trash-can" onclick="deleteComment()"></i>
-                    @endif
+                        @if((!$comment->isReported())&& (auth()->user()->user_id !== $comment->author->user_id))
+                            <i class="fa-solid fa-flag" onclick="showReportPopUp()"></i>
+                        @endif
+                        @if(auth()->user()->user_id === $comment->author->user_id)
+                            <i class="fa-solid fa-pen-to-square" onclick="showEditCommentModal()"></i>
+                        @endif
+                        @if(auth()->user() && auth()->user()->is_admin || auth()->user()->user_id === $comment->author->user_id)
+                            <i class="fa-solid fa-trash-can" onclick="confirmDeleteComment()"></i>
+                        @endif
                     @endif
                 </div>
             </div>
             <p class="comment-text" id="commentText">{{ $comment->text }}</p>
 
             <form id="editCommentForm" style="display: none;">
-
-
-
                 <textarea id="editedCommentText" class="edit-comment-textbox" rows="3"
                     required>{{ $comment->text }}</textarea>
                 <button class="btn btn-primary" onclick="editComment()">Submit</button>
                 <button type="button" class="btn btn-danger" onclick="hideEditCommentModal()">Cancel</button>
             </form>
 
-            <div class="comment-likes-section">
+          
 
-                @if(auth()->check() && auth()->user()->likes($comment->comment_id))
+            <div class="comment-likes-section">
+            @if(auth()->check())
+            @if(auth()->user()->likes($comment->comment_id))
                 <i class="fas fa-thumbs-up fa-solid" id="liked" onclick="unlikeComment()"></i>
-                @else
-                <i class="far fa-thumbs-up fa-regular" id="unliked" onclick="goToLogin()"></i>
-                @endif
+            @else
+                <i class="far fa-thumbs-up fa-regular" id="unliked" onclick="likeComment()"></i>
+            @endif
+        @else
+            <i class="far fa-thumbs-up fa-regular" id="unliked" onclick="alert('Please log in to like this comment')"></i>
+        @endif
                 <p class="comment-likes">{{ $comment->likes }}</p>
 
             </div>
+
+            <form id="confirmDeleteCommentForm" style="display: none;">
+            <p class="text-danger">Are you sure you want to delete your comment?</p>
+            <button class="btn btn-danger" onclick="deleteComment()">Delete</button>
+            <button type="button" class="btn btn-primary" onclick="hideDeleteCommentModal()">Cancel</button>
+            </form>
 
         </div>
         @endforeach
     </div>
 
-    @if(auth()->user() && auth()->user()->is_admin)
+    <!--@if(auth()->user() && auth()->user()->is_admin)
     <h2 class="text-primary mt-4 text-center">Private Comments (visible to admins only)</h2>
     <div id="private-comments-section" class="commentsContainer">
 
@@ -222,7 +240,7 @@
                     @endif
                     @if(auth()->user()->user_id === $comment->author->user_id)
                     <i class="fa-solid fa-pen-to-square" onclick="showEditCommentModal()"></i>
-                    <i class="fa-solid fa-trash-can" onclick="deleteComment()"></i>
+                    <i class="fa-solid fa-trash-can" onclick="confirmDeleteComment()"></i>
                     @endif
                     @endif
                 </div>
@@ -232,10 +250,12 @@
             <form id="editCommentForm" style="display: none;">
 
                 <textarea id="editedCommentText" class="edit-comment-textbox" rows="3"
-                    required>{{ $comment->text }}</textarea>
+                    required>{{ $comment->text }}</textarea> 
                 <button class="btn btn-primary" onclick="editComment()">Submit</button>
                 <button type="button" class="btn btn-danger" onclick="hideEditCommentModal()">Cancel</button>
             </form>
+
+            
             <div class="comment-likes-section">
 
                 @if(auth()->check() && auth()->user()->likes($comment->comment_id))
@@ -246,22 +266,19 @@
                 <p class="comment-likes">{{ $comment->likes }}</p>
 
             </div>
+
+            <form id="confirmDeleteCommentForm" style="display: none;">
+            <p class="text-danger">Are you sure you want to delete your comment?</p>
+            <button class="btn btn-danger" onclick="deleteComment()">Delete</button>
+            <button type="button" class="btn btn-primary" onclick="hideDeleteCommentModal()">Cancel</button>
+            </form>
+
         </div>
         @endforeach
     </div>
-    @endif
+    @endif-->
 
-    @if(auth()->check())
-    <form id="newCommentForm" action="{{ route('submitComment') }}" method="post">
-        @csrf
-        <div class="comment new-comment">
-            <textarea name="newCommentText" id="newCommentText" class="new-comment-textbox" rows="3"
-                placeholder="Write a new comment"></textarea>
-        </div>
-        <input id="newCommentEventID" type="hidden" name="event_id" value="{{$event->event_id}}">
-        <button onclick="addNewComment()" class="btn btn-primary" id="submit-comment-button">Submit Comment</button>
-    </form>
-    @endif
+    
 
     <div class="pop-up-report">
         <div class="report-section">
@@ -560,8 +577,13 @@
         </tbody>
     </table>
 
-    <h2 id="title-charts">Stats</h2>
+    @if ($totalSoldTickets == 0)
+    <h2 class="text-center no-tickets-stat">No tickets sold yet,come back later!</h2>
+    @else
 
+    <h2 id="title-charts">Stats</h2>
+    
+    
     <section id="event-charts" data-id="{{ $event->event_id }}">
         <div class="div_dif_tickets_chart">
             <canvas id="dif_tickets_chart"></canvas>
@@ -592,7 +614,7 @@
 
 </section>
 
-
+@endif
 @endcan
 
 @endsection

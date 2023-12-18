@@ -42,8 +42,11 @@ class Event extends Model
 
     public function comments()
     {
-        return $this->hasMany(Comment::class, 'event_id');
+        return $this->hasMany(Comment::class, 'event_id')
+                    ->orderByRaw("author_id = ? DESC", [auth()->user()->user_id])
+                    ->orderByDesc('likes');
     }
+    
 
     public function ratings()
     {
@@ -59,7 +62,7 @@ class Event extends Model
             return $sum / $totalRatings;
         }
 
-        return "No Ratings Yet"; 
+        return 0; 
     }
     public function userRating()
     {

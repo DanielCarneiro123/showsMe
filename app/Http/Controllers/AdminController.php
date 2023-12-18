@@ -8,6 +8,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\Comment;
+use App\Models\Notification;
+use App\Models\Report;
+use Illuminate\Database\QueryException;
 
 class AdminController extends Controller
 {
@@ -37,7 +40,7 @@ class AdminController extends Controller
         $reportedComments = DB::table('comment_')
             ->join('report', 'comment_.comment_id', '=', 'report.comment_id')
             ->join('event_', 'comment_.event_id', '=', 'event_.event_id')
-            ->select('comment_.*', 'event_.name as event_name', 'report.type as type')
+            ->select('comment_.*', 'event_.name as event_name', 'report.type as type', 'report.report_id')
             ->distinct()
             ->get();
 
@@ -126,5 +129,21 @@ class AdminController extends Controller
     {
         $eventCount = Event::countEventsByYear($year);
         return response()->json(['count' => $eventCount]);
+    }
+
+    
+    public function deleteReport($reportId)
+    {
+        try {
+            $report = Report::findOrFail($reportId);
+
+            $report->notifications()->delete(); 
+
+            $report->delete();
+
+            return response()->json(['message' => 'Report deleted successfully']);
+        } catch (QueryException $e) {
+            return response()->json(['error' => 'Error deleting report'], 500);
+        }
     }
 }
