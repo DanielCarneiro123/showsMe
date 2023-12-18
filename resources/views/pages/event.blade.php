@@ -171,19 +171,16 @@
             <div class="comment-icons-container">
                 <p class="comment-author">{{ $comment->author->name }}</p>
                 <div>
-                    <i class="toggle-eye fa-solid fa-eye show-icon" id="show_{{ $comment->comment_id }}"
-                        onclick="toggleCommentVisibility('{{ $comment->comment_id }}', 'show', 'private')"></i>
-                    <i class="toggle-eye fa-solid fa-eye-slash hidden-icon" id="hidden_{{ $comment->comment_id }}"
-                        onclick="toggleCommentVisibility('{{ $comment->comment_id }}', 'hide', 'public')"
-                        style="display: none;"></i>
                     @if(auth()->check())
-                    @if((!$comment->isReported())&& (auth()->user()->user_id !== $comment->author->user_id))
-                    <i class="fa-solid fa-flag" onclick="showReportPopUp()"></i>
-                    @endif
-                    @if(auth()->user()->user_id === $comment->author->user_id)
-                    <i class="fa-solid fa-pen-to-square" onclick="showEditCommentModal()"></i>
-                    <i class="fa-solid fa-trash-can" onclick="confirmDeleteComment()"></i>
-                    @endif
+                        @if((!$comment->isReported())&& (auth()->user()->user_id !== $comment->author->user_id))
+                            <i class="fa-solid fa-flag" onclick="showReportPopUp()"></i>
+                        @endif
+                        @if(auth()->user()->user_id === $comment->author->user_id)
+                            <i class="fa-solid fa-pen-to-square" onclick="showEditCommentModal()"></i>
+                        @endif
+                        @if(auth()->user() && auth()->user()->is_admin || auth()->user()->user_id === $comment->author->user_id)
+                            <i class="fa-solid fa-trash-can" onclick="confirmDeleteComment()"></i>
+                        @endif
                     @endif
                 </div>
             </div>
@@ -222,7 +219,7 @@
         @endforeach
     </div>
 
-    @if(auth()->user() && auth()->user()->is_admin)
+    <!--@if(auth()->user() && auth()->user()->is_admin)
     <h2 class="text-primary mt-4 text-center">Private Comments (visible to admins only)</h2>
     <div id="private-comments-section" class="commentsContainer">
 
@@ -278,7 +275,7 @@
         </div>
         @endforeach
     </div>
-    @endif
+    @endif-->
 
     
 

@@ -1013,7 +1013,22 @@ function moveCommentToPublic(commentId) {
 }
 
 
+document.addEventListener('DOMContentLoaded', function () {
+  let deleteButtons = document.querySelectorAll('.delete-report');
 
+  deleteButtons.forEach(function (button) {
+      button.addEventListener('click', function () {
+          let reportId = this.dataset.reportId;
+
+          sendAjaxRequest('POST', '/delete-report/' + reportId, {reportId: reportId}, function () {
+              let row = document.getElementById('reported_comment_row_' + reportId);
+              if (row) {
+                  row.remove();
+              }
+          });
+      });
+  });
+});
 
 
 
