@@ -15,6 +15,7 @@ class Report extends Model
      * @var array<int, string>
      */
     protected $fillable = [
+        'report_id',
         'type',
         'comment_id',
         'author_id',

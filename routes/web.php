@@ -5,7 +5,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 
-use App\Http\Controllers\AdminController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\FaqController;
 use App\Http\Controllers\AboutUsController;
@@ -18,6 +17,8 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\StripeController;
+use App\Http\Controllers\AdminController;
+
 
 
 /*
@@ -57,6 +58,8 @@ Route::post('/edit-rating/{eventId}', [RatingController::class, 'editRating'])->
 
 
 Route::post('/submit-report', [ReportController::class, 'submitReport'])->name('submitReport');
+Route::post('/delete-report/{reportId}', [AdminController::class, 'deleteReport'])->name('delete-report');
+
 
 Route::post('/send', [MailController::class, 'send']);
 

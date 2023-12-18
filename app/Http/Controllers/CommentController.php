@@ -15,27 +15,11 @@ class CommentController extends Controller
         event(new PostComment($request->id));
     }
 
-
-
-    /*public function deleteComment(Comment $comment)
-    {
-        // Delete reports associated with the comment
-        $comment->reports()->each(function ($report) {
-            // Delete notifications associated with the report
-            $report->notifications()->delete();
-
-            // Delete the report
-            $report->delete();
-        });
-
-        // Perform the deletion logic for the comment
-        $comment->delete();
-
-        // Redirect or respond as needed
-    }*/
     public function submitComment(Request $request)
     {
-       
+        $request->validate([
+            'newCommentText' => 'required',
+        ]);
         $comment = new Comment();
         $comment->text = $request->input('newCommentText');
         $comment->event_id = $request->input('event_id'); 
@@ -89,7 +73,7 @@ class CommentController extends Controller
         return response()->json(['message' => $comment]);
     }
 
-    public function likeComment(Request $request){
+      public function likeComment(Request $request){
         
         $commentID = $request->input('comment_id');
 
@@ -105,6 +89,7 @@ class CommentController extends Controller
         }
         return response()->json(['message' => 'Comment not found'], 404);
     }
+
 
     public function unlikeComment(Request $request){
         

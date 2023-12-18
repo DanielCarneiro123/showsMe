@@ -198,7 +198,6 @@ function updateEventPageContent(formData) {
 }
 
 function updateEvent(eventId) {
-
   let formData = {
     'edit_name': document.getElementById('edit_name').value,
     'edit_description': document.getElementById('edit_description').value,
@@ -211,9 +210,36 @@ function updateEvent(eventId) {
 
   sendAjaxRequest('post', '../update-event/' + eventId, formData);
 
-  //colocar uma mensagem a dizer que foi alterado
+  
+  displaySuccessMessage();
+
+  
+  setTimeout(function () {
+    removeSuccessMessage();
+  }, 3500);
 }
 
+function displaySuccessMessage() {
+  // Create a div element with the success message content
+  let successDiv = document.createElement('div');
+  successDiv.classList.add('alert', 'alert-dismissible', 'alert-success', 'fixed-top-right');
+  successDiv.innerHTML = `
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    <strong>Well done!</strong> You successfully <a href="#" class="alert-link">updated your event</a>.
+  `;
+
+  // Append the div to the body
+  document.body.appendChild(successDiv);
+}
+
+
+function removeSuccessMessage() {
+  // Find and remove the success message div
+  let successDiv = document.querySelector('.alert-success');
+  if (successDiv) {
+    successDiv.remove();
+  }
+}
 function updateProfilePageContent(formData) {
   document.getElementById('user-header-name').innerText = formData.edit_name;
 
@@ -648,6 +674,39 @@ function toggleCheckoutSection() {
   showForm.style.display = 'none';
 }
 
+
+
+function confirmDeleteComment() {
+  const comment = event.target.closest(".comment");
+
+  comment.querySelector('#confirmDeleteCommentForm').style.display = 'block';
+ 
+}
+
+function confirmAdminDeleteComment() {
+  const comment = event.target.closest("tr");
+
+  comment.querySelector('#confirmAdminDeleteCommentForm').style.display = 'block';
+}
+
+
+function hideDeleteCommentModal() {
+  const comment = event.target.closest(".comment");
+  
+
+  comment.querySelector('#confirmDeleteCommentForm').style.display = 'none';
+ 
+}
+
+
+function hideAdminDeleteCommentModal() {
+  const comment = event.target.closest("tr");
+  
+
+  comment.querySelector('#confirmAdminDeleteCommentForm').style.display = 'none';
+ 
+}
+
 function showEditCommentModal() {
   const comment = event.target.closest(".comment");
 
@@ -693,9 +752,7 @@ function unlikeCommentHandler() {
   
 }
 
-function goToLogin(){
-  sendAjaxRequest('get', '/login');
-}
+
 function likeComment(){
   const comment = event.target.closest(".comment");
 
@@ -741,6 +798,30 @@ function deleteCommentHandler() {
     }
   } else {
     console.error('Invalid response structure or missing comment_id.');
+  }
+}
+
+function deleteAdminComment(event, reportedComment) {
+  event.preventDefault();
+  sendAjaxRequest('post', '/delete-comment', { comment_id: reportedComment }, deleteAdminCommentHandler);
+}
+
+function deleteAdminCommentHandler() {
+  const response = JSON.parse(this.responseText);
+  const message = response.message;
+
+  if (message && message.comment_id) {
+      const commentId = message.comment_id;
+
+      const commentElement = document.querySelector(`tr[data-report-id="${commentId}"]`);
+
+      if (commentElement) {
+          commentElement.remove();
+      } else {
+          console.error('Comment element not found in HTML:', commentId);
+      }
+  } else {
+      console.error('Invalid response structure or missing comment_id.');
   }
 }
 
@@ -845,11 +926,13 @@ function addNewCommentHandler() {
 
       const deleteIcon = document.createElement('i');
       deleteIcon.className = 'fa-solid fa-trash-can';
-      deleteIcon.addEventListener('click', function () {
-        const commentID = commentElement.getAttribute('data-id');
-        event.preventDefault();
-        sendAjaxRequest('post', '/delete-comment', { comment_id: commentID }, deleteCommentHandler);
-      });
+      
+      deleteIcon.addEventListener('click', function(){
+       
+  commentElement.querySelector('#confirmDeleteCommentForm').style.display = 'block';
+      }) ;
+
+
       iconsDiv.appendChild(deleteIcon);
 
 
@@ -860,7 +943,7 @@ function addNewCommentHandler() {
       commentText.className = 'comment-text';
       commentText.id = 'commentText';
       commentText.textContent = newComment.text;
-
+     
       const editCommentForm = document.createElement('form');
       editCommentForm.id = 'editCommentForm';
       editCommentForm.style.display = 'none';
@@ -924,7 +1007,7 @@ function addNewCommentHandler() {
       // Append the new comment directly to the container
       const commentsContainer = document.querySelector('.commentsContainer');
       if (commentsContainer) {
-        commentsContainer.appendChild(commentElement);
+        commentsContainer.prepend(commentElement);
       } else {
         console.error('Comments container not found.');
       }
@@ -1030,7 +1113,22 @@ function moveCommentToPublic(commentId) {
 }
 
 
+document.addEventListener('DOMContentLoaded', function () {
+  let deleteButtons = document.querySelectorAll('.delete-report');
 
+  deleteButtons.forEach(function (button) {
+      button.addEventListener('click', function () {
+          let reportId = this.dataset.reportId;
+
+          sendAjaxRequest('POST', '/delete-report/' + reportId, {reportId: reportId}, function () {
+              let row = document.getElementById('reported_comment_row_' + reportId);
+              if (row) {
+                  row.remove();
+              }
+          });
+      });
+  });
+});
 
 
 
