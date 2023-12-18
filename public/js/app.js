@@ -467,52 +467,54 @@ function loadNotifications(notificationsBody, callback) {
     .then(data => {
       console.log(data);
 
-      data.notifications.forEach(notification => {
-        if (notification.viewed === false){
-          const notificationElement = document.createElement('div');
-        
-          notificationElement.setAttribute('id', `notification-${notification.id}`);
-          
-          notificationElement.classList.add(`notification-${notification.id}`);
+      notificationsBody.innerHTML = '';
 
-          const iconElement = document.createElement('i');
+      if (data.notifications.length === 0) {
+        const noNotificationsText = document.createElement('p');
+        noNotificationsText.textContent = 'Não tens notificações';
+        notificationsBody.appendChild(noNotificationsText);
+      } else {
+        data.notifications.forEach(notification => {
+          if (notification.viewed === false) {
+            const notificationElement = document.createElement('div');
+            notificationElement.setAttribute('id', `notification-${notification.id}`);
+            notificationElement.classList.add(`notification-${notification.id}`);
 
-          iconElement.classList.add('fa-solid');
-          iconElement.classList.add('fa-xmark');
-          iconElement.addEventListener('click', function () {
-            dismissNotification(notification.id);
-          });
+            const iconElement = document.createElement('i');
+            iconElement.classList.add('fa-solid');
+            iconElement.classList.add('fa-xmark');
+            iconElement.addEventListener('click', function () {
+              dismissNotification(notification.id);
+            });
 
-          notificationElement.appendChild(iconElement);
+            notificationElement.appendChild(iconElement);
 
-          const horizontalSpace = document.createElement('br');
+            const horizontalSpace = document.createElement('br');
+            notificationElement.appendChild(horizontalSpace);
+            notificationElement.appendChild(horizontalSpace);
 
-          notificationElement.appendChild(horizontalSpace);
-          notificationElement.appendChild(horizontalSpace);
+            const anchorTag = document.createElement('a');
+            anchorTag.classList.add('event-link');
+            if (notification.notification_type === 'Event') {
+              anchorTag.href = `/view-event/${notification.event_id}`;
+              anchorTag.innerHTML = `The event <strong>${notification.event_name || 'Unknown Event'}</strong> had some changes made. Check them out! `;
+            } else if (notification.notification_type === 'Comment') {
+              anchorTag.href = `/view-event/${notification.event_id}`;
+              anchorTag.innerHTML = `A comment was made in the event <strong>${notification.event_name || 'Unknown Event'}</strong>. `;
+            } else if (notification.notification_type === 'Report') {
+              anchorTag.href = `/admin`;
+              anchorTag.innerHTML = `A report on a comment was made in the event <strong>${notification.event_name || 'Unknown Event'}</strong>. `;
+            }
 
-          const anchorTag = document.createElement('a');
-          anchorTag.classList.add('event-link');
-          if (notification.notification_type === 'Event') {
-            anchorTag.href = `/view-event/${notification.event_id}`;
-            anchorTag.innerHTML = `The event <strong>${notification.event_name || 'Unknown Event'}</strong> had some changes made. Check them out! `;
-          } else if (notification.notification_type === 'Comment') {
-            anchorTag.href = `/view-event/${notification.event_id}`;
-            anchorTag.innerHTML = `A comment was made in the event <strong>${notification.event_name || 'Unknown Event'}</strong>. `;
-          } else if (notification.notification_type === 'Report') {
-            anchorTag.href = `/admin`;
-            anchorTag.innerHTML = `A report on a comment was made in the event <strong>${notification.event_name || 'Unknown Event'}</strong>. `;
+            notificationElement.appendChild(anchorTag);
+
+            const horizontalLine = document.createElement('hr');
+            notificationElement.appendChild(horizontalLine);
+
+            notificationsBody.appendChild(notificationElement);
           }
-
-          notificationElement.appendChild(anchorTag);
-
-          notificationsBody.appendChild(notificationElement);
-
-          const horizontalLine = document.createElement('hr');
-          notificationElement.appendChild(horizontalLine);
-
-        }
-        
-      });
+        });
+      }
 
       if (callback) {
         callback();
@@ -520,6 +522,7 @@ function loadNotifications(notificationsBody, callback) {
     })
     .catch(error => console.error('Error fetching notifications:', error));
 }
+
 
 function dismissNotification(notificationId) {
   sendAjaxRequest('POST', `/dismiss-notification/${notificationId}`, null, function () {

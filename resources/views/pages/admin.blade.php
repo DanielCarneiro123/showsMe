@@ -7,7 +7,7 @@
         <label class="btn btn-outline-primary" for="reportComments">Reported Comments</label>
 
         <input type="radio" class="btn-check" name="sectionToggle" id="manageUsers" autocomplete="off" data-section-id="manage-users">
-        <label class="btn btn-outline-primary" for="manageUsers">Activate/Deactivate Users</label>
+        <label class="btn btn-outline-primary" for="manageUsers">Manage Users</label>
 
         <input type="radio" class="btn-check" name="sectionToggle" id="adminStats" autocomplete="off" data-section-id="admin-stats">
         <label class="btn btn-outline-primary" for="adminStats">Admin Stats</label>
@@ -98,12 +98,8 @@
             </table>
         </div>
     </div>
-    <div class="admin-section" id="admin-stats">
-        <p>Total de usuários: {{ $userCount }}</p>
-        <p>Total de eventos: {{ $eventCount }}</p>
-        <p>Total de eventos ativos: <span id="activeEventCount">{{ $activeEventCount }}</span></p>
-        <p>Total de eventos inativos: <span id="inactiveEventCount">{{ $inactiveEventCount }}</span></p>
-
+    <div class="admin-section text-center" id="admin-stats">
+        <br>
         <h2>Event Count by Month</h2>
         <p>Total de eventos no mês atual: <span id="eventCountByMonth">{{ $eventCountByMonth }}</span></p>
 
@@ -112,6 +108,14 @@
 
         <h2>Event Count by Year</h2>
         <p>Total de eventos no ano atual: <span id="eventCountByYear">{{ $eventCountByYear }}</span></p>
+        <br>
+        
+        <p>Total de usuários: {{ $userCount }}</p>
+        <p>Total de eventos: {{ $eventCount }}</p>
+        <p>Total de eventos ativos: <span id="activeEventCount">{{ $activeEventCount }}</span></p>
+        <p>Total de eventos inativos: <span id="inactiveEventCount">{{ $inactiveEventCount }}</span></p>
+
+        
     </div>
     
 @endsection
