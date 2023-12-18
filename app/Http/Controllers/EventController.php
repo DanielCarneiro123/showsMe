@@ -184,34 +184,27 @@ class EventController extends Controller
         session()->forget('purchase_user');
         $quantities = session('purchase_quantities');
         session()->forget('purchase_quantities');
-        $eventId = session('purchase_event_id');
-        session()->forget('purchase_event_id');
-
-
-        $event = Event::findOrFail($eventId);
-
-
-        $this->authorize('purchaseTickets', $event);
-
-
+    
         if (empty(array_filter($quantities, function ($quantity) {
             return $quantity > 0;
         }))) {
-            return redirect()->route('view-event', ['id' => $eventId])->with('error', 'Select at least one ticket type.');
+            return redirect()->route('checkout')->with('error', 'Select at least one ticket type.');
         }
-
-        //$buyer = Auth::user();
-
+    
         $order = new TicketOrder();
         $order->timestamp = now();
         $order->promo_code = null;
         $order->buyer_id = $user->user_id;
         $order->save();
-
+    
         foreach ($quantities as $ticketTypeId => $quantity) {
             if ($quantity > 0) {
                 $ticketType = TicketType::findOrFail($ticketTypeId);
-
+                $event = Event::findOrFail($ticketType->event_id);
+    
+                // Authorize the sale for each ticket type and corresponding event
+                $this->authorize('purchaseTickets', [$event, $ticketType]);
+    
                 for ($i = 0; $i < $quantity; $i++) {
                     $ticketInstance = new TicketInstance();
                     $ticketInstance->ticket_type_id = $ticketTypeId;
@@ -223,9 +216,12 @@ class EventController extends Controller
                 }
             }
         }
+    
 
-    return redirect()->route('my-tickets')->with('success', 'Tickets purchased successfully.');
-}
+        session()->forget('cart');
+        return redirect()->route('my-tickets')->with('success', 'Tickets purchased successfully.');
+    }
+    
 
 private function createTemporaryAccount(Request $request)
 {

@@ -287,7 +287,7 @@
 
 <section id="ticket-types" class="event-section">
     <h2 class="text-center">Ticket <span>Types</span></h2>
-    <form method="POST" action="{{ url('/payment/'.$event->event_id) }}">
+    <form method="POST" action="{{ url('/cart/'.$event->event_id) }}">
         @csrf
         @guest
         <div id="checkout-section" class="auth-form" style="display: none;">
@@ -369,13 +369,13 @@
         <div class="d-flex justify-content-center">
             @auth
             <button type="submit" class="btn btn-success event-button" id="buy-button">
-                <i class="fa-solid fa-credit-card"></i> Buy Tickets
+                <i class="fa-solid fa-cart-shopping"></i> Add To Cart
             </button>
             @endauth
 
             @guest
             <button type="button" class="btn btn-success event-button" id="show-form" onclick="toggleCheckoutSection()">
-                <i class="fa-solid fa-credit-card"></i> Buy Tickets
+                <i class="fa-solid fa-cart-shopping"></i> Add To Cart
             </button>
             @endguest
         </div>

@@ -88,6 +88,7 @@
                                 <i class="fa-solid fa-bell fa-2x"></i>
                             </button>
                         </div>
+                        <a id="cart-icon" class="text-light me-2" href="{{ route('checkout') }}"><i class="fa-solid fa-cart-shopping"></i></a>
                         <div class="user-info">
                             <a id="user-header-name" class="text-light me-2" href="{{ route('profile') }}">{{ Auth::user()->name}}</a>
                             <a class="btn btn-outline-secondary" href="{{ url('/logout') }}">Logout</a>

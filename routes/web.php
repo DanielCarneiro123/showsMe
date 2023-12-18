@@ -150,5 +150,9 @@ Route::controller(NotificationController::class)->group(function (){
 
 Route::controller(StripeController::class)->group(function () {
     Route::get('/payment', 'showPaymentForm')->name('payment');
-    Route::post('/payment/{event_id}', 'processPayment')->name('payment');
+    Route::post('/payment', 'processPayment')->name('payment');
+    Route::post('/cart/{event_id}', 'addToCart')->name('cart');
 });
+
+Route::get('/checkout', [CheckoutController::class, 'showCheckoutPage'])
+    ->name('checkout');
