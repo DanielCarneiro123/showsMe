@@ -2,7 +2,6 @@
 
 @section('content')
 <h1>Featured <span>Events</span></h1>
-
 <section class="centered-section-fluid text-center mt-4 mx-auto">
     <form class="row justify-content-center" method="GET" action="{{ route('search-events') }}">
         <div class="col-sm-8 col-md-6 mb-3">

@@ -255,17 +255,28 @@ private function createTemporaryAccount(Request $request)
     
     public function searchEvents(Request $request)
     {
+        if (Auth::check()) {
+            $user = Auth::user();
+            $notifications = $user->notifications;
 
-        $user = Auth::user();
-        $notifications = $user->notifications;
+            $query = $request->input('query');
 
-        $query = $request->input('query');
+            $events = Event::whereRaw('tsvectors @@ to_tsquery(\'english\', ?)', [$query])
+                ->orderByRaw('ts_rank(tsvectors, to_tsquery(\'english\', ?)) DESC', [$query])
+                ->paginate(10);
 
-        $events = Event::whereRaw('tsvectors @@ to_tsquery(\'english\', ?)', [$query])
-            ->orderByRaw('ts_rank(tsvectors, to_tsquery(\'english\', ?)) DESC', [$query])
-            ->paginate(10);
+            return view('pages.all_events', compact('events', 'notifications'));
+        }
+        else {
 
-        return view('pages.all_events', compact('events', 'notifications'));
+            $query = $request->input('query');
+
+            $events = Event::whereRaw('tsvectors @@ to_tsquery(\'english\', ?)', [$query])
+                ->orderByRaw('ts_rank(tsvectors, to_tsquery(\'english\', ?)) DESC', [$query])
+                ->paginate(10);
+
+            return view('pages.all_events', compact('events'));
+        } 
     }  
 
     private function generateQRCodePath(TicketInstance $ticketInstance)
