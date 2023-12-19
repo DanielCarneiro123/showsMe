@@ -11,56 +11,6 @@ h2 span {
     color: rgb(192, 148, 198);
 }
 
-.ticket-type {
-    display: inline-block;
-    padding: 3em;
-    width: 20%;
-    height: 30%;
-    max-height: 30%;
-    margin: 10px;
-    border: 3px solid #ddd;
-    border-radius: 10px;
-    background-color: #ddd;
-    overflow: hidden;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.ticket-type:hover {
-    border-color: #0000006b;
-    transform: scale(1.05);
-}
-
-
-#ticket-type h3 {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-    margin: 0;
-}
-
-
-#ticket-type p#ticket-type-price {
-    position: absolute;
-    top: 10px;
-    left: 10px; 
-    font-size: 1.5em;
-    margin: 0;
-}
-
-#ticket-type p#ticket-type-description {
-    text-align: center;
-    margin: 10px 0;
-}
-
-#ticket-type p#ticket-type-stock {
-    text-align: center;
-    margin: 0;
-    font-size: 0.8em;
-}
-
 
 .event-button {
     font-size: 1.2em;
@@ -108,7 +58,7 @@ input[type="number"] {
     box-sizing: border-box;
     font-size: 1em;
     text-align: center;
-    margin-right: 5px; 
+    margin: 5px; 
 }
 
 input[type="number"]:hover,

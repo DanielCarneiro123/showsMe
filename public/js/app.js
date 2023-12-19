@@ -18,6 +18,14 @@ function addEventListeners() {
       }
     });
   }
+
+  document.querySelectorAll('form button').forEach(function (button) {
+    button.addEventListener('click', function (event) {
+        if (button.id !== 'buy-button') {
+            event.preventDefault();
+        }
+    });
+});
 }
 
 function encodeForAjax(data) {
@@ -271,39 +279,8 @@ function updateProfile() {
 
   //depois tenho de colocar uma mensagem a dizer que foi alterado
 
-
 }
 
-function updateTicketPageContent(ticketType) {
-  console.log(ticketType);
-  let ticketTypesContainer = document.getElementById('ticket-types-container');
-  let newTicketType = document.createElement('article');
-  newTicketType.className = 'ticket-type';
-  newTicketType.innerHTML = `
-      <h3>${ticketType.name}</h3>
-      <p>Stock: ${ticketType.stock}</p>
-      <p>Description: ${ticketType.description}</p>
-      <p>Price: ${ticketType.price} €</p>
-      <label for="quantity_${ticketType.ticket_type_id}">Quantity:</label>
-      <input type="number" id="quantity_${ticketType.ticket_type_id}" name="quantity[${ticketType.ticket_type_id}]" min="0" max="${ticketType.person_buying_limit}">
-      
-      <!-- New Stock -->
-      <p>New Stock:
-      <input type="number" id="new_stock_${ticketType.ticket_type_id}" name="new_stock" value="${ticketType.stock}" required>
-      </p>
-      <button class="button-update-stock" onclick="updateStock(${ticketType.ticket_type_id})" form="purchaseForm">Update Stock</button>
-  `;
-  ticketTypesContainer.appendChild(newTicketType);
-
-  document.getElementById('ticket_name').value = '';
-  document.getElementById('ticket_stock').value = '';
-  document.getElementById('ticket_description').value = '';
-  document.getElementById('ticket_person_limit').value = '';
-  document.getElementById('ticket_price').value = '';
-  document.getElementById('ticket_start_timestamp').value = '';
-  document.getElementById('ticket_end_timestamp').value = '';
-
-}
 
 async function createTicketType(event_id) {
   let ticketName = document.getElementById('ticket_name').value;
@@ -370,14 +347,9 @@ async function createTicketType(event_id) {
 
 function createTypeHandler() {
   if (this.status == 200) {
-    const response = JSON.parse(this.responseText);
-    const ticketType = response.ticketType;
-    console.log(ticketType.ticket_type_id);
-    updateTicketPageContent(ticketType);
-
+    window.location.reload();
   }
 }
-
 
 const activate = document.querySelector('#activate-button');
 
@@ -1341,4 +1313,5 @@ document.addEventListener('DOMContentLoaded', function () {
               input.stepDown();
           }
       });
+      
   });

@@ -352,33 +352,52 @@
             @foreach ($event->ticketTypes as $ticketType)
             <article class="ticket-type" id="ticket-type-{{$ticketType->ticket_type_id}}"
                 data-max="{{ min($ticketType->person_buying_limit, $ticketType->stock) }}">
-                <h3>{{ $ticketType->name }}</h3>
-                <p id="stock_display_{{ $ticketType->ticket_type_id }}">Stock: {{ $ticketType->stock }}</p>
-                <p id="event_description_{{ $ticketType->ticket_type_id }}">Description: {{ $ticketType->description }}
-                </p>
-                <p id="ticket_price_{{ $ticketType->ticket_type_id }}">Price: {{ $ticketType->price }} €</p>
-                @if (auth()->user() && auth()->user()->user_id == $event->creator_id)
-                @csrf
-                <p>New Stock:
-                    <input type="number" id="new_stock_{{ $ticketType->ticket_type_id }}" name="new_stock"
-                        value="{{ $ticketType->stock }}" required>
-                </p>
-                <button class="button-update-stock" onclick="updateStock({{ $ticketType->ticket_type_id }})"
-                    form="purchaseForm">Update Stock</button>
-                @endif
-                @if ($ticketType->stock > 0)
+                <div class="ticket_first_area">
+                    <p id="ticket_type_name">{{ $ticketType->name }}</p>
+                    <p id="event_description_{{ $ticketType->ticket_type_id }}"> {{ $ticketType->description}}</p>
+                    <p id="ticket_logo">show<span>s</span>me</p>
+                    <p id="ticket_start_date">Start: {{ $ticketType->start_timestamp->format('H:i d/m ') }}</p>
+                    <p id="ticket_end_date">End: {{ $ticketType->end_timestamp->format('H:i d/m') }}</p>
+                    <p id="ticket_price_{{ $ticketType->ticket_type_id }}"> {{ $ticketType->price }}€</p>
+                </div>
 
-                <label class="quant" id="label{{$ticketType->ticket_type_id}}"
-                    for="quantity_{{ $ticketType->ticket_type_id }}">Quantity:</label>
-                <input class="quant" id="input{{$ticketType->ticket_type_id}}" type="number"
-                    id="quantity_{{ $ticketType->ticket_type_id }}" name="quantity[{{ $ticketType->ticket_type_id }}]"
-                    min="0" max="{{ min($ticketType->person_buying_limit, $ticketType->stock) }}">
+                <div class="line"></div>
 
-                @endif
+                <div class="ticket_second_area">
+                    @if (auth()->user() && auth()->user()->user_id == $event->creator_id)
+                    @csrf
+                    <div class="ticket_second_area_stock">
+                        <div class="input_stock numeric-input">
+                            <p>Stock</p>
+                            <button class="btn-decrement">-</button>
+                            <input type="number" id="new_stock_{{ $ticketType->ticket_type_id }}" name="new_stock"
+                                value="{{ $ticketType->stock }}" required>
+                            <button class="btn-increment">+</button>
+                        </div>
+                        <button class="button-update-stock" onclick="updateStock({{ $ticketType->ticket_type_id }})"
+                            form="purchaseForm">Update Stock</button>
+                    </div>
+                    @endif
+                    @if ($ticketType->stock > 0)
+                    <div class="ticket_second_area_quanti">
+                        <label class="quant" id="label{{$ticketType->ticket_type_id}}"
+                            for="quantity_{{ $ticketType->ticket_type_id }}">Quantity</label>
+
+                        <div class="input_quanti numeric-input">
+                            <button class="btn-increment">+</button>
+                            <input class="quant" id="input{{$ticketType->ticket_type_id}}" type="number"
+                                id="quantity_{{ $ticketType->ticket_type_id }}"
+                                name="quantity[{{ $ticketType->ticket_type_id }}]" min="0"
+                                max="{{ min($ticketType->person_buying_limit, $ticketType->stock) }}">
+                            <button class="btn-decrement">-</button>
+                        </div>
+
+                    </div>
+                    @endif
+                </div>
             </article>
             @endforeach
         </div>
-        <br>
         <div class="d-flex justify-content-center">
             @auth
             <button type="submit" class="btn btn-success event-button" id="buy-button">
@@ -392,7 +411,6 @@
             </button>
             @endguest
         </div>
-
     </form>
 </section>
 

@@ -530,7 +530,7 @@ button:hover {
 
 .notification i {
   margin-right: 10px;
-  /* Adjust the margin as needed */
+  cursor: pointer;
 }
 
 
@@ -590,8 +590,6 @@ button:hover {
     'logo info-edate '
     'logo  edate';
 
-
-  /*border: 3px dashed rgb(0, 0, 0); */
   
   border-top: 3px dashed rgb(0, 0, 0);
   border-left: 3px dashed rgb(0, 0, 0); 
@@ -685,11 +683,11 @@ button:hover {
   font-weight: bold;
   width: fit-content;
   margin: 0;
+  cursor: default;
 }
 
 .create-ticket-instance .first_area #ticket_logo>span {
   color: rgba(192, 148, 198, 0.5);
-
 }
 
 .create-ticket-instance .second_area {
@@ -780,3 +778,273 @@ button:hover {
   align-self: center;
   border-left: 5px dashed #000000;
 }
+
+/*fim ticketcreate*/
+
+/*all ticket types*/
+
+#ticket-types-container{
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(0,600px));
+  gap: 10px;
+  justify-content: center;
+}
+
+.ticket-type{
+  display: grid;
+  grid-template-areas:
+    'ticket_first_area line ticket_second_area';
+  width: fit-content;
+  column-gap: 1px;
+  padding: 20px;
+  border-radius: 20px;
+  min-height: 275px;
+  height: min-content;
+  cursor: default;
+}
+
+.ticket-type .line {
+  grid-area: line;
+  content: "";
+  height: 96%;
+  width: 5px; 
+  display: flex;
+  align-self: center;
+  border-left: 6px dashed #000000; 
+}
+
+.ticket-type .ticket_first_area{
+  grid-area: ticket_first_area;
+  display: grid;
+  grid-template-areas:
+    'ticket_nome price'
+    'ticket_descri ticket_descri'
+    'logo sdate'
+    'logo edate';
+
+  grid-template-rows: auto 1fr auto auto;
+  grid-template-columns: auto 1fr;
+  border: 2px solid rgb(233, 233, 233);
+  box-shadow: 0 8px 12px #25015e;
+  background-color: #ddd;
+  border-top-left-radius: 15px;
+  border-bottom-left-radius: 15px;
+  padding: 20px;
+  margin: 0;
+  column-gap: 40px;
+}
+
+.ticket-type .ticket_first_area #ticket_type_name{
+  grid-area: ticket_nome;
+  justify-self: start;
+  font-size: 30px;
+  font-weight: 800;
+  color: purple;
+  margin-bottom: 5px;
+  background-color: transparent;
+  border: none;
+}
+
+.ticket_first_area p:nth-child(2) { /*é a descrição*/
+  grid-area: ticket_descri;
+  justify-self: start;
+  font-size: 15px;
+  color: rgba(0, 0, 0, 0.5); 
+  font-weight: 600;
+}
+
+.ticket-type .ticket_first_area #ticket_start_date{
+  grid-area: sdate;
+  display: flex;
+  justify-self: end;
+  align-self: end;
+  margin: 0;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.312); 
+}
+
+.ticket-type .ticket_first_area #ticket_end_date{
+  grid-area: edate;
+  display: flex;
+  justify-self: end;
+  align-self: start;
+  margin: 0;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.312); 
+}
+
+.ticket_first_area p:nth-child(6) { /*é a descrição*/
+  grid-area: price;
+  justify-self: end;
+  font-size: 30px;
+  color: rgba(0, 0, 0, 0.671); 
+  font-weight: 700;
+}
+
+.ticket-type .ticket_second_area{
+  display: grid;
+  grid-area: ticket_second_area;
+  grid-template-areas:
+  'ticket_second_area_stock'
+  'ticket_second_area_quanti';
+  align-content: center;
+  grid-template-rows: auto 1fr;
+  grid-template-rows: 1fr auto; 
+  column-gap: 60px;
+
+  border: 2px solid rgb(233, 233, 233);
+  box-shadow: 0 8px 12px #25015e;
+  background-color: #ddd;
+  padding: 20px;
+  margin: 0;
+  border-top-right-radius: 15px;
+  border-bottom-right-radius: 15px;
+}
+
+.ticket-type .ticket_second_area .ticket_second_area_stock{
+  grid-area: ticket_second_area_stock;
+  display: grid;
+  grid-template-areas: 
+  'input_stock'
+  'btn';
+  height: fit-content;
+  column-gap: 10px;
+  row-gap: 5px;
+}
+
+.ticket-type .ticket_second_area .ticket_second_area_stock .input_stock{
+  grid-area: input_stock;
+  display: grid;
+  grid-template-areas: 
+  'p p p'
+  'less input more' ;
+  height: fit-content;
+  column-gap: 10px;
+  row-gap: 5px;
+}
+
+.ticket-type .ticket_second_area .ticket_second_area_stock .input_stock p{
+  grid-area: p;
+  display: flex;
+  justify-self: end;
+  margin: 0;
+}
+
+.ticket-type .ticket_second_area .ticket_second_area_stock .input_stock .btn-decrement {
+  grid-area: less;
+  display: flex;
+  justify-self: center;
+  width: fit-content;
+  height: fit-content;
+  background-color: transparent;
+  margin: 0;
+  border: none;
+  align-self: center;
+}
+
+.ticket-type .ticket_second_area .ticket_second_area_stock .input_stock .btn-increment {
+  grid-area: more;
+  display: flex;
+  justify-self: center;
+  width: fit-content;
+  height: fit-content;
+  background-color: transparent;
+  border: none;
+  margin: 0;
+  align-self: center;
+}
+
+.ticket-type .ticket_second_area .ticket_second_area_stock .input_stock input{
+  grid-area: input;
+  display: flex;
+  margin: 0;
+  justify-self: center;
+}
+
+.ticket-type .ticket_second_area .ticket_second_area_stock button:last-child{
+  grid-area: btn;
+  display: flex;
+  margin: 0;
+  height: fit-content;
+  align-self: center;
+  border: none;
+  border-radius: 10px;
+  padding: 3px;
+  font-size: 12px;
+  cursor: pointer;
+  width: fit-content;
+  justify-self: end;
+}
+
+.ticket-type .ticket_second_area .ticket_second_area_quanti{
+  grid-area: ticket_second_area_quanti;
+  display: grid;
+  grid-template-areas: 
+  'quanti'
+  'input_quanti';
+  font-size: 18px;
+  color: rgba(0, 0, 0, 0.5); 
+  font-weight: 600;
+}
+
+.ticket-type .ticket_second_area .ticket_second_area_quanti label{
+  grid-area: quanti;
+  justify-self: center;
+  margin:0;
+}
+
+.ticket-type .ticket_second_area .ticket_second_area_quanti .input_quanti{
+  grid-area: input_quanti;
+  justify-content: center;
+  display: grid;
+  grid-template-areas: 
+  'les quant mor';
+  margin:0;
+  align-self: center;
+}
+
+.ticket-type .ticket_second_area .ticket_second_area_quanti .input_quanti .btn-increment{
+  grid-area: mor;
+  display: flex;
+  justify-self: center;
+  width: fit-content;
+  height: fit-content;
+  background-color: transparent;
+  margin: 0;
+  border: none;
+  align-self: center;
+}
+
+.ticket-type .ticket_second_area .ticket_second_area_quanti .input_quanti .btn-decrement{
+  grid-area: les;
+  display: flex;
+  justify-self: center;
+  width: fit-content;
+  height: fit-content;
+  background-color: transparent;
+  margin: 0;
+  border: none;
+  align-self: center;
+}
+
+.ticket-type .ticket_second_area .ticket_second_area_quanti .input_quanti input{
+  grid-area: quant;
+}
+
+.ticket-type .ticket_first_area #ticket_logo {
+  grid-area: logo;
+  justify-self: center;
+  align-self: end;
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 2.4em;
+  font-weight: bold;
+  width: fit-content;
+  margin: 0;
+  cursor: default;
+}
+
+.ticket-type .ticket_first_area #ticket_logo>span {
+  color: rgba(192, 148, 198, 0.5);
+}
+

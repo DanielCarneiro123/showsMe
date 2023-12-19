@@ -212,6 +212,7 @@
     font-weight: bold;
     width: fit-content;
     margin: 0;
+    cursor: default;
 }
 
 #ticket-logo > span {
