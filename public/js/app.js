@@ -127,30 +127,17 @@ function updateStock(ticketTypeId) {
     if (this.status === 200) {
       let response = JSON.parse(this.responseText);
       updateStockContent(response, ticketTypeId);
+      displaySuccessMessage("You have updated your ticket stock successfully");
+  
+  
     } else {
       console.error('Error updating stock:', this.responseText);
     }
   });
-  displaySuccessMessageTicketUpdateStock();
   
-  setTimeout(function () {
-    removeSuccessMessage();
-  }, 3500);
   
 }
 
-function displaySuccessMessageTicketUpdateStock() {
-  
-  let successDiv = document.createElement('div');
-  successDiv.classList.add('alert', 'alert-dismissible', 'alert-success', 'fixed-top-right');
-  successDiv.innerHTML = `
-    
-    <strong>Well done!</strong> You successfully <a href="#" class="alert-link">updated your ticket's stock</a>.
-  `;
-
-  
-  document.body.appendChild(successDiv);
-}
 
 function deactivateUser(userId) {
   let formData = { 'user_id': userId };
@@ -209,9 +196,49 @@ function updateInactiveEventCount() {
 }
 
 function updateEventPageContent(formData) {
+ 
+  if (formData.edit_name.trim() === '') {
+    displayDangerMessage("Event name cannot be empty");
+    return;
+}
+
+if (formData.edit_location.trim() === '') {
+    displayDangerMessage("Event location cannot be empty");
+    return;
+}
+
+if (formData.edit_description.trim() === '') {
+    displayDangerMessage("Event description cannot be empty");
+    return;
+}
+
+let currentDate = new Date().toISOString().split('T')[0];
+if (formData.edit_start_timestamp < currentDate) {
+    displayDangerMessage("The start timestamp must be superior to the current date");
+    return;
+}
+
+if (formData.edit_end_timestamp <= currentDate) {
+    displayDangerMessage("The end timestamp must be superior to the current date");
+    return;
+}
+
+if (formData.edit_start_timestamp.split('T')[0] === formData.edit_end_timestamp.split('T')[0] && formData.edit_start_timestamp.split('T')[1] >= formData.edit_end_timestamp.split('T')[1]) {
+    displayDangerMessage("The start timestamp must be earlier than the end timestamp.");
+    return;
+}
+
+
+
+
   document.getElementById('name').innerHTML = formData.edit_name;
+
   document.getElementById('location').innerHTML = formData.edit_location;
   document.getElementById('description').innerHTML = formData.edit_description;
+
+  displaySuccessMessage("You have updated your event successfully");
+  
+      
   //document.getElementById('start_timestamp').innerHTML =  formData.edit_start_timestamp; //ainda não está display
   //document.getElementById('end_timestamp').innerHTML =  formData.edit_end_timestamp;  //ainda não está display
 }
@@ -228,28 +255,26 @@ function updateEvent(eventId) {
   updateEventPageContent(formData);
 
   sendAjaxRequest('post', '../update-event/' + eventId, formData);
-
   
-  displaySuccessMessageEventChange();
-
+}
   
+
+function displaySuccessMessage(message) {
+  let successDiv = document.createElement('div');
+  successDiv.classList.add('alert', 'alert-dismissible', 'alert-success', 'fixed-top-right');
+  successDiv.innerHTML = `
+    <strong>Well done!</strong> ${message}
+  `;
+
+  document.body.appendChild(successDiv);
+
   setTimeout(function () {
     removeSuccessMessage();
   }, 3500);
 }
 
-function displaySuccessMessageEventChange() {
-  
-  let successDiv = document.createElement('div');
-  successDiv.classList.add('alert', 'alert-dismissible', 'alert-success', 'fixed-top-right');
-  successDiv.innerHTML = `
-    
-    <strong>Well done!</strong> You successfully <a href="#" class="alert-link">updated your event</a>.
-  `;
 
-  
-  document.body.appendChild(successDiv);
-}
+
 
 
 function removeSuccessMessage() {
@@ -259,6 +284,29 @@ function removeSuccessMessage() {
     successDiv.remove();
   }
 }
+
+function displayDangerMessage(message) {
+  let dangerDiv = document.createElement('div');
+  dangerDiv.classList.add('alert', 'alert-dismissible', 'alert-danger', 'fixed-top-right');
+  dangerDiv.innerHTML = `
+    <strong>Attention!</strong> ${message}
+  `;
+
+  document.body.appendChild(dangerDiv);
+
+  setTimeout(function () {
+    removeDangerMessage();
+  }, 3500);
+}
+
+function removeDangerMessage() {
+  let dangerDiv = document.querySelector('.alert-danger');
+  if (dangerDiv) {
+    dangerDiv.remove();
+  }
+}
+
+
 function updateProfilePageContent(formData) {
   document.getElementById('user-header-name').innerText = formData.edit_name;
 
@@ -322,6 +370,8 @@ function updateTicketPageContent(ticketType) {
   document.getElementById('ticket_start_timestamp').value = '';
   document.getElementById('ticket_end_timestamp').value = '';
 
+
+
 }
 
 async function createTicketType(event_id) {
@@ -333,43 +383,43 @@ async function createTicketType(event_id) {
   let ticketEndTimestamp = document.getElementById('ticket_end_timestamp').value;
 
   if (!ticketName || !ticketStock || !ticketPersonLimit || !ticketStartTimestamp || !ticketEndTimestamp) {
-    alert("Todos os campos são obrigatórios.");
+    displayDangerMessage("All fields are mandatory.");
     return;
-  }
+}
 
-  if (isNaN(ticketPrice)) {
-    alert("O preço do ingresso deve ser um número.");
+if (isNaN(ticketPrice)) {
+    displayDangerMessage("The ticket price must be a number.");
     return;
-  }
+}
 
-  let currentDate = new Date().toISOString().split('T')[0];
-  if (ticketStartTimestamp < currentDate) {
-    alert("A data de início do ingresso deve ser igual ou superior à data atual.");
+let currentDate = new Date().toISOString().split('T')[0];
+if (ticketStartTimestamp < currentDate) {
+    displayDangerMessage("The ticket start date must be equal to or later than the current date.");
     return;
-  }
+}
 
-  if (ticketEndTimestamp <= currentDate) {
-    alert("A data de término do ingresso deve ser superior à data atual.");
+if (ticketEndTimestamp <= currentDate) {
+    displayDangerMessage("The ticket end date must be later than the current date.");
     return;
-  }
+}
 
-  if (ticketStartTimestamp.split('T')[0] === ticketEndTimestamp.split('T')[0] && ticketStartTimestamp.split('T')[1] >= ticketEndTimestamp.split('T')[1]) {
-    alert("A hora de início do ingresso deve ser anterior à hora de término no mesmo dia.");
+if (ticketStartTimestamp.split('T')[0] === ticketEndTimestamp.split('T')[0] && ticketStartTimestamp.split('T')[1] >= ticketEndTimestamp.split('T')[1]) {
+    displayDangerMessage("The ticket start time must be earlier than the end time on the same day.");
     return;
-  }
+}
 
-  let eventStartTimestamp = document.getElementById('edit_start_timestamp').value;
-  let eventEndTimestamp = document.getElementById('edit_end_timestamp').value;
+let eventStartTimestamp = document.getElementById('edit_start_timestamp').value;
+let eventEndTimestamp = document.getElementById('edit_end_timestamp').value;
 
-  if (ticketStartTimestamp < eventStartTimestamp || ticketStartTimestamp >= eventEndTimestamp) {
-    alert("A data de início do ingresso deve ser maior ou igual à data de início do evento e menor que a data de fim do evento.");
+if (ticketStartTimestamp < eventStartTimestamp || ticketStartTimestamp >= eventEndTimestamp) {
+    displayDangerMessage("The ticket start date must be greater than or equal to the event start date and less than the event end date.");
     return;
-  }
+}
 
-  if ((ticketEndTimestamp && ticketEndTimestamp <= eventStartTimestamp) || (ticketEndTimestamp && ticketEndTimestamp > eventEndTimestamp)) {
-    alert("A data de término do ingresso deve ser maior que a data de início do evento e menor ou igual à data de fim do evento.");
+if ((ticketEndTimestamp && ticketEndTimestamp <= eventStartTimestamp) || (ticketEndTimestamp && ticketEndTimestamp > eventEndTimestamp)) {
+    displayDangerMessage("The ticket end date must be greater than the event start date and less than or equal to the event end date.");
     return;
-  }
+}
 
 
   let formData = {
@@ -384,6 +434,9 @@ async function createTicketType(event_id) {
 
   sendAjaxRequest('post', `../create-ticket-type/${event_id}`, formData, createTypeHandler);
 
+  
+  displaySuccessMessage("You have updated your ticket information successfully");
+
 }
 
 
@@ -393,7 +446,7 @@ function createTypeHandler() {
     const ticketType = response.ticketType;
     console.log(ticketType.ticket_type_id);
     updateTicketPageContent(ticketType);
-
+    
   }
 }
 

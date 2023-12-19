@@ -424,7 +424,7 @@
 
         <label for="edit_name">Event Name:</label>
         <input type="text" id="edit_name" name="edit_name" value="{{ $event->name }}" required>
-
+        
         <label for="edit_description">Event Description:</label>
         <textarea id="edit_description" name="edit_description">{{ $event->description }}</textarea>
 

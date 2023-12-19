@@ -99,7 +99,7 @@ class EventController extends Controller
     public function updateEvent(Request $request, $id)
     {
         $request->validate([
-            'edit_name' => 'required|string|max:255',
+            'edit_name' => 'required:edit_name|string|max:255',
             'edit_description' => 'nullable|string',
             'edit_location' => 'required|string',
             'edit_start_timestamp' => 'required|date',
@@ -107,6 +107,7 @@ class EventController extends Controller
            
         ], [
             'edit_end_timestamp.after' => 'The end timestamp must be a date after the start timestamp.',
+            'edit_name.required' => 'Cannot have an empty name',
          
         ]);
     
