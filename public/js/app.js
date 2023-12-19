@@ -314,6 +314,50 @@ function updateProfilePageContent(formData) {
 
 function updateProfile() {
 
+  let formData = {
+    'edit_name': document.getElementById('edit_name').value,
+    'edit_email': document.getElementById('edit_email').value,
+    'edit_promotor_code': document.getElementById('edit_promotor_code').value,
+    'edit_phone_number': document.getElementById('edit_phone_number').value,
+  };
+
+  if (!formData.edit_name) {
+    displayDangerMessage("Name field cannot be empty.");
+    return;
+}
+
+if (!formData.edit_email) {
+  displayDangerMessage("Email field cannot be empty.");
+  return;
+}
+
+if (!formData.edit_phone_number) {
+  displayDangerMessage("Phone Number field cannot be empty.");
+  return;
+}
+
+const phoneNumberRegex = /^[0-9]+$/;
+if (!phoneNumberRegex.test(formData.edit_phone_number)) {
+    displayDangerMessage("Phone Number must only contain numbers.");
+    return;
+}
+
+sendAjaxRequest('post', '../update-profile', formData,function () {
+  
+    let response = JSON.parse(this.responseText);
+    
+    if(response.message == "The email address is already in use by another user."){
+      displayDangerMessage("The email address is already in use by another user.");
+    
+    
+
+
+  } else {
+    updateProfilePageContent(formData);
+
+    displaySuccessMessage("You have updated your profile successfully");
+}});
+
   document.getElementById('update-profile-button').style.display = 'none';
   document.getElementById('edit-profile-button').style.display = 'block';
   document.getElementById('edit_name').disabled = true;
@@ -322,21 +366,12 @@ function updateProfile() {
   document.getElementById('edit_phone_number').disabled = true;
 
 
-  let formData = {
-    'edit_name': document.getElementById('edit_name').value,
-    'edit_email': document.getElementById('edit_email').value,
-    'edit_promotor_code': document.getElementById('edit_promotor_code').value,
-    'edit_phone_number': document.getElementById('edit_phone_number').value,
-  };
-
-  console.log(formData);
+  
 
 
-  sendAjaxRequest('post', '../update-profile', formData);
 
-  updateProfilePageContent(formData);
 
-  //depois tenho de colocar uma mensagem a dizer que foi alterado
+ 
 
 
 }

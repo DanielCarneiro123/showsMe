@@ -99,5 +99,16 @@ class User extends Authenticatable
             ->where('comment_id', $comment_id)
             ->exists();
     }
+    public static function emailExists($email, $excludeUserId = null)
+    {
+        $query = self::where('email', $email);
+
+        if ($excludeUserId !== null) {
+            $query->where('user_id', '!=', $excludeUserId);
+        }
+
+        return $query->exists();
+    }
+
   
 }

@@ -27,6 +27,10 @@ class UserController extends Controller
 {
     $user = Auth::user();
 
+    if (User::emailExists($request->input('edit_email'), $user->user_id)) {
+        return response()->json(['message' => 'The email address is already in use by another user.']);
+    }
+
     $request->validate([
         'edit_email' => [
             'required',
@@ -42,7 +46,7 @@ class UserController extends Controller
             'regex:/^[0-9]+$/'
         ],
 ], 
-    ['email.unique' => 'The email address is already in use.',
+    ['edit_email.unique' => 'The email address is already in use.',
         'phone_number.numeric' => 'The phone number must be a number.',
         'phone_number.regex' => 'The phone number must only contain numbers.']);
 
@@ -54,6 +58,7 @@ class UserController extends Controller
         'phone_number' => $request->input('edit_phone_number'),
     ]);
 
+    
     $user->save();
 
     return response()->json(['message' => 'Perfil atualizado com sucesso']);
