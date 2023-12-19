@@ -193,7 +193,11 @@
                 <button type="button" class="btn btn-danger" onclick="hideEditCommentModal()">Cancel</button>
             </form>
 
-          
+            <form id="confirmDeleteCommentForm" style="display: none;">
+            <p id="deleteCommentText" class="text-danger"> Are you sure you want to delete your comment?</p>
+            <button class="btn btn-danger" onclick="deleteComment()">Delete</button>
+            <button type="button" class="btn btn-primary" onclick="hideDeleteCommentModal()">Cancel</button>
+            </form>
 
             <div class="comment-likes-section">
             @if(auth()->check())
@@ -214,6 +218,7 @@
             <button class="btn btn-danger" onclick="deleteComment()">Delete</button>
             <button type="button" class="btn btn-primary" onclick="hideDeleteCommentModal()">Cancel</button>
             </form>
+           
 
         </div>
         @endforeach

@@ -665,6 +665,8 @@ function hideAdminDeleteCommentModal() {
  
 }
 
+
+
 function showEditCommentModal() {
   const comment = event.target.closest(".comment");
 
@@ -842,7 +844,6 @@ function addNewComment(){
 
 };
 
-
 function addNewCommentHandler() {
   if (this.status === 200) {
     const response = JSON.parse(this.responseText);
@@ -887,7 +888,10 @@ function addNewCommentHandler() {
       
       deleteIcon.addEventListener('click', function(){
        
-  commentElement.querySelector('#confirmDeleteCommentForm').style.display = 'block';
+        const deleteCommentForm = commentElement.querySelector('#confirmDeleteCommentForm');
+        
+        deleteCommentForm.style.display = 'block';
+        
       }) ;
 
 
@@ -906,12 +910,33 @@ function addNewCommentHandler() {
       editCommentForm.id = 'editCommentForm';
       editCommentForm.style.display = 'none';
 
+      const deleteCommentForm = document.createElement('form');
+      deleteCommentForm.id = 'confirmDeleteCommentForm';
+      deleteCommentForm.style.display = 'none';
+
       const editedCommentText = document.createElement('textarea');
       editedCommentText.id = 'editedCommentText';
       editedCommentText.className = 'edit-comment-textbox';
       editedCommentText.rows = '3';
       editedCommentText.value = newComment.text;
       editedCommentText.required = true;
+
+      const deleteCommentText = document.createElement('p');
+      deleteCommentText.id = 'deleteCommentText';
+      deleteCommentText.className = 'text-danger';
+      deleteCommentText.textContent = 'Are you sure you want to delete your comment?';
+      
+      
+
+      const deleteSubmitButton = document.createElement('button');
+      deleteSubmitButton.className = 'btn btn-danger';
+      deleteSubmitButton.textContent = 'Delete';
+      deleteSubmitButton.addEventListener('click', function () {
+        const comment = event.target.closest('.comment');
+        const commentID = comment.getAttribute('data-id');
+       event.preventDefault();
+       sendAjaxRequest('post', '/delete-comment', { comment_id: commentID }, deleteCommentHandler);
+      });
 
       const submitButton = document.createElement('button');
       submitButton.className = 'btn btn-primary';
@@ -924,6 +949,17 @@ function addNewCommentHandler() {
         event.preventDefault();
         sendAjaxRequest('post', '/edit-comment', { newCommentText: editedCommentText, comment_id: commentID }, editCommentHandler);
       });
+      const deleteCancelButton = document.createElement('button');
+      deleteCancelButton.className = 'btn btn-primary';
+      deleteCancelButton.textContent = 'Cancel';
+      deleteCancelButton.type = 'button';
+      deleteCancelButton.style = 'margin-left: 4px;'
+      deleteCancelButton.addEventListener('click', function () {
+        const comment = event.target.closest('.comment');
+        
+        comment.querySelector('#confirmDeleteCommentForm').style.display = 'none';
+      });
+      
 
       const cancelButton = document.createElement('button');
       cancelButton.className = 'btn btn-danger';
@@ -936,8 +972,10 @@ function addNewCommentHandler() {
         comment.querySelector('#editCommentForm').style.display = 'none';
       });
       
-
-
+      deleteCommentForm.appendChild(deleteCommentText);
+      deleteCommentForm.appendChild(deleteSubmitButton);
+      deleteCommentForm.appendChild(deleteCancelButton);
+      
       editCommentForm.appendChild(editedCommentText);
       editCommentForm.appendChild(submitButton);
       editCommentForm.appendChild(cancelButton);
@@ -960,6 +998,7 @@ function addNewCommentHandler() {
       commentElement.appendChild(commentIconsContainer);
       commentElement.appendChild(commentText);
       commentElement.appendChild(editCommentForm);
+      commentElement.appendChild(deleteCommentForm);
       commentElement.appendChild(commentLikesSection);
 
       // Append the new comment directly to the container
@@ -977,6 +1016,9 @@ function addNewCommentHandler() {
     }
   }
 }
+
+
+
 
 
 

@@ -15,7 +15,7 @@
                                 <img src="{{ asset('../media/event_image.jpg') }}" alt="Event Image" class="img-fluid">
                                 <div class="event-info">
                                     <h3>{{ $event->name }}</h3>
-                                    <p>{{ $event->start_timestamp }}</p>
+                                    <p>{{ $event->description }}</p>
                                 </div>
                             </article>
                         </a>
