@@ -1081,7 +1081,10 @@ function showEditRatingForm() {
 }
 
 
-
+function redirectToLogin() {
+  // Redirect to the login route
+  window.location.href = "/login";
+}
 
 
 

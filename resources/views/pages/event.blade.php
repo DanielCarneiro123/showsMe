@@ -207,7 +207,7 @@
                 <i class="far fa-thumbs-up fa-regular" id="unliked" onclick="likeComment()"></i>
             @endif
         @else
-            <i class="far fa-thumbs-up fa-regular" id="unliked" onclick="alert('Please log in to like this comment')"></i>
+            <i class="far fa-thumbs-up fa-regular" id="unliked" onclick="redirectToLogin()"></i>
         @endif
                 <p class="comment-likes">{{ $comment->likes }}</p>
 
