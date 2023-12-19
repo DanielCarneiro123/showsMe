@@ -22,7 +22,7 @@
         </div>
 
         <div class="text-center">
-            <button class="btn btn-primary btn-lg" type="submit">
+            <button class="btn btn-primary btn-lg" type="submit"  onclick="showSuccessAlert()">
                 Send Password Reset Link
             </button>
         </div>

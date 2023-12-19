@@ -1046,8 +1046,19 @@ function showEditRatingForm() {
 }
 
 
+if (localStorage.getItem('resetSuccess') !== 'true') {
+  function showSuccessAlert() {
+      var alertDiv = document.createElement('div');
+      alertDiv.className = 'alert alert-dismissible alert-success';
+      alertDiv.innerHTML = '<button type="button" class="btn-close" data-bs-dismiss="alert"></button>The reset password has been sent to your email account!';
 
+      document.body.appendChild(alertDiv);
 
+      localStorage.setItem('resetSuccess', 'true');
+  }
+
+  showSuccessAlert();
+}
 
 
 
