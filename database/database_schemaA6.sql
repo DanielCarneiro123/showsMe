@@ -40,6 +40,12 @@ CREATE TABLE users (
    profile_image VARCHAR
 );
 
+CREATE TABLE password_reset_tokens (
+   email TEXT PRIMARY KEY,
+   token TEXT,
+   created_at TIMESTAMP
+);
+
 
 CREATE TABLE Event_ (
    event_id SERIAL PRIMARY KEY,
