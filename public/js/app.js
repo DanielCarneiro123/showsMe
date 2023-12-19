@@ -569,7 +569,7 @@ function showSection() {
       }
 
       if (currentSection) {
-        if(sectionId =='event-info'){
+        if(sectionId =='event-info' || sectionId == 'create-ticket-type'){
           currentSection.style.display = "grid";
         }
         else{
@@ -1300,3 +1300,45 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 });
+// script.js
+
+document.addEventListener('DOMContentLoaded', function () {
+  var currentDate = new Date();
+
+  var formattedDate = currentDate.toISOString().slice(0, 16);
+
+  document.getElementById('ticket_start_timestamp').value = formattedDate;
+  document.getElementById('ticket_end_timestamp').value = formattedDate;
+});
+
+    // Adiciona eventos de escuta aos campos de entrada numérica
+    document.querySelectorAll('.numeric-input input[type="number"]').forEach(function (input) {
+      input.addEventListener('input', function () {
+          this.value = this.value.replace(/[^0-9]/g, ''); // Remove caracteres não numéricos
+      });
+
+      input.addEventListener('change', function () {
+          // Garante que o valor não seja menor que zero
+          if (parseInt(this.value) < 0) {
+              this.value = 0;
+          }
+      });
+  });
+
+  // Adiciona eventos de escuta aos botões de incremento e decremento
+  document.querySelectorAll('.numeric-input .btn-increment').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+          var input = this.parentNode.querySelector('input[type="number"]');
+          input.stepUp();
+      });
+  });
+
+  document.querySelectorAll('.numeric-input .btn-decrement').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+          var input = this.parentNode.querySelector('input[type="number"]');
+          // Garante que o valor não seja menor que zero
+          if (parseInt(input.value) > 0) {
+              input.stepDown();
+          }
+      });
+  });

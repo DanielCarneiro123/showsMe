@@ -159,9 +159,9 @@
         <div class="comment new-comment">
             <textarea name="newCommentText" id="newCommentText" class="new-comment-textbox" rows="3"
                 placeholder="Write a new comment" required></textarea>
-                
+
         </div>
-       
+
         <input id="newCommentEventID" type="hidden" name="event_id" value="{{$event->event_id}}">
         <button onclick="addNewComment()" class="btn btn-primary" id="submit-comment-button">Submit Comment</button>
     </form>
@@ -173,15 +173,16 @@
                 <p class="comment-author">{{ $comment->author->name }}</p>
                 <div>
                     @if(auth()->check())
-                        @if((!$comment->isReported())&& (auth()->user()->user_id !== $comment->author->user_id))
-                            <i class="fa-solid fa-flag" onclick="showReportPopUp()"></i>
-                        @endif
-                        @if(auth()->user()->user_id === $comment->author->user_id)
-                            <i class="fa-solid fa-pen-to-square" onclick="showEditCommentModal()"></i>
-                        @endif
-                        @if(auth()->user() && auth()->user()->is_admin || auth()->user()->user_id === $comment->author->user_id)
-                            <i class="fa-solid fa-trash-can" onclick="confirmDeleteComment()"></i>
-                        @endif
+                    @if((!$comment->isReported())&& (auth()->user()->user_id !== $comment->author->user_id))
+                    <i class="fa-solid fa-flag" onclick="showReportPopUp()"></i>
+                    @endif
+                    @if(auth()->user()->user_id === $comment->author->user_id)
+                    <i class="fa-solid fa-pen-to-square" onclick="showEditCommentModal()"></i>
+                    @endif
+                    @if(auth()->user() && auth()->user()->is_admin || auth()->user()->user_id ===
+                    $comment->author->user_id)
+                    <i class="fa-solid fa-trash-can" onclick="confirmDeleteComment()"></i>
+                    @endif
                     @endif
                 </div>
             </div>
@@ -194,26 +195,27 @@
                 <button type="button" class="btn btn-danger" onclick="hideEditCommentModal()">Cancel</button>
             </form>
 
-          
+
 
             <div class="comment-likes-section">
-            @if(auth()->check())
-            @if(auth()->user()->likes($comment->comment_id))
+                @if(auth()->check())
+                @if(auth()->user()->likes($comment->comment_id))
                 <i class="fas fa-thumbs-up fa-solid" id="liked" onclick="unlikeComment()"></i>
-            @else
+                @else
                 <i class="far fa-thumbs-up fa-regular" id="unliked" onclick="likeComment()"></i>
-            @endif
-        @else
-            <i class="far fa-thumbs-up fa-regular" id="unliked" onclick="alert('Please log in to like this comment')"></i>
-        @endif
+                @endif
+                @else
+                <i class="far fa-thumbs-up fa-regular" id="unliked"
+                    onclick="alert('Please log in to like this comment')"></i>
+                @endif
                 <p class="comment-likes">{{ $comment->likes }}</p>
 
             </div>
 
             <form id="confirmDeleteCommentForm" style="display: none;">
-            <p class="text-danger">Are you sure you want to delete your comment?</p>
-            <button class="btn btn-danger" onclick="deleteComment()">Delete</button>
-            <button type="button" class="btn btn-primary" onclick="hideDeleteCommentModal()">Cancel</button>
+                <p class="text-danger">Are you sure you want to delete your comment?</p>
+                <button class="btn btn-danger" onclick="deleteComment()">Delete</button>
+                <button type="button" class="btn btn-primary" onclick="hideDeleteCommentModal()">Cancel</button>
             </form>
 
         </div>
@@ -278,7 +280,7 @@
     </div>
     @endif-->
 
-    
+
 
     <div class="pop-up-report">
         <div class="report-section">
@@ -441,31 +443,59 @@
     </article>
 </section>
 
-<section id="create-ticket-type" class="event-section edit-or-create">
+<section id="create-ticket-type" class="event-section ">
     <h2>Create <span> TicketType </span> </h2>
-    <article class="">
+    <article class="create-ticket-instance">
         @csrf
+        <div class="first_area">
+            <input type="text" id="ticket_name" name="ticket_name" placeholder="Ticket Name" required>
 
-        <label for="ticket_name">Ticket Name:</label>
-        <input type="text" id="ticket_name" name="ticket_name" required>
+            <textarea id="ticket_description" name="ticket_description" placeholder="Description"></textarea>
 
-        <label for="ticket_stock">Stock:</label>
-        <input type="number" id="ticket_stock" name="ticket_stock" required>
+            <p id="ticket_logo">show<span>s</span>me</p>
 
-        <label for="ticket_description">Ticket Description:</label>
-        <textarea id="ticket_description" name="ticket_description"></textarea>
+            <label for="ticket_start_timestamp" id="start_date_info">Start</label>
+            <input type="datetime-local" id="ticket_start_timestamp" name="ticket_start_timestamp" required>
 
-        <label for="ticket_person_limit">Person Buying Limit:</label>
-        <input type="number" id="ticket_person_limit" name="ticket_person_limit" required>
+            <label for="ticket_end_timestamp" id="end_date_info">End</label>
+            <input type="datetime-local" id="ticket_end_timestamp" name="ticket_end_timestamp" required>
+        </div>
 
-        <label for="ticket_price">Ticket Price:</label>
-        <input type="number" id="ticket_price" name="ticket_price" required>
 
-        <label for="ticket_start_timestamp">Ticket Start Timestamp:</label>
-        <input type="datetime-local" id="ticket_start_timestamp" name="ticket_start_timestamp" required>
+        <div class="line"></div>
 
-        <label for="ticket_end_timestamp">Ticket End Timestamp:</label>
-        <input type="datetime-local" id="ticket_end_timestamp" name="ticket_end_timestamp" required>
+        <div class="second_area">
+
+            <div id="div_ticket_price">
+                <label for="ticket_price">Price</label>
+                <div class="numeric-input">
+                    <button class="btn-increment">+</button>
+                    <input type="number" id="ticket_price" name="ticket_price" placeholder="€" required>
+                    <button class="btn-decrement">-</button>
+                </div>
+            </div>
+
+
+            <div id="div_ticket_stock">
+                <label for="ticket_stock">Stock</label>
+                <div class="numeric-input">
+                    <button class="btn-increment">+</button>
+                    <input type="number" id="ticket_stock" name="ticket_stock" required>
+                    <button class="btn-decrement">-</button>
+                </div>
+            </div>
+
+            <div id="div_ticket_person_limit">
+                <label for="ticket_person_limit">Max per Person</label>
+                <div class="numeric-input">
+                    <button class="btn-increment">+</button>
+
+                    <input type="number" id="ticket_person_limit" name="ticket_person_limit" required>
+                    <button class="btn-decrement">-</button>
+                </div>
+            </div>
+
+        </div>
         @error('ticket_end_timestamp')
         <span class="text-danger">{{ $message }}</span>
         @enderror <!-- You might want to add more fields based on your requirements -->
@@ -474,50 +504,6 @@
             TicketType</button>
     </article>
 </section>
-
-<!-- <section class="event-section event-info-content" id="event-info">
-    <h2 id="hist">Histórico de Compras</h2>
-
-    <section id="hist-compras">
-        @php
-        $totalSoldTickets = 0;
-        $purchaseNumber = 1;
-        @endphp
-
-        @foreach ($soldTickets->groupBy('order_id') as $orderTickets)
-        @php
-        $order = $orderTickets->first()->order;
-        @endphp
-
-        <div class="hist-compras-cards">
-            <div class="compra-nr">#{{ $purchaseNumber }}</div>
-            <div class="compra-data"> {{ $order->timestamp->format('d/m/Y') }}</div>
-            <div class="compra-quanti-valor">
-                <p class="bil">Bilhetes</p>
-                <p class="bil-total">{{ $orderTickets->count() }}</p>
-                <p class="val">Valor Total </p>
-                <p class="val-total">{{ $order->totalPurchaseAmount }}€</p>
-            </div>
-            <div class="div-compra-tipos">
-                @foreach ($orderTickets->groupBy('ticket_type_id') as $ticketType => $typeTickets)
-                @php
-                $ticketTypeName = $typeTickets->first()->ticketType->name;
-                $quantity = $typeTickets->count();
-                @endphp
-                <ul class="compra-tipos">
-                    <p class="tipo-nome"> {{ $ticketTypeName }} </p>
-                    <p class="quant"> {{ $quantity }} </p>
-                </ul>
-                @endforeach
-            </div>
-        </div>
-
-        @php
-        $totalSoldTickets += $orderTickets->count();
-        $purchaseNumber++;
-        @endphp
-        @endforeach
-    </section> -->
 
 <section class="event-section event-info-content" id="event-info">
     <h2 id="hist">Histórico de Compras</h2>
@@ -582,8 +568,8 @@
     @else
 
     <h2 id="title-charts">Stats</h2>
-    
-    
+
+
     <section id="event-charts" data-id="{{ $event->event_id }}">
         <div class="div_dif_tickets_chart">
             <canvas id="dif_tickets_chart"></canvas>
