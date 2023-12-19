@@ -435,7 +435,7 @@ if ((ticketEndTimestamp && ticketEndTimestamp <= eventStartTimestamp) || (ticket
   sendAjaxRequest('post', `../create-ticket-type/${event_id}`, formData, createTypeHandler);
 
   
-  displaySuccessMessage("You have updated your ticket information successfully");
+  displaySuccessMessage("You have created your ticket successfully");
 
 }
 
