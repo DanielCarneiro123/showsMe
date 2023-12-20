@@ -63,9 +63,6 @@
                 <div class="swiper-slide">
                         <figure>
                                 <img src="{{ \App\Http\Controllers\FileController::get('event_image', $image->event_image_id) }}" data-event-image-id= "{{ $image->event_image_id }}" alt="Event Image">
-                                <figcaption>
-                                    Image Test
-                                </figcaption>
                         </figure>
                 </div>
             @endforeach
