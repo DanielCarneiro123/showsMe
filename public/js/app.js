@@ -754,7 +754,7 @@ function showAdminSection() {
       }
 
       if (currentSection) {
-        currentSection.style.display = "block";
+        currentSection.style.display = "grid";
         console.log("Displaying section with ID:", sectionId);
       } else {
         console.log("Section not found with ID:", sectionId);

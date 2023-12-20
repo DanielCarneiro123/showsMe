@@ -261,7 +261,7 @@
 </section>
 
 <section id="ticket-types" class="event-section">
-    <h2 class="text-center">Ticket <span>Types</span></h2>
+    <h2 id="ticket_types_title"class="text-center">Ticket <span>Types</span></h2>
     @if(count($event->ticketTypes) > 0)
     <form method="POST" action="{{ url('/cart/'.$event->event_id) }}">
         @csrf
