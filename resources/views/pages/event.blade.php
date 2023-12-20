@@ -1,3 +1,4 @@
+<script type="text/javascript" src={{ url('js/event.js') }} defer></script>
 @extends('layouts.app')
 
 @section('content')

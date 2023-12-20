@@ -1,3 +1,5 @@
+<script type="text/javascript" src={{ url('js/paginate.js') }} defer></script>
+
 @extends('layouts.app')
 
 @section('content')
