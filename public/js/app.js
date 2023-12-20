@@ -801,15 +801,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
+
 function toggleCheckoutSection() {
   var checkoutSection = document.getElementById('checkout-section');
-  var buyButton = document.getElementById('buy-button');
+  var paymentButton = document.getElementById('payment-button');
   var showForm = document.getElementById('show-form')
 
   checkoutSection.style.display = 'block';
-  buyButton.style.display = 'inline';
+  paymentButton.style.display = 'inline';
   showForm.style.display = 'none';
 }
+
+
 
 
 
