@@ -375,7 +375,6 @@ button:hover {
 .next-img,
 .page-item {
   cursor: pointer;
-  position: absolute;
   top: 50%;
   width: auto;
   margin-top: -22px;

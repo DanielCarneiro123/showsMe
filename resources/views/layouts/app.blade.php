@@ -80,6 +80,7 @@
                             <button id="bell-button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#notificationsModal">
                                 <i class="fa-solid fa-bell fa-2x"></i>
                             </button>
+                            <span class="notification-count"></span>
                         </div>
                         <div class="user-info">
                             <a id="user-header-name" class="text-light me-2" href="{{ route('profile') }}">{{ Auth::user()->name}}</a>

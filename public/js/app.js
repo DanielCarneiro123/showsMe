@@ -46,6 +46,26 @@ function sendAjaxRequest(method, url, data, handler) {
   request.send(encodeForAjax(data));
 }
 
+document.addEventListener('DOMContentLoaded', function () {
+
+  function loadEvents(page) {
+    sendAjaxRequest('GET', `/ajax-paginate?page=${page}`, null, function () {
+      if (this.status >= 200 && this.status < 400) {
+        document.getElementById('event-cards-section').innerHTML = this.responseText;
+      } else {
+        console.error('Failed to load events.');
+      }
+    });
+  }
+
+  document.getElementById('event-cards-section').addEventListener('click', function (e) {
+    if (e.target.tagName === 'A' && e.target.getAttribute('class')=== 'page-link'){
+      e.preventDefault();
+      let page = e.target.getAttribute('href').split('page=')[1];
+      loadEvents(page);
+    }
+  });
+});
 
 function updateStockContent(formData, ticketTypeId) {
   document.getElementById('new_stock_' + ticketTypeId).innerHTML = formData['new_stock_' + ticketTypeId];
@@ -440,52 +460,54 @@ function loadNotifications(notificationsBody, callback) {
     .then(data => {
       console.log(data);
 
-      data.notifications.forEach(notification => {
-        if (notification.viewed === false){
-          const notificationElement = document.createElement('div');
-        
-          notificationElement.setAttribute('id', `notification-${notification.id}`);
-          
-          notificationElement.classList.add(`notification-${notification.id}`);
+      notificationsBody.innerHTML = '';
 
-          const iconElement = document.createElement('i');
+      if (data.notifications.length === 0) {
+        const noNotificationsText = document.createElement('p');
+        noNotificationsText.textContent = 'Não tens notificações';
+        notificationsBody.appendChild(noNotificationsText);
+      } else {
+        data.notifications.forEach(notification => {
+          if (notification.viewed === false) {
+            const notificationElement = document.createElement('div');
+            notificationElement.setAttribute('id', `notification-${notification.id}`);
+            notificationElement.classList.add(`notification-${notification.id}`);
 
-          iconElement.classList.add('fa-solid');
-          iconElement.classList.add('fa-xmark');
-          iconElement.addEventListener('click', function () {
-            dismissNotification(notification.id);
-          });
+            const iconElement = document.createElement('i');
+            iconElement.classList.add('fa-solid');
+            iconElement.classList.add('fa-xmark');
+            iconElement.addEventListener('click', function () {
+              dismissNotification(notification.id);
+            });
 
-          notificationElement.appendChild(iconElement);
+            notificationElement.appendChild(iconElement);
 
-          const horizontalSpace = document.createElement('br');
+            const horizontalSpace = document.createElement('br');
+            notificationElement.appendChild(horizontalSpace);
+            notificationElement.appendChild(horizontalSpace);
 
-          notificationElement.appendChild(horizontalSpace);
-          notificationElement.appendChild(horizontalSpace);
+            const anchorTag = document.createElement('a');
+            anchorTag.classList.add('event-link');
+            if (notification.notification_type === 'Event') {
+              anchorTag.href = `/view-event/${notification.event_id}`;
+              anchorTag.innerHTML = `The event <strong>${notification.event_name || 'Unknown Event'}</strong> had some changes made. Check them out! `;
+            } else if (notification.notification_type === 'Comment') {
+              anchorTag.href = `/view-event/${notification.event_id}`;
+              anchorTag.innerHTML = `A comment was made in the event <strong>${notification.event_name || 'Unknown Event'}</strong>. `;
+            } else if (notification.notification_type === 'Report') {
+              anchorTag.href = `/admin`;
+              anchorTag.innerHTML = `A report on a comment was made in the event <strong>${notification.event_name || 'Unknown Event'}</strong>. `;
+            }
 
-          const anchorTag = document.createElement('a');
-          anchorTag.classList.add('event-link');
-          if (notification.notification_type === 'Event') {
-            anchorTag.href = `/view-event/${notification.event_id}`;
-            anchorTag.innerHTML = `The event <strong>${notification.event_name || 'Unknown Event'}</strong> had some changes made. Check them out! `;
-          } else if (notification.notification_type === 'Comment') {
-            anchorTag.href = `/view-event/${notification.event_id}`;
-            anchorTag.innerHTML = `A comment was made in the event <strong>${notification.event_name || 'Unknown Event'}</strong>. `;
-          } else if (notification.notification_type === 'Report') {
-            anchorTag.href = `/admin`;
-            anchorTag.innerHTML = `A report on a comment was made in the event <strong>${notification.event_name || 'Unknown Event'}</strong>. `;
+            notificationElement.appendChild(anchorTag);
+
+            const horizontalLine = document.createElement('hr');
+            notificationElement.appendChild(horizontalLine);
+
+            notificationsBody.appendChild(notificationElement);
           }
-
-          notificationElement.appendChild(anchorTag);
-
-          notificationsBody.appendChild(notificationElement);
-
-          const horizontalLine = document.createElement('hr');
-          notificationElement.appendChild(horizontalLine);
-
-        }
-        
-      });
+        });
+      }
 
       if (callback) {
         callback();
@@ -493,6 +515,7 @@ function loadNotifications(notificationsBody, callback) {
     })
     .catch(error => console.error('Error fetching notifications:', error));
 }
+
 
 function dismissNotification(notificationId) {
   sendAjaxRequest('POST', `/dismiss-notification/${notificationId}`, null, function () {
@@ -503,11 +526,26 @@ function dismissNotification(notificationId) {
     if (notificationElement && notificationElement.parentNode) {
       notificationElement.parentNode.removeChild(notificationElement);
     }
+    updateNotificationCount();
   });
 }
 
+function updateNotificationCount() {
+  sendAjaxRequest('POST', '/update-notifications', null, function(event) {
+      if (event.target.status === 200) {
+          const responseData = JSON.parse(event.target.responseText);
+          const notificationCount = responseData.count;
 
-//Immediate Execution on Page Load (To follow this approach later, if there is time)
+          document.querySelector('.notification-count').textContent = notificationCount;
+      }
+  });
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+  updateNotificationCount();
+});
+
+
 
 function showSection() {
   var sectionButtons = document.querySelectorAll('.btn-check');
@@ -1001,8 +1039,19 @@ function showEditRatingForm() {
 }
 
 
+if (localStorage.getItem('resetSuccess') !== 'true') {
+  function showSuccessAlert() {
+      var alertDiv = document.createElement('div');
+      alertDiv.className = 'alert alert-dismissible alert-success';
+      alertDiv.innerHTML = '<button type="button" class="btn-close" data-bs-dismiss="alert"></button>The reset password has been sent to your email account!';
 
+      document.body.appendChild(alertDiv);
 
+      localStorage.setItem('resetSuccess', 'true');
+  }
+
+  showSuccessAlert();
+}
 
 
 
@@ -1298,3 +1347,4 @@ document.addEventListener('DOMContentLoaded', function () {
       });
       
   });
+

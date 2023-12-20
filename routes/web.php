@@ -18,8 +18,16 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\StripeController;
 use App\Http\Controllers\AdminController;
-
-
+use App\Http\Controllers\PasswordController;
+use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
+use App\Models\User;
+use Illuminate\Auth\Events\PasswordReset;
+use Illuminate\View\View;
 
 /*
 |--------------------------------------------------------------------------
@@ -63,7 +71,10 @@ Route::post('/delete-report/{reportId}', [AdminController::class, 'deleteReport'
 Route::post('/send', [MailController::class, 'send']);
 
 Route::controller(EventController::class)->group(function () {
-    Route::get('/all-events', 'index')->name('all-events');
+    Route::get('/all-events', [EventController::class, 'index'])->name('all-events');
+    Route::get('/ajax-paginate',[EventController::class,'ajax_paginate'])->name('ajax-paginate');
+
+
     Route::get('/view-event/{id}', 'view')->name('view-event');
     Route::get('/my-events', 'myEvents')->name('my-events');
     Route::post('/create-event', 'createEvent');
@@ -146,6 +157,7 @@ Route::post('/post/comment', [PostController::class, 'like']);
 Route::controller(NotificationController::class)->group(function () {
     Route::get('/get-notifications', 'getNotifications')->name('get-notifications')->middleware('auth');
     Route::post('/dismiss-notification/{notificationId}', [NotificationController::class, 'dismissNotification']);
+    Route::post('/update-notifications', [NotificationController::class, 'updateNotifications'])->name('update-notifications');
     //Route::post('/notifications/mark-as-read', 'NotificationController@markAsRead')->name('notifications.markAsRead')->middleware('auth');
 });
 
@@ -154,3 +166,52 @@ Route::controller(StripeController::class)->group(function () {
     Route::get('/payment', 'showPaymentForm')->name('payment');
     Route::post('/payment/{event_id}', 'processPayment')->name('payment');
 });
+
+
+Route::get('/forgot-password', function () {
+    return view('auth.forgot_password');
+})->middleware('guest')->name('password.forgot');
+
+Route::post('/forgot-password', function (Request $request) {
+    $request->validate(['email' => 'required|email']);
+ 
+    $status = Password::sendResetLink(
+        $request->only('email')
+    );
+ 
+    return $status === Password::RESET_LINK_SENT
+                ? back()->with(['status' => __($status)])
+                : back()->withErrors(['email' => __($status)]);
+})->middleware('guest')->name('password.email');
+
+
+Route::get('/reset-password/{token}', function (string $token) {
+    return view('auth.change_pass', ['token' => $token]);
+})->middleware('guest')->name('password.reset');
+
+
+Route::post('/reset-password', function (Request $request) {
+    $request->validate([
+        'email' => 'required|email',
+        'password' => 'required|min:8|confirmed',
+        'token' => 'required',
+    ]);
+
+    $status = Password::reset(
+
+        $request->only('email', 'password', 'password_confirmation', 'token'),
+        function (User $user, string $new_password) {
+            $user->forceFill([
+                'password' => Hash::make($new_password),
+            ])->setRememberToken(Str::random(60));
+
+            $user->save();
+
+            event(new PasswordReset($user));
+        }
+    );
+
+    return $status === Password::PASSWORD_RESET
+        ? redirect()->route('login')->with('status', __($status))
+        : back()->withErrors(['email' => [__($status)]]);
+})->middleware('guest')->name('password.update');

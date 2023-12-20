@@ -19,6 +19,7 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash; 
+use Illuminate\Pagination\Paginator;
 
 
 
@@ -50,6 +51,22 @@ class EventController extends Controller
 
 
         return view('pages.all_events', compact('events', 'user', 'notifications'));
+    }
+
+    public function ajax_paginate(Request $request)
+    {
+        $user = Auth::user();
+
+        if ($user && $user->is_admin) {
+            $events = Event::paginate(8);
+        } else {
+            $events = Event::where('private', false)->paginate(8);
+        }
+
+        $notifications = $user ? $user->notifications : [];
+
+
+        return view('partials.event_cards', compact('events', 'user', 'notifications'))->render();
     }
 
     public function myEvents(): View
@@ -255,17 +272,28 @@ private function createTemporaryAccount(Request $request)
     
     public function searchEvents(Request $request)
     {
+        if (Auth::check()) {
+            $user = Auth::user();
+            $notifications = $user->notifications;
 
-        $user = Auth::user();
-        $notifications = $user->notifications;
+            $query = $request->input('query');
 
-        $query = $request->input('query');
+            $events = Event::whereRaw('tsvectors @@ to_tsquery(\'english\', ?)', [$query])
+                ->orderByRaw('ts_rank(tsvectors, to_tsquery(\'english\', ?)) DESC', [$query])
+                ->paginate(10);
 
-        $events = Event::whereRaw('tsvectors @@ to_tsquery(\'english\', ?)', [$query])
-            ->orderByRaw('ts_rank(tsvectors, to_tsquery(\'english\', ?)) DESC', [$query])
-            ->paginate(10);
+            return view('pages.all_events', compact('events', 'notifications'));
+        }
+        else {
 
-        return view('pages.all_events', compact('events', 'notifications'));
+            $query = $request->input('query');
+
+            $events = Event::whereRaw('tsvectors @@ to_tsquery(\'english\', ?)', [$query])
+                ->orderByRaw('ts_rank(tsvectors, to_tsquery(\'english\', ?)) DESC', [$query])
+                ->paginate(10);
+
+            return view('pages.all_events', compact('events'));
+        } 
     }  
 
     private function generateQRCodePath(TicketInstance $ticketInstance)
