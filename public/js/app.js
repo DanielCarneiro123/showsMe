@@ -1339,7 +1339,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 document.addEventListener('DOMContentLoaded', function () {
-  let page = 1;
 
   function loadEvents(page) {
     sendAjaxRequest('GET', `/ajax-paginate?page=${page}`, null, function () {
@@ -1352,8 +1351,10 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   document.getElementById('event-cards-section').addEventListener('click', function (e) {
-    e.preventDefault();
-    let page = e.target.getAttribute('href').split('page=')[1];
-    loadEvents(page);
+    if (e.target.tagName === 'A' && e.target.getAttribute('class')=== 'page-link'){
+      e.preventDefault();
+      let page = e.target.getAttribute('href').split('page=')[1];
+      loadEvents(page);
+    }
   });
 });

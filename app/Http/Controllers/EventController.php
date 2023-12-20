@@ -37,7 +37,7 @@ class EventController extends Controller
         return view('pages.event', compact('event', 'notifications'));
     }
 
-    public function index()
+    public function index(): View
     {
         $user = Auth::user();
 

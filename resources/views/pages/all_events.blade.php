@@ -12,7 +12,10 @@
             </div>
         </form>
     </section>
-    @include('partials.event_cards')
+    <section class="mt-4"></section>
+    <section class="all-events-container" id="event-cards-section">
+        @include('partials.event_cards')
+    </section>
     
 @endsection
 
