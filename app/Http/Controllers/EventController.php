@@ -287,10 +287,11 @@ private function createTemporaryAccount(Request $request)
         $user = Auth::user();
         $event = Event::findOrFail($eventId);
         $soldTickets = $event->soldTickets();
+        $totalSoldTickets = $soldTickets->count();
 
         $notifications = $user ? $user->notifications : [];
 
-        return view('pages.event', compact('event', 'soldTickets', 'notifications'));
+        return view('pages.event', compact('event', 'soldTickets', 'notifications', 'totalSoldTickets'));
     }
 
     public function calculateAndDisplayRevenue($eventId)

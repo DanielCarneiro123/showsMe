@@ -80,6 +80,11 @@ class Event extends Model
             ->get();
     }
 
+    public function getTotalSoldTickets()
+    {
+        return $this->soldTickets()->count();
+    }
+
     public function tickets_chart()
     {
         // Obter todas as instâncias de ingressos relacionadas aos tipos de ingressos do evento

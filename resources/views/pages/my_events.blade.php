@@ -14,19 +14,20 @@
                 <p id="my-event-card-local">{{ $event->location }}</p>
                 <p id="my-event-card-name">{{ $event->name }}</p>
                 <p id="my-event-card-date">{!! $event->start_timestamp->format('H:i, F j') !!}<br></p>
+                <p id="my-event-card-tickets">Tickets: {{ $event->getTotalSoldTickets() }}</p>
+                <p id="my-event-card-revenue">Total: {{ $event->calculateRevenue() }}€</p>
             </a>
         </div>
         @endforeach
         <div class="my-event-card new-my-event-card">
             <a href="{{ route('create-event') }}">
-                    <div class="new-event-info">
-                        <h3>Create a new Event</h3>
-                        <i class="fa-solid fa-circle-plus fa-4x"></i>
-                    </div>
+                <div class="new-event-info">
+                    <h3>Create a new Event</h3>
+                    <i class="fa-solid fa-circle-plus fa-4x"></i>
+                </div>
             </a>
         </div>
     </section>
-
 </section>
 @else
 <section class="warning-section">

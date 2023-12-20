@@ -248,12 +248,14 @@
             <p id="my-event-card-local">{{ $event->location }}</p>
             <p id="my-event-card-name">{{ $event->name }}</p>
             <p id="my-event-card-date">{!! $event->start_timestamp->format('H:i, F j') !!}<br></p>
+            <p id="average-rating"> {{ number_format($event->averageRating, 1) }} <span class="star-icon">★</span></p>
         </a>
     </div>
 </section>
 
 <section id="ticket-types" class="event-section">
-    <h2 class="text-center">Ticket <span>Types</span></h2>
+    <h2 id="ticket_types_title" class="text-center">Ticket <span>Types</span></h2>
+    @if(count($event->ticketTypes) > 0)
     <form method="POST" action="{{ url('/payment/'.$event->event_id) }}">
         @csrf
         @guest
@@ -366,6 +368,9 @@
             @endguest
         </div>
     </form>
+    @else
+    <h2 id="no_ticket_types">No Tickets available, come back later!</h2>
+    @endif
 
     <div class="my-event-card">
         <div class="event-image" style="background-image: url('{{ asset('media/event_image.jpg') }}');"></div>
@@ -373,6 +378,7 @@
             <p id="my-event-card-local">{{ $event->location }}</p>
             <p id="my-event-card-name">{{ $event->name }}</p>
             <p id="my-event-card-date">{!! $event->start_timestamp->format('H:i, F j') !!}<br></p>
+            <p id="average-rating">{{ number_format($event->averageRating, 1) }} <span class="star-icon">★</span></p>
         </a>
     </div>
 </section>
@@ -480,6 +486,10 @@
 </section>
 
 <section class="event-section event-info-content" id="event-info">
+
+    @if ($totalSoldTickets == 0)
+    <h2 class="text-center no-tickets-stat">No tickets sold yet,come back later!</h2>
+    @else
     <h2 id="hist">Histórico de Compras</h2>
 
     <table class="hist-compras">
@@ -536,10 +546,6 @@
             @endforeach
         </tbody>
     </table>
-
-    @if ($totalSoldTickets == 0)
-    <h2 class="text-center no-tickets-stat">No tickets sold yet,come back later!</h2>
-    @else
 
     <h2 id="title-charts">Stats</h2>
 
