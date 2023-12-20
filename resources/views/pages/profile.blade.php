@@ -9,7 +9,10 @@
  
         @if($user->profile_image != null)
             <img id="profile-image" src="{{ \App\Http\Controllers\FileController::get('profile_image', $user->user_id) }}" alt="Profile Image">
-        @endif      
+        @else
+            <img id="profile-image" src="{{ asset('media/default_user.jpg') }}" alt="Default Profile Image">
+        @endif
+   
         <label for="name">Name:</label>
         <input type="text" id="edit_name" name="name" value="{{ $user->name }}" required disabled>
         @error('name')

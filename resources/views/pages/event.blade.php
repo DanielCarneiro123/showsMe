@@ -181,7 +181,9 @@
                     <div class="photo-and-name">
                 @if($comment->author->profile_image != null)
                     <img id="profile-image-comment" src="{{ \App\Http\Controllers\FileController::get('profile_image', $comment->author->user_id) }}" alt="Profile Image">
-                 @endif  
+                @else
+                    <img id="profile-image-comment" src="{{ asset('media/default_user.jpg') }}" alt="Default Profile Image">
+                @endif  
                     <p class="comment-author">{{ $comment->author->name }}</p>
                     </div>
                     <div>
