@@ -17,7 +17,7 @@
     position: relative;
   }
   
-  .my-events-cards .my-event-card .event-image {
+ .my-event-card .event-image {
     position: absolute;
     top: 0;
     left: 0;
@@ -51,7 +51,6 @@
     z-index: 1;
     font-weight: 500;
     display: flex;
-    opacity: 0; 
     transition: opacity 0.6s ease; 
   }
   
@@ -73,12 +72,9 @@
     font-weight: 500;
   }
   
-  .my-event-card:hover .my-event-info #my-event-card-local {
-    opacity: 1;
-  }
-  
   .my-event-card:hover .my-event-info #my-event-card-name,
-  .my-event-card:hover .my-event-info #my-event-card-date {
+  .my-event-card:hover .my-event-info #my-event-card-date,
+  .my-event-card:hover .my-event-info #my-event-card-local {
     transform: scale(1.1); 
     filter: brightness(1.5); 
     transition: transform 0.8s ease, filter 0.8s ease; 

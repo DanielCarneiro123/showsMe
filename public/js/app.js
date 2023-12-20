@@ -19,13 +19,14 @@ function addEventListeners() {
     });
   }
 
-  document.querySelectorAll('form button').forEach(function (button) {
+  document.getElementById('ticket-types-container').querySelectorAll('form button').forEach(function (button) {
     button.addEventListener('click', function (event) {
         if (button.id !== 'buy-button') {
             event.preventDefault();
         }
     });
 });
+
 }
 
 function encodeForAjax(data) {
@@ -523,7 +524,7 @@ function showSection() {
   var initialSection = document.getElementById('ticket-types');
 
   if (initialSection) {
-    initialSection.style.display = "block"; 
+    initialSection.style.display = "grid"; 
   }
 
 
@@ -545,7 +546,7 @@ function showSection() {
           currentSection.style.display = "grid";
         }
         else{
-          currentSection.style.display = "block";
+          currentSection.style.display = "grid";
         }
         console.log("Displaying section with ID:", sectionId);
       } else {
@@ -1083,24 +1084,6 @@ function moveCommentToPublic(commentId) {
   commentElement.parentNode.removeChild(commentElement);
   document.getElementById('public-comments-section').appendChild(commentElement);
 }
-
-
-document.addEventListener('DOMContentLoaded', function () {
-  let deleteButtons = document.querySelectorAll('.delete-report');
-
-  deleteButtons.forEach(function (button) {
-      button.addEventListener('click', function () {
-          let reportId = this.dataset.reportId;
-
-          sendAjaxRequest('POST', '/delete-report/' + reportId, {reportId: reportId}, function () {
-              let row = document.getElementById('reported_comment_row_' + reportId);
-              if (row) {
-                  row.remove();
-              }
-          });
-      });
-  });
-});
 
 
 

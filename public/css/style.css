@@ -783,11 +783,33 @@ button:hover {
 
 /*all ticket types*/
 
+#ticket-types{
+  display: grid;
+  grid-template-areas:
+  '. title'
+  'event-card ticket-types';
+  grid-template-columns: auto 1fr;
+  column-gap: 50px;
+  margin: 50px;
+}
+
+#ticket-types h2{
+  grid-area: title;
+}
+
+#ticket-types form{
+  grid-area: ticket-types;
+}
+
 #ticket-types-container{
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(0,600px));
+  grid-template-columns: repeat(auto-fill, minmax(0,550px));
   gap: 10px;
   justify-content: center;
+}
+
+#ticket-types .my-event-card{
+  grid-area: event-card;
 }
 
 .ticket-type{
@@ -1048,3 +1070,24 @@ button:hover {
   color: rgba(192, 148, 198, 0.5);
 }
 
+/*comments*/
+
+#event-comments{
+  display: grid;
+  grid-template-areas:
+  '. title'
+  'event-card comments-area';
+  grid-template-columns: auto 1fr;
+  column-gap: 50px;
+  margin: 50px;
+}
+#event-comments h2{
+  grid-area: title;
+}
+#event-comments .comments-area{
+  grid-area: comments-area;
+}
+
+#event-comments .my-event-card{
+  grid-area: event-card;
+}

@@ -85,216 +85,170 @@
 </section>
 
 <section id="event-comments" class="event-section">
-    @if(auth()->user())
-    @if($userRating = $event->userRating())
-    <p id="yourRatingP" class="text-center">
-        Your Rating: {{ $userRating->rating }}
-        <span class="star-icon">★</span>
-        <button class="btn btn-primary" onclick="showEditRatingForm()">Edit</button>
-    </p>
-    <div class="centered-form">
-        <form id="editRatingForm" class="rate" method="POST"
-            action="{{ route('editRating', ['eventId' => $event->event_id]) }}" style="display: none;">
-            @csrf
+    <h2 class="text-center">Event <span>Comments</span></h2>
 
-
-            <input type="radio" name="rate" id="star5" value="5" {{ $userRating->rating == 5 ? 'checked' : '' }}>
-            <label for="star5">5 stars</label>
-
-
-            <input type="radio" name="rate" id="star4" value="4" {{ $userRating->rating == 4 ? 'checked' : '' }}>
-            <label for="star4">4 stars</label>
-
-            <input type="radio" name="rate" id="star3" value="3" {{ $userRating->rating == 3 ? 'checked' : '' }}>
-            <label for="star3">3 stars</label>
-
-            <input type="radio" name="rate" id="star2" value="2" {{ $userRating->rating == 2 ? 'checked' : '' }}>
-            <label for="star2">2 stars</label>
-
-            <input type="radio" name="rate" id="star1" value="1" {{ $userRating->rating == 1 ? 'checked' : '' }}>
-            <label for="star1">1 star</label>
-
-            <br>
-            <div class="text-center">
-                <button type="submit" class="btn btn-primary">Update</button>
-            </div>
-        </form>
-    </div>
-    @else
-    <p class="text-center rate"> Give us your Rating: </p>
-    <div class="centered-form">
-        <form id="ratingForm" class="rate" method="POST"
-            action="{{ route('submitRating', ['eventId' => $event->event_id]) }}">
-            @csrf
-
-            <input type="radio" name="rate" id="star5" value="5">
-            <label for="star5">5 stars</label>
-
-
-            <input type="radio" name="rate" id="star4" value="4">
-            <label for="star4">4 stars</label>
-
-            <input type="radio" name="rate" id="star3" value="3">
-            <label for="star3">3 stars</label>
-
-            <input type="radio" name="rate" id="star2" value="2">
-            <label for="star2">2 stars</label>
-
-            <input type="radio" name="rate" id="star1" value="1">
-            <label for="star1">1 star</label>
-
-            <div class="text-center">
-                <button type="submit" class="btn btn-primary">Submit</button>
-            </div>
-        </form>
-    </div>
-    @endif
-    @endif
-
-
-    <h2 class="text-primary text-center">Comments</h2>
-    @if(auth()->check())
-    <form id="newCommentForm" action="{{ route('submitComment') }}" method="post">
-        @csrf
-        <div class="comment new-comment">
-            <textarea name="newCommentText" id="newCommentText" class="new-comment-textbox" rows="3"
-                placeholder="Write a new comment" required></textarea>
-
-        </div>
-
-        <input id="newCommentEventID" type="hidden" name="event_id" value="{{$event->event_id}}">
-        <button onclick="addNewComment()" class="btn btn-primary" id="submit-comment-button">Submit Comment</button>
-    </form>
-    @endif
-    <div id="public-comments-section" class="commentsContainer">
-        @foreach($event->comments->where('private', false) as $comment)
-        <div class="comment" data-id="{{ $comment->comment_id }}">
-            <div class="comment-icons-container">
-                <p class="comment-author">{{ $comment->author->name }}</p>
-                <div>
-                    @if(auth()->check())
-                    @if((!$comment->isReported())&& (auth()->user()->user_id !== $comment->author->user_id))
-                    <i class="fa-solid fa-flag" onclick="showReportPopUp()"></i>
-                    @endif
-                    @if(auth()->user()->user_id === $comment->author->user_id)
-                    <i class="fa-solid fa-pen-to-square" onclick="showEditCommentModal()"></i>
-                    @endif
-                    @if(auth()->user() && auth()->user()->is_admin || auth()->user()->user_id ===
-                    $comment->author->user_id)
-                    <i class="fa-solid fa-trash-can" onclick="confirmDeleteComment()"></i>
-                    @endif
-                    @endif
-                </div>
-            </div>
-            <p class="comment-text" id="commentText">{{ $comment->text }}</p>
-
-            <form id="editCommentForm" style="display: none;">
-                <textarea id="editedCommentText" class="edit-comment-textbox" rows="3"
-                    required>{{ $comment->text }}</textarea>
-                <button class="btn btn-primary" onclick="editComment()">Submit</button>
-                <button type="button" class="btn btn-danger" onclick="hideEditCommentModal()">Cancel</button>
-            </form>
-
-
-
-            <div class="comment-likes-section">
-                @if(auth()->check())
-                @if(auth()->user()->likes($comment->comment_id))
-                <i class="fas fa-thumbs-up fa-solid" id="liked" onclick="unlikeComment()"></i>
-                @else
-                <i class="far fa-thumbs-up fa-regular" id="unliked" onclick="likeComment()"></i>
-                @endif
-                @else
-                <i class="far fa-thumbs-up fa-regular" id="unliked"
-                    onclick="alert('Please log in to like this comment')"></i>
-                @endif
-                <p class="comment-likes">{{ $comment->likes }}</p>
-
-            </div>
-
-            <form id="confirmDeleteCommentForm" style="display: none;">
-                <p class="text-danger">Are you sure you want to delete your comment?</p>
-                <button class="btn btn-danger" onclick="deleteComment()">Delete</button>
-                <button type="button" class="btn btn-primary" onclick="hideDeleteCommentModal()">Cancel</button>
-            </form>
-
-        </div>
-        @endforeach
-    </div>
-
-    <!--@if(auth()->user() && auth()->user()->is_admin)
-    <h2 class="text-primary mt-4 text-center">Private Comments (visible to admins only)</h2>
-    <div id="private-comments-section" class="commentsContainer">
-
-        @foreach($event->comments->where('private', true) as $comment)
-        <div class="comment" data-id="{{ $comment->comment_id }}">
-            <div class="comment-icons-container">
-                <p class="comment-author">{{ $comment->author->name }}</p>
-                <div>
-                    <i class="toggle-eye fa-solid fa-eye show-icon" id="show_{{ $comment->comment_id }}"
-                        onclick="toggleCommentVisibility('{{ $comment->comment_id }}', 'show', 'private')"></i>
-                    <i class="toggle-eye fa-solid fa-eye-slash hidden-icon" id="hidden_{{ $comment->comment_id }}"
-                        onclick="toggleCommentVisibility('{{ $comment->comment_id }}', 'hide', 'public')"
-                        style="display: none;"></i>
-                    @if(auth()->check())
-                    @if((!$comment->isReported())&& (auth()->user()->user_id !== $comment->author->user_id))
-                    <i class="fa-solid fa-flag" onclick="showReportPopUp()"></i>
-                    @endif
-                    @if(auth()->user()->user_id === $comment->author->user_id)
-                    <i class="fa-solid fa-pen-to-square" onclick="showEditCommentModal()"></i>
-                    <i class="fa-solid fa-trash-can" onclick="confirmDeleteComment()"></i>
-                    @endif
-                    @endif
-                </div>
-            </div>
-            <p class="comment-text" id="commentText">{{ $comment->text }}</p>
-
-            <form id="editCommentForm" style="display: none;">
-
-                <textarea id="editedCommentText" class="edit-comment-textbox" rows="3"
-                    required>{{ $comment->text }}</textarea> 
-                <button class="btn btn-primary" onclick="editComment()">Submit</button>
-                <button type="button" class="btn btn-danger" onclick="hideEditCommentModal()">Cancel</button>
-            </form>
-
-            
-            <div class="comment-likes-section">
-
-                @if(auth()->check() && auth()->user()->likes($comment->comment_id))
-                <i class="fas fa-thumbs-up fa-solid" id="liked" onclick="unlikeComment()"></i>
-                @else
-                <i class="far fa-thumbs-up fa-regular" id="unliked" onclick="likeComment()"></i>
-                @endif
-                <p class="comment-likes">{{ $comment->likes }}</p>
-
-            </div>
-
-            <form id="confirmDeleteCommentForm" style="display: none;">
-            <p class="text-danger">Are you sure you want to delete your comment?</p>
-            <button class="btn btn-danger" onclick="deleteComment()">Delete</button>
-            <button type="button" class="btn btn-primary" onclick="hideDeleteCommentModal()">Cancel</button>
-            </form>
-
-        </div>
-        @endforeach
-    </div>
-    @endif-->
-
-
-
-    <div class="pop-up-report">
-        <div class="report-section">
-            <h3>Why are you reporting?</h3>
-
-
-            <form action="{{ route('submitReport') }}" method="post">
+    <div class="comments-area">
+        @if(auth()->user())
+        @if($userRating = $event->userRating())
+        <p id="yourRatingP" class="text-center">
+            Your Rating: {{ $userRating->rating }}
+            <span class="star-icon">★</span>
+            <button class="btn btn-primary" onclick="showEditRatingForm()">Edit</button>
+        </p>
+        <div class="centered-form">
+            <form id="editRatingForm" class="rate" method="POST"
+                action="{{ route('editRating', ['eventId' => $event->event_id]) }}" style="display: none;">
                 @csrf
-                <input type="hidden" name="comment_id" id="reportCommentId" value="0">
-                <textarea id="reportReason" class="report-textbox" name="reportReason" rows="4"
-                    placeholder="Enter your reason here"></textarea>
-                <button type="submit" class="btn btn-primary">Submit Report</button>
+
+
+                <input type="radio" name="rate" id="star5" value="5" {{ $userRating->rating == 5 ? 'checked' : '' }}>
+                <label for="star5">5 stars</label>
+
+
+                <input type="radio" name="rate" id="star4" value="4" {{ $userRating->rating == 4 ? 'checked' : '' }}>
+                <label for="star4">4 stars</label>
+
+                <input type="radio" name="rate" id="star3" value="3" {{ $userRating->rating == 3 ? 'checked' : '' }}>
+                <label for="star3">3 stars</label>
+
+                <input type="radio" name="rate" id="star2" value="2" {{ $userRating->rating == 2 ? 'checked' : '' }}>
+                <label for="star2">2 stars</label>
+
+                <input type="radio" name="rate" id="star1" value="1" {{ $userRating->rating == 1 ? 'checked' : '' }}>
+                <label for="star1">1 star</label>
+
+                <br>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary">Update</button>
+                </div>
             </form>
         </div>
+        @else
+        <p class="text-center rate"> Give us your Rating: </p>
+        <div class="centered-form">
+            <form id="ratingForm" class="rate" method="POST"
+                action="{{ route('submitRating', ['eventId' => $event->event_id]) }}">
+                @csrf
+
+                <input type="radio" name="rate" id="star5" value="5">
+                <label for="star5">5 stars</label>
+
+
+                <input type="radio" name="rate" id="star4" value="4">
+                <label for="star4">4 stars</label>
+
+                <input type="radio" name="rate" id="star3" value="3">
+                <label for="star3">3 stars</label>
+
+                <input type="radio" name="rate" id="star2" value="2">
+                <label for="star2">2 stars</label>
+
+                <input type="radio" name="rate" id="star1" value="1">
+                <label for="star1">1 star</label>
+
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+        </div>
+        @endif
+        @endif
+
+
+        <h2 class="text-primary text-center">Comments</h2>
+        @if(auth()->check())
+        <form id="newCommentForm" action="{{ route('submitComment') }}" method="post">
+            @csrf
+            <div class="comment new-comment">
+                <textarea name="newCommentText" id="newCommentText" class="new-comment-textbox" rows="3"
+                    placeholder="Write a new comment" required></textarea>
+
+            </div>
+
+            <input id="newCommentEventID" type="hidden" name="event_id" value="{{$event->event_id}}">
+            <button onclick="addNewComment()" class="btn btn-primary" id="submit-comment-button">Submit Comment</button>
+        </form>
+        @endif
+        <div id="public-comments-section" class="commentsContainer">
+            @foreach($event->comments->where('private', false) as $comment)
+            <div class="comment" data-id="{{ $comment->comment_id }}">
+                <div class="comment-icons-container">
+                    <p class="comment-author">{{ $comment->author->name }}</p>
+                    <div>
+                        @if(auth()->check())
+                        @if((!$comment->isReported())&& (auth()->user()->user_id !== $comment->author->user_id))
+                        <i class="fa-solid fa-flag" onclick="showReportPopUp()"></i>
+                        @endif
+                        @if(auth()->user()->user_id === $comment->author->user_id)
+                        <i class="fa-solid fa-pen-to-square" onclick="showEditCommentModal()"></i>
+                        @endif
+                        @if(auth()->user() && auth()->user()->is_admin || auth()->user()->user_id ===
+                        $comment->author->user_id)
+                        <i class="fa-solid fa-trash-can" onclick="confirmDeleteComment()"></i>
+                        @endif
+                        @endif
+                    </div>
+                </div>
+                <p class="comment-text" id="commentText">{{ $comment->text }}</p>
+
+                <form id="editCommentForm" style="display: none;">
+                    <textarea id="editedCommentText" class="edit-comment-textbox" rows="3"
+                        required>{{ $comment->text }}</textarea>
+                    <button class="btn btn-primary" onclick="editComment()">Submit</button>
+                    <button type="button" class="btn btn-danger" onclick="hideEditCommentModal()">Cancel</button>
+                </form>
+
+
+
+                <div class="comment-likes-section">
+                    @if(auth()->check())
+                    @if(auth()->user()->likes($comment->comment_id))
+                    <i class="fas fa-thumbs-up fa-solid" id="liked" onclick="unlikeComment()"></i>
+                    @else
+                    <i class="far fa-thumbs-up fa-regular" id="unliked" onclick="likeComment()"></i>
+                    @endif
+                    @else
+                    <i class="far fa-thumbs-up fa-regular" id="unliked"
+                        onclick="alert('Please log in to like this comment')"></i>
+                    @endif
+                    <p class="comment-likes">{{ $comment->likes }}</p>
+
+                </div>
+
+                <form id="confirmDeleteCommentForm" style="display: none;">
+                    <p class="text-danger">Are you sure you want to delete your comment?</p>
+                    <button class="btn btn-danger" onclick="deleteComment()">Delete</button>
+                    <button type="button" class="btn btn-primary" onclick="hideDeleteCommentModal()">Cancel</button>
+                </form>
+
+            </div>
+            @endforeach
+        </div>
+
+        <div class="pop-up-report">
+            <div class="report-section">
+                <h3>Why are you reporting?</h3>
+
+
+                <form action="{{ route('submitReport') }}" method="post">
+                    @csrf
+                    <input type="hidden" name="comment_id" id="reportCommentId" value="0">
+                    <textarea id="reportReason" class="report-textbox" name="reportReason" rows="4"
+                        placeholder="Enter your reason here"></textarea>
+                    <button type="submit" class="btn btn-primary">Submit Report</button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="my-event-card">
+        <div class="event-image" style="background-image: url('{{ asset('media/event_image.jpg') }}');"></div>
+        <a href="{{ route('view-event', ['id' => $event->event_id]) }}" class="my-event-info">
+            <p id="my-event-card-local">{{ $event->location }}</p>
+            <p id="my-event-card-name">{{ $event->name }}</p>
+            <p id="my-event-card-date">{!! $event->start_timestamp->format('H:i, F j') !!}<br></p>
+        </a>
     </div>
 </section>
 
@@ -412,14 +366,16 @@
             @endguest
         </div>
     </form>
+
+    <div class="my-event-card">
+        <div class="event-image" style="background-image: url('{{ asset('media/event_image.jpg') }}');"></div>
+        <a href="{{ route('view-event', ['id' => $event->event_id]) }}" class="my-event-info">
+            <p id="my-event-card-local">{{ $event->location }}</p>
+            <p id="my-event-card-name">{{ $event->name }}</p>
+            <p id="my-event-card-date">{!! $event->start_timestamp->format('H:i, F j') !!}<br></p>
+        </a>
+    </div>
 </section>
-
-
-
-
-
-
-
 
 
 <!-- Edit Event form (displayed only for the event creator) -->

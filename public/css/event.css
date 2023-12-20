@@ -357,8 +357,8 @@ input[type="number"]:invalid {
 .event-info-content #event-charts .perc_sold_tickets_charts{
     display: grid;
     grid-area: perc_sold_tickets_charts;
-    grid-template-columns: repeat(auto-fill, minmax(0, 250px));
-    grid-auto-rows: minmax(0, 250px); 
+    grid-template-columns: repeat(auto-fill, minmax(0, 300px));
+    grid-auto-rows: minmax(0, 300px); 
     justify-content: center; 
     grid-gap: 10px;
 }
