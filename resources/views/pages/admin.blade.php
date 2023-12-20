@@ -47,7 +47,7 @@
     </div>
 
     <div class="admin-section text-center mt-4 " id="manage-users">
-        <div id="active_users_section mx-auto">
+        <div id="active_users_section" class="mt-4 mx-auto">
             <h2 id="active_users_header">Active Users</h2>
             <h3 id="activeUserCount">Total de usuários ativos: {{ count($activeUsers) }}</h3>
             <table class="table mx-auto">

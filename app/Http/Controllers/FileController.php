@@ -117,7 +117,7 @@ class FileController extends Controller
         $error = null;
         switch($request->type) {
             case 'profile_image':
-                $this->delete($type, $request->id);
+                //$this->delete($type, $request->id);
                 $user = User::findOrFail($request->id);
                 if ($user) {
                     $user->profile_image = $fileName;
