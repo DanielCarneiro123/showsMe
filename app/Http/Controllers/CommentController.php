@@ -24,9 +24,10 @@ class CommentController extends Controller
         $comment->text = $request->input('newCommentText');
         $comment->event_id = $request->input('event_id'); 
         $comment->author_id = auth()->user()->user_id;
+        
         $comment->save();
     
-     
+        $comment->profile_image = auth()->user()->profile_image;
         $comment->load('author');
     
         return response()->json(['message' => $comment]);

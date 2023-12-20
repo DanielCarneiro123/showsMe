@@ -1047,10 +1047,11 @@ function addNewComment(){
 function addNewCommentHandler() {
   if (this.status === 200) {
     const response = JSON.parse(this.responseText);
+    console.log(response);
     const newComment = response.message;
 
     // Ensure that newComment.text and newComment.author_id are defined
-    if (newComment && newComment.text && newComment.author && newComment.author.name) {
+    if (newComment && newComment.text && newComment.author && newComment.author.name && newComment.author.profile_image ) {
       // Create a new comment element
       const commentElement = document.createElement('div');
       commentElement.className = 'comment';
@@ -1059,9 +1060,22 @@ function addNewCommentHandler() {
       const commentIconsContainer = document.createElement('div');
       commentIconsContainer.className = 'comment-icons-container';
 
+      const photoAndName = document.createElement('div');
+      photoAndName.className = "photo-and-name";
+
+     
+
+      const authorPicture = document.createElement('img');
+      authorPicture.id = 'profile-image-comment';
+      authorPicture.alt = 'Profile Image';
+      const imagePath = "{{ asset('media/') }}";
+      const imageName = "{{ $newComment->author->profile_image }}";
+
+      authorPicture.src = imagePath + imageName;
+
       const commentAuthor = document.createElement('p');
       commentAuthor.className = 'comment-author';
-      commentAuthor.textContent = newComment.author.name; // Use the actual author name
+      commentAuthor.textContent = newComment.author.name; 
 
       const iconsDiv = document.createElement('div');
 
@@ -1097,8 +1111,11 @@ function addNewCommentHandler() {
 
       iconsDiv.appendChild(deleteIcon);
 
+      photoAndName.appendChild(authorPicture);
+      photoAndName.appendChild(commentAuthor);
+   
 
-      commentIconsContainer.appendChild(commentAuthor);
+      commentIconsContainer.appendChild(photoAndName);
       commentIconsContainer.appendChild(iconsDiv);
 
       const commentText = document.createElement('p');
