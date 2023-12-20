@@ -46,9 +46,22 @@
     font-size: xx-large;
     text-align: center;
     margin: 0 auto;
+    padding-bottom: 0.5em;
  
 }
 
 #profile p{
     text-align: center;
+}
+
+#profile-image {
+    display: block;
+    width: 20em;
+    height: 20rem;
+    object-fit: cover;
+    border-radius: 50%;
+    border-style: solid;
+    margin: 0 auto;
+    text-align: center;
+    justify-content: center;
 }
