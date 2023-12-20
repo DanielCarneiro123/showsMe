@@ -122,6 +122,9 @@ input[type="number"]:invalid {
     font-weight: bold;
     font-size: 18px;
     color: #593196;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .comment p.comment-text {
@@ -575,4 +578,17 @@ input[type="radio"] {
 
 #payment-button{
     display: none;
+}
+
+
+#profile-image-comment {
+    display: block;
+    width: 3em;
+    height: 3rem;
+    object-fit: cover;
+    border-radius: 50%;
+    border-style: solid;
+    margin: 0 auto;
+    text-align: center;
+    justify-content: center;
 }

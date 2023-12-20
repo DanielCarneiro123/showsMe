@@ -178,7 +178,12 @@
             @foreach($event->comments->where('private', false) as $comment)
             <div class="comment" data-id="{{ $comment->comment_id }}">
                 <div class="comment-icons-container">
+                    <div class="photo-and-name">
+                @if($comment->author->profile_image != null)
+                    <img id="profile-image-comment" src="{{ \App\Http\Controllers\FileController::get('profile_image', $comment->author->user_id) }}" alt="Profile Image">
+                 @endif  
                     <p class="comment-author">{{ $comment->author->name }}</p>
+                    </div>
                     <div>
                         @if(auth()->check())
                         @if((!$comment->isReported())&& (auth()->user()->user_id !== $comment->author->user_id))
