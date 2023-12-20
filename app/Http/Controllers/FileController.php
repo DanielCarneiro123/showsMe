@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Models\User;
 use App\Models\Event;
+use App\Models\EventImage;
+
 
 
 
@@ -43,7 +45,7 @@ class FileController extends Controller
                 $fileName = User::find($id)->profile_image; // can be null as well
                 break;
             case 'event_image':
-                $eventImage = Event::find($id)->images()->first();
+                $eventImage = EventImage::find($id);
                 if ($eventImage) {
                     $fileName = $eventImage->image_path;
                 }
@@ -55,24 +57,38 @@ class FileController extends Controller
         return $fileName;
     }
 
-    private static function delete(String $type, int $id) {
+    function delete(String $type, int $id) {
         $existingFileName = self::getFileName($type, $id);
-        if ($existingFileName) {
-            Storage::disk(self::$diskName)->delete($type . '/' . $existingFileName);
+        $response = ['message' => '', 'error' => false]; // Initialize response array
 
-            switch($type) {
-                case 'profile_image':
-                    User::find($id)->profile_image = null;
-                    break;
-                case 'event_image':
-                    $event = Event::find($id);
-                    if ($event) {
-                        // Assuming 'images' relationship is defined in the Event model
-                        $event->images()->delete();
-                    }
-                    break;
+        if ($existingFileName) {
+            try {
+                // Attempt to delete the file
+                Storage::disk(self::$diskName)->delete($type . '/' . $existingFileName);
+
+                switch($type) {
+                    case 'profile_image':
+                        User::find($id)->profile_image = null;
+                        break;
+                    case 'event_image':
+                        $eventImage = EventImage::find($id);
+                        if ($eventImage) {
+                            $eventImage->delete();
+                        }
+                        break;
+                }
+
+                $response['message'] = 'File deleted successfully';
+            } catch (\Exception $e) {
+                $response['message'] = 'Error deleting file: ' . $e->getMessage();
+                $response['error'] = true;
             }
         }
+
+        // Send the JSON response
+        header('Content-Type: application/json');
+        echo json_encode($response);
+        exit();
     }
 
     function upload(Request $request) {
@@ -95,16 +111,13 @@ class FileController extends Controller
             return redirect()->back()->with('error', 'Error: Unsupported upload extension');
         }
 
-        // Prevent existing old files
-        $this->delete($type, $request->id);
-
-        // Generate unique filename
         $fileName = $file->hashName();
 
         // Validation: model
         $error = null;
         switch($request->type) {
             case 'profile_image':
+                $this->delete($type, $request->id);
                 $user = User::findOrFail($request->id);
                 if ($user) {
                     $user->profile_image = $fileName;

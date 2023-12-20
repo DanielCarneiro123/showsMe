@@ -28,7 +28,12 @@
         <link href="{{ asset('../css/edit_event.css') }}" rel="stylesheet">
         <link href="{{ asset('../css/payment.css') }}" rel="stylesheet">
         <link href="{{ asset('css/style.css') }}" rel="stylesheet">
+        <link href="{{ asset('css/swiper.css') }}" rel="stylesheet">
         <link rel="icon" type="image/png" href="{{ asset('images/logo1.png') }}">
+
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+        <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
         <script type="text/javascript">
             // Fix for Firefox autofocus CSS bug
             // See: http://stackoverflow.com/questions/18943276/html-5-autofocus-messes-up-css-loading/18945951#18945951
@@ -36,6 +41,7 @@
         
         <script type="text/javascript" src={{ url('js/app.js') }} defer></script>
         <script type="text/javascript" src={{ url('js/charts.js') }} defer></script>
+        <script type="text/javascript" src={{ url('js/swiper.js') }} defer></script>
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     </head>
     <body>
@@ -82,6 +88,7 @@
                             </button>
                             <span class="notification-count"></span>
                         </div>
+                        <a id="cart-icon" class="text-light me-2" href="{{ route('checkout') }}"><i class="fa-solid fa-cart-shopping"></i></a>
                         <div class="user-info">
                             <a id="user-header-name" class="text-light me-2" href="{{ route('profile') }}">{{ Auth::user()->name}}</a>
                             <a class="btn btn-outline-secondary" href="{{ url('/logout') }}">Logout</a>

@@ -55,8 +55,31 @@
     </form>
     @endif
     @endif-->
+    <h1 id="name">{{ $event->name }}</h1>
+
+    <section id="event-slider">
+        <div class="swiper" id="event-swiper">
+            <div class="swiper-wrapper">
+            @foreach ($event->images as $image)
+                <div class="swiper-slide">
+                        <figure>
+                                <img src="{{ \App\Http\Controllers\FileController::get('event_image', $image->event_image_id) }}" data-event-image-id= "{{ $image->event_image_id }}" alt="Event Image">
+                                <figcaption>
+                                    Image Test
+                                </figcaption>
+                        </figure>
+                </div>
+            @endforeach
+            </div>
+            <div class="swiper-custom-nav">
+                <i id="nav-left" class="fa-solid fa-circle-arrow-left"></i>
+                <i id="nav-right" class="fa-solid fa-circle-arrow-right"></i>
+            </div>
+            <div class="swiper-custom-pagination"></div>
+        </div>
+    </section>
+
     <section>
-        <h1 id="name">{{ $event->name }}</h1>
         <p id="description">{{ $event->description }}</p>
         <section class="ratings-event">
             <p id="average-rating"> Rating: {{ number_format($event->averageRating, 1) }} <span
@@ -65,23 +88,6 @@
         </section>
         <p id="location">Location: {{ $event->location }}</p>
     </section>
-
-    <div class="slideshow-container">
-        @php $index = 1; @endphp
-
-        @foreach ($event->images as $image)
-        <div class="mySlides faded">
-            <div class="numbertext">{{ $index }} / {{ count($event->images) }}</div>
-            <img src="{{ \App\Http\Controllers\FileController::get('event_image', $event->event_id) }}"
-                alt="Event Image">
-        </div>
-        @php $index++; @endphp
-        @endforeach
-
-        <!-- Next and previous buttons -->
-        <a class="prev-img" onclick="plusSlides(-1)">&#10094;</a>
-        <a class="next-img" onclick="plusSlides(1)">&#10095;</a>
-    </div>
 </section>
 
 <section id="event-comments" class="event-section">
@@ -257,9 +263,9 @@
 </section>
 
 <section id="ticket-types" class="event-section">
-    <h2 id="ticket_types_title" class="text-center">Ticket <span>Types</span></h2>
+    <h2 class="text-center">Ticket <span>Types</span></h2>
     @if(count($event->ticketTypes) > 0)
-    <form method="POST" action="{{ url('/payment/'.$event->event_id) }}">
+    <form method="POST" action="{{ url('/cart/'.$event->event_id) }}">
         @csrf
         @guest
         <div id="checkout-section" class="auth-form" style="display: none;">
@@ -360,13 +366,13 @@
         <div class="d-flex justify-content-center">
             @auth
             <button type="submit" class="btn btn-success event-button" id="buy-button">
-                <i class="fa-solid fa-credit-card"></i> Buy Tickets
+                <i class="fa-solid fa-cart-shopping"></i> Add To Cart
             </button>
             @endauth
 
             @guest
             <button type="button" class="btn btn-success event-button" id="show-form" onclick="toggleCheckoutSection()">
-                <i class="fa-solid fa-credit-card"></i> Buy Tickets
+                <i class="fa-solid fa-cart-shopping"></i> Add To Cart
             </button>
             @endguest
         </div>
@@ -389,20 +395,30 @@
 
 <!-- Edit Event form (displayed only for the event creator) -->
 @can('updateEvent', $event)
-<section id="edit-event" class="event-section edit-or-create">
+<section id="edit-event" class="event-section">
     <h2>Edit <span>Event</span></h2>
-    <article>
-        @csrf
+    <section id="edit-event-images">
+        @foreach ($event->images as $image)
+            <div class="image-container">
+                <img src="{{ \App\Http\Controllers\FileController::get('event_image', $image->event_image_id) }}" alt="Event Image">
+                <i class="fa-solid fa-trash" data-event-image-id="{{ $image->event_image_id }}" onclick="deleteImage(this)"></i>
+            </div>
+        @endforeach
 
-        <form method="POST" action="/file/upload" enctype="multipart/form-data">
+        <!-- Form to upload new image -->
+        <form id="upload-form" method="POST" action="/file/upload" enctype="multipart/form-data">
             @csrf
-            <input name="file" type="file" required>
-            <input name="id" type="number" value="{{ $event->event_id }}" hidden>
-            <input name="type" type="text" value="event_image" hidden>
-            <button type="submit">Submit</button>
+            <div class="image-container add-image" id="file-container">
+                <label for="file-input" class="add-image-label">Click to add image</label>
+                <input id="file-input" name="file" type="file" required>
+                <input name="id" type="number" value="{{ $event->event_id }}" hidden>
+                <input name="type" type="text" value="event_image" hidden>
+            </div>
+            <button type="submit" id="submit-btn">Submit</button>
         </form>
+    </section>
 
-
+    <article class="edit-or-create">
         <label for="edit_name">Event Name:</label>
         <input type="text" id="edit_name" name="edit_name" value="{{ $event->name }}" required>
         
