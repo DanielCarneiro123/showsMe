@@ -1,8 +1,26 @@
-.edit-or-create {
-    max-width: 600px;
+#edit-event{
     margin: 50px;
+    display: grid;
+    grid-template-areas:
+    'title'
+    'images'
+    'edit';
+    width: 100%;
+}
+
+#edit-event h2{
+    grid-area: title;
     justify-self: center;
-    text-align: center;
+}
+#edit-event #edit-event-images{
+    grid-area: images;
+    justify-self: center;
+}
+.edit-or-create {
+    max-width: 800px;
+    margin: 50px;
+    width: 700px;
+    justify-self: center;
 }
 
 

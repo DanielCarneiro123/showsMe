@@ -4,7 +4,7 @@
 @section('content')
 
 
-<div class="container-fluid">
+<div id="tab_bar" class="container-fluid">
     <div class="d-flex justify-content-center text-center">
         <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
             <input type="radio" class="btn-check" name="sectionToggle" id="eventOverview" autocomplete="off" checked
