@@ -963,6 +963,24 @@ function deleteAdminCommentHandler() {
   }
 }
 
+document.addEventListener('DOMContentLoaded', function () {
+  let deleteButtons = document.querySelectorAll('.delete-report');
+
+  deleteButtons.forEach(function (button) {
+      button.addEventListener('click', function () {
+          let reportId = this.dataset.reportId;
+
+          sendAjaxRequest('POST', '/delete-report/' + reportId, {reportId: reportId}, function () {
+              let row = document.getElementById('reported_comment_row_' + reportId);
+              if (row) {
+                  row.remove();
+              }
+          });
+      });
+  });
+});
+
+
 function editComment(){
   const comment = event.target.closest(".comment");
   
@@ -1243,65 +1261,6 @@ const reportPopUp = document.querySelector('.pop-up-report');
 
 
 
-  function toggleEye(showIconId, hideIconId) {
-    const showIcon = document.getElementById(showIconId);
-    const hideIcon = document.getElementById(hideIconId);
-
-    if (showIcon.style.display !== 'none') {
-        showIcon.style.display = 'none';
-        hideIcon.style.display = 'inline-block';
-    } else {
-        showIcon.style.display = 'inline-block';
-        hideIcon.style.display = 'none';
-    }
-}
-
-
-function toggleAdminCommentVisibility(commentId, action) {
-  let url = action === 'private' ? `/hide-comment/${commentId}` : `/show-comment/${commentId}`;
-
-  sendAjaxRequest('POST', url, {}, function () {
-      if (this.status === 200) {
-          toggleEye(`show_${commentId}`, `hidden_${commentId}`);
-      } else {
-          console.error(`Error toggling event visibility: ${this.responseText}`);
-      }
-  });
-}
-
-
-
-
-function toggleCommentVisibility(commentId, action, visibility) {
-  let url = action === 'hide' ? `/hide-comment/${commentId}` : `/show-comment/${commentId}`;
-  
-
-  sendAjaxRequest('POST', url, {}, function () {
-      if (this.status === 200) {
-          toggleEye(`show_${commentId}`, `hidden_${commentId}`);
-          if (visibility === 'public') {
-              moveCommentToPrivate(commentId);
-          } else {
-              moveCommentToPublic(commentId);
-          }
-      } else {
-          console.error(`Error toggling comment visibility: ${this.responseText}`);
-      }
-  });
-}
-
-function moveCommentToPrivate(commentId) {
-  const commentElement = document.querySelector(`.comment[data-id="${commentId}"]`);
-  commentElement.parentNode.removeChild(commentElement);
-  document.getElementById('private-comments-section').appendChild(commentElement);
-}
-
-function moveCommentToPublic(commentId) {
-  const commentElement = document.querySelector(`.comment[data-id="${commentId}"]`);
-  commentElement.parentNode.removeChild(commentElement);
-  document.getElementById('public-comments-section').appendChild(commentElement);
-}
-
 
 function updateEventCountByMonth() {
   // Obtém o mês atual (você pode personalizar isso conforme necessário)
@@ -1485,6 +1444,7 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     });
   });
-  submitFormOnFileChange();
 
   addEventListeners();
+
+  submitFormOnFileChange();
