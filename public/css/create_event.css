@@ -19,56 +19,62 @@
     padding: 30px; /* Increased padding */
 }
 
+#create-event-content{
+    display: grid;
+    grid-template-areas: 
+    'title'
+    'bar'
+    'form';
+    margin: 50px;
+}
 
-
-
-#create-event-form {
-    background-color: white;
-    border-radius: 10px;
-    width: 33%;
-    padding: 3em 3em; /* Adjusted padding */
-    margin: auto;
-    border: 2px solid rgb(233, 233, 233);
-    color: rgb(0, 0, 0); /* Text color for better contrast */
+#create-event-content h2{
+    grid-area: title;
+    justify-self: center;
+    font-size: 3em;
+    margin-bottom: 50px;
 }
 
 
+#create-event-content #create-event-form {
+    grid-area: form;
+    border-radius: 10px;
+    border: 2px solid rgb(233, 233, 233);
+
+    max-width: 800px;
+    width: 700px;
+    justify-self: center;
+    padding: 20px;
+    margin-top: 50px;
+}
+
+#create-event-content #create-event-form .container-fluid{
+    padding: 0;
+}
+
 
 #create-event-form label {
-    display: block;
-    margin-bottom: 8px;
-    color: #000000; /* Dark blue color */
-    font-size: larger;
-    font-weight:500;
 }
 
 
 #create-event-form button:hover {
-    transform: scale(0.95); 
 }
 
 
 .icon-input textarea {
-    border: none;
-    outline: none;
-    flex: 1;
-    padding-left: 10px;
-    font-size: medium;
+
 }
 
 .my-input-group label,
 .my-input-group textarea,
 .my-input-group input,
 .my-input-group select {
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 16px; /* Set your preferred font size */
-    font-weight: normal; /* Set your preferred font weight */
+
 }
 
 
 .my-input-group textarea::placeholder,
 .my-input-group input::placeholder,
 .my-input-group select::placeholder {
-    color: #3a3a3a;
 }
 
