@@ -7,12 +7,13 @@
 <div class="my-tickets-container">
 
     <div class="my-tickets-event">
-    <div class="event-image" style="background-image: url('{{ asset('media/event_image.jpg') }}');"></div>
+    <div class="event-image" style="background-image: url('@if($eventTickets->first()->ticketType->event->images->isNotEmpty()){{ \App\Http\Controllers\FileController::get('event_image', $eventTickets->first()->ticketType->event->images->first()->event_image_id) }}@else{{ asset('media/event_image.jpg') }}@endif');"></div>
         <a href="{{ route('view-event', ['id' => $eventTickets->first()->ticketType->event->event_id]) }}" class="event-info">
             <h2 id="my-tickets-event-title">{{ $eventName }}</h2>
             <p id="my-tickets-event-local">{{ $eventTickets->first()->ticketType->event->location }}</p>
-            <p id="my-tickets-event-Sdate">{!! $eventTickets->first()->ticketType->event->start_timestamp->format('H:i,F j') !!}<br></p>
+            <p id="my-tickets-event-Sdate">{!! $eventTickets->first()->ticketType->event->start_timestamp->format('H:i, F j') !!}<br></p>
         </a>
+
     </div>
     
     <div class="my-tickets-per-event">

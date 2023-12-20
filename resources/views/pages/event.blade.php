@@ -381,7 +381,7 @@
     @endif
 
     <div class="my-event-card">
-        <div class="event-image" style="background-image: url('{{ asset('media/event_image.jpg') }}');"></div>
+        <div class="event-image" style="background-image: url('@if($event->images->isNotEmpty()){{ \App\Http\Controllers\FileController::get('event_image', $event->images->first()->event_image_id) }}@else{{ asset('media/event_image.jpg') }}@endif');"></div>
         <a href="{{ route('view-event', ['id' => $event->event_id]) }}" class="my-event-info">
             <p id="my-event-card-local">{{ $event->location }}</p>
             <p id="my-event-card-name">{{ $event->name }}</p>
@@ -389,6 +389,7 @@
             <p id="average-rating">{{ number_format($event->averageRating, 1) }} <span class="star-icon">★</span></p>
         </a>
     </div>
+
 </section>
 
 
