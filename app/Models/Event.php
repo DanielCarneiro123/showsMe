@@ -37,14 +37,22 @@ class Event extends Model
 
     public function ticketTypes()
     {
-        return $this->hasMany(TicketType::class, 'event_id', 'event_id');
+        return $this->hasMany(TicketType::class, 'event_id', 'event_id')->orderBy('price', 'asc');
+
     }
 
     public function comments()
     {
+        if (auth()->check()){
         return $this->hasMany(Comment::class, 'event_id')
                     ->orderByRaw("author_id = ? DESC", [auth()->user()->user_id])
+                    ->orderByDesc('likes');}
+
+        else{
+            return $this->hasMany(Comment::class, 'event_id')
+                    
                     ->orderByDesc('likes');
+        }
     }
     
 

@@ -46,6 +46,12 @@
         <p class="auth-message">
             Don't have an account? <a href="{{ route('register') }}" class="text-primary">Register here</a>.
         </p>
+        <div class="text-center mt-3">
+            <a href="{{ route('password.forgot') }}" class="btn btn-link">
+                Forgot your password?
+            </a>
+        </div>
+
         @if (session('success'))
             <p class="success">
                 {{ session('success') }}

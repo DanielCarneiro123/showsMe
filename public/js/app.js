@@ -136,11 +136,17 @@ function updateStock(ticketTypeId) {
     if (this.status === 200) {
       let response = JSON.parse(this.responseText);
       updateStockContent(response, ticketTypeId);
+      displaySuccessMessage("You have updated your ticket stock successfully");
+  
+  
     } else {
       console.error('Error updating stock:', this.responseText);
     }
   });
+  
+  
 }
+
 
 function deactivateUser(userId) {
   let formData = { 'user_id': userId };
@@ -199,9 +205,49 @@ function updateInactiveEventCount() {
 }
 
 function updateEventPageContent(formData) {
+ 
+  if (formData.edit_name.trim() === '') {
+    displayDangerMessage("Event name cannot be empty");
+    return;
+}
+
+if (formData.edit_location.trim() === '') {
+    displayDangerMessage("Event location cannot be empty");
+    return;
+}
+
+if (formData.edit_description.trim() === '') {
+    displayDangerMessage("Event description cannot be empty");
+    return;
+}
+
+let currentDate = new Date().toISOString().split('T')[0];
+if (formData.edit_start_timestamp < currentDate) {
+    displayDangerMessage("The start timestamp must be superior to the current date");
+    return;
+}
+
+if (formData.edit_end_timestamp <= currentDate) {
+    displayDangerMessage("The end timestamp must be superior to the current date");
+    return;
+}
+
+if (formData.edit_start_timestamp.split('T')[0] === formData.edit_end_timestamp.split('T')[0] && formData.edit_start_timestamp.split('T')[1] >= formData.edit_end_timestamp.split('T')[1]) {
+    displayDangerMessage("The start timestamp must be earlier than the end timestamp.");
+    return;
+}
+
+
+
+
   document.getElementById('name').innerHTML = formData.edit_name;
+
   document.getElementById('location').innerHTML = formData.edit_location;
   document.getElementById('description').innerHTML = formData.edit_description;
+
+  displaySuccessMessage("You have updated your event successfully");
+  
+      
   //document.getElementById('start_timestamp').innerHTML =  formData.edit_start_timestamp; //ainda não está display
   //document.getElementById('end_timestamp').innerHTML =  formData.edit_end_timestamp;  //ainda não está display
 }
@@ -218,43 +264,108 @@ function updateEvent(eventId) {
   updateEventPageContent(formData);
 
   sendAjaxRequest('post', '../update-event/' + eventId, formData);
-
   
-  displaySuccessMessage();
-
+}
   
+
+function displaySuccessMessage(message) {
+  let successDiv = document.createElement('div');
+  successDiv.classList.add('alert', 'alert-dismissible', 'alert-success', 'fixed-top-right');
+  successDiv.innerHTML = `
+    <strong>Well done!</strong> ${message}
+  `;
+
+  document.body.appendChild(successDiv);
+
   setTimeout(function () {
     removeSuccessMessage();
   }, 3500);
 }
 
-function displaySuccessMessage() {
-  // Create a div element with the success message content
-  let successDiv = document.createElement('div');
-  successDiv.classList.add('alert', 'alert-dismissible', 'alert-success', 'fixed-top-right');
-  successDiv.innerHTML = `
-    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    <strong>Well done!</strong> You successfully <a href="#" class="alert-link">updated your event</a>.
-  `;
 
-  // Append the div to the body
-  document.body.appendChild(successDiv);
-}
+
 
 
 function removeSuccessMessage() {
-  // Find and remove the success message div
+  
   let successDiv = document.querySelector('.alert-success');
   if (successDiv) {
     successDiv.remove();
   }
 }
+
+function displayDangerMessage(message) {
+  let dangerDiv = document.createElement('div');
+  dangerDiv.classList.add('alert', 'alert-dismissible', 'alert-danger', 'fixed-top-right');
+  dangerDiv.innerHTML = `
+    <strong>Attention!</strong> ${message}
+  `;
+
+  document.body.appendChild(dangerDiv);
+
+  setTimeout(function () {
+    removeDangerMessage();
+  }, 3500);
+}
+
+function removeDangerMessage() {
+  let dangerDiv = document.querySelector('.alert-danger');
+  if (dangerDiv) {
+    dangerDiv.remove();
+  }
+}
+
+
 function updateProfilePageContent(formData) {
   document.getElementById('user-header-name').innerText = formData.edit_name;
 
 }
 
 function updateProfile() {
+
+  let formData = {
+    'edit_name': document.getElementById('edit_name').value,
+    'edit_email': document.getElementById('edit_email').value,
+    'edit_promotor_code': document.getElementById('edit_promotor_code').value,
+    'edit_phone_number': document.getElementById('edit_phone_number').value,
+  };
+
+  if (!formData.edit_name) {
+    displayDangerMessage("Name field cannot be empty.");
+    return;
+}
+
+if (!formData.edit_email) {
+  displayDangerMessage("Email field cannot be empty.");
+  return;
+}
+
+if (!formData.edit_phone_number) {
+  displayDangerMessage("Phone Number field cannot be empty.");
+  return;
+}
+
+const phoneNumberRegex = /^[0-9]+$/;
+if (!phoneNumberRegex.test(formData.edit_phone_number)) {
+    displayDangerMessage("Phone Number must only contain numbers.");
+    return;
+}
+
+sendAjaxRequest('post', '../update-profile', formData,function () {
+  
+    let response = JSON.parse(this.responseText);
+    
+    if(response.message == "The email address is already in use by another user."){
+      displayDangerMessage("The email address is already in use by another user.");
+    
+    
+
+
+  } else {
+    updateProfilePageContent(formData);
+
+    displaySuccessMessage("You have updated your profile successfully");
+}});
 
   document.getElementById('update-profile-button').style.display = 'none';
   document.getElementById('edit-profile-button').style.display = 'block';
@@ -264,24 +375,42 @@ function updateProfile() {
   document.getElementById('edit_phone_number').disabled = true;
 
 
-  let formData = {
-    'edit_name': document.getElementById('edit_name').value,
-    'edit_email': document.getElementById('edit_email').value,
-    'edit_promotor_code': document.getElementById('edit_promotor_code').value,
-    'edit_phone_number': document.getElementById('edit_phone_number').value,
-  };
 
-  console.log(formData);
-
-
-  sendAjaxRequest('post', '../update-profile', formData);
-
-  updateProfilePageContent(formData);
-
-  //depois tenho de colocar uma mensagem a dizer que foi alterado
 
 }
 
+function updateTicketPageContent(ticketType) {
+  console.log(ticketType);
+  let ticketTypesContainer = document.getElementById('ticket-types-container');
+  let newTicketType = document.createElement('article');
+  newTicketType.className = 'ticket-type';
+  newTicketType.innerHTML = `
+      <h3>${ticketType.name}</h3>
+      <p>Stock: ${ticketType.stock}</p>
+      <p>Description: ${ticketType.description}</p>
+      <p>Price: ${ticketType.price} €</p>
+      <label for="quantity_${ticketType.ticket_type_id}">Quantity:</label>
+      <input type="number" id="quantity_${ticketType.ticket_type_id}" name="quantity[${ticketType.ticket_type_id}]" min="0" max="${ticketType.person_buying_limit}">
+      
+      <!-- New Stock -->
+      <p>New Stock:
+      <input type="number" id="new_stock_${ticketType.ticket_type_id}" name="new_stock" value="${ticketType.stock}" required>
+      </p>
+      <button class="button-update-stock" onclick="updateStock(${ticketType.ticket_type_id})" form="purchaseForm">Update Stock</button>
+  `;
+  ticketTypesContainer.appendChild(newTicketType);
+
+  document.getElementById('ticket_name').value = '';
+  document.getElementById('ticket_stock').value = '';
+  document.getElementById('ticket_description').value = '';
+  document.getElementById('ticket_person_limit').value = '';
+  document.getElementById('ticket_price').value = '';
+  document.getElementById('ticket_start_timestamp').value = '';
+  document.getElementById('ticket_end_timestamp').value = '';
+
+
+
+}
 
 async function createTicketType(event_id) {
   let ticketName = document.getElementById('ticket_name').value;
@@ -292,43 +421,43 @@ async function createTicketType(event_id) {
   let ticketEndTimestamp = document.getElementById('ticket_end_timestamp').value;
 
   if (!ticketName || !ticketStock || !ticketPersonLimit || !ticketStartTimestamp || !ticketEndTimestamp) {
-    alert("Todos os campos são obrigatórios.");
+    displayDangerMessage("All fields are mandatory.");
     return;
-  }
+}
 
-  if (isNaN(ticketPrice)) {
-    alert("O preço do ingresso deve ser um número.");
+if (isNaN(ticketPrice)) {
+    displayDangerMessage("The ticket price must be a number.");
     return;
-  }
+}
 
-  let currentDate = new Date().toISOString().split('T')[0];
-  if (ticketStartTimestamp < currentDate) {
-    alert("A data de início do ingresso deve ser igual ou superior à data atual.");
+let currentDate = new Date().toISOString().split('T')[0];
+if (ticketStartTimestamp < currentDate) {
+    displayDangerMessage("The ticket start date must be equal to or later than the current date.");
     return;
-  }
+}
 
-  if (ticketEndTimestamp <= currentDate) {
-    alert("A data de término do ingresso deve ser superior à data atual.");
+if (ticketEndTimestamp <= currentDate) {
+    displayDangerMessage("The ticket end date must be later than the current date.");
     return;
-  }
+}
 
-  if (ticketStartTimestamp.split('T')[0] === ticketEndTimestamp.split('T')[0] && ticketStartTimestamp.split('T')[1] >= ticketEndTimestamp.split('T')[1]) {
-    alert("A hora de início do ingresso deve ser anterior à hora de término no mesmo dia.");
+if (ticketStartTimestamp.split('T')[0] === ticketEndTimestamp.split('T')[0] && ticketStartTimestamp.split('T')[1] >= ticketEndTimestamp.split('T')[1]) {
+    displayDangerMessage("The ticket start time must be earlier than the end time on the same day.");
     return;
-  }
+}
 
-  let eventStartTimestamp = document.getElementById('edit_start_timestamp').value;
-  let eventEndTimestamp = document.getElementById('edit_end_timestamp').value;
+let eventStartTimestamp = document.getElementById('edit_start_timestamp').value;
+let eventEndTimestamp = document.getElementById('edit_end_timestamp').value;
 
-  if (ticketStartTimestamp < eventStartTimestamp || ticketStartTimestamp >= eventEndTimestamp) {
-    alert("A data de início do ingresso deve ser maior ou igual à data de início do evento e menor que a data de fim do evento.");
+if (ticketStartTimestamp < eventStartTimestamp || ticketStartTimestamp >= eventEndTimestamp) {
+    displayDangerMessage("The ticket start date must be greater than or equal to the event start date and less than the event end date.");
     return;
-  }
+}
 
-  if ((ticketEndTimestamp && ticketEndTimestamp <= eventStartTimestamp) || (ticketEndTimestamp && ticketEndTimestamp > eventEndTimestamp)) {
-    alert("A data de término do ingresso deve ser maior que a data de início do evento e menor ou igual à data de fim do evento.");
+if ((ticketEndTimestamp && ticketEndTimestamp <= eventStartTimestamp) || (ticketEndTimestamp && ticketEndTimestamp > eventEndTimestamp)) {
+    displayDangerMessage("The ticket end date must be greater than the event start date and less than or equal to the event end date.");
     return;
-  }
+}
 
 
   let formData = {
@@ -343,12 +472,16 @@ async function createTicketType(event_id) {
 
   sendAjaxRequest('post', `../create-ticket-type/${event_id}`, formData, createTypeHandler);
 
+  
+  
+
 }
 
 
 function createTypeHandler() {
   if (this.status == 200) {
     window.location.reload();
+    displaySuccessMessage("You have created your ticket successfully");
   }
 }
 
@@ -440,52 +573,54 @@ function loadNotifications(notificationsBody, callback) {
     .then(data => {
       console.log(data);
 
-      data.notifications.forEach(notification => {
-        if (notification.viewed === false){
-          const notificationElement = document.createElement('div');
-        
-          notificationElement.setAttribute('id', `notification-${notification.id}`);
-          
-          notificationElement.classList.add(`notification-${notification.id}`);
+      notificationsBody.innerHTML = '';
 
-          const iconElement = document.createElement('i');
+      if (data.notifications.length === 0) {
+        const noNotificationsText = document.createElement('p');
+        noNotificationsText.textContent = 'Não tens notificações';
+        notificationsBody.appendChild(noNotificationsText);
+      } else {
+        data.notifications.forEach(notification => {
+          if (notification.viewed === false) {
+            const notificationElement = document.createElement('div');
+            notificationElement.setAttribute('id', `notification-${notification.id}`);
+            notificationElement.classList.add(`notification-${notification.id}`);
 
-          iconElement.classList.add('fa-solid');
-          iconElement.classList.add('fa-xmark');
-          iconElement.addEventListener('click', function () {
-            dismissNotification(notification.id);
-          });
+            const iconElement = document.createElement('i');
+            iconElement.classList.add('fa-solid');
+            iconElement.classList.add('fa-xmark');
+            iconElement.addEventListener('click', function () {
+              dismissNotification(notification.id);
+            });
 
-          notificationElement.appendChild(iconElement);
+            notificationElement.appendChild(iconElement);
 
-          const horizontalSpace = document.createElement('br');
+            const horizontalSpace = document.createElement('br');
+            notificationElement.appendChild(horizontalSpace);
+            notificationElement.appendChild(horizontalSpace);
 
-          notificationElement.appendChild(horizontalSpace);
-          notificationElement.appendChild(horizontalSpace);
+            const anchorTag = document.createElement('a');
+            anchorTag.classList.add('event-link');
+            if (notification.notification_type === 'Event') {
+              anchorTag.href = `/view-event/${notification.event_id}`;
+              anchorTag.innerHTML = `The event <strong>${notification.event_name || 'Unknown Event'}</strong> had some changes made. Check them out! `;
+            } else if (notification.notification_type === 'Comment') {
+              anchorTag.href = `/view-event/${notification.event_id}`;
+              anchorTag.innerHTML = `A comment was made in the event <strong>${notification.event_name || 'Unknown Event'}</strong>. `;
+            } else if (notification.notification_type === 'Report') {
+              anchorTag.href = `/admin`;
+              anchorTag.innerHTML = `A report on a comment was made in the event <strong>${notification.event_name || 'Unknown Event'}</strong>. `;
+            }
 
-          const anchorTag = document.createElement('a');
-          anchorTag.classList.add('event-link');
-          if (notification.notification_type === 'Event') {
-            anchorTag.href = `/view-event/${notification.event_id}`;
-            anchorTag.innerHTML = `The event <strong>${notification.event_name || 'Unknown Event'}</strong> had some changes made. Check them out! `;
-          } else if (notification.notification_type === 'Comment') {
-            anchorTag.href = `/view-event/${notification.event_id}`;
-            anchorTag.innerHTML = `A comment was made in the event <strong>${notification.event_name || 'Unknown Event'}</strong>. `;
-          } else if (notification.notification_type === 'Report') {
-            anchorTag.href = `/admin`;
-            anchorTag.innerHTML = `A report on a comment was made in the event <strong>${notification.event_name || 'Unknown Event'}</strong>. `;
+            notificationElement.appendChild(anchorTag);
+
+            const horizontalLine = document.createElement('hr');
+            notificationElement.appendChild(horizontalLine);
+
+            notificationsBody.appendChild(notificationElement);
           }
-
-          notificationElement.appendChild(anchorTag);
-
-          notificationsBody.appendChild(notificationElement);
-
-          const horizontalLine = document.createElement('hr');
-          notificationElement.appendChild(horizontalLine);
-
-        }
-        
-      });
+        });
+      }
 
       if (callback) {
         callback();
@@ -493,6 +628,7 @@ function loadNotifications(notificationsBody, callback) {
     })
     .catch(error => console.error('Error fetching notifications:', error));
 }
+
 
 function dismissNotification(notificationId) {
   sendAjaxRequest('POST', `/dismiss-notification/${notificationId}`, null, function () {
@@ -503,11 +639,26 @@ function dismissNotification(notificationId) {
     if (notificationElement && notificationElement.parentNode) {
       notificationElement.parentNode.removeChild(notificationElement);
     }
+    updateNotificationCount();
   });
 }
 
+function updateNotificationCount() {
+  sendAjaxRequest('POST', '/update-notifications', null, function(event) {
+      if (event.target.status === 200) {
+          const responseData = JSON.parse(event.target.responseText);
+          const notificationCount = responseData.count;
 
-//Immediate Execution on Page Load (To follow this approach later, if there is time)
+          document.querySelector('.notification-count').textContent = notificationCount;
+      }
+  });
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+  updateNotificationCount();
+});
+
+
 
 function showSection() {
   var sectionButtons = document.querySelectorAll('.btn-check');
@@ -634,7 +785,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 
-addEventListeners();
+
 
 
 function toggleCheckoutSection() {
@@ -679,6 +830,8 @@ function hideAdminDeleteCommentModal() {
   comment.querySelector('#confirmAdminDeleteCommentForm').style.display = 'none';
  
 }
+
+
 
 function showEditCommentModal() {
   const comment = event.target.closest(".comment");
@@ -857,7 +1010,6 @@ function addNewComment(){
 
 };
 
-
 function addNewCommentHandler() {
   if (this.status === 200) {
     const response = JSON.parse(this.responseText);
@@ -902,7 +1054,10 @@ function addNewCommentHandler() {
       
       deleteIcon.addEventListener('click', function(){
        
-  commentElement.querySelector('#confirmDeleteCommentForm').style.display = 'block';
+        const deleteCommentForm = commentElement.querySelector('#confirmDeleteCommentForm');
+        
+        deleteCommentForm.style.display = 'block';
+        
       }) ;
 
 
@@ -921,12 +1076,33 @@ function addNewCommentHandler() {
       editCommentForm.id = 'editCommentForm';
       editCommentForm.style.display = 'none';
 
+      const deleteCommentForm = document.createElement('form');
+      deleteCommentForm.id = 'confirmDeleteCommentForm';
+      deleteCommentForm.style.display = 'none';
+
       const editedCommentText = document.createElement('textarea');
       editedCommentText.id = 'editedCommentText';
       editedCommentText.className = 'edit-comment-textbox';
       editedCommentText.rows = '3';
       editedCommentText.value = newComment.text;
       editedCommentText.required = true;
+
+      const deleteCommentText = document.createElement('p');
+      deleteCommentText.id = 'deleteCommentText';
+      deleteCommentText.className = 'text-danger';
+      deleteCommentText.textContent = 'Are you sure you want to delete your comment?';
+      
+      
+
+      const deleteSubmitButton = document.createElement('button');
+      deleteSubmitButton.className = 'btn btn-danger';
+      deleteSubmitButton.textContent = 'Delete';
+      deleteSubmitButton.addEventListener('click', function () {
+        const comment = event.target.closest('.comment');
+        const commentID = comment.getAttribute('data-id');
+       event.preventDefault();
+       sendAjaxRequest('post', '/delete-comment', { comment_id: commentID }, deleteCommentHandler);
+      });
 
       const submitButton = document.createElement('button');
       submitButton.className = 'btn btn-primary';
@@ -939,6 +1115,17 @@ function addNewCommentHandler() {
         event.preventDefault();
         sendAjaxRequest('post', '/edit-comment', { newCommentText: editedCommentText, comment_id: commentID }, editCommentHandler);
       });
+      const deleteCancelButton = document.createElement('button');
+      deleteCancelButton.className = 'btn btn-primary';
+      deleteCancelButton.textContent = 'Cancel';
+      deleteCancelButton.type = 'button';
+      deleteCancelButton.style = 'margin-left: 4px;'
+      deleteCancelButton.addEventListener('click', function () {
+        const comment = event.target.closest('.comment');
+        
+        comment.querySelector('#confirmDeleteCommentForm').style.display = 'none';
+      });
+      
 
       const cancelButton = document.createElement('button');
       cancelButton.className = 'btn btn-danger';
@@ -951,8 +1138,10 @@ function addNewCommentHandler() {
         comment.querySelector('#editCommentForm').style.display = 'none';
       });
       
-
-
+      deleteCommentForm.appendChild(deleteCommentText);
+      deleteCommentForm.appendChild(deleteSubmitButton);
+      deleteCommentForm.appendChild(deleteCancelButton);
+      
       editCommentForm.appendChild(editedCommentText);
       editCommentForm.appendChild(submitButton);
       editCommentForm.appendChild(cancelButton);
@@ -975,6 +1164,7 @@ function addNewCommentHandler() {
       commentElement.appendChild(commentIconsContainer);
       commentElement.appendChild(commentText);
       commentElement.appendChild(editCommentForm);
+      commentElement.appendChild(deleteCommentForm);
       commentElement.appendChild(commentLikesSection);
 
       // Append the new comment directly to the container
@@ -995,18 +1185,33 @@ function addNewCommentHandler() {
 
 
 
+
+
+
 function showEditRatingForm() {
   document.getElementById('editRatingForm').style.display = 'block';
   document.getElementById('yourRatingP').style.display = 'none';
 }
 
 
+function redirectToLogin() {
+  // Redirect to the login route
+  window.location.href = "/login";
+}if (localStorage.getItem('resetSuccess') !== 'true') {
+  function showSuccessAlert() {
+      var alertDiv = document.createElement('div');
+      alertDiv.className = 'alert alert-dismissible alert-success';
+      alertDiv.innerHTML = '<button type="button" class="btn-close" data-bs-dismiss="alert"></button>The reset password has been sent to your email account!';
+
+      document.body.appendChild(alertDiv);
+
+      localStorage.setItem('resetSuccess', 'true');
+  }
+
+  showSuccessAlert();
+}
 
 
-
-
-
-addEventListeners();
 
 function showReportPopUp(){
     const comment_id = event.target.closest('.comment').getAttribute('data-id');
@@ -1298,3 +1503,29 @@ document.addEventListener('DOMContentLoaded', function () {
       });
       
   });
+
+  
+
+  document.addEventListener('DOMContentLoaded', function () {
+
+    function loadEvents(page) {
+      sendAjaxRequest('GET', `/ajax-paginate?page=${page}`, null, function () {
+        if (this.status >= 200 && this.status < 400) {
+          document.getElementById('event-cards-section').innerHTML = this.responseText;
+        } else {
+          console.error('Failed to load events.');
+        }
+      });
+    }
+  
+    document.getElementById('event-cards-section').addEventListener('click', function (e) {
+      if (e.target.tagName === 'A' && e.target.getAttribute('class')=== 'page-link'){
+        e.preventDefault();
+        let page = e.target.getAttribute('href').split('page=')[1];
+        loadEvents(page);
+      }
+    });
+  });
+
+
+  addEventListeners();

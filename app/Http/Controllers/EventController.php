@@ -19,6 +19,7 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash; 
+use Illuminate\Pagination\Paginator;
 
 
 
@@ -41,6 +42,24 @@ class EventController extends Controller
         $user = Auth::user();
 
         if ($user && $user->is_admin) {
+            $events = Event::orderBy('start_timestamp', 'asc')->paginate(8);
+        } else {
+            $events = Event::where('private', false)
+                            ->orderBy('start_timestamp', 'asc')
+                            ->paginate(8);
+        }
+        
+        $notifications = $user ? $user->notifications : [];
+
+
+        return view('pages.all_events', compact('events', 'user', 'notifications'));
+    }
+
+    public function ajax_paginate(Request $request)
+    {
+        $user = Auth::user();
+
+        if ($user && $user->is_admin) {
             $events = Event::paginate(8);
         } else {
             $events = Event::where('private', false)->paginate(8);
@@ -49,14 +68,16 @@ class EventController extends Controller
         $notifications = $user ? $user->notifications : [];
 
 
-        return view('pages.all_events', compact('events', 'user', 'notifications'));
+        return view('partials.event_cards', compact('events', 'user', 'notifications'))->render();
     }
 
     public function myEvents(): View
     {
         if (Auth::check()) {
             $user = Auth::user();
-            $events = Event::where('creator_id', Auth::user()->user_id)->get();
+            $events = Event::where('creator_id', Auth::user()->user_id)
+            ->orderBy('start_timestamp', 'asc')
+            ->get();
             $notifications = $user ? $user->notifications : [];
             return view('pages.my_events', compact('events', 'notifications'));
         } else {
@@ -95,7 +116,7 @@ class EventController extends Controller
     public function updateEvent(Request $request, $id)
     {
         $request->validate([
-            'edit_name' => 'required|string|max:255',
+            'edit_name' => 'required:edit_name|string|max:255',
             'edit_description' => 'nullable|string',
             'edit_location' => 'required|string',
             'edit_start_timestamp' => 'required|date',
@@ -103,6 +124,7 @@ class EventController extends Controller
            
         ], [
             'edit_end_timestamp.after' => 'The end timestamp must be a date after the start timestamp.',
+            'edit_name.required' => 'Cannot have an empty name',
          
         ]);
     
@@ -255,17 +277,28 @@ private function createTemporaryAccount(Request $request)
     
     public function searchEvents(Request $request)
     {
+        if (Auth::check()) {
+            $user = Auth::user();
+            $notifications = $user->notifications;
 
-        $user = Auth::user();
-        $notifications = $user->notifications;
+            $query = $request->input('query');
 
-        $query = $request->input('query');
+            $events = Event::whereRaw('tsvectors @@ to_tsquery(\'english\', ?)', [$query])
+                ->orderByRaw('ts_rank(tsvectors, to_tsquery(\'english\', ?)) DESC', [$query])
+                ->paginate(10);
 
-        $events = Event::whereRaw('tsvectors @@ to_tsquery(\'english\', ?)', [$query])
-            ->orderByRaw('ts_rank(tsvectors, to_tsquery(\'english\', ?)) DESC', [$query])
-            ->paginate(10);
+            return view('pages.all_events', compact('events', 'notifications'));
+        }
+        else {
 
-        return view('pages.all_events', compact('events', 'notifications'));
+            $query = $request->input('query');
+
+            $events = Event::whereRaw('tsvectors @@ to_tsquery(\'english\', ?)', [$query])
+                ->orderByRaw('ts_rank(tsvectors, to_tsquery(\'english\', ?)) DESC', [$query])
+                ->paginate(10);
+
+            return view('pages.all_events', compact('events'));
+        } 
     }  
 
     private function generateQRCodePath(TicketInstance $ticketInstance)

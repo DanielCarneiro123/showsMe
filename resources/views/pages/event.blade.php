@@ -198,20 +198,23 @@
                     <button type="button" class="btn btn-danger" onclick="hideEditCommentModal()">Cancel</button>
                 </form>
 
+            <form id="confirmDeleteCommentForm" style="display: none;">
+            <p id="deleteCommentText" class="text-danger"> Are you sure you want to delete your comment?</p>
+            <button class="btn btn-danger" onclick="deleteComment()">Delete</button>
+            <button type="button" class="btn btn-primary" onclick="hideDeleteCommentModal()">Cancel</button>
+            </form>
 
-
-                <div class="comment-likes-section">
-                    @if(auth()->check())
-                    @if(auth()->user()->likes($comment->comment_id))
-                    <i class="fas fa-thumbs-up fa-solid" id="liked" onclick="unlikeComment()"></i>
-                    @else
-                    <i class="far fa-thumbs-up fa-regular" id="unliked" onclick="likeComment()"></i>
-                    @endif
-                    @else
-                    <i class="far fa-thumbs-up fa-regular" id="unliked"
-                        onclick="alert('Please log in to like this comment')"></i>
-                    @endif
-                    <p class="comment-likes">{{ $comment->likes }}</p>
+            <div class="comment-likes-section">
+            @if(auth()->check())
+            @if(auth()->user()->likes($comment->comment_id))
+                <i class="fas fa-thumbs-up fa-solid" id="liked" onclick="unlikeComment()"></i>
+            @else
+                <i class="far fa-thumbs-up fa-regular" id="unliked" onclick="likeComment()"></i>
+            @endif
+        @else
+            <i class="far fa-thumbs-up fa-regular" id="unliked" onclick="redirectToLogin()"></i>
+        @endif
+                <p class="comment-likes">{{ $comment->likes }}</p>
 
                 </div>
 
@@ -402,7 +405,7 @@
 
         <label for="edit_name">Event Name:</label>
         <input type="text" id="edit_name" name="edit_name" value="{{ $event->name }}" required>
-
+        
         <label for="edit_description">Event Description:</label>
         <textarea id="edit_description" name="edit_description">{{ $event->description }}</textarea>
 

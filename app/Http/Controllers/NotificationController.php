@@ -69,4 +69,13 @@ class NotificationController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+
+    public function updateNotifications(Request $request)
+    {
+        //auth()->user()->notifications()->where('viewed', false)->update(['viewed' => true]);
+
+        $unreadCount = auth()->user()->notifications()->where('viewed', false)->count();
+
+        return response()->json(['count' => $unreadCount]);
+    }
 }
