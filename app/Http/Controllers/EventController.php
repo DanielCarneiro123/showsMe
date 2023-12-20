@@ -19,6 +19,7 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash; 
+use Illuminate\Pagination\Paginator;
 
 
 
@@ -36,7 +37,7 @@ class EventController extends Controller
         return view('pages.event', compact('event', 'notifications'));
     }
 
-    public function index(): View
+    public function index()
     {
         $user = Auth::user();
 
@@ -50,6 +51,22 @@ class EventController extends Controller
 
 
         return view('pages.all_events', compact('events', 'user', 'notifications'));
+    }
+
+    public function ajax_paginate(Request $request)
+    {
+        $user = Auth::user();
+
+        if ($user && $user->is_admin) {
+            $events = Event::paginate(8);
+        } else {
+            $events = Event::where('private', false)->paginate(8);
+        }
+
+        $notifications = $user ? $user->notifications : [];
+
+
+        return view('partials.event_cards', compact('events', 'user', 'notifications'))->render();
     }
 
     public function myEvents(): View

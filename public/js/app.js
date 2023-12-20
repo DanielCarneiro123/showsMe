@@ -1336,3 +1336,24 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 });
+
+
+document.addEventListener('DOMContentLoaded', function () {
+  let page = 1;
+
+  function loadEvents(page) {
+    sendAjaxRequest('GET', `/ajax-paginate?page=${page}`, null, function () {
+      if (this.status >= 200 && this.status < 400) {
+        document.getElementById('event-cards-section').innerHTML = this.responseText;
+      } else {
+        console.error('Failed to load events.');
+      }
+    });
+  }
+
+  document.getElementById('event-cards-section').addEventListener('click', function (e) {
+    e.preventDefault();
+    let page = e.target.getAttribute('href').split('page=')[1];
+    loadEvents(page);
+  });
+});

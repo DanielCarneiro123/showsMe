@@ -72,7 +72,10 @@ Route::post('/delete-report/{reportId}', [AdminController::class, 'deleteReport'
 Route::post('/send', [MailController::class, 'send']);
 
 Route::controller(EventController::class)->group(function () {
-    Route::get('/all-events', 'index')->name('all-events');
+    Route::get('/all-events', [EventController::class, 'index'])->name('all-events');
+    Route::get('/ajax-paginate',[EventController::class,'ajax_paginate'])->name('ajax-paginate');
+
+
     Route::get('/view-event/{id}', 'view')->name('view-event');
     Route::get('/my-events', 'myEvents')->name('my-events');
     Route::post('/create-event', 'createEvent');
