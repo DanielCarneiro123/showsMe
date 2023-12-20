@@ -12,21 +12,21 @@
             <label class="btn btn-outline-primary" for="eventOverview">Overview</label>
             <input type="radio" class="btn-check" name="sectionToggle" id="ticketTypes" autocomplete="off" checked
                 data-section-id="ticket-types">
-            <label class="btn btn-outline-primary" for="ticketTypes">Ticket Types</label>
+            <label class="btn btn-outline-primary" for="ticketTypes">Tickets</label>
             <input type="radio" class="btn-check" name="sectionToggle" id="eventComments" autocomplete="off"
                 data-section-id="event-comments">
-            <label class="btn btn-outline-primary" for="eventComments">Event Comments</label>
+            <label class="btn btn-outline-primary" for="eventComments">Comments</label>
             @can('updateEvent', $event)
             <input type="radio" class="btn-check" name="sectionToggle" id="editEvent" autocomplete="off"
                 data-section-id="edit-event">
-            <label class="btn btn-outline-primary" for="editEvent">Edit Event</label>
+            <label class="btn btn-outline-primary" for="editEvent">Edit</label>
 
             <input type="radio" class="btn-check" name="sectionToggle" id="createTicketType" autocomplete="off"
                 data-section-id="create-ticket-type">
-            <label class="btn btn-outline-primary" for="createTicketType">Create Ticket Type</label>
+            <label class="btn btn-outline-primary" for="createTicketType">Create Tickets</label>
             <input type="radio" class="btn-check" name="sectionToggle" id="eventInfo" autocomplete="off"
                 data-section-id="event-info">
-            <label class="btn btn-outline-primary" for="eventInfo">Event Info</label>
+            <label class="btn btn-outline-primary" for="eventInfo">Info</label>
             @endcan
         </div>
     </div>
