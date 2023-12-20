@@ -37,7 +37,7 @@
         <br>
         <div class="d-flex justify-content-center">
             <button type="submit" class="btn btn-success checkout-button" id="checkout-button">
-                <i class="fa-solid fa-credit-card"></i> Process Checkout
+                <i class="fa-solid fa-credit-card" aria-label="Credit Card" ></i> Process Checkout
             </button>
         </div>
     </form>

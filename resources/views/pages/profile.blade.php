@@ -2,7 +2,7 @@
 
 @section('content')
 <section id="profile">
-    <i class="fa-regular fa-user"></i>
+    <i class="fa-regular fa-user" aria-label="User" ></i>
 
     <section>
         @csrf

@@ -72,7 +72,7 @@
         <div class="container">
             <div class="row">
             <section class="warning-section text-center">
-                <i class="fa-solid fa-circle-exclamation fa-3x"></i>
+                <i class="fa-solid fa-circle-exclamation fa-3x" aria-label="Circle" ></i>
                 <p class="text-sm">Junta-te a nós e cria os teus eventos!</p>
                 <p class="text-sm">Deves fazer <a href="{{ route('login') }}" class="auth-link">login </a> primeiro.</p>
             </section>
