@@ -38,7 +38,7 @@ class UserController extends Controller
             Rule::unique('users', 'email')->ignore($user->user_id, 'user_id')
         ],
         'edit_name' => 'required|string|max:255',
-        'edit_promotor_code' => 'nullable|string|max:255',
+        
         'edit_phone_number' => [
             'required',
             'string',
@@ -54,7 +54,7 @@ class UserController extends Controller
     $user->update([
         'email' => $request->input('edit_email'),
         'name' => $request->input('edit_name'),
-        'promotor_code' => $request->input('edit_promotor_code'),
+        
         'phone_number' => $request->input('edit_phone_number'),
     ]);
 

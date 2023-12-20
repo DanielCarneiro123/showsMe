@@ -41,7 +41,7 @@ class RegisterController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'promotor_code' => NULL,
+            
             'phone_number' => $request->phone_number,
             'is_admin' => false, 
         ]);

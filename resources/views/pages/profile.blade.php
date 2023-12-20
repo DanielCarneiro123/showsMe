@@ -30,12 +30,7 @@
             <span class="text-danger">{{ $message }}</span>
         @enderror
 
-        <label for="promotor_code">Promotor Code:</label>
-        <input type="text" id="edit_promotor_code" name="promotor_code" value="{{ $user->promotor_code }}" disabled>
-        @error('promotor_code')
-            <span class="text-danger">{{ $message }}</span>
-        @enderror
-
+       
         <label for="phone_number">Phone Number:</label>
         <input type="text" id="edit_phone_number" name="phone_number" value="{{ $user->phone_number }}" required disabled>
         @error('phone_number')

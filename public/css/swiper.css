@@ -103,3 +103,23 @@
 .swiper-custom-pagination .swiper-pagination-bullet-active .line {
     width: 2rem;
 }
+
+
+
+#event-slider {
+    max-height: 80vh;
+    overflow: hidden; 
+  }
+  
+  #event-swiper {
+    width: 100%;
+    height: 100%;
+  }
+  
+  .swiper-slide {
+    width: 100%;
+    height: 100%;
+  }
+  
+
+  
