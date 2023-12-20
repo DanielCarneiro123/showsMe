@@ -341,7 +341,6 @@ function updateProfile() {
   let formData = {
     'edit_name': document.getElementById('edit_name').value,
     'edit_email': document.getElementById('edit_email').value,
-    'edit_promotor_code': document.getElementById('edit_promotor_code').value,
     'edit_phone_number': document.getElementById('edit_phone_number').value,
   };
 
@@ -386,7 +385,6 @@ sendAjaxRequest('post', '../update-profile', formData,function () {
   document.getElementById('edit-profile-button').style.display = 'block';
   document.getElementById('edit_name').disabled = true;
   document.getElementById('edit_email').disabled = true;
-  document.getElementById('edit_promotor_code').disabled = true;
   document.getElementById('edit_phone_number').disabled = true;
 
 
@@ -537,7 +535,6 @@ function toggleProfileButtons() {
 
   document.getElementById('edit_name').disabled = false;
   document.getElementById('edit_email').disabled = false;
-  document.getElementById('edit_promotor_code').disabled = false;
   document.getElementById('edit_phone_number').disabled = false;
 }
 

@@ -25,7 +25,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'promotor_code',
+     
         'phone_number',
         'is_admin',
         'active',

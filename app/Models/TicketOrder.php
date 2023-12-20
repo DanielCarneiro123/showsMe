@@ -16,7 +16,7 @@ class TicketOrder extends Model
      */
     protected $fillable = [
         'timestamp',
-        'promo_code',
+      
         'buyer_id',
     ];
 

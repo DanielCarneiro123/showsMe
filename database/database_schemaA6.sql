@@ -31,7 +31,6 @@ CREATE TABLE users (
    email TEXT NOT NULL UNIQUE,
    name TEXT NOT NULL,
    password TEXT NOT NULL,
-   promotor_code TEXT UNIQUE,
    phone_number TEXT NOT NULL UNIQUE,
    is_admin BOOLEAN NOT NULL DEFAULT FALSE,
    active BOOLEAN NOT NULL DEFAULT TRUE,
@@ -99,7 +98,6 @@ CREATE TABLE TicketType (
 CREATE TABLE TicketOrder (
    order_id SERIAL PRIMARY KEY,
    timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-   promo_code TEXT,
    buyer_id INT NOT NULL REFERENCES users (user_id) ON UPDATE CASCADE
 );
 
@@ -352,40 +350,40 @@ EXECUTE FUNCTION decrement_comment_likes();
 
 
 -- Inserts for Users
-INSERT INTO users (email, name, password, phone_number, promotor_code, is_admin, active, temporary) 
+INSERT INTO users (email, name, password, phone_number,  is_admin, active, temporary) 
 VALUES 
-  ('danielmc2116@gmail.com', 'Daniel', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', '913756968', NULL, TRUE, TRUE, FALSE),
-  ('user1@example.com', 'John Doe', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', '1234567890', NULL, FALSE, TRUE, FALSE),
-  ('user2@example.com', 'Jane Smith', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', '9876543210', NULL, FALSE, TRUE, FALSE),
-  ('user3@example.com', 'Bob Johnson', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', '5551231567', NULL, FALSE, TRUE, FALSE),
-  ('user4@example.com', 'Alice Brown', 'password4', '7890123456', NULL, FALSE, TRUE, FALSE),
-  ('user5@example.com', 'Charlie Davis', 'password5', '3216149870', NULL, FALSE, TRUE, FALSE),
-  ('user6@example.com', 'David Wilson', 'password6', '6547810123', 'promo1', FALSE, TRUE, FALSE),
-  ('user7@example.com', 'Eva Rodriguez', 'password7', '7810123456', 'promo2', FALSE, TRUE, FALSE),
-  ('user8@example.com', 'Frank Garcia', 'password8', '9871543210', 'promo3', FALSE, TRUE, FALSE),
-  ('user9@example.com', 'Grace Miller', 'password9', '1231567890', 'promo4', FALSE, TRUE, FALSE),
-  ('user10@example.com', 'Henry Lee', 'password10', '5551134567', 'promo5', FALSE, TRUE, FALSE),
-  ('admin@example.com', 'Admin User', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', '1212223333', NULL, TRUE, TRUE, FALSE),
-  ('user11@example.com', 'Isabel Lopez', 'password11', '7178889999', NULL, FALSE, TRUE, FALSE),
-  ('user12@example.com', 'Jack Turner', 'password12', '4425556666', NULL, FALSE, TRUE, FALSE),
-  ('user13@example.com', 'Kelly White', 'password13', '2233334444',  NULL, FALSE, TRUE, FALSE),
-  ('user14@example.com', 'Liam Anderson', 'password14', '1667778888',  NULL, FALSE, TRUE, FALSE),
-  ('user15@example.com', 'Mia Harris', 'password15', '3331445555',  NULL, FALSE, TRUE, FALSE),
-  ('user16@example.com', 'Nathan Moore', 'password16', '9190001111',  NULL, FALSE, TRUE, FALSE),
-  ('user17@example.com', 'Olivia Taylor', 'password17', '2112223333', NULL, FALSE, TRUE, FALSE),
-  ('user18@example.com', 'Peter Martin', 'password18', '8189990000',  NULL, FALSE, TRUE, FALSE),
-  ('user19@example.com', 'Quinn Hall', 'password19', '5553667777',  NULL, FALSE, TRUE, FALSE),
-  ('user20@example.com', 'Rachel Clark', 'password20', '2123334444',  NULL, FALSE, TRUE, FALSE),
-  ('user21@example.com', 'Samuel Allen', 'password21', '7578889999',  NULL, FALSE, TRUE, FALSE),
-  ('user22@example.com', 'Tara Turner', 'password22', '4465556666', NULL, FALSE, TRUE, FALSE),
-  ('user23@example.com', 'Ulysses Walker', 'password23', '1667178888',  NULL, FALSE, TRUE, FALSE),
-  ('user24@example.com', 'Vivian Scott', 'password24', '3324445555', NULL, FALSE, TRUE, FALSE),
-  ('user25@example.com', 'Walter Bennett', 'password25', '1990001111', NULL, FALSE, TRUE, FALSE),
-  ('user26@example.com', 'Xavier Garcia', 'password26', '1412223333',  NULL, FALSE, TRUE, FALSE),
-  ('user27@example.com', 'Yasmine Williams', 'password27', '1889990000', NULL, FALSE, TRUE, FALSE),
-  ('user28@example.com', 'Zachary Smith', 'password28', '5551667777',  NULL, FALSE, TRUE, FALSE),
-  ('user29@example.com', 'Ava Davis', 'password29', '2223334144',  NULL, FALSE, TRUE, FALSE),
-  ('user30@example.com', 'Benjamin Harris', 'password30', '7171889999', NULL, FALSE, TRUE, FALSE);
+  ('danielmc2116@gmail.com', 'Daniel', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', '913756968', TRUE, TRUE, FALSE),
+  ('user1@example.com', 'John Doe', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', '1234567890',  FALSE, TRUE, FALSE),
+  ('user2@example.com', 'Jane Smith', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', '9876543210',  FALSE, TRUE, FALSE),
+  ('user3@example.com', 'Bob Johnson', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', '5551231567', FALSE, TRUE, FALSE),
+  ('user4@example.com', 'Alice Brown', 'password4', '7890123456',  FALSE, TRUE, FALSE),
+  ('user5@example.com', 'Charlie Davis', 'password5', '3216149870',  FALSE, TRUE, FALSE),
+  ('user6@example.com', 'David Wilson', 'password6', '6547810123',  FALSE, TRUE, FALSE),
+  ('user7@example.com', 'Eva Rodriguez', 'password7', '7810123456',  FALSE, TRUE, FALSE),
+  ('user8@example.com', 'Frank Garcia', 'password8', '9871543210',  FALSE, TRUE, FALSE),
+  ('user9@example.com', 'Grace Miller', 'password9', '1231567890',  FALSE, TRUE, FALSE),
+  ('user10@example.com', 'Henry Lee', 'password10', '5551134567',  FALSE, TRUE, FALSE),
+  ('admin@example.com', 'Admin User', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', '1212223333',  TRUE, TRUE, FALSE),
+  ('user11@example.com', 'Isabel Lopez', 'password11', '7178889999',  FALSE, TRUE, FALSE),
+  ('user12@example.com', 'Jack Turner', 'password12', '4425556666',  FALSE, TRUE, FALSE),
+  ('user13@example.com', 'Kelly White', 'password13', '2233334444',  FALSE, TRUE, FALSE),
+  ('user14@example.com', 'Liam Anderson', 'password14', '1667778888',  FALSE, TRUE, FALSE),
+  ('user15@example.com', 'Mia Harris', 'password15', '3331445555',  FALSE, TRUE, FALSE),
+  ('user16@example.com', 'Nathan Moore', 'password16', '9190001111',  FALSE, TRUE, FALSE),
+  ('user17@example.com', 'Olivia Taylor', 'password17', '2112223333',  FALSE, TRUE, FALSE),
+  ('user18@example.com', 'Peter Martin', 'password18', '8189990000',  FALSE, TRUE, FALSE),
+  ('user19@example.com', 'Quinn Hall', 'password19', '5553667777',   FALSE, TRUE, FALSE),
+  ('user20@example.com', 'Rachel Clark', 'password20', '2123334444',   FALSE, TRUE, FALSE),
+  ('user21@example.com', 'Samuel Allen', 'password21', '7578889999',   FALSE, TRUE, FALSE),
+  ('user22@example.com', 'Tara Turner', 'password22', '4465556666',  FALSE, TRUE, FALSE),
+  ('user23@example.com', 'Ulysses Walker', 'password23', '1667178888',   FALSE, TRUE, FALSE),
+  ('user24@example.com', 'Vivian Scott', 'password24', '3324445555', FALSE, TRUE, FALSE),
+  ('user25@example.com', 'Walter Bennett', 'password25', '1990001111', FALSE, TRUE, FALSE),
+  ('user26@example.com', 'Xavier Garcia', 'password26', '1412223333',  FALSE, TRUE, FALSE),
+  ('user27@example.com', 'Yasmine Williams', 'password27', '1889990000', FALSE, TRUE, FALSE),
+  ('user28@example.com', 'Zachary Smith', 'password28', '5551667777',  FALSE, TRUE, FALSE),
+  ('user29@example.com', 'Ava Davis', 'password29', '2223334144',  FALSE, TRUE, FALSE),
+  ('user30@example.com', 'Benjamin Harris', 'password30', '7171889999', FALSE, TRUE, FALSE);
 
 
 -- Inserts for Realistic Events
@@ -511,72 +509,52 @@ VALUES
   ('Outdoor Concert Ticket', 180, 'Celebrate summer with live music.', TRUE, 25, '2024-02-05 17:00:00', '2024-02-06 22:00:00', 49.99, 20);
 
 -- Inserts for Ticket Orders
-INSERT INTO TicketOrder (timestamp, promo_code, buyer_id) 
+INSERT INTO TicketOrder (timestamp, buyer_id) 
 VALUES 
-  ('2023-11-01 00:00:00', NULL, 1),
-  ('2023-11-01 00:00:00', 'promo1', 1),
-  ('2023-11-01 00:00:00', NULL, 3),
-  ('2023-11-01 00:00:00', NULL, 4),
-  ('2023-11-01 00:00:00', NULL, 5),
-  ('2023-11-01 00:00:00', NULL, 6),
-  ('2023-11-01 00:00:00', 'promo1', 7),
-  ('2023-11-01 00:00:00', NULL, 8),
-  ('2023-11-01 00:00:00', 'promo2', 9),
-  ('2023-11-02 00:00:00', NULL, 10),
-  ('2023-11-02 00:00:00', NULL, 11),
-  ('2023-11-04 00:00:00', 'promo3', 12),
-  ('2023-11-05 00:00:00', NULL, 13),
-  ('2023-11-06 00:00:00', 'promo4', 14),
-  ('2023-11-01 00:00:00', NULL, 15),
-  ('2023-11-01 00:00:00', NULL, 16),
-  ('2023-11-01 00:00:00', 'promo5', 17),
-  ('2023-11-01 00:00:00', NULL, 18),
-  ('2023-11-01 00:00:00', 'promo5', 19);
+  ('2023-11-01 00:00:00', 1),
+  ('2023-11-01 00:00:00',  1),
+  ('2023-11-01 00:00:00',  3),
+  ('2023-11-01 00:00:00',  4),
+  ('2023-11-01 00:00:00',  5),
+  ('2023-11-01 00:00:00',  6),
+  ('2023-11-01 00:00:00',  7),
+  ('2023-11-01 00:00:00',  8),
+  ('2023-11-01 00:00:00',  9),
+  ('2023-11-02 00:00:00',  10),
+  ('2023-11-02 00:00:00', 11),
+  ('2023-11-04 00:00:00',  12),
+  ('2023-11-05 00:00:00',  13),
+  ('2023-11-06 00:00:00',  14),
+  ('2023-11-01 00:00:00',  15),
+  ('2023-11-01 00:00:00', 16),
+  ('2023-11-01 00:00:00',  17),
+  ('2023-11-01 00:00:00',  18),
+  ('2023-11-01 00:00:00',  19);
 
-INSERT INTO TicketOrder (timestamp, promo_code, buyer_id) 
-VALUES 
-  ('2023-11-01 00:00:00', NULL, 1),
-  ('2023-11-01 00:00:00', 'promo1', 1),
-  ('2023-11-01 00:00:00', NULL, 3),
-  ('2023-11-01 00:00:00', NULL, 4),
-  ('2023-11-01 00:00:00', NULL, 5),
-  ('2023-11-01 00:00:00', NULL, 6),
-  ('2023-11-01 00:00:00', 'promo1', 7),
-  ('2023-11-01 00:00:00', NULL, 8),
-  ('2023-11-01 00:00:00', 'promo2', 9),
-  ('2023-11-01 00:00:00', NULL, 10),
-  ('2023-11-01 00:00:00', NULL, 11),
-  ('2023-11-01 00:00:00', 'promo3', 12),
-  ('2023-11-01 00:00:00', NULL, 13),
-  ('2023-11-01 00:00:00', 'promo4', 14),
-  ('2023-11-01 00:00:00', NULL, 15),
-  ('2023-11-01 00:00:00', NULL, 16),
-  ('2023-11-01 00:00:00', 'promo5', 17),
-  ('2023-11-01 00:00:00', NULL, 18),
-  ('2023-11-01 00:00:00', 'promo5', 19);
 
-INSERT INTO TicketOrder (promo_code, buyer_id) 
+
+INSERT INTO TicketOrder ( buyer_id) 
 VALUES 
-  (NULL, 1),
-  ('promo1', 1),
-  (NULL, 3),
-  (NULL, 4),
-  (NULL, 5),
-  (NULL, 6),
-  ('promo1', 7),
-  (NULL, 8),
-  ('promo2', 9),
-  (NULL, 10),
-  (NULL, 11),
-  ('promo3', 12),
-  (NULL, 13),
-  ('promo4', 14),
-  (NULL, 15),
-  (NULL, 16),
-  ('promo5', 17),
-  (NULL, 18),
-  ('promo5', 19),
-  (NULL, 20);
+  ( 1),
+  ( 1),
+  ( 3),
+  ( 4),
+  ( 5),
+  ( 6),
+  ( 7),
+  ( 8),
+  ( 9),
+  ( 10),
+  ( 11),
+  ( 12),
+  ( 13),
+  ( 14),
+  ( 15),
+  ( 16),
+  ( 17),
+  (18),
+  (19),
+  ( 20);
 
 -- Inserts for Ticket Instances
 INSERT INTO TicketInstance (ticket_type_id, order_id) 

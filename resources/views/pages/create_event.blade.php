@@ -20,7 +20,7 @@
             <div class="form-group container-fluid">
                 <label for="name" class="form-label mt-4">Event Name:</label>
                     <input type="text" class="form-control form-field" id="name" name="name" placeholder="Type the name of the event" required>
-                </div>
+                
                 @error('name')
                     <span class="text-danger">{{ $message }}</span>
                 @enderror

@@ -215,7 +215,6 @@ class EventController extends Controller
     
         $order = new TicketOrder();
         $order->timestamp = now();
-        $order->promo_code = null;
         $order->buyer_id = $user->user_id;
         $order->save();
     
