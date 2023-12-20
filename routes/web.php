@@ -133,6 +133,7 @@ Route::controller(UserController::class)->group(function () {
 // File Upload Route
 Route::controller(FileController::class)->group(function () {
     Route::post('/file/upload', [FileController::class, 'upload'])->name('file.upload');
+    Route::delete('/delete/{type}/{id}', [FileController::class, 'delete'])->name('file.delete');
 });
 
 
@@ -164,8 +165,12 @@ Route::controller(NotificationController::class)->group(function () {
 
 Route::controller(StripeController::class)->group(function () {
     Route::get('/payment', 'showPaymentForm')->name('payment');
-    Route::post('/payment/{event_id}', 'processPayment')->name('payment');
+    Route::post('/payment', 'processPayment')->name('payment');
+    Route::post('/cart/{event_id}', 'addToCart')->name('cart');
 });
+
+Route::get('/checkout', [CheckoutController::class, 'showCheckoutPage'])
+    ->name('checkout');
 
 
 Route::get('/forgot-password', function () {

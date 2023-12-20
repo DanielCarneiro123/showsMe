@@ -46,6 +46,21 @@ function sendAjaxRequest(method, url, data, handler) {
   request.send(encodeForAjax(data));
 }
 
+function submitFormOnFileChange() {
+  document.getElementById("file-input").addEventListener("change", function() {
+      document.getElementById("upload-form").submit();
+  });
+}
+
+function makeFileContainerClickable() {
+  const fileInput = document.getElementById('file-input');
+  const fileContainer = document.getElementById('file-container');
+
+  fileContainer.addEventListener('click', function () {
+      fileInput.click();
+  });
+}
+
 
 function updateStockContent(formData, ticketTypeId) {
   document.getElementById('new_stock_' + ticketTypeId).innerHTML = formData['new_stock_' + ticketTypeId];
@@ -1291,59 +1306,6 @@ function moveCommentToPublic(commentId) {
 }
 
 
-
-
-/*
-let slideIndex = 1;
-showSlides(slideIndex);
-
-// Next/previous controls
-function plusSlides(n) {
-  showSlides(slideIndex += n);
-}
-
-
-// Thumbnail image controls
-function currentSlide(n) {
-  showSlides(slideIndex = n);
-}
-
-function showSlides(n) {
-  let i;
-  let slides = document.getElementsByClassName("mySlides");
-  let dots = document.getElementsByClassName("dot");
-  if (n > slides.length) {slideIndex = 1}
-  if (n < 1) {slideIndex = slides.length}
-  for (i = 0; i < slides.length; i++) {
-    slides[i].style.display = "none";
-  }
-  for (i = 0; i < dots.length; i++) {
-    dots[i].className = dots[i].className.replace(" active", "");
-  }
-  slides[slideIndex-1].style.display = "block";
-  dots[slideIndex-1].className += " active";
-} 
-
-
-
-var stripe = Stripe('your-publishable-key');
-var elements = stripe.elements();
-var card = elements.create('card');
-
-card.mount('#card-element');
-
-card.addEventListener('change', function(event) {
-    var displayError = document.getElementById('card-errors');
-    if (event.error) {
-        displayError.textContent = event.error.message;
-    } else {
-        displayError.textContent = '';
-    }
-});
-*/
-
-
-
 function updateEventCountByMonth() {
   // Obtém o mês atual (você pode personalizar isso conforme necessário)
   let currentMonth = new Date().getMonth() + 1;
@@ -1526,6 +1488,6 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     });
   });
-
+  submitFormOnFileChange();
 
   addEventListeners();

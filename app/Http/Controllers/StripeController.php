@@ -23,7 +23,7 @@ class StripeController extends Controller
     }
 
 
-    public function processPayment(Request $request, $eventId){
+    public function processPayment(Request $request){
         if (Auth::guest()) {
             $user = EventController.createTemporaryAccount($request);
         } else {
@@ -34,7 +34,7 @@ class StripeController extends Controller
         if (empty(array_filter($quantities, function ($quantity) {
             return $quantity > 0;
         }))) {
-            return redirect()->route('view-event', ['id' => $eventId])->with('error', 'Select at least one ticket type.');
+            return redirect()->route('checkout')->with('error', 'Select at least one ticket type.');
         }
 
         $lineItems = [];
@@ -68,17 +68,31 @@ class StripeController extends Controller
         }
 
         session(['purchase_user' => $user]);
-        session(['purchase_event_id' => $eventId]);
         session(['purchase_quantities' => $quantities]);
         Stripe::setApiKey(env('STRIPE_SECRET'));
 
         $checkoutSession = Session::create([
             "mode" => "payment",
             "success_url" => url('/purchase-tickets/'),
-            "cancel_url" => url('/view-event/' . $eventId),
+            "cancel_url" => url('/checkout/'),
             "line_items" => $lineItems,
         ]);
 
         return redirect()->to($checkoutSession->url);
     } 
+
+    public function addToCart(Request $request, $eventId){
+        $quantities = $request->input('quantity', []);
+        $cart = session()->get('cart', []);
+    
+        foreach ($quantities as $ticketTypeId => $quantity) {
+            if ($quantity > 0) {
+                $cart[$ticketTypeId] = $quantity;
+            }
+        }
+    
+        session()->put('cart', $cart);
+        
+        return redirect()->route('view-event', ['id' => $eventId])->with('success', 'Tickets successfully added to the cart!');
+    }
 }

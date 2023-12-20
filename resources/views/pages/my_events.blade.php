@@ -23,7 +23,7 @@
             <a href="{{ route('create-event') }}">
                 <div class="new-event-info">
                     <h3>Create a new Event</h3>
-                    <i class="fa-solid fa-circle-plus fa-4x"></i>
+                    <i class="fa-solid fa-circle-plus fa-4x" aria-label="Plus" ></i>
                 </div>
             </a>
         </div>
@@ -31,7 +31,7 @@
 </section>
 @else
 <section class="warning-section">
-    <i class="fa-solid fa-question"></i>
+    <i class="fa-solid fa-question" aria-label="Question" ></i>
     <p>You haven't created any events yet...</p>
     <a href="{{ route('create-event') }}" class="auth-link">Create your first event</a>
 </section>

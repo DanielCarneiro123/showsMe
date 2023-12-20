@@ -8,7 +8,7 @@
             @foreach ($faqs as $faq)
                 <div class="col-xs-6 faq-dropdown">
                     <div class="faq-title">
-                        <i class="fa-solid fa-circle-question"></i>
+                        <i class="fa-solid fa-circle-question" aria-label="Question" ></i>
                         <h3 class="faq-question">{{ $faq->question }}</h3>
                     </div>
                     <p>{{ $faq->answer }}</p>
