@@ -42,11 +42,13 @@ class EventController extends Controller
         $user = Auth::user();
 
         if ($user && $user->is_admin) {
-            $events = Event::paginate(8);
+            $events = Event::orderBy('start_timestamp', 'asc')->paginate(8);
         } else {
-            $events = Event::where('private', false)->paginate(8);
+            $events = Event::where('private', false)
+                            ->orderBy('start_timestamp', 'asc')
+                            ->paginate(8);
         }
-
+        
         $notifications = $user ? $user->notifications : [];
 
 
@@ -73,7 +75,9 @@ class EventController extends Controller
     {
         if (Auth::check()) {
             $user = Auth::user();
-            $events = Event::where('creator_id', Auth::user()->user_id)->get();
+            $events = Event::where('creator_id', Auth::user()->user_id)
+            ->orderBy('start_timestamp', 'asc')
+            ->get();
             $notifications = $user ? $user->notifications : [];
             return view('pages.my_events', compact('events', 'notifications'));
         } else {
@@ -112,7 +116,7 @@ class EventController extends Controller
     public function updateEvent(Request $request, $id)
     {
         $request->validate([
-            'edit_name' => 'required|string|max:255',
+            'edit_name' => 'required:edit_name|string|max:255',
             'edit_description' => 'nullable|string',
             'edit_location' => 'required|string',
             'edit_start_timestamp' => 'required|date',
@@ -120,6 +124,7 @@ class EventController extends Controller
            
         ], [
             'edit_end_timestamp.after' => 'The end timestamp must be a date after the start timestamp.',
+            'edit_name.required' => 'Cannot have an empty name',
          
         ]);
     
