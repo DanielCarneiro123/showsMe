@@ -244,31 +244,7 @@ class EventController extends Controller
     }
     
 
-private function createTemporaryAccount(Request $request)
-{
 
-    $request->validate([
-        'name' => 'required|string',
-        'email' => 'required|email|unique:users,email', // Ensure email is unique in the users table
-        'phone_number' => 'required|string', // You might need to adjust this based on your requirements
-    ]);
-    // Generate a random password for the temporary account
-    $randomPassword = Str::random(12);
-
-    // Create a temporary user with the provided information
-    $user = new User();
-    $user->name = $request->input('name');
-    $user->email = $request->input('email');
-    $user->phone_number = $request->input('phone_number');
-    $user->password = Hash::make($randomPassword);
-    $user->temporary = true;
-    $user->save();
-
-    // Log in the temporary user
-    Auth::login($user);
-
-    return $user;
-}
     
     public function searchEvents(Request $request)
     {

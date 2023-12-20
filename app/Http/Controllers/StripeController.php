@@ -13,6 +13,10 @@ use Illuminate\Support\Facades\Redirect;
 use App\Models\TicketOrder;
 use App\Models\TicketInstance;
 use Illuminate\Auth\Access\AuthorizationException; 
+use Illuminate\Support\Str;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash; 
+
 
 class StripeController extends Controller
 {
@@ -25,7 +29,7 @@ class StripeController extends Controller
 
     public function processPayment(Request $request){
         if (Auth::guest()) {
-            $user = EventController.createTemporaryAccount($request);
+            $user = $this->createTemporaryAccount($request);
         } else {
             $user = Auth::user();
         }
@@ -95,4 +99,31 @@ class StripeController extends Controller
         
         return redirect()->route('view-event', ['id' => $eventId])->with('success', 'Tickets successfully added to the cart!');
     }
+
+    private function createTemporaryAccount(Request $request)
+    {
+
+        $request->validate([
+            'name' => 'required|string',
+            'email' => 'required|email|unique:users,email', // Ensure email is unique in the users table
+            'phone_number' => 'required|string', // You might need to adjust this based on your requirements
+        ]);
+        // Generate a random password for the temporary account
+        $randomPassword = Str::random(12);
+
+        // Create a temporary user with the provided information
+        $user = new User();
+        $user->name = $request->input('name');
+        $user->email = $request->input('email');
+        $user->phone_number = $request->input('phone_number');
+        $user->password = Hash::make($randomPassword);
+        $user->temporary = true;
+        $user->save();
+
+        // Log in the temporary user
+        Auth::login($user);
+
+        return $user;
+    }
 }
+

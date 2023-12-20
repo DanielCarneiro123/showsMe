@@ -19,15 +19,7 @@ function addEventListeners() {
     });
   }
 
-  document.getElementById('ticket-types-container').querySelectorAll('form button').forEach(function (button) {
-    button.addEventListener('click', function (event) {
-        if (button.id !== 'buy-button') {
-            event.preventDefault();
-        }
-    });
-});
-
-}
+} 
 
 function encodeForAjax(data) {
   if (data == null) return null;
@@ -47,9 +39,13 @@ function sendAjaxRequest(method, url, data, handler) {
 }
 
 function submitFormOnFileChange() {
-  document.getElementById("file-input").addEventListener("change", function() {
-      document.getElementById("upload-form").submit();
-  });
+  var fileInput = document.getElementById("file-input");
+
+  if (fileInput) {
+      fileInput.addEventListener("change", function() {
+          document.getElementById("upload-form").submit();
+      });
+  }
 }
 
 function makeFileContainerClickable() {
@@ -667,8 +663,13 @@ function updateNotificationCount() {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-  updateNotificationCount();
+  var notificationIcon = document.querySelector('.notification-icon');
+  
+  if (notificationIcon) {
+      updateNotificationCount();
+  }
 });
+
 
 
 
@@ -800,15 +801,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
+
 function toggleCheckoutSection() {
   var checkoutSection = document.getElementById('checkout-section');
-  var buyButton = document.getElementById('buy-button');
+  var paymentButton = document.getElementById('payment-button');
   var showForm = document.getElementById('show-form')
 
   checkoutSection.style.display = 'block';
-  buyButton.style.display = 'inline';
+  paymentButton.style.display = 'inline';
   showForm.style.display = 'none';
 }
+
+
 
 
 
@@ -1382,12 +1386,22 @@ document.addEventListener('DOMContentLoaded', function () {
 
 document.addEventListener('DOMContentLoaded', function () {
   var currentDate = new Date();
-
   var formattedDate = currentDate.toISOString().slice(0, 16);
 
-  document.getElementById('ticket_start_timestamp').value = formattedDate;
-  document.getElementById('ticket_end_timestamp').value = formattedDate;
+  var ticketStartTimestampElement = document.getElementById('ticket_start_timestamp');
+
+  if (ticketStartTimestampElement) {
+      ticketStartTimestampElement.value = formattedDate;
+  }
+
+  var ticketEndTimestampElement = document.getElementById('ticket_end_timestamp');
+
+  if (ticketEndTimestampElement) {
+      ticketEndTimestampElement.value = formattedDate;
+  }
 });
+
+
 
     // Adiciona eventos de escuta aos campos de entrada numérica
     document.querySelectorAll('.numeric-input input[type="number"]').forEach(function (input) {
@@ -1422,28 +1436,6 @@ document.addEventListener('DOMContentLoaded', function () {
       
   });
 
-  
-
-  document.addEventListener('DOMContentLoaded', function () {
-
-    function loadEvents(page) {
-      sendAjaxRequest('GET', `/ajax-paginate?page=${page}`, null, function () {
-        if (this.status >= 200 && this.status < 400) {
-          document.getElementById('event-cards-section').innerHTML = this.responseText;
-        } else {
-          console.error('Failed to load events.');
-        }
-      });
-    }
-  
-    document.getElementById('event-cards-section').addEventListener('click', function (e) {
-      if (e.target.tagName === 'A' && e.target.getAttribute('class')=== 'page-link'){
-        e.preventDefault();
-        let page = e.target.getAttribute('href').split('page=')[1];
-        loadEvents(page);
-      }
-    });
-  });
 
   addEventListeners();
 

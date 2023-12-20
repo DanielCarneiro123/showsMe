@@ -1,3 +1,4 @@
+<script type="text/javascript" src={{ url('js/event.js') }} defer></script>
 @extends('layouts.app')
 
 @section('content')
@@ -263,7 +264,7 @@
 <section id="ticket-types" class="event-section">
     <h2 id="ticket_types_title"class="text-center">Ticket <span>Types</span></h2>
     @if(count($event->ticketTypes) > 0)
-    <form method="POST" action="{{ url('/cart/'.$event->event_id) }}">
+    <form method="POST" action="{{ auth()->check() ? url('/cart/'.$event->event_id) : route('payment') }}">
         @csrf
         @guest
         <div id="checkout-section" class="auth-form" style="display: none;">
@@ -370,7 +371,11 @@
 
             @guest
             <button type="button" class="btn btn-success event-button" id="show-form" onclick="toggleCheckoutSection()">
-                <i class="fa-solid fa-cart-shopping" aria-label="Shopping Cart"></i> Add To Cart
+                <i class="fa-solid fa-cart-shopping" aria-label="Shopping Cart"></i> Buy Tickets
+            </button>
+
+            <button type="submit" class="btn btn-success event-button" id="payment-button">
+                <i class="fa-solid fa-cart-shopping" aria-label="Shopping Cart"></i> Proceed to Checkout
             </button>
             @endguest
         </div>
@@ -380,7 +385,7 @@
     @endif
 
     <div class="my-event-card">
-        <div class="event-image" style="background-image: url('{{ asset('media/event_image.jpg') }}');"></div>
+        <div class="event-image" style="background-image: url('@if($event->images->isNotEmpty()){{ \App\Http\Controllers\FileController::get('event_image', $event->images->first()->event_image_id) }}@else{{ asset('media/event_image.jpg') }}@endif');"></div>
         <a href="{{ route('view-event', ['id' => $event->event_id]) }}" class="my-event-info">
             <p id="my-event-card-local">{{ $event->location }}</p>
             <p id="my-event-card-name">{{ $event->name }}</p>
@@ -388,6 +393,7 @@
             <p id="average-rating">{{ number_format($event->averageRating, 1) }} <span class="star-icon">★</span></p>
         </a>
     </div>
+
 </section>
 
 
