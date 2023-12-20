@@ -31,8 +31,6 @@
     </div>
 </div>
 
-<div class="mt-4"></div>
-
 <section id="event-overview" class="event-section">
     @if(auth()->user() && auth()->user()->is_admin)
     <button class="event-button {{ $event->private ? 'active' : '' }}" id="activate-button"

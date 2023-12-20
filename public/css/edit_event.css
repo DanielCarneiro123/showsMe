@@ -1,13 +1,10 @@
 .edit-or-create {
     max-width: 600px;
-    margin: 0 auto;
+    margin: 50px;
+    justify-self: center;
+    text-align: center;
 }
 
-.edit-or-create h2 {
-    margin-top: 2em;
-    font-size: 3em;
-    margin-bottom: 20px;
-}
 
 .edit-or-create article {
     padding: 20px;

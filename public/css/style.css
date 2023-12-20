@@ -549,6 +549,7 @@ button:hover {
     'create-ticket-title'
     'create-ticket-instance';
   justify-content: center;
+  margin:50px;
 }
 
 #create-ticket-type h2 {
@@ -815,6 +816,7 @@ button:hover {
 
 #ticket-types .my-event-card{
   grid-area: event-card;
+  max-width: 300px;
 }
 
 #ticket-types .my-event-card .my-event-info{
@@ -1184,4 +1186,5 @@ button:hover {
 
 #event-comments .my-event-card{
   grid-area: event-card;
+  max-width: 300px;
 }

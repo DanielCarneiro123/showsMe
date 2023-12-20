@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-    <h1 class="mt-4">Admin</h1>
     <div class="btn-group d-flex justify-content-center mt-3 mx-auto" role="group" aria-label="Basic radio toggle button group">
         <input type="radio" class="btn-check" name="sectionToggle" id="reportComments" autocomplete="off" checked data-section-id="report-comments">
         <label class="btn btn-outline-primary" for="reportComments">Manage Reports</label>
