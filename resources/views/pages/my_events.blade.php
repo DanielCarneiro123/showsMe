@@ -4,10 +4,12 @@
 @extends('layouts.app')
 
 @section('content')
-<section class="my-events-container" id="event-cards-section">
+<section class="my-events-container">
     @if ($events->count() > 0)
-    <h1>My <span>Events</span></h1>
-    @include('partials.my_event_cards')
+    <h1>My <span>Events</span></h1> 
+    <section id="event-cards-section">
+        @include('partials.my_event_cards')
+    </section>
 </section>
 @else
 <section class="warning-section">
