@@ -14,7 +14,6 @@
     </div>
 
 
-    <!-- Conteúdo do formulário de criação de evento para utilizadores autenticados -->
     <form method="POST" id="create-event-form" action="{{ url('/create-event') }}">
         @csrf
 
@@ -27,7 +26,6 @@
         @enderror
         </div>
 
-        <!-- Event Description -->
         <div id="create_descr" class="form-group">
             <textarea id="description" class="form-control form-field"
                 placeholder="Description" name="description"></textarea>
@@ -36,8 +34,6 @@
             @enderror
         </div>
 
-
-        <!-- Event Location -->
         <div id="create_local" class="form-group">
             <input type="text" class="form-control form-field" id="location" name="location"
                 placeholder="Location" required>
@@ -46,7 +42,6 @@
             @enderror
         </div>
 
-        <!-- Start Timestamp -->
         <div id="create_sdate" class="form-group">
             <label for="start_timestamp" class="form-label mt-4">Start Timestamp:</label>
             <input id="ticket_start_timestamp" type="datetime-local" class="form-control form-field" name="start_timestamp" required>
@@ -55,7 +50,6 @@
             @enderror
         </div>
 
-        <!-- End Timestamp -->
         <div id="create_edate" class="form-group">
             <label for="end_timestamp" class="form-label mt-4">End Timestamp:</label>
             <input id="ticket_end_timestamp" type="datetime-local" class="form-control form-field" name="end_timestamp" required>
@@ -69,7 +63,6 @@
     </form>
 
     @else
-    <!-- Mensagem para utilizadores não autenticados -->
     <div class="container">
         <div class="row">
             <section class="warning-section text-center">

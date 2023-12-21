@@ -418,7 +418,6 @@
 </section>
 
 
-<!-- Edit Event form (displayed only for the event creator) -->
 @can('updateEvent', $event)
 <section id="edit-event" class="event-section">
     <h2>Edit <span>Event</span></h2>
@@ -432,7 +431,6 @@
         </div>
         @endforeach
 
-        <!-- Form to upload new image -->
         <form id="upload-form" method="POST" action="/file/upload" enctype="multipart/form-data">
             @csrf
             <div class="image-container add-image" id="file-container">
@@ -536,7 +534,7 @@
         </div>
         @error('ticket_end_timestamp')
         <span class="text-danger">{{ $message }}</span>
-        @enderror <!-- You might want to add more fields based on your requirements -->
+        @enderror 
 
         <button type="button" class="btn btn-primary" onclick="createTicketType({{ $event->event_id }})">Create
             TicketType</button>
@@ -579,7 +577,6 @@
                 <td>
                     <p>Details</p>
                     <div class="additional-info" style="display: none;">
-                        <!-- Include the additional information here -->
                         <div class="div-compra-tipos">
                             @foreach ($orderTickets->groupBy('ticket_type_id') as $ticketType => $typeTickets)
                             @php
