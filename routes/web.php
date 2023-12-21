@@ -164,7 +164,7 @@ Route::controller(NotificationController::class)->group(function () {
 
 
 Route::controller(StripeController::class)->group(function () {
-    Route::get('/payment', 'showPaymentForm')->name('payment');
+    //Route::get('/payment', 'showPaymentForm')->name('payment');
     Route::post('/payment', 'processPayment')->name('payment');
     Route::post('/cart/{event_id}', 'addToCart')->name('cart');
 });
