@@ -1075,13 +1075,16 @@ function addNewCommentHandler() {
       authorPicture.id = 'profile-image-comment';
       authorPicture.alt = 'Profile Image';
       if (newComment.profile_image === null) {
-        // If profile_image is null, use the default_user.jpg
+       
         authorPicture.src = baseUrl + '../media/default_user.jpg';
       } else {
-        // If profile_image is not null, use the provided profile_image path
+        
         authorPicture.src = baseUrl + `../profile_image/${newComment.profile_image}`;
       }
       photoAndName.appendChild(authorPicture);
+      photoAndName.appendChild(commentAuthor);
+
+
 
       commentIconsContainer.appendChild(photoAndName);
 
@@ -1118,7 +1121,7 @@ function addNewCommentHandler() {
       iconsDiv.appendChild(deleteIcon);
 
 
-      commentIconsContainer.appendChild(commentAuthor);
+      
       commentIconsContainer.appendChild(iconsDiv);
 
       const commentText = document.createElement('p');
