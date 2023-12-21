@@ -18,8 +18,7 @@
         @csrf
 
         <div id="create_name" class="form-group">
-            <input type="text" class="form-control form-field" id="name" name="name"
-                placeholder="Event name" required>
+            <input type="text" class="form-control form-field" id="name" name="name" placeholder="Event name" required>
         </div>
         @error('name')
         <span class="text-danger">{{ $message }}</span>
@@ -27,16 +26,16 @@
         </div>
 
         <div id="create_descr" class="form-group">
-            <textarea id="description" class="form-control form-field"
-                placeholder="Description" name="description"></textarea>
+            <textarea id="description" class="form-control form-field" placeholder="Description"
+                name="description"></textarea>
             @error('description')
             <span class="text-danger">{{ $message }}</span>
             @enderror
         </div>
 
         <div id="create_local" class="form-group">
-            <input type="text" class="form-control form-field" id="location" name="location"
-                placeholder="Location" required>
+            <input type="text" class="form-control form-field" id="location" name="location" placeholder="Location"
+                required>
             @error('location')
             <span class="text-danger">{{ $message }}</span>
             @enderror
@@ -44,7 +43,8 @@
 
         <div id="create_sdate" class="form-group">
             <label for="start_timestamp" class="form-label mt-4">Start Timestamp:</label>
-            <input id="ticket_start_timestamp" type="datetime-local" class="form-control form-field" name="start_timestamp" required>
+            <input id="ticket_start_timestamp" type="datetime-local" class="form-control form-field"
+                name="start_timestamp" required min="{{ now()->format('Y-m-d\TH:i') }}">
             @error('start_timestamp')
             <span class="text-danger">{{ $message }}</span>
             @enderror
@@ -52,7 +52,8 @@
 
         <div id="create_edate" class="form-group">
             <label for="end_timestamp" class="form-label mt-4">End Timestamp:</label>
-            <input id="ticket_end_timestamp" type="datetime-local" class="form-control form-field" name="end_timestamp" required>
+            <input id="ticket_end_timestamp" type="datetime-local" class="form-control form-field" name="end_timestamp"
+                required min="{{ now()->format('Y-m-d\TH:i') }}">
             @error('end_timestamp')
             <span class="text-danger">{{ $message }}</span>
             @enderror

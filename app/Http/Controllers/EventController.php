@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash; 
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\Validator;
 
 
 
@@ -91,15 +92,21 @@ class EventController extends Controller
     public function createEvent(Request $request)
     {
         $this->authorize('createEvent', Event::class);
-
-        $request->validate([
+    
+        $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'location' => 'required|string',
-            'start_timestamp' => 'required|date',
+            'start_timestamp' => 'required|date|after_or_equal:now',
             'end_timestamp' => 'required|date|after:start_timestamp',
+        ], [
+            'start_timestamp.after_or_equal' => 'The start timestamp must be in the future.',
         ]);
-
+    
+        if ($validator->fails()) {
+            return back()->withErrors($validator)->withInput();
+        }
+    
         $event = new Event();
         $event->name = $request->input('name');
         $event->description = $request->input('description');
@@ -107,11 +114,12 @@ class EventController extends Controller
         $event->start_timestamp = $request->input('start_timestamp');
         $event->end_timestamp = $request->input('end_timestamp');
         $event->creator_id = Auth::user()->user_id; 
-
+    
         $event->save();
-
+    
         return redirect('/my-events');
     }
+    
 
     public function updateEvent(Request $request, $id)
     {
