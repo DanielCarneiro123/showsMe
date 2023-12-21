@@ -80,6 +80,7 @@
                     @endif   
                     </ul>
                     <section id='header-buttons'>
+                        <a id="cart-icon" class="text-light me-2" href="{{ route('checkout') }}"><i class="fa-solid fa-cart-shopping" aria-label="Shopping Cart"></i></a>
                         @if (Auth::check())
                         @include('partials.notification')
                         <div class="notification-icon me-3" onclick="toggleNotifications()">
@@ -88,7 +89,6 @@
                             </button>
                             <span class="notification-count"></span>
                         </div>
-                        <a id="cart-icon" class="text-light me-2" href="{{ route('checkout') }}"><i class="fa-solid fa-cart-shopping" aria-label="Shopping Cart"></i></a>
                         <div class="user-info">
                             <a id="user-header-name" class="text-light me-2" href="{{ route('profile') }}">{{ Auth::user()->name}}</a>
                             <a class="btn btn-outline-secondary" href="{{ url('/logout') }}">Logout</a>

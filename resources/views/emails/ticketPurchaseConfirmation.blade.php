@@ -1,6 +1,6 @@
 <!-- ticketPurchaseConfirmation.blade.php -->
 
-<p>Dear {{ Auth::user()->name }},</p>
+<p>Dear User,</p>
 
 <p>Thank you for your purchase! Your ticket purchase was successful.</p>
 

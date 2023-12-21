@@ -803,11 +803,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
 function toggleCheckoutSection() {
   var checkoutSection = document.getElementById('checkout-section');
-  var buyButton = document.getElementById('buy-button');
+  var buyButton = document.getElementById('checkout-button');
   var showForm = document.getElementById('show-form')
 
   checkoutSection.style.display = 'block';
-  buyButton.style.display = 'inline';
+  buyButton.style.display = 'block';
   showForm.style.display = 'none';
 }
 

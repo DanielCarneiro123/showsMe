@@ -263,51 +263,6 @@
     @if(count($event->ticketTypes) > 0)
     <form method="POST" action="{{ url('/cart/'.$event->event_id) }}">
         @csrf
-        @guest
-        <div id="checkout-section" class="auth-form" style="display: none;">
-            <div class="text-center"><label for="name">Name</label></div>
-            <div class="my-input-group">
-                <div class="icon-input">
-                    <i class="fas fa-user" aria-label="User" ></i>
-                    <input id="name" type="text" placeholder="Type your name" name="name" value="{{ old('name') }}"
-                        required autofocus>
-                </div>
-                @if ($errors->has('name'))
-                <span class="error">
-                    {{ $errors->first('name') }}
-                </span>
-                @endif
-            </div>
-
-            <div class="text-center"><label for="email">E-mail</label></div>
-            <div class="my-input-group">
-                <div class="icon-input">
-                    <i class="fas fa-envelope" aria-label="Envelope" ></i>
-                    <input id="email" type="email" placeholder="Type your email" name="email" value="{{ old('email') }}"
-                        required>
-                </div>
-                @if ($errors->has('email'))
-                <span class="error">
-                    {{ $errors->first('email') }}
-                </span>
-                @endif
-            </div>
-
-            <div class="text-center"><label for="phone">Phone Number</label></div>
-            <div class="my-input-group">
-                <div class="icon-input">
-                    <i class="fas fa-phone" aria-label="Phone" ></i>
-                    <input id="phone" type="tel" placeholder="Type your phone number" name="phone_number"
-                        value="{{ old('phone_number') }}" required pattern="[0-9]{9}">
-                </div>
-                @if ($errors->has('phone_number'))
-                <span class="error">
-                    {{ $errors->first('phone_number') }}
-                </span>
-                @endif
-            </div>
-        </div>
-        @endguest
         <br>
         <div id="ticket-types-container" class="text-center">
             @foreach ($event->ticketTypes as $ticketType)
@@ -360,17 +315,9 @@
             @endforeach
         </div>
         <div class="d-flex justify-content-center">
-            @auth
             <button type="submit" class="btn btn-success event-button" id="buy-button">
                 <i class="fa-solid fa-cart-shopping"aria-label="Shopping Cart"></i> Add To Cart
             </button>
-            @endauth
-
-            @guest
-            <button type="button" class="btn btn-success event-button" id="show-form" onclick="toggleCheckoutSection()">
-                <i class="fa-solid fa-cart-shopping" aria-label="Shopping Cart"></i> Add To Cart
-            </button>
-            @endguest
         </div>
     </form>
     @else

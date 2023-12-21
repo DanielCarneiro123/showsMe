@@ -224,7 +224,7 @@ class EventController extends Controller
                 $event = Event::findOrFail($ticketType->event_id);
     
                 // Authorize the sale for each ticket type and corresponding event
-                $this->authorize('purchaseTickets', [$event, $ticketType]);
+                //$this->authorize('purchaseTickets', [$event, $ticketType]);
     
                 for ($i = 0; $i < $quantity; $i++) {
                     $ticketInstance = new TicketInstance();
@@ -233,43 +233,22 @@ class EventController extends Controller
                     $qrCodePath = $this->generateQRCodePath($ticketInstance);
                     $ticketInstance->qr_code_path = $qrCodePath;
                     $ticketInstance->save();
-                    //Mail::to($user->email)->send(new TicketPurchaseConfirmation($ticketInstance));
+                    Mail::to($user->email)->send(new TicketPurchaseConfirmation($ticketInstance));
                 }
             }
         }
-    
+
 
         session()->forget('cart');
+
+        if (Auth::check() && $user->temporary) {
+            $user->temporary = false;
+            Auth::logout();
+        }
         return redirect()->route('my-tickets')->with('success', 'Tickets purchased successfully.');
     }
-    
 
-private function createTemporaryAccount(Request $request)
-{
 
-    $request->validate([
-        'name' => 'required|string',
-        'email' => 'required|email|unique:users,email', // Ensure email is unique in the users table
-        'phone_number' => 'required|string', // You might need to adjust this based on your requirements
-    ]);
-    // Generate a random password for the temporary account
-    $randomPassword = Str::random(12);
-
-    // Create a temporary user with the provided information
-    $user = new User();
-    $user->name = $request->input('name');
-    $user->email = $request->input('email');
-    $user->phone_number = $request->input('phone_number');
-    $user->password = Hash::make($randomPassword);
-    $user->temporary = true;
-    $user->save();
-
-    // Log in the temporary user
-    Auth::login($user);
-
-    return $user;
-}
-    
     public function searchEvents(Request $request)
     {
         if (Auth::check()) {
