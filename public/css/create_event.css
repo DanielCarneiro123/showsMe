@@ -1,22 +1,22 @@
 .warning-section {
-    padding: 60px; /* Increased padding for more space */
+    padding: 60px;
     width: 30%;
     background-color: #ddd;
-    border-radius: 12px; /* Increased border radius */
-    margin: 0 auto; /* This will center the section horizontally */
-    margin-top: 10%; /* Adjust the top margin as needed */
-    text-align: center; /* Center the text and icon */
+    border-radius: 12px;
+    margin: 0 auto;
+    margin-top: 10%; 
+    text-align: center;
 }
 
 .warning-section p {
-    margin-bottom: 15px; /* Increased margin-bottom for more space */
-    font-size: 1.2em; /* Increased font size */
+    margin-bottom: 15px;
+    font-size: 1.2em; 
 }
 
 .warning-section i {
-    font-size: 4em; /* Increased font size */
+    font-size: 4em; 
     color: #000000; 
-    padding: 30px; /* Increased padding */
+    padding: 30px;
 }
 
 #create-event-content{
