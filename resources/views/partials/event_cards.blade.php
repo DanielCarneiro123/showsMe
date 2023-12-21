@@ -1,6 +1,6 @@
 <section class="all-events-cards">
     @foreach ($events as $event)
-        <div class="event-card">
+        <div class="event-card col">
             @if ($event->images->isNotEmpty())
                 <div class="event-image" style="background-image: url('{{ \App\Http\Controllers\FileController::get('event_image', $event->images->first()->event_image_id) }}');"></div>
             @else
@@ -9,7 +9,7 @@
             <a href="{{ route('view-event', ['id' => $event->event_id]) }}" class="event-info">
                 <p id="event-card-local">{{ $event->location }}</p>
                 <p id="event-card-name">{{ $event->name }}</p>
-                <p id="event-card-date">{!! $event->start_timestamp->format('H:i, F j') !!}<br></p>
+                <p id="event-card-date">{!! $event->start_timestamp->format('H:i, F j, Y') !!}<br></p>
             </a>
         </div>
     @endforeach

@@ -951,47 +951,30 @@ function deleteCommentHandler() {
   }
 }
 
-function deleteAdminComment(event, reportedComment) {
+function deleteReportComment(event, reportedComment) {
   event.preventDefault();
-  sendAjaxRequest('post', '/delete-comment', { comment_id: reportedComment }, deleteAdminCommentHandler);
+  console.log(reportedComment);
+  sendAjaxRequest('post', '/delete-report/' + reportedComment, { report_id: reportedComment }, deleteAdminCommentHandler1);
 }
 
-function deleteAdminCommentHandler() {
+function deleteAdminCommentHandler1() {
   const response = JSON.parse(this.responseText);
   const message = response.message;
 
-  if (message && message.comment_id) {
-      const commentId = message.comment_id;
+  if (message && response.report_id) {
+      const reportId = response.report_id;
 
-      const commentElement = document.querySelector(`tr[data-report-id="${commentId}"]`);
+      const reportElement = document.querySelector(`tr[data-report-id="${reportId}"]`);
 
-      if (commentElement) {
-          commentElement.remove();
+      if (reportElement) {
+        reportElement.remove();
       } else {
-          console.error('Comment element not found in HTML:', commentId);
+          console.error('Comment element not found in HTML:', reportId);
       }
   } else {
       console.error('Invalid response structure or missing comment_id.');
   }
 }
-
-document.addEventListener('DOMContentLoaded', function () {
-  let deleteButtons = document.querySelectorAll('.delete-report');
-
-  deleteButtons.forEach(function (button) {
-      button.addEventListener('click', function () {
-          let reportId = this.dataset.reportId;
-
-          sendAjaxRequest('POST', '/delete-report/' + reportId, {reportId: reportId}, function () {
-              let row = document.getElementById('reported_comment_row_' + reportId);
-              if (row) {
-                  row.remove();
-              }
-          });
-      });
-  });
-});
-
 
 function editComment(){
   const comment = event.target.closest(".comment");

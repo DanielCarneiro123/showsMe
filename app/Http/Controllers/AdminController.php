@@ -164,7 +164,7 @@ class AdminController extends Controller
 
             $report->delete();
 
-            return response()->json(['message' => 'Report deleted successfully']);
+            return response()->json(['message' => 'Report deleted successfully', 'report_id' => $reportId]);
         } catch (QueryException $e) {
             return response()->json(['error' => 'Error deleting report'], 500);
         }

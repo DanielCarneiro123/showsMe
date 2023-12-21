@@ -329,7 +329,7 @@
                             <input class="quant" id="input{{$ticketType->ticket_type_id}}" type="number"
                                 id="quantity_{{ $ticketType->ticket_type_id }}"
                                 name="quantity[{{ $ticketType->ticket_type_id }}]" min="0"
-                                max="{{ min($ticketType->person_buying_limit, $ticketType->stock) }}">
+                                max="{{ min($ticketType->person_buying_limit, $ticketType->stock) }}" value="0" required autofocus>
                             <button class="btn-decrement">-</button>
                         </div>
 

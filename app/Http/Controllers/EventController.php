@@ -43,11 +43,11 @@ class EventController extends Controller
         $user = Auth::user();
 
         if ($user && $user->is_admin) {
-            $events = Event::orderBy('start_timestamp', 'asc')->paginate(8);
+            $events = Event::orderBy('start_timestamp', 'asc')->paginate(12);
         } else {
             $events = Event::where('private', false)
                             ->orderBy('start_timestamp', 'asc')
-                            ->paginate(8);
+                            ->paginate(12);
         }
         
         $notifications = $user ? $user->notifications : [];
@@ -61,9 +61,9 @@ class EventController extends Controller
         $user = Auth::user();
 
         if ($user && $user->is_admin) {
-            $events = Event::paginate(8);
+            $events = Event::orderBy('start_timestamp', 'asc')->paginate(12);
         } else {
-            $events = Event::where('private', false)->orderBy('start_timestamp', 'asc')->paginate(8);
+            $events = Event::where('private', false)->orderBy('start_timestamp', 'asc')->paginate(12);
         }
 
         $notifications = $user ? $user->notifications : [];

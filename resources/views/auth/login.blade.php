@@ -47,16 +47,10 @@
             Don't have an account? <a href="{{ route('register') }}" class="text-primary">Register here</a>.
         </p>
         <div class="text-center mt-3">
-            <a href="{{ route('password.forgot') }}" class="btn btn-link">
+            <a href="{{ route('password.forgot') }}" class="btn btn-link" style="text-decoration: none;">
                 Forgot your password?
             </a>
         </div>
-
-        @if (session('success'))
-            <p class="success">
-                {{ session('success') }}
-            </p>
-        @endif
     </form>
 </section>
 @endsection

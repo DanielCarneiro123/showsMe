@@ -16,13 +16,17 @@ function sendAjaxRequest(method, url, data, handler) {
 }
 
 function addEventListeners() {
-    document.getElementById('ticket-types-container').querySelectorAll('form button').forEach(function (button) {
-    button.addEventListener('click', function (event) {
-        if (button.id !== 'buy-button') {
-            event.preventDefault();
-        }
-    });
-});
+    var ticketTypesContainer = document.getElementById('ticket-types-container');
+
+    if (ticketTypesContainer) {
+        ticketTypesContainer.querySelectorAll('form button').forEach(function (button) {
+            button.addEventListener('click', function (event) {
+                if (button.id !== 'buy-button') {
+                    event.preventDefault();
+                }
+            });
+        });
+    }
 }
 
 addEventListeners();
