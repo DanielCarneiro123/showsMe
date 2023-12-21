@@ -73,10 +73,9 @@ Route::post('/send', [MailController::class, 'send']);
 Route::controller(EventController::class)->group(function () {
     Route::get('/all-events', [EventController::class, 'index'])->name('all-events');
     Route::get('/ajax-paginate',[EventController::class,'ajax_paginate'])->name('ajax-paginate');
-
-
     Route::get('/view-event/{id}', 'view')->name('view-event');
     Route::get('/my-events', 'myEvents')->name('my-events');
+    Route::get('/myevents-paginate', [EventController::class, 'myEvents_paginate'])->name('myevents-paginate');
     Route::post('/create-event', 'createEvent');
     Route::post('/update-event/{id}', 'updateEvent');
     Route::get('/purchase-tickets', [EventController::class, 'purchaseTickets'])->name('purchase-tickets');

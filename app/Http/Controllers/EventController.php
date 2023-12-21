@@ -77,14 +77,29 @@ class EventController extends Controller
             $user = Auth::user();
             $events = Event::where('creator_id', Auth::user()->user_id)
             ->orderBy('start_timestamp', 'asc')
-            ->get();
+            ->paginate(4);
             $notifications = $user ? $user->notifications : [];
             return view('pages.my_events', compact('events', 'notifications'));
         } else {
-            $events = collect();
+            $events = paginate(4);
             return view('pages.my_events', compact('events'));
         }
         
+    }
+
+    public function myEvents_paginate(Request $request)
+    {
+        if (Auth::check()) {
+            $user = Auth::user();
+            $events = Event::where('creator_id', Auth::user()->user_id)
+            ->orderBy('start_timestamp', 'asc')
+            ->paginate(4);
+            $notifications = $user ? $user->notifications : [];
+            return view('partials.my_event_cards', compact('events', 'notifications'))->render();
+        } else {
+            $events = collect()->paginate(4);
+            return view('partials.my_event_cards', compact('events'))->render();
+        }
     }
     
 
