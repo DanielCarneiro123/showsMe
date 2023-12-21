@@ -47,6 +47,29 @@ class AdminController extends Controller
         return view('pages.admin', compact('notifications', 'userCount', 'eventCount', 'reportedComments', 'activeEventCount', 'inactiveEventCount', 'eventCountByMonth', 'eventCountByDay', 'eventCountByYear', 'activeUsers', 'inactiveUsers'));
     }
 
+    public function getActiveUsersAjax(Request $request)
+    {
+        $activeUsers = User::where('active', true)->paginate(10);
+
+        if ($request->ajax()) {
+            return view('partials.active_table', compact('activeUsers'))->render();
+        }
+
+        return view('pages.admin', compact('activeUsers'));
+    }
+
+    public function getInactiveUsersAjax(Request $request)
+    {
+        $inactiveUsers = User::where('active', false)->paginate(10);
+
+        if ($request->ajax()) {
+            return view('partials.inactive_table', compact('inactiveUsers'))->render();
+        }
+
+        return view('pages.admin', compact('inactiveUsers'));
+    }
+
+
 
 
     public function deactivateUser($id)

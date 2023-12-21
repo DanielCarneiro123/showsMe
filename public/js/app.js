@@ -731,20 +731,20 @@ showSection();
 
 function showAdminSection() {
   var sectionButtons = document.querySelectorAll('.btn-check');
-  var eventSections = document.getElementsByClassName("admin-section"); 
+  var eventSections = document.getElementsByClassName("admin-section");
 
   if (!sectionButtons.length || !eventSections.length) {
-      return;
+    return;
   }
 
   for (var j = 1; j < eventSections.length; j++) {
     eventSections[j].style.display = "none";
   }
 
-  sectionButtons.forEach(function(button) {
-    button.addEventListener("click", function() {
+  sectionButtons.forEach(function (button) {
+    button.addEventListener("click", function () {
       console.log(this);
-      
+
       var sectionId = this.getAttribute("data-section-id");
       console.log("Section ID:", sectionId);
 
@@ -754,14 +754,18 @@ function showAdminSection() {
         eventSections[j].style.display = "none";
       }
 
-      if (currentSection) {
-        currentSection.style.display = "block";
+      console.log("Current Section:", currentSection);
+      if (sectionId === 'manage-users' && currentSection) {
+        currentSection.style.display = "flex";
+        console.log("Displaying section with ID:", sectionId);
+      } else if (currentSection) {
+        currentSection.style.display = "grid";
         console.log("Displaying section with ID:", sectionId);
       } else {
         console.log("Section not found with ID:", sectionId);
       }
 
-      sectionButtons.forEach(function(btn) {
+      sectionButtons.forEach(function (btn) {
         btn.parentElement.classList.remove("selected");
       });
 
@@ -770,6 +774,7 @@ function showAdminSection() {
     });
   });
 }
+
 
 
 

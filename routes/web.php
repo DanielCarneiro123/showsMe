@@ -117,6 +117,7 @@ Route::controller(AdminController::class)->group(function () {
     Route::get('/getEventCountByMonth/{month}', [AdminController::class, 'getEventCountByMonth']);
     Route::get('/getEventCountByDay/{day}', [AdminController::class, 'getEventCountByDay']);
     Route::get('/getEventCountByYear/{year}', [AdminController::class, 'getEventCountByYear']);
+
 });
 
 

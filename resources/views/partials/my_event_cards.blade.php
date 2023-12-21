@@ -23,4 +23,6 @@
 
 <section class="mt-4"></section>
 
-{{ $events->links() }}
+<section class="pagination mt-4 justify-content-center" id="pagination-links">
+    {{ $events->links() }}
+</section>
