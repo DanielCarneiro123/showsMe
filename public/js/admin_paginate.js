@@ -28,7 +28,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   
     document.getElementById('activeUsersTable').addEventListener('click', function (e) {
-    console.log("laallaalalalal");
       if (e.target.tagName === 'A' && e.target.getAttribute('class')=== 'page-link'){
         e.preventDefault();
         let page = e.target.getAttribute('href').split('page=')[1];

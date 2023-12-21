@@ -27,7 +27,7 @@
 
         <div id="create_descr" class="form-group">
             <textarea id="description" class="form-control form-field" placeholder="Description"
-                name="description"></textarea>
+                name="description" required> </textarea>
             @error('description')
             <span class="text-danger">{{ $message }}</span>
             @enderror

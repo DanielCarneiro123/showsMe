@@ -33,9 +33,7 @@ function deleteImage(deleteIcon) {
         const responseData = JSON.parse(this.responseText);
   
         const swiperContainer = document.getElementById('event-swiper');
-        console.log(swiperContainer);
         const swiperSlides = swiperContainer.querySelectorAll('.swiper-slide');
-        console.log(swiperSlides);
         let deletedSlideIndex = -1;
   
         swiperSlides.forEach((slide, index) => {

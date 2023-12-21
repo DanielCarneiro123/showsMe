@@ -40,10 +40,10 @@
                                         <div class="ticket_first_area">
 
                                             <p id="ticket_type_name">{{ $checkoutItem['ticketType']->name }}</p>
-                                            <p id="descri">Description: {{ $checkoutItem['ticketType']->description }}</p>
-                                            <p>Price: {{ $checkoutItem['ticketType']->price }} €</p>
+                                            <p id="descri">{{ $checkoutItem['ticketType']->description }}</p>
                                             <p id="ticket_logo">show<span>s</span>me</p>
                                             <p id="ticket_start_date">{{ $checkoutItem['ticketType']->start_timestamp->format('H:i') }}</p>
+                                            <p id="ticket_end_date">{{ $checkoutItem['ticketType']->end_timestamp->format('H:i') }}</p>
                                             <p id="ticket_price_{{ $checkoutItem['ticketType']->ticket_type_id }}"> {{ $checkoutItem['ticketType']->price }}€</p>
                                         </div>
                                         <div class="line"></div>

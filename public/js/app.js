@@ -79,7 +79,6 @@ function updateStockContent(formData, ticketTypeId) {
     } else {
       const container = document.querySelector('#ticket-type-' + ticketTypeId);
       const max = container.getAttribute('data-max');
-      console.log(container.innerHTML);
       let original = container.innerHTML;
       const update = original + ` <label class="quant" id ="label${ticketTypeId}" for="quantity_${ticketTypeId}">Quantity:</label>
         <input class="quant" id ="input${ticketTypeId}" type="number" id="quantity_${ticketTypeId}" name="quantity[${ticketTypeId}]" min="0" max="${max}">
@@ -393,7 +392,6 @@ sendAjaxRequest('post', '../update-profile', formData,function () {
 }
 
 function updateTicketPageContent(ticketType) {
-  console.log(ticketType);
   let ticketTypesContainer = document.getElementById('ticket-types-container');
   let newTicketType = document.createElement('article');
   newTicketType.className = 'ticket-type';
@@ -515,7 +513,6 @@ if (activate) {
 
 function eventHandler() {
   if (this.status == 200) {
-    console.log('Ativado');
     activate.textContent = 'Deactivate Event'
     activate.classList.remove('active')
   }
@@ -523,7 +520,6 @@ function eventHandler() {
 
 function event2Handler() {
   if (this.status == 200) {
-    console.log('Desativado');
     activate.textContent = 'Activate Event'
     activate.classList.add('active')
   }
@@ -582,7 +578,6 @@ function loadNotifications(notificationsBody, callback) {
   fetch(`/get-notifications`)
     .then(response => response.json())
     .then(data => {
-      console.log(data);
 
       notificationsBody.innerHTML = '';
 
@@ -697,10 +692,8 @@ function showSection() {
 
   sectionButtons.forEach(function (button) {
     button.addEventListener("click", function () {
-      console.log(this);
 
       var sectionId = this.getAttribute("data-section-id");
-      console.log("Section ID:", sectionId);
 
       var currentSection = document.getElementById(sectionId);
 
@@ -715,9 +708,7 @@ function showSection() {
         else{
           currentSection.style.display = "grid";
         }
-        console.log("Displaying section with ID:", sectionId);
       } else {
-        console.log("Section not found with ID:", sectionId);
       }
 
       sectionButtons.forEach(function (btn) {
@@ -725,7 +716,6 @@ function showSection() {
       });
 
       this.parentElement.classList.add("selected");
-      console.log("Button marked as selected");
     });
   });
 }
@@ -746,10 +736,8 @@ function showAdminSection() {
 
   sectionButtons.forEach(function (button) {
     button.addEventListener("click", function () {
-      console.log(this);
 
       var sectionId = this.getAttribute("data-section-id");
-      console.log("Section ID:", sectionId);
 
       var currentSection = document.getElementById(sectionId);
 
@@ -757,15 +745,11 @@ function showAdminSection() {
         eventSections[j].style.display = "none";
       }
 
-      console.log("Current Section:", currentSection);
       if (sectionId === 'manage-users' && currentSection) {
         currentSection.style.display = "flex";
-        console.log("Displaying section with ID:", sectionId);
       } else if (currentSection) {
         currentSection.style.display = "grid";
-        console.log("Displaying section with ID:", sectionId);
       } else {
-        console.log("Section not found with ID:", sectionId);
       }
 
       sectionButtons.forEach(function (btn) {
@@ -773,7 +757,6 @@ function showAdminSection() {
       });
 
       this.parentElement.classList.add("selected");
-      console.log("Button marked as selected");
     });
   });
 }
@@ -898,7 +881,6 @@ event.target.outerHTML = '<i class="far fa-thumbs-up fa-regular" id="unliked" on
 }
 
 function unlikeCommentHandler() {
-  console.log(this.responseText);
   
 }
 
@@ -927,7 +909,6 @@ event.target.outerHTML = '<i class="fas fa-thumbs-up fa-solid" id="liked" onclic
 
 function deleteComment(){
    const commentID = event.target.closest('.comment').getAttribute('data-id');
-   console.log(commentID);
   event.preventDefault();
   sendAjaxRequest('post', '/delete-comment', { comment_id: commentID }, deleteCommentHandler);
 }
@@ -1332,8 +1313,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 var hasOverflow = otherTicketsPerEvent.scrollHeight > otherTicketsPerEvent.clientHeight;
 
               if (hasOverflow) {
-                console.log("oi");
-
                 otherTicketsPerEvent.style.maxHeight = '340px';
                 otherTicketsPerEvent.style.overflow = 'scroll';
                 otherSeeMoreButton.style.display = 'flex';
