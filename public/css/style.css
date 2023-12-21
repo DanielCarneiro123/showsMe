@@ -1187,3 +1187,23 @@ button:hover {
 #other_stats .admin-stats-cards {
   background-color: #efa31d;
 }
+
+#cart-icon i{
+  font-size: 2em;
+  margin-right: 15px;
+}
+
+#cart-icon:hover i{
+  text-decoration: none;
+  color: yellow; 
+}
+
+#user-header-name {
+  margin-right: 25px !important;
+  margin-left: 5px !important;
+  color: rgba(255, 255, 255, 0.55) !important;
+}
+
+#user-header-name:hover {
+  color: white !important;
+}
