@@ -1,90 +1,145 @@
 .warning-section {
-    padding: 60px; /* Increased padding for more space */
+    padding: 60px;
     width: 30%;
     background-color: #ddd;
-    border-radius: 12px; /* Increased border radius */
-    margin: 0 auto; /* This will center the section horizontally */
-    margin-top: 10%; /* Adjust the top margin as needed */
-    text-align: center; /* Center the text and icon */
+    border-radius: 12px;
+    margin: 0 auto;
+    margin-top: 10%; 
+    text-align: center;
 }
 
 .warning-section p {
-    margin-bottom: 15px; /* Increased margin-bottom for more space */
-    font-size: 1.2em; /* Increased font size */
+    margin-bottom: 15px;
+    font-size: 1.2em; 
 }
 
 .warning-section i {
-    font-size: 4em; /* Increased font size */
+    font-size: 4em; 
     color: #000000; 
-    padding: 30px; /* Increased padding */
+    padding: 30px;
 }
 
+#create-event-content{
+    display: grid;
+    grid-template-areas: 
+    'title'
+    'bar'
+    'form';
+    margin: 50px;
+}
 
+#create-event-content h2{
+    grid-area: title;
+    justify-self: center;
+    font-size: 3em;
+    margin-bottom: 50px;
+}
 
 
 #create-event-form {
-    background-color: white;
+    grid-area: form;
     border-radius: 10px;
-    width: 33%;
-    padding: 3em 3em; /* Adjusted padding */
-    margin: auto;
     border: 2px solid rgb(233, 233, 233);
-    color: rgb(0, 0, 0); /* Text color for better contrast */
+
+    max-width: 800px;
+    width: 700px;
+    justify-self: center;
+    padding: 20px;
+    margin-top: 50px;
+    
+    display: grid;
+    grid-template-areas: 
+    'name location'
+    'descri descri'
+    'sdate edate'
+    'botao botao';
+    grid-template-rows: auto 1fr auto auto auto;
+    row-gap: 30px;
+    column-gap: 30px;
+    background-color: #ddd;
 }
 
 
-
-#create-event-form label {
-    display: block;
-    margin-bottom: 8px;
-    color: #000000; /* Dark blue color */
-    font-size: larger;
-    font-weight:500;
+#create-event-form #create_name{
+    padding: 0;
+    grid-area: name;
+}
+ #create-event-form #create_name input{
+    background-color: transparent;
+    font-size: 30px;
+    font-weight: 800;
+    color: purple;
+    margin-bottom: 5px;
+    border-radius: 10px;
+}
+ #create-event-form #create_name input::placeholder{
+    color: rgba(128, 0, 128, 0.459);
 }
 
-#create-event-form button {
-    margin-top: 20px;
-    font-size: 1.2em;
-    font-weight: bold;
-    width: 100%;
-    text-decoration: none;
-    border-radius: 27px;
-    padding: 12px 15px;
+#create-event-form #create_descr{
+    padding: 0;
+    grid-area: descri;
+}
+ #create-event-form #create_descr textarea{
+    background-color: transparent;
+    font-size: 15px;
+    color: rgba(0, 0, 0, 0.5);
+    font-weight: 600;
+    background-color: transparent;
+    resize: none;
+    border-radius: 10px;
+
+}
+
+
+#create-event-form #create_local{
+    padding: 0;
+    grid-area: location;
+    justify-content: end;
+}
+ #create-event-form #create_local input{
+    background-color: transparent;
+    font-size: 30px;
+    font-weight: 600;
+    border-radius: 10px;
+
+}
+
+ #create-event-form #create_local input::placeholder{
+    color: #80008045;
+}
+
+ #create-event-form #create_sdate{
+    padding: 0;
+    grid-area: sdate;
+}
+ #create-event-form #create_sdate input{
     cursor: pointer;
-    display: inline-block;
-    background: linear-gradient(to bottom, #1279bd, #36aaf7); /* Gradient background */
-    color: #fff;
-    margin-bottom: 10px;
-    transition: transform 0.3s ease; /* Add a smooth transition effect on transform property */
+    background-color: #ffffffa9;
+    border-radius: 5px;
+    padding: 5px;
+    border-radius: 10px;
+
 }
 
-
-#create-event-form button:hover {
-    transform: scale(0.95); 
+ #create-event-form #create_edate{
+    padding: 0;
+    grid-area: edate;
+}
+ #create-event-form #create_edate input{
+    cursor: pointer;
+    background-color: #ffffffa9;
+    border-radius: 5px;
+    padding: 5px;
+    border-radius: 10px;
 }
 
-
-.icon-input textarea {
-    border: none;
-    outline: none;
-    flex: 1;
-    padding-left: 10px;
-    font-size: medium;
+ #create-event-form button{
+    margin-top: 30px;
+    justify-self: center;
+    grid-area: botao;
 }
 
-.input-group label,
-.input-group textarea,
-.input-group input,
-.input-group select {
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 16px; /* Set your preferred font size */
-    font-weight: normal; /* Set your preferred font weight */
+ #create-event-form #create_descr textarea{
+    resize: none; 
 }
-
-
-.input-group textarea::placeholder,
-.input-group input::placeholder,
-.input-group select::placeholder {
-    color: #3a3a3a;
-}
-

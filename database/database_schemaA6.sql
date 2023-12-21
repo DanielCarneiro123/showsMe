@@ -8,13 +8,12 @@ DROP TABLE IF EXISTS Notification_;
 DROP TABLE IF EXISTS Rating;
 DROP TABLE IF EXISTS Report;
 DROP TABLE IF EXISTS Comment_;
-DROP TABLE IF EXISTS TagEvent;
 DROP TABLE IF EXISTS TicketInstance;
 DROP TABLE IF EXISTS TicketType;
-DROP TABLE IF EXISTS Tag;
 DROP TABLE IF EXISTS FAQ;
 DROP TABLE IF EXISTS Event_;
 DROP TABLE IF EXISTS TicketOrder;
+DROP TABLE IF EXISTS UserLikes;
 DROP TABLE IF EXISTS users;
 
 
@@ -30,12 +29,20 @@ CREATE TABLE users (
    email TEXT NOT NULL UNIQUE,
    name TEXT NOT NULL,
    password TEXT NOT NULL,
-   promotor_code TEXT UNIQUE,
    phone_number TEXT NOT NULL UNIQUE,
    is_admin BOOLEAN NOT NULL DEFAULT FALSE,
    active BOOLEAN NOT NULL DEFAULT TRUE,
-   remember_token VARCHAR
+   temporary BOOLEAN NOT NULL DEFAULT FALSE,
+   remember_token VARCHAR,
+   profile_image VARCHAR
 );
+
+CREATE TABLE password_reset_tokens (
+   email TEXT PRIMARY KEY,
+   token TEXT,
+   created_at TIMESTAMP
+);
+
 
 CREATE TABLE Event_ (
    event_id SERIAL PRIMARY KEY,
@@ -52,8 +59,10 @@ CREATE TABLE Comment_ (
    comment_id SERIAL PRIMARY KEY,
    text TEXT,
    media BYTEA,
+   private BOOLEAN NOT NULL DEFAULT FALSE,
    event_id INT REFERENCES Event_ (event_id) ON UPDATE CASCADE,
    author_id INT REFERENCES users (user_id),
+   likes INT DEFAULT 0,
    CHECK (text IS NOT NULL OR media IS NOT NULL)
 );
 
@@ -87,32 +96,23 @@ CREATE TABLE TicketType (
 CREATE TABLE TicketOrder (
    order_id SERIAL PRIMARY KEY,
    timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-   promo_code TEXT,
    buyer_id INT NOT NULL REFERENCES users (user_id) ON UPDATE CASCADE
 );
 
 CREATE TABLE TicketInstance (
    ticket_instance_id SERIAL PRIMARY KEY,
    ticket_type_id INT NOT NULL REFERENCES TicketType (ticket_type_id) ON UPDATE CASCADE,
-   order_id INT NOT NULL REFERENCES TicketOrder(order_id) ON UPDATE CASCADE
+   order_id INT NOT NULL REFERENCES TicketOrder(order_id) ON UPDATE CASCADE,
+   qr_code_path TEXT
 );
 
-CREATE TABLE Tag (
-   tag_id SERIAL PRIMARY KEY,
-   name TEXT NOT NULL UNIQUE
-);
-                
+          
 CREATE TABLE FAQ (
    faq_id SERIAL PRIMARY KEY,
    question TEXT NOT NULL,
    answer TEXT NOT NULL
 );
 
-CREATE TABLE TagEvent (
-   event_id INT NOT NULL REFERENCES Event_ (event_id) ON UPDATE CASCADE,
-   tag_id INT NOT NULL REFERENCES Tag (tag_id),
-   PRIMARY KEY (event_id, tag_id)
-);
 
 CREATE TABLE Notification_ (
    notification_id SERIAL PRIMARY KEY,
@@ -124,11 +124,24 @@ CREATE TABLE Notification_ (
    viewed BOOLEAN NOT NULL DEFAULT FALSE,
    notification_type NotificationType NOT NULL,
    CHECK (
-      (notification_type = 'Event' AND event_id IS NOT NULL AND comment_id IS NULL AND report_id IS NULL) OR
-      (notification_type = 'Comment' AND event_id IS NULL AND comment_id IS NOT NULL AND report_id IS NULL) OR
-      (notification_type = 'Report' AND event_id IS NULL AND comment_id IS NULL AND report_id IS NOT NULL)
-   )
+    (notification_type = 'Event' AND event_id IS NOT NULL AND comment_id IS NULL AND report_id IS NULL) OR
+    (notification_type = 'Comment' AND event_id IS NOT NULL AND comment_id IS NOT NULL AND report_id IS NULL) OR
+    (notification_type = 'Report' AND event_id IS NULL AND comment_id IS NULL AND report_id IS NOT NULL)
+  )
 );
+
+CREATE TABLE EventImage (
+   event_image_id SERIAL PRIMARY KEY,
+   event_id INT NOT NULL REFERENCES Event_ (event_id) ON UPDATE CASCADE,
+   image_path VARCHAR NOT NULL
+);
+
+CREATE TABLE UserLikes (
+   user_id INT REFERENCES users (user_id) ON UPDATE CASCADE,
+   comment_id INT REFERENCES Comment_ (comment_id) ON UPDATE CASCADE,
+   PRIMARY KEY (user_id, comment_id)
+);
+
 
 CREATE INDEX start_timestamp_event ON Event_ USING btree (start_timestamp);
 
@@ -145,28 +158,18 @@ BEGIN
     NEW.tsvectors = (
       setweight(to_tsvector('english', NEW.name), 'A') ||
       setweight(to_tsvector('english', NEW.description), 'B') ||
-      setweight(to_tsvector('english', COALESCE((SELECT string_agg(Tag.name, ' ') FROM TagEvent JOIN Tag ON TagEvent.tag_id = Tag.tag_id WHERE TagEvent.event_id = NEW.event_id),' ')), 'C') ||
-      setweight(to_tsvector('english', NEW.location), 'D')
+      setweight(to_tsvector('english', NEW.location), 'C')
     );
   END IF;
 
   IF TG_OP = 'UPDATE' THEN
     IF (NEW.name <> OLD.name OR
         NEW.description <> OLD.description OR
-        (SELECT string_agg(Tag.name, ' ')
-         FROM TagEvent
-         JOIN Tag ON TagEvent.tag_id = Tag.tag_id
-         WHERE TagEvent.event_id = NEW.event_id)
-         <> (SELECT string_agg(Tag.name, ' ')
-             FROM TagEvent
-             JOIN Tag ON TagEvent.tag_id = Tag.tag_id
-             WHERE TagEvent.event_id = OLD.event_id) OR
          NEW.location <> OLD.location) THEN
 
       NEW.tsvectors = (
         setweight(to_tsvector('english', NEW.name), 'A') ||
         setweight(to_tsvector('english', NEW.description), 'B') ||
-        setweight(to_tsvector('english', COALESCE((SELECT string_agg(Tag.name, ' ') FROM TagEvent JOIN Tag ON TagEvent.tag_id = Tag.tag_id WHERE TagEvent.event_id = NEW.event_id),' ')), 'C') ||
         setweight(to_tsvector('english', NEW.location), 'D')
       );
 
@@ -177,6 +180,8 @@ BEGIN
 
   RETURN NEW;
 END $$ LANGUAGE plpgsql;
+
+
 
 CREATE TRIGGER event_search_update
 
@@ -189,8 +194,8 @@ CREATE OR REPLACE FUNCTION send_comment_notification()
 RETURNS TRIGGER AS $$
 BEGIN
   -- Insert a new notification for the event owner
-  INSERT INTO Notification_ (notified_user, comment_id, notification_type, timestamp)
-  VALUES ((SELECT creator_id FROM Event_ WHERE event_id = NEW.event_id), NEW.comment_id, 'Comment', NOW());
+  INSERT INTO Notification_ (notified_user, event_id, comment_id, notification_type, timestamp)
+  VALUES ((SELECT creator_id FROM Event_ WHERE event_id = NEW.event_id), NEW.event_id, NEW.comment_id, 'Comment', NOW());
 
   RETURN NEW;
 END;
@@ -233,10 +238,12 @@ CREATE OR REPLACE FUNCTION send_report_notification()
 RETURNS TRIGGER AS $$
 BEGIN
   -- Insert a new 'Report' type notification for every user with isAdmin = TRUE
-  INSERT INTO Notification_ (notified_user, report_id, notification_type, timestamp)
-  SELECT user_id, NEW.report_id, 'Report'::NotificationType, NOW()
-  FROM users
-  WHERE is_admin = TRUE;
+  IF NEW.report_id IS NOT NULL THEN
+    INSERT INTO Notification_ (notified_user, report_id, notification_type, timestamp)
+    SELECT user_id, NEW.report_id, 'Report'::NotificationType, NOW()
+    FROM users
+    WHERE is_admin = TRUE;
+  END IF;
 
   RETURN NEW;
 END;
@@ -283,53 +290,91 @@ BEFORE INSERT ON Report
 FOR EACH ROW
 EXECUTE FUNCTION check_duplicate_report();
 
+-- Create a trigger after insert on userlikes
+CREATE OR REPLACE FUNCTION increment_comment_likes()
+RETURNS TRIGGER AS $$
+BEGIN
+   
+    UPDATE comment_
+    SET likes = likes + 1
+    WHERE comment_id = NEW.comment_id;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER increment_comment_likes_trigger
+AFTER INSERT ON userlikes
+FOR EACH ROW
+EXECUTE FUNCTION increment_comment_likes();
+
+CREATE OR REPLACE FUNCTION decrement_comment_likes()
+RETURNS TRIGGER AS $$
+BEGIN
+    UPDATE comment_
+    SET likes = likes - 1
+    WHERE comment_id = OLD.comment_id;
+
+    RETURN OLD;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Create a trigger to decrement likes after deletion in userlikes
+CREATE TRIGGER decrement_comment_likes_trigger
+AFTER DELETE ON userlikes
+FOR EACH ROW
+EXECUTE FUNCTION decrement_comment_likes();
+
+
 
 
 -- Inserts for Users
-INSERT INTO users (email, name, password, phone_number, promotor_code, is_admin, active) 
+INSERT INTO users (email, name, password, phone_number,  is_admin, active, temporary) 
 VALUES 
-  ('user1@example.com', 'John Doe', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', '1234567890', NULL, FALSE, TRUE),
-  ('user2@example.com', 'Jane Smith', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', '9876543210', NULL, FALSE, TRUE),
-  ('user3@example.com', 'Bob Johnson', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', '5551231567', NULL, FALSE, TRUE),
-  ('user4@example.com', 'Alice Brown', 'password4', '7890123456', NULL, FALSE, TRUE),
-  ('user5@example.com', 'Charlie Davis', 'password5', '3216149870', NULL, FALSE, TRUE),
-  ('user6@example.com', 'David Wilson', 'password6', '6547810123', 'promo1', FALSE, TRUE),
-  ('user7@example.com', 'Eva Rodriguez', 'password7', '7810123456', 'promo2', FALSE, TRUE),
-  ('user8@example.com', 'Frank Garcia', 'password8', '9871543210', 'promo3', FALSE, TRUE),
-  ('user9@example.com', 'Grace Miller', 'password9', '1231567890', 'promo4', FALSE, TRUE),
-  ('user10@example.com', 'Henry Lee', 'password10', '5551134567', 'promo5', FALSE, TRUE),
-  ('admin@example.com', 'Admin User', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', '1212223333', NULL, TRUE, TRUE),
-  ('user11@example.com', 'Isabel Lopez', 'password11', '7178889999', NULL, FALSE, TRUE),
-  ('user12@example.com', 'Jack Turner', 'password12', '4425556666', NULL, FALSE, TRUE),
-  ('user13@example.com', 'Kelly White', 'password13', '2233334444',  NULL, FALSE, TRUE),
-  ('user14@example.com', 'Liam Anderson', 'password14', '1667778888',  NULL, FALSE, TRUE),
-  ('user15@example.com', 'Mia Harris', 'password15', '3331445555',  NULL, FALSE, TRUE),
-  ('user16@example.com', 'Nathan Moore', 'password16', '9190001111',  NULL, FALSE, TRUE),
-  ('user17@example.com', 'Olivia Taylor', 'password17', '2112223333', NULL, FALSE, TRUE),
-  ('user18@example.com', 'Peter Martin', 'password18', '8189990000',  NULL, FALSE, TRUE),
-  ('user19@example.com', 'Quinn Hall', 'password19', '5553667777',  NULL, FALSE, TRUE),
-  ('user20@example.com', 'Rachel Clark', 'password20', '2123334444',  NULL, FALSE, TRUE),
-  ('user21@example.com', 'Samuel Allen', 'password21', '7578889999',  NULL, FALSE, TRUE),
-  ('user22@example.com', 'Tara Turner', 'password22', '4465556666', NULL, FALSE, TRUE),
-  ('user23@example.com', 'Ulysses Walker', 'password23', '1667178888',  NULL, FALSE, TRUE),
-  ('user24@example.com', 'Vivian Scott', 'password24', '3324445555', NULL, FALSE, TRUE),
-  ('user25@example.com', 'Walter Bennett', 'password25', '1990001111', NULL, FALSE, TRUE),
-  ('user26@example.com', 'Xavier Garcia', 'password26', '1412223333',  NULL, FALSE, TRUE),
-  ('user27@example.com', 'Yasmine Williams', 'password27', '1889990000', NULL, FALSE, TRUE),
-  ('user28@example.com', 'Zachary Smith', 'password28', '5551667777',  NULL, FALSE, TRUE),
-  ('user29@example.com', 'Ava Davis', 'password29', '2223334144',  NULL, FALSE, TRUE),
-  ('user30@example.com', 'Benjamin Harris', 'password30', '7171889999', NULL, FALSE, TRUE);
+  ('danielmc2116@gmail.com', 'Daniel', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', '913756968', TRUE, TRUE, FALSE),
+  ('user1@example.com', 'John Doe', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', '1234567890',  FALSE, TRUE, FALSE),
+  ('user2@example.com', 'Jane Smith', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', '9876543210',  FALSE, TRUE, FALSE),
+  ('user3@example.com', 'Bob Johnson', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', '5551231567', FALSE, TRUE, FALSE),
+  ('user4@example.com', 'Alice Brown', 'password4', '7890123456',  FALSE, TRUE, FALSE),
+  ('user5@example.com', 'Charlie Davis', 'password5', '3216149870',  FALSE, TRUE, FALSE),
+  ('user6@example.com', 'David Wilson', 'password6', '6547810123',  FALSE, TRUE, FALSE),
+  ('user7@example.com', 'Eva Rodriguez', 'password7', '7810123456',  FALSE, TRUE, FALSE),
+  ('user8@example.com', 'Frank Garcia', 'password8', '9871543210',  FALSE, TRUE, FALSE),
+  ('user9@example.com', 'Grace Miller', 'password9', '1231567890',  FALSE, TRUE, FALSE),
+  ('user10@example.com', 'Henry Lee', 'password10', '5551134567',  FALSE, TRUE, FALSE),
+  ('admin@example.com', 'Admin User', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', '1212223333',  TRUE, TRUE, FALSE),
+  ('user11@example.com', 'Isabel Lopez', 'password11', '7178889999',  FALSE, TRUE, FALSE),
+  ('user12@example.com', 'Jack Turner', 'password12', '4425556666',  FALSE, TRUE, FALSE),
+  ('user13@example.com', 'Kelly White', 'password13', '2233334444',  FALSE, TRUE, FALSE),
+  ('user14@example.com', 'Liam Anderson', 'password14', '1667778888',  FALSE, TRUE, FALSE),
+  ('user15@example.com', 'Mia Harris', 'password15', '3331445555',  FALSE, TRUE, FALSE),
+  ('user16@example.com', 'Nathan Moore', 'password16', '9190001111',  FALSE, TRUE, FALSE),
+  ('user17@example.com', 'Olivia Taylor', 'password17', '2112223333',  FALSE, TRUE, FALSE),
+  ('user18@example.com', 'Peter Martin', 'password18', '8189990000',  FALSE, TRUE, FALSE),
+  ('user19@example.com', 'Quinn Hall', 'password19', '5553667777',   FALSE, TRUE, FALSE),
+  ('user20@example.com', 'Rachel Clark', 'password20', '2123334444',   FALSE, TRUE, FALSE),
+  ('user21@example.com', 'Samuel Allen', 'password21', '7578889999',   FALSE, TRUE, FALSE),
+  ('user22@example.com', 'Tara Turner', 'password22', '4465556666',  FALSE, TRUE, FALSE),
+  ('user23@example.com', 'Ulysses Walker', 'password23', '1667178888',   FALSE, TRUE, FALSE),
+  ('user24@example.com', 'Vivian Scott', 'password24', '3324445555', FALSE, TRUE, FALSE),
+  ('user25@example.com', 'Walter Bennett', 'password25', '1990001111', FALSE, TRUE, FALSE),
+  ('user26@example.com', 'Xavier Garcia', 'password26', '1412223333',  FALSE, TRUE, FALSE),
+  ('user27@example.com', 'Yasmine Williams', 'password27', '1889990000', FALSE, TRUE, FALSE),
+  ('user28@example.com', 'Zachary Smith', 'password28', '5551667777',  FALSE, TRUE, FALSE),
+  ('user29@example.com', 'Ava Davis', 'password29', '2223334144',  FALSE, TRUE, FALSE),
+  ('user30@example.com', 'Benjamin Harris', 'password30', '7171889999', FALSE, TRUE, FALSE);
 
 
 -- Inserts for Realistic Events
 INSERT INTO Event_ (name, location, description, private, start_timestamp, end_timestamp, creator_id) 
 VALUES 
+  ('Arena Rock Serenade', 'Rock Arena', 'Experience the magic of these classic rock with bands, including Journey, Night Ranger, Toto and Whitesnake for a night filled with heartfelt lyrics, emotional melodies and unforgettable tunes.', FALSE, '2024-06-15 18:30:00', '2024-06-15 23:59:00', 1),  
   ('Conference on Technology Innovation', 'Tech Center', 'Join us for the latest in tech innovations and discussions.', FALSE, '2023-11-01 09:00:00', '2023-11-01 17:00:00', 1),
   ('Art Exhibition: Modern Perspectives', 'City Art Gallery', 'Explore contemporary art from local and international artists.', TRUE, '2023-11-05 18:00:00', '2023-11-05 21:00:00', 2),
   ('Community Charity Run', 'City Park', 'Run for a cause and support local charities.', FALSE, '2023-11-10 08:00:00', '2023-11-10 12:00:00', 3),
-  ('Food Festival: Taste of the World', 'Downtown Square', 'Indulge in a culinary journey with flavors from around the globe.', TRUE, '2023-11-15 12:00:00', '2023-11-15 20:00:00', 4),
+  ('Food Festival: Taste of the World', 'Downtown Square', 'Indulge in a culinary journey with flavors from around the globe.', FALSE, '2023-11-15 12:00:00', '2023-11-15 20:00:00', 4),
   ('Tech Workshop: Introduction to AI', 'Innovation Hub', 'Learn the basics of Artificial Intelligence in this hands-on workshop.', FALSE, '2023-11-20 14:00:00', '2023-11-20 17:00:00', 1),
-  ('Music Concert: Jazz Fusion Night', 'Harmony Arena', 'Enjoy an evening of jazz fusion performances by talented musicians.', TRUE, '2023-11-25 19:00:00', '2023-11-25 22:00:00', 2),
+  ('Music Concert: Jazz Fusion Night', 'Harmony Arena', 'Enjoy an evening of jazz fusion performances by talented musicians.', FALSE, '2023-11-25 19:00:00', '2023-11-25 22:00:00', 2),
   ('Environmental Awareness Seminar', 'Green Hall', 'Discuss and address current environmental challenges with experts.', FALSE, '2023-11-30 10:00:00', '2023-11-30 13:00:00', 3),
   ('Fashion Show: Urban Elegance', 'Fashion Center', 'Witness the latest trends in urban fashion and style.', TRUE, '2023-12-05 15:00:00', '2023-12-05 18:00:00', 4),
   ('Startup Pitch Competition', 'Innovation Hub', 'Entrepreneurs pitch their innovative ideas to a panel of investors.', FALSE, '2023-12-10 13:00:00', '2023-12-10 17:00:00', 1),
@@ -348,8 +393,11 @@ VALUES
 -- Inserts for Comments
 INSERT INTO Comment_ (text, media, event_id, author_id) 
 VALUES 
-  ('Great event!', NULL, 1, 1),
-  ('The art was amazing!', NULL, 2, 2),
+  ('Awesome concert, loved every song!', NULL, 1, 1),
+  ('The atmosphere was electric, great performance!', NULL, 1, 2),
+  ('Good vibes all night long, would attend again!', NULL, 1, 3),
+  ('Solid lineup and fantastic sound quality!', NULL, 1, 4),
+  ('Memorable night, the bands were phenomenal!', NULL, 1, 5),
   ('I had a blast running!', NULL, 3, 3),
   ('The food was delicious!', NULL, 4, 4),
   ('Interesting workshop on AI.', NULL, 5, 5),
@@ -373,25 +421,27 @@ VALUES
 INSERT INTO Rating (rating, event_id, author_id) 
 VALUES 
   (5, 1, 1),
+  (4, 1, 2),
   (4, 2, 2),
-  (5, 3, 3),
-  (4, 4, 4),
-  (4, 5, 5),
-  (5, 6, 6),
-  (4, 7, 7),
-  (5, 8, 8),
-  (4, 9, 9),
-  (5, 10, 10),
-  (4, 11, 11),
-  (5, 12, 12),
-  (4, 13, 13),
-  (5, 14, 14),
-  (4, 15, 15),
-  (5, 16, 16),
-  (4, 17, 17),
-  (5, 18, 18),
-  (4, 19, 19),
-  (5, 20, 20);
+  (5, 2, 1),
+  (5, 3, 1),
+  (4, 4, 1),
+  (4, 5, 1),
+  (5, 6, 1),
+  (4, 7, 1),
+  (5, 8, 1),
+  (4, 9, 1),
+  (5, 10, 1),
+  (4, 11, 1),
+  (5, 12, 1),
+  (4, 13, 1),
+  (5, 14, 1),
+  (4, 15, 1),
+  (5, 16, 1),
+  (4, 17, 1),
+  (5, 18, 1),
+  (4, 19, 1),
+  (5, 20, 2);
   
   -- Inserts for Reports
 INSERT INTO Report (Type, comment_id, author_id) 
@@ -420,8 +470,8 @@ VALUES
   -- Inserts for Ticket Types
 INSERT INTO TicketType (name, stock, description, private, person_buying_limit, start_timestamp, end_timestamp, price, event_id)
 VALUES 
-  ('General Admission', 100, 'Access to the event for one person.', FALSE, 10, '2023-11-01 00:00:00', '2023-12-01 00:00:00', 25.99, 1),
-  ('VIP Pass', 50, 'Exclusive access with VIP amenities.', TRUE, 5, '2023-11-05 12:00:00', '2023-11-10 12:00:00', 99.99, 1),
+  ('Standard Access', 100, 'Get your ticket for individual entry to the concert.', FALSE, 10, '2023-12-01 00:00:00', '2023-12-15 00:00:00', 25.99, 1),
+  ('Premiere Pass', 50, 'Elevate your concert experience with exclusive VIP perks and access.', TRUE, 5, '2023-12-05 12:00:00', '2023-12-10 12:00:00', 99.99, 1),
   ('Runner''s Package', 75, 'Participate in the community charity run.', FALSE, 15, '2023-11-10 09:00:00', '2023-11-11 12:00:00', 10.00, 3),
   ('Foodie Ticket', 120, 'Taste a variety of dishes at the food festival.', TRUE, 20, '2023-11-15 18:00:00', '2023-11-16 23:59:59', 39.99, 4),
   ('Workshop Pass', 30, 'Attend workshops on AI and technology.', FALSE, 5, '2023-11-20 14:00:00', '2023-11-21 17:00:00', 49.99, 5),
@@ -442,45 +492,69 @@ VALUES
   ('Outdoor Concert Ticket', 180, 'Celebrate summer with live music.', TRUE, 25, '2024-02-05 17:00:00', '2024-02-06 22:00:00', 49.99, 20);
 
 -- Inserts for Ticket Orders
-INSERT INTO TicketOrder (promo_code, buyer_id) 
+INSERT INTO TicketOrder (timestamp, buyer_id) 
 VALUES 
-  (NULL, 1),
-  ('promo1', 1),
-  (NULL, 3),
-  (NULL, 4),
-  (NULL, 5),
-  (NULL, 6),
-  ('promo1', 7),
-  (NULL, 8),
-  ('promo2', 9),
-  (NULL, 10),
-  (NULL, 11),
-  ('promo3', 12),
-  (NULL, 13),
-  ('promo4', 14),
-  (NULL, 15),
-  (NULL, 16),
-  ('promo5', 17),
-  (NULL, 18),
-  ('promo5', 19),
-  (NULL, 20);
+  ('2023-11-01 00:00:00', 1),
+  ('2023-11-01 00:00:00',  1),
+  ('2023-11-01 00:00:00',  3),
+  ('2023-11-01 00:00:00',  4),
+  ('2023-11-01 00:00:00',  5),
+  ('2023-11-01 00:00:00',  6),
+  ('2023-11-01 00:00:00',  7),
+  ('2023-11-01 00:00:00',  8),
+  ('2023-11-01 00:00:00',  9),
+  ('2023-11-02 00:00:00',  10),
+  ('2023-11-02 00:00:00', 11),
+  ('2023-11-04 00:00:00',  12),
+  ('2023-11-05 00:00:00',  13),
+  ('2023-11-06 00:00:00',  14),
+  ('2023-11-01 00:00:00',  15),
+  ('2023-11-01 00:00:00', 16),
+  ('2023-11-01 00:00:00',  17),
+  ('2023-11-01 00:00:00',  18),
+  ('2023-11-01 00:00:00',  19);
+
+
+
+INSERT INTO TicketOrder ( buyer_id) 
+VALUES 
+  ( 1),
+  ( 1),
+  ( 3),
+  ( 4),
+  ( 5),
+  ( 6),
+  ( 7),
+  ( 8),
+  ( 9),
+  ( 10),
+  ( 11),
+  ( 12),
+  ( 13),
+  ( 14),
+  ( 15),
+  ( 16),
+  ( 17),
+  (18),
+  (19),
+  ( 20);
 
 -- Inserts for Ticket Instances
 INSERT INTO TicketInstance (ticket_type_id, order_id) 
 VALUES 
   (1, 1),
-  (2, 2),
-  (3, 3),
-  (4, 4),
-  (5, 5),
-  (6, 6),
-  (2, 7),
-  (8, 8),
-  (4, 9),
-  (10, 10),
-  (11, 11),
-  (12, 12),
-  (13, 13),
+  (1, 2),
+  (1, 3),
+  (3, 4),
+  (3, 5),
+  (3, 6),
+  (3, 7),
+  (2, 8),
+  (6, 9),
+  (6, 10),
+  (6, 11),
+  (6, 12),
+  (6, 13),
   (14, 14),
   (15, 15),
   (16, 16),
@@ -489,73 +563,6 @@ VALUES
   (19, 19),
   (20, 20);
 
--- Inserts for Tags
-INSERT INTO Tag (name) 
-VALUES 
-  ('Technology'),
-  ('Art'),
-  ('Charity'),
-  ('Food'),
-  ('Workshop'),
-  ('Music'),
-  ('Environment'),
-  ('Fashion'),
-  ('Startup'),
-  ('Film'),
-  ('Health'),
-  ('Culinary'),
-  ('Tech'),
-  ('Crafts'),
-  ('Education'),
-  ('Gaming'),
-  ('Science'),
-  ('Fashion Workshop'),
-  ('Community'),
-  ('Concert');
-  
-  -- Inserts for TagEvent
-INSERT INTO TagEvent (event_id, tag_id) 
-VALUES 
-  (1, 1),
-  (1, 13),
-  (2, 2),
-  (2, 8),
-  (3, 3),
-  (3, 18),
-  (4, 4),
-  (4, 14),
-  (5, 5),
-  (5, 12),
-  (6, 6),
-  (6, 19),
-  (7, 7),
-  (7, 11),
-  (8, 8),
-  (8, 15),
-  (9, 9),
-  (9, 16),
-  (10, 10),
-  (10, 5),
-  (11, 11),
-  (11, 20),
-  (12, 12),
-  (12, 3),
-  (13, 13),
-  (13, 17),
-  (14, 14),
-  (14, 9),
-  (15, 15),
-  (15, 7),
-  (16, 16),
-  (16, 2),
-  (17, 17),
-  (17, 10),
-  (18, 18),
-  (18, 1),
-  (19, 19),
-  (19, 4),
-  (20, 20),
-  (20, 8);
 -- Inserts for FAQs
 INSERT INTO FAQ (question, answer) 
 VALUES 
@@ -569,3 +576,12 @@ VALUES
   ('How do I leave a comment or review for an event?', 'To leave a comment or review for an event, you must be a registered user. Once logged in, navigate to the event page and use the comment section to share your thoughts or ask questions.'),
   ('Can I get a refund for purchased tickets?', 'Refund policies vary by event. Check the event details and terms and conditions before purchasing tickets. If you have questions about a specific event, contact the event organizer for more information.'),
   ('How can I promote my own event on this platform?', 'If you are interested in promoting your event on this platform, you can create an organizer account and follow the steps to add and promote your event. The platform provides tools to manage and market your events effectively.');
+
+INSERT INTO UserLikes (user_id, comment_id) 
+VALUES 
+  (2, 1);
+
+INSERT INTO EventImage (event_id, image_path) VALUES (1, 'concert_image1.jpg');
+INSERT INTO EventImage (event_id, image_path) VALUES (1, 'concert_image2.jpg');
+INSERT INTO EventImage (event_id, image_path) VALUES (1, 'concert_image3.jpg');
+INSERT INTO EventImage (event_id, image_path) VALUES (1, 'concert_image4.jpg');

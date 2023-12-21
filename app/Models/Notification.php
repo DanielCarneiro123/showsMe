@@ -10,7 +10,6 @@ class Notification extends Model
 {
     use HasFactory;
 
-    // Don't add create and update timestamps in the database.
     public $timestamps = false;
 
     /**
@@ -45,6 +44,13 @@ class Notification extends Model
      */
     protected $table = 'notification_';
 
+    /**
+     * Primary key
+     *
+     * @var string
+     */
+    protected $primaryKey = 'notification_id';
+    
     /**
      * Get the user that was notified.
      */

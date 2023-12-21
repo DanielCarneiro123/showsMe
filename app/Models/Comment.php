@@ -18,8 +18,10 @@ class Comment extends Model
     protected $fillable = [
         'text',
         'media',
+        'private',
         'event_id',
         'author_id',
+        'likes',
     ];
 
     /**
@@ -56,13 +58,34 @@ class Comment extends Model
      */
     public function author()
     {
-        return $this->belongsTo(UserClass::class, 'author_id', 'user_id');
+        return $this->belongsTo(User::class, 'author_id', 'user_id');
     }
-
-    // Comment.php (model)
 
     public function reports()
     {
         return $this->hasMany(Report::class, 'comment_id');
     }
+
+    public function isReported()
+    {
+        $userId = auth()->user()->user_id;
+
+        return $this->reports()->where('author_id', $userId)->exists();
+    }
+
+    public function notifications()
+{
+    return $this->hasMany(Notification::class, 'comment_id');
+}
+
+
+
+public function likes()
+    {
+        return $this->hasMany(UserLikes::class, 'comment_id');
+    }
+
+
+
+
 }

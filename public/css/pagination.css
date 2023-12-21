@@ -1,30 +1,24 @@
-
-
-#paginator{
-  display: flex;
+#paginator {
+  display: grid;
+  grid-area: pagination;
   gap: 20px;
   justify-content: center;
+  
+  grid-template-areas:
+  'prev numbers next';
 }
 
-.pagination{
-  display: flex;
-  gap: 10px;
+#paginator .prev{
+  grid-area: prev;
+  display: grid;
 }
 
-.previous{
-  display: flex;
-  grid-area: previous;
-  width: fit-content;
+#paginator .numbers{
+  grid-area: numbers;
+  display: grid;
 }
 
-#indexes{
-  display: flex;
-  grid-area: indexes;
-  width: fit-content;
-}
-
-.next{
+#paginator .next{
   grid-area: next;
-  display: flex;
-  width: fit-content;
+  display: grid;
 }

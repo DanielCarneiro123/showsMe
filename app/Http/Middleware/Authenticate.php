@@ -2,8 +2,10 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Event;
 use Illuminate\Auth\Middleware\Authenticate as Middleware;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class Authenticate extends Middleware
 {
@@ -13,10 +15,10 @@ class Authenticate extends Middleware
 
     protected function redirectTo(Request $request): ?string
     {
-        $protectedRoutes = ['admin', 'my-tickets', 'profile'];
+        $protectedRoutes = ['admin', 'my-tickets', 'profile', 'all-events'];
 
         if (in_array($request->route()->getName(), $protectedRoutes) && !$request->user()) {
-            return route('allevents');
+            return route('all-events');
         }
 
         return null;

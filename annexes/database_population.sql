@@ -1,37 +1,37 @@
 -- Inserts for Users
-INSERT INTO UserClass (email_address, name, password, phone_number, role, is_admin, promotor_code) 
+INSERT INTO UserClass (email_address, name, password, phone_number, role, is_admin) 
 VALUES 
-  ('user1@example.com', 'John Doe', 'password1', '1234567890', 'Event_Creator', FALSE, NULL),
-  ('user2@example.com', 'Jane Smith', 'password2', '9876543210', 'Event_Creator', FALSE, NULL),
-  ('user3@example.com', 'Bob Johnson', 'password3', '5551231567', 'Event_Creator', FALSE, NULL),
-  ('user4@example.com', 'Alice Brown', 'password4', '7890123456','Event_Creator', FALSE, NULL),
-  ('user5@example.com', 'Charlie Davis', 'password5', '3216149870', NULL, FALSE, NULL),
-  ('user6@example.com', 'David Wilson', 'password6', '6547810123', 'Event_Manager', FALSE, 'promo1'),
-  ('user7@example.com', 'Eva Rodriguez', 'password7', '7810123456', 'Event_Manager', FALSE, 'promo2'),
-  ('user8@example.com', 'Frank Garcia', 'password8', '9871543210', 'Event_Manager', FALSE, 'promo3'),
-  ('user9@example.com', 'Grace Miller', 'password9', '1231567890', 'Event_Manager', FALSE, 'promo4'),
-  ('user10@example.com', 'Henry Lee', 'password10', '5551134567', 'Event_Manager', FALSE, 'promo5'),
-  ('admin@example.com', 'Admin User', 'adminpassword', '1212223333', NULL, TRUE, NULL),
-  ('user11@example.com', 'Isabel Lopez', 'password11', '7178889999', NULL, FALSE, NULL),
-  ('user12@example.com', 'Jack Turner', 'password12', '4425556666', NULL, FALSE, NULL),
-  ('user13@example.com', 'Kelly White', 'password13', '2233334444', NULL, FALSE, NULL),
-  ('user14@example.com', 'Liam Anderson', 'password14', '1667778888', NULL, FALSE, NULL),
-  ('user15@example.com', 'Mia Harris', 'password15', '3331445555', NULL, FALSE, NULL),
-  ('user16@example.com', 'Nathan Moore', 'password16', '9190001111', NULL, FALSE, NULL),
-  ('user17@example.com', 'Olivia Taylor', 'password17', '2112223333', NULL, FALSE, NULL),
-  ('user18@example.com', 'Peter Martin', 'password18', '8189990000', NULL, FALSE, NULL),
-  ('user19@example.com', 'Quinn Hall', 'password19', '5553667777', NULL, FALSE, NULL),
-  ('user20@example.com', 'Rachel Clark', 'password20', '2123334444', NULL, FALSE, NULL),
-  ('user21@example.com', 'Samuel Allen', 'password21', '7578889999', NULL, FALSE, NULL),
-  ('user22@example.com', 'Tara Turner', 'password22', '4465556666', NULL, FALSE, NULL),
-  ('user23@example.com', 'Ulysses Walker', 'password23', '1667178888', NULL, FALSE, NULL),
-  ('user24@example.com', 'Vivian Scott', 'password24', '3324445555', NULL, FALSE, NULL),
-  ('user25@example.com', 'Walter Bennett', 'password25', '1990001111', NULL, FALSE, NULL),
-  ('user26@example.com', 'Xavier Garcia', 'password26', '1412223333', NULL, FALSE, NULL),
-  ('user27@example.com', 'Yasmine Williams', 'password27', '1889990000', NULL, FALSE, NULL),
-  ('user28@example.com', 'Zachary Smith', 'password28', '5551667777', NULL, FALSE, NULL),
-  ('user29@example.com', 'Ava Davis', 'password29', '2223334144', NULL, FALSE, NULL),
-  ('user30@example.com', 'Benjamin Harris', 'password30', '7171889999', NULL, FALSE, NULL);
+  ('user1@example.com', 'John Doe', 'password1', '1234567890', 'Event_Creator', FALSE),
+  ('user2@example.com', 'Jane Smith', 'password2', '9876543210', 'Event_Creator', FALSE),
+  ('user3@example.com', 'Bob Johnson', 'password3', '5551231567', 'Event_Creator', FALSE),
+  ('user4@example.com', 'Alice Brown', 'password4', '7890123456','Event_Creator', FALSE),
+  ('user5@example.com', 'Charlie Davis', 'password5', '3216149870', NULL, FALSE),
+  ('user6@example.com', 'David Wilson', 'password6', '6547810123', 'Event_Manager', FALSE),
+  ('user7@example.com', 'Eva Rodriguez', 'password7', '7810123456', 'Event_Manager', FALSE),
+  ('user8@example.com', 'Frank Garcia', 'password8', '9871543210', 'Event_Manager', FALSE),
+  ('user9@example.com', 'Grace Miller', 'password9', '1231567890', 'Event_Manager', FALSE),
+  ('user10@example.com', 'Henry Lee', 'password10', '5551134567', 'Event_Manager', FALSE),
+  ('admin@example.com', 'Admin User', 'adminpassword', '1212223333', NULL, TRUE),
+  ('user11@example.com', 'Isabel Lopez', 'password11', '7178889999', NULL, FALSE),
+  ('user12@example.com', 'Jack Turner', 'password12', '4425556666', NULL, FALSE),
+  ('user13@example.com', 'Kelly White', 'password13', '2233334444', NULL, FALSE),
+  ('user14@example.com', 'Liam Anderson', 'password14', '1667778888', NULL, FALSE),
+  ('user15@example.com', 'Mia Harris', 'password15', '3331445555', NULL, FALSE),
+  ('user16@example.com', 'Nathan Moore', 'password16', '9190001111', NULL, FALSE),
+  ('user17@example.com', 'Olivia Taylor', 'password17', '2112223333', NULL, FALSE),
+  ('user18@example.com', 'Peter Martin', 'password18', '8189990000', NULL, FALSE),
+  ('user19@example.com', 'Quinn Hall', 'password19', '5553667777', NULL, FALSE),
+  ('user20@example.com', 'Rachel Clark', 'password20', '2123334444', NULL, FALSE),
+  ('user21@example.com', 'Samuel Allen', 'password21', '7578889999', NULL, FALSE),
+  ('user22@example.com', 'Tara Turner', 'password22', '4465556666', NULL, FALSE),
+  ('user23@example.com', 'Ulysses Walker', 'password23', '1667178888', NULL, FALSE),
+  ('user24@example.com', 'Vivian Scott', 'password24', '3324445555', NULL, FALSE),
+  ('user25@example.com', 'Walter Bennett', 'password25', '1990001111', NULL, FALSE),
+  ('user26@example.com', 'Xavier Garcia', 'password26', '1412223333', NULL, FALSE),
+  ('user27@example.com', 'Yasmine Williams', 'password27', '1889990000', NULL, FALSE),
+  ('user28@example.com', 'Zachary Smith', 'password28', '5551667777', NULL, FALSE),
+  ('user29@example.com', 'Ava Davis', 'password29', '2223334144', NULL, FALSE),
+  ('user30@example.com', 'Benjamin Harris', 'password30', '7171889999', NULL, FALSE);
 
 -- Inserts for Realistic Events
 INSERT INTO Event_ (name, location, description, private, start_timestamp, end_timestamp, creator_id) 
@@ -154,28 +154,28 @@ VALUES
   ('Outdoor Concert Ticket', 180, 'Celebrate summer with live music.', TRUE, 25, '2024-02-05 17:00:00', '2024-02-06 22:00:00', 49.99, 20);
 
 -- Inserts for Ticket Orders
-INSERT INTO TicketOrder (promo_code, buyer_id) 
+INSERT INTO TicketOrder (buyer_id) 
 VALUES 
-  (NULL, 1),
-  ('promo1', 2),
-  (NULL, 3),
-  (NULL, 4),
-  (NULL, 5),
-  (NULL, 6),
-  ('promo1', 7),
-  (NULL, 8),
-  ('promo2', 9),
-  (NULL, 10),
-  (NULL, 11),
-  ('promo3', 12),
-  (NULL, 13),
-  ('promo4', 14),
-  (NULL, 15),
-  (NULL, 16),
-  ('promo5', 17),
-  (NULL, 18),
-  ('promo5', 19),
-  (NULL, 20);
+  ( 1),
+  ( 2),
+  ( 3),
+  ( 4),
+  ( 5),
+  (6),
+  (7),
+  (8),
+  (9),
+  ( 10),
+  ( 11),
+  ( 12),
+  ( 13),
+  ( 14),
+  ( 15),
+  (16),
+  ( 17),
+  (18),
+  ( 19),
+  ( 20);
 
 -- Inserts for Ticket Instances
 INSERT INTO TicketInstance (ticket_type_id, order_id) 
@@ -201,30 +201,6 @@ VALUES
   (19, 19),
   (20, 20);
 
--- Inserts for Tags
-INSERT INTO Tag (name) 
-VALUES 
-  ('Technology'),
-  ('Art'),
-  ('Charity'),
-  ('Food'),
-  ('Workshop'),
-  ('Music'),
-  ('Environment'),
-  ('Fashion'),
-  ('Startup'),
-  ('Film'),
-  ('Health'),
-  ('Culinary'),
-  ('Tech'),
-  ('Crafts'),
-  ('Education'),
-  ('Gaming'),
-  ('Science'),
-  ('Fashion Workshop'),
-  ('Community'),
-  ('Concert');
-  
   -- Inserts for TagEvent
 INSERT INTO TagEvent (event_id, tag_id) 
 VALUES 

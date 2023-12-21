@@ -17,6 +17,7 @@ class TicketInstance extends Model
     protected $fillable = [
         'ticket_type_id',
         'order_id',
+        'qr_code_path'
     ];
 
     /**

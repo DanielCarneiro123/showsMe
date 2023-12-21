@@ -10,7 +10,19 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use App\Models\TicketOrder;
 use App\Models\TicketInstance;
+use App\Models\Notification; 
+use App\Models\User;
 use Illuminate\Auth\Access\AuthorizationException; 
+use Illuminate\Support\Facades\Mail;
+use App\Mail\TicketPurchaseConfirmation;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Hash; 
+use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\Validator;
+
+
 
 use Illuminate\Support\Facades\DB;
 
@@ -19,8 +31,11 @@ class EventController extends Controller
     public function view($id): View
     { 
         $event = Event::findOrFail($id);
+        $user = Auth::user();
+        
+        $notifications = $user ? $user->notifications : [];
 
-        return view('pages.event', compact('event'));
+        return view('pages.event', compact('event', 'notifications'));
     }
 
     public function index(): View
@@ -28,37 +43,85 @@ class EventController extends Controller
         $user = Auth::user();
 
         if ($user && $user->is_admin) {
-            $events = Event::paginate(8);
+            $events = Event::orderBy('start_timestamp', 'asc')->paginate(12);
         } else {
-            $events = Event::where('private', false)->paginate(8);
+            $events = Event::where('private', false)
+                            ->orderBy('start_timestamp', 'asc')
+                            ->paginate(12);
+        }
+        
+        $notifications = $user ? $user->notifications : [];
+
+
+        return view('pages.all_events', compact('events', 'user', 'notifications'));
+    }
+
+    public function ajax_paginate(Request $request)
+    {
+        $user = Auth::user();
+
+        if ($user && $user->is_admin) {
+            $events = Event::orderBy('start_timestamp', 'asc')->paginate(12);
+        } else {
+            $events = Event::where('private', false)->orderBy('start_timestamp', 'asc')->paginate(12);
         }
 
-        return view('pages.all_events', compact('events', 'user'));
+        $notifications = $user ? $user->notifications : [];
+
+
+        return view('partials.event_cards', compact('events', 'user', 'notifications'))->render();
     }
 
     public function myEvents(): View
     {
         if (Auth::check()) {
-            $events = Event::where('creator_id', Auth::user()->user_id)->get();
+            $user = Auth::user();
+            $events = Event::where('creator_id', Auth::user()->user_id)
+            ->orderBy('start_timestamp', 'asc')
+            ->paginate(4);
+            $notifications = $user ? $user->notifications : [];
+            return view('pages.my_events', compact('events', 'notifications'));
         } else {
-            $events = collect();
+            $events = paginate(4);
+            return view('pages.my_events', compact('events'));
         }
-        return view('pages.my_events', compact('events'));
+        
+    }
+
+    public function myEvents_paginate(Request $request)
+    {
+        if (Auth::check()) {
+            $user = Auth::user();
+            $events = Event::where('creator_id', Auth::user()->user_id)
+            ->orderBy('start_timestamp', 'asc')
+            ->paginate(4);
+            $notifications = $user ? $user->notifications : [];
+            return view('partials.my_event_cards', compact('events', 'notifications'))->render();
+        } else {
+            $events = collect()->paginate(4);
+            return view('partials.my_event_cards', compact('events'))->render();
+        }
     }
     
 
     public function createEvent(Request $request)
     {
         $this->authorize('createEvent', Event::class);
-
-        $request->validate([
+    
+        $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'location' => 'required|string',
-            'start_timestamp' => 'required|date',
+            'start_timestamp' => 'required|date|after_or_equal:now',
             'end_timestamp' => 'required|date|after:start_timestamp',
+        ], [
+            'start_timestamp.after_or_equal' => 'The start timestamp must be in the future.',
         ]);
-
+    
+        if ($validator->fails()) {
+            return back()->withErrors($validator)->withInput();
+        }
+    
         $event = new Event();
         $event->name = $request->input('name');
         $event->description = $request->input('description');
@@ -66,16 +129,17 @@ class EventController extends Controller
         $event->start_timestamp = $request->input('start_timestamp');
         $event->end_timestamp = $request->input('end_timestamp');
         $event->creator_id = Auth::user()->user_id; 
-
+    
         $event->save();
-
+    
         return redirect('/my-events');
     }
+    
 
     public function updateEvent(Request $request, $id)
     {
         $request->validate([
-            'edit_name' => 'required|string|max:255',
+            'edit_name' => 'required:edit_name|string|max:255',
             'edit_description' => 'nullable|string',
             'edit_location' => 'required|string',
             'edit_start_timestamp' => 'required|date',
@@ -83,6 +147,7 @@ class EventController extends Controller
            
         ], [
             'edit_end_timestamp.after' => 'The end timestamp must be a date after the start timestamp.',
+            'edit_name.required' => 'Cannot have an empty name',
          
         ]);
     
@@ -108,7 +173,6 @@ class EventController extends Controller
         $event->private = true;
         $event->save();
         return response()->json(['message' => 'deactivated successfully']);
-       // return redirect()->back()->with('success', 'Event deactivated successfully.');
     }
 
     public function activateEvent(Request $request, $eventId)
@@ -118,7 +182,6 @@ class EventController extends Controller
         $event->private = false;
         $event->save();
         return response()->json(['message' => 'activated successfully']);
-//        return redirect()->back()->with('success', 'Event activated successfully.');
     }
 
     public function createTicketType(Request $request, Event $event)
@@ -151,82 +214,145 @@ class EventController extends Controller
         return response()->json(['message' => 'TicketType created successfully', 'ticketType' => $ticketType]);
     }
 
-
-
-    
-    
     public function showCreateEvent()
     {
-    
-        return view('pages.create_event');
+        $user = Auth::user();
+        $notifications = $user ? $user->notifications : [];
+        return view('pages.create_event', compact('notifications'));
     }
 
-    public function purchaseTickets(Request $request, $eventId)
-{
-    try {
-        $event = Event::findOrFail($eventId);
 
-        $this->authorize('purchaseTickets', $event);
-
-        $quantities = $request->input('quantity', []);
-
+    public function purchaseTickets(){
+        $user = session('purchase_user');
+        session()->forget('purchase_user');
+        $quantities = session('purchase_quantities');
+        session()->forget('purchase_quantities');
+    
         if (empty(array_filter($quantities, function ($quantity) {
             return $quantity > 0;
         }))) {
-            return redirect()->route('view-event', ['id' => $eventId])->with('error', 'Select at least one ticket type.');
+            return redirect()->route('checkout')->with('error', 'Select at least one ticket type.');
         }
-
-        $buyer = Auth::user();
-
+    
         $order = new TicketOrder();
         $order->timestamp = now();
-        $order->promo_code = null;
-        $order->buyer_id = $buyer->user_id;
+        $order->buyer_id = $user->user_id;
         $order->save();
-
+    
         foreach ($quantities as $ticketTypeId => $quantity) {
             if ($quantity > 0) {
-                // Obtenha o TicketType associado ao ticketTypeId
                 $ticketType = TicketType::findOrFail($ticketTypeId);
-
-                // Determine o mínimo entre stock e person_buying_limit
-                $minQuantity = min($ticketType->stock, $ticketType->person_buying_limit);
-
-                // Verifique se a quantidade é um número inteiro positivo e menor que o mínimo
-                if (is_numeric($quantity) && $quantity == (int) $quantity && $quantity > 0 && $quantity <= $minQuantity) {
-                    for ($i = 0; $i < $quantity; $i++) {
-                        $ticketInstance = new TicketInstance();
-                        $ticketInstance->ticket_type_id = $ticketTypeId;
-                        $ticketInstance->order_id = $order->order_id;
-                        $ticketInstance->save();
-                    }
-                } else {
-                    return redirect()->route('view-event', ['id' => $eventId])->with('error', 'Invalid quantity for ticket type.');
+                $event = Event::findOrFail($ticketType->event_id);
+    
+                // Authorize the sale for each ticket type and corresponding event
+                //$this->authorize('purchaseTickets', [$event, $ticketType]);
+    
+                for ($i = 0; $i < $quantity; $i++) {
+                    $ticketInstance = new TicketInstance();
+                    $ticketInstance->ticket_type_id = $ticketTypeId;
+                    $ticketInstance->order_id = $order->order_id;
+                    $qrCodePath = $this->generateQRCodePath($ticketInstance);
+                    $ticketInstance->qr_code_path = $qrCodePath;
+                    $ticketInstance->save();
+                    Mail::to($user->email)->send(new TicketPurchaseConfirmation($ticketInstance));
                 }
             }
         }
 
+
+        session()->forget('cart');
+
+        if (Auth::check() && $user->temporary) {
+            $user->temporary = false;
+            Auth::logout();
+        }
         return redirect()->route('my-tickets')->with('success', 'Tickets purchased successfully.');
-    } catch (AuthorizationException $e) {
-        return redirect()->route('login')->with('error', 'You must be logged in to purchase tickets.');
-    } catch (ModelNotFoundException $e) {
-        return redirect()->route('view-event', ['id' => $eventId])->with('error', 'Invalid ticket type.');
     }
-}
 
-    
+
     public function searchEvents(Request $request)
-{
-    $query = $request->input('query');
+    {
+        if (Auth::check()) {
+            $user = Auth::user();
+            $notifications = $user->notifications;
 
-    $events = Event::whereRaw('tsvectors @@ plainto_tsquery(?)', [$query])
-        ->orderByRaw('ts_rank(tsvectors, plainto_tsquery(?)) DESC', [$query])
-        ->paginate(10);
+            $query = $request->input('query');
 
-    return view('pages.all_events', compact('events'));
-}
+            $events = Event::whereRaw('tsvectors @@ to_tsquery(\'english\', ?)', [$query])
+                ->orderByRaw('ts_rank(tsvectors, to_tsquery(\'english\', ?)) DESC', [$query])
+                ->paginate(10);
 
+            return view('pages.all_events', compact('events', 'notifications'));
+        }
+        else {
+
+            $query = $request->input('query');
+
+            $events = Event::whereRaw('tsvectors @@ to_tsquery(\'english\', ?)', [$query])
+                ->orderByRaw('ts_rank(tsvectors, to_tsquery(\'english\', ?)) DESC', [$query])
+                ->paginate(10);
+
+            return view('pages.all_events', compact('events'));
+        } 
+    }  
+
+    private function generateQRCodePath(TicketInstance $ticketInstance)
+    {
+        $qrCode = QrCode::format('png')
+            ->size(300)
+            ->generate(route('my-tickets', ['id' => $ticketInstance->id]));
+
+        $filename = $ticketInstance->id . $ticketInstance->order_id . '_qrcode.png';
+        $path = storage_path('app/public/qrcodes/' . $filename);
+
+        Storage::disk('public')->put('qrcodes/' . $filename, $qrCode);
+
+        return 'qrcodes/' . $filename;
+    }
+
+    public function show($eventId)
+    {
+        $user = Auth::user();
+        $event = Event::findOrFail($eventId);
+        $soldTickets = $event->soldTickets();
+        $totalSoldTickets = $soldTickets->count();
+
+        $notifications = $user ? $user->notifications : [];
+
+        return view('pages.event', compact('event', 'soldTickets', 'notifications', 'totalSoldTickets'));
+    }
+
+    public function calculateAndDisplayRevenue($eventId)
+    {
+        $event = Event::findOrFail($eventId);
+        $revenue = $event->calculateRevenue();
+
+        return view('event.revenue', ['event' => $event, 'revenue' => $revenue]);
+    }
+    public function charts(Request $request, $eventId) {
+        $event = Event::findOrFail($eventId);
     
-
+        if ($request->has('type')) {
+            $type = $request->type;
+    
+            if ($type == 'tickets_chart') {
+                $chartData = $event->tickets_chart();
+                return response()->json(['moucho' => $chartData]);
+            } else if ($type == 'all_tickets_chart') {
+                $chartData = $event->all_tickets_chart();
+                return response()->json(['moucho' => $chartData]);
+            } elseif ($type == 'distribution') {
+                $pieChartData = $event->tickets_pie_chart();
+                return response()->json(['moucho' => $pieChartData]);
+            }
+        } elseif ($request->has('canvaId')) {
+            $subtype = $request->canvaId; 
+            $canvas = $request->canva;  
+            $pieChartsData = $event->per_sold_tickets_pie_chart($subtype);
+            return response()->json(['moucho' => $pieChartsData, 'chart_id' => $subtype, 'canvas' => $canvas]);
+        }
+    
+        return response()->json(['error' => 'Invalid chart type']);
+    }  
 }
 ?>

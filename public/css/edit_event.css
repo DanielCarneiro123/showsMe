@@ -1,30 +1,47 @@
-.edit-event {
-    max-width: 600px;
-    margin: 0 auto;
+#edit-event{
+    margin: 50px;
+    display: grid;
+    grid-template-areas:
+    'title'
+    'images'
+    'edit';
+    width: fit-content;
+    justify-self: center;
 }
 
-.edit-event h2 {
-    margin-top: 2em;
-    font-size: 3em;
-    margin-bottom: 20px;
+#edit-event h2{
+    grid-area: title;
+    justify-self: center;
+}
+#edit-event #edit-event-images{
+    grid-area: images;
+    justify-self: center;
+}
+.edit-or-create {
+    max-width: 800px;
+    margin: 50px;
+    width: 700px;
+    justify-self: center;
 }
 
-.edit-event article {
+
+.edit-or-create article {
     padding: 20px;
     background-color: var(--gray);
     border: 1px solid #ddd;
     border-radius: 8px;
 }
 
-.edit-event label {
+.edit-or-create label {
     display: block;
     margin-bottom: 8px;
     font-weight: bold;
 }
 
-.edit-event input[type="text"],
-.edit-event textarea,
-.edit-event input[type="datetime-local"] {
+.edit-or-create input[type="text"],
+.edit-or-create input[type="number"],
+.edit-or-create textarea,
+.edit-or-create input[type="datetime-local"] {
     width: 100%;
     padding: 8px;
     margin-bottom: 16px;
@@ -33,7 +50,7 @@
     border-radius: 4px;
 }
 
-.edit-event textarea {
+.edit-or-create textarea {
     height: 100px;
     resize: vertical;
 }

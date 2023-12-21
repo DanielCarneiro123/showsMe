@@ -1,19 +1,3 @@
-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px 40px; 
-    background-color: var(--dark-gray);
-    color: var(--gray);
-}
-
-header a {
-    text-decoration: none;
-    color: #fff; 
-    font-size: 1.5em;
-    transition: transform 0.3s ease; 
-}
-
 #logo {
     text-decoration: none;
     color: #fff;
@@ -22,22 +6,8 @@ header a {
     display: inline-block;
 }
 
-header a:hover {
-    transform: scale(0.9);
-    color: var(--light-blue);
-}
-
-
 #logo > span {
-    color: var(--light-blue);
-}
-#header-nav {
-    display: flex;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-}
-
-#header-nav a {
-    margin: 0px 15px;
+    color: rgb(192, 148, 198);
 }
 
 #header-buttons {
@@ -45,36 +15,56 @@ header a:hover {
     align-items: center;
 }
 
-#header-buttons a.button {
-    font-size: 1.2em;
-    font-weight: bold;
-    padding: 8px 30px;
-    text-decoration: none;
-    border-radius: 15px;
-    margin-left: 1em;
-}
-
-.login {
-    background-color: var(--light-blue);
-    border: 2px solid var(--light-blue);
-    color: #fff;
-}
-
-#register {
-    background-color: rgba(0, 0, 0, 0);
-    border: 2px solid var(--light-blue);
-    color: #36aaf7;
-}
-
-#register:hover{
-    color: #fff;
-}
-
-#header-buttons a.button:hover {
-    background-color: var(--light-blue);
-    color:white;
-}
-
-#header-buttons span {
+#header-buttons a {
     margin-right: 10px;
+}
+
+#customNotificationsDropdown {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #fff;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+}
+
+#customNotificationsDropdown a {
+    color: #000;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+#customNotificationsDropdown a:hover {
+    background-color: #f5f5f5;
+}
+
+.notification-icon {
+    position: relative;
+}
+
+.notification-count {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background-color: red; 
+    color: white;
+    border-radius: 50%;
+    padding: 5px 8px;
+    font-size: 12px;
+    margin-right: 15px;
+}
+
+.notification-count {
+    transition: background-color 0.3s, color 0.3s;
+}
+
+#bell-button {
+    color: white;
+}
+
+#bell-button:hover {
+    text-decoration: none;
+    color: yellow; 
 }

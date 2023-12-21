@@ -26,7 +26,6 @@ CREATE TABLE UserClass (
    email_address TEXT NOT NULL UNIQUE,
    name TEXT NOT NULL,
    password TEXT NOT NULL,
-   promotor_code TEXT UNIQUE,
    phone_number TEXT NOT NULL UNIQUE,
    role Role_,
    is_admin BOOLEAN NOT NULL DEFAULT FALSE
@@ -82,7 +81,6 @@ CREATE TABLE TicketType (
 CREATE TABLE TicketOrder (
    order_id SERIAL PRIMARY KEY,
    timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-   promo_code TEXT,
    buyer_id INT NOT NULL REFERENCES UserClass (user_id) ON UPDATE CASCADE
 );
 
