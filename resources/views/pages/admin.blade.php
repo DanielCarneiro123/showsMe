@@ -1,3 +1,5 @@
+<script type="text/javascript" src={{ url('js/admin_paginate.js') }} defer></script>
+
 @extends('layouts.app')
 
 @section('content')
@@ -59,67 +61,27 @@
     </table>
 </div>
 
-<div class="admin-section text-center mt-4 " id="manage-users">
-    <div id="active_users_section" class="mt-4 mx-auto">
-        <h2 id="active_users_header">Active Users</h2>
-        <h3 id="activeUserCount">Total de usuários ativos: {{ count($activeUsers) }}</h3>
-        <table class="table mx-auto">
-            <thead>
-                <tr>
-                    <th>Email</th>
-                    <th>Name</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($activeUsers as $user)
-                <tr id="active_user_row_{{ $user->user_id }}">
-                    <td>{{ $user->email }}</td>
-                    <td>{{ $user->name }}</td>
-                    <td>
-                        <button class="deactivate-btn" data-user-id="{{ $user->user_id }}">Deactivate</button>
-                    </td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
+    <div class="admin-section text-center mt-4 flex-container" id="manage-users">
+        <div id="active_users_section" class="mt-4 mx-auto table-container">
+            <h2 id="active_users_header">Active Users</h2>
+            <h3 id="activeUserCount">Total Active Users: {{ count($activeUsers) }}</h3>
+            <table class="table mx-auto" id="activeUsersTable">
+                @include('partials.active_table')
+            </table>
+        </div>
+
+        <div id="inactive_users_section" class="mt-4 mx-auto table-container">
+            <h2 id="inactive_users_header">Inactive Users</h2>
+            <h3 id="inactiveUserCount">Total Inactive Users: {{ count($inactiveUsers) }}</h3>
+            <table class="table mx-auto" id="inactiveUsersTable">
+                @include('partials.inactive_table')
+            </table>
+        </div>
     </div>
-
-    <div id="inactive_users_section" class="mt-4 mx-auto">
-        <h2 id="inactive_users_header">Inactive Users</h2>
-        <h3 id="inactiveUserCount">Total de usuários inativos: {{ count($inactiveUsers) }}</h3>
-        <table class="table mx-auto">
-            <thead>
-                <tr>
-                    <th>Email</th>
-                    <th>Name</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($inactiveUsers as $user)
-                <tr id="inactive_user_row_{{ $user->user_id }}">
-                    <td>{{ $user->email }}</td>
-                    <td>{{ $user->name }}</td>
-                    <td>
-                        <button class="activate-btn" data-user-id="{{ $user->user_id }}">Activate</button>
-                    </td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
-    </div>
-</div>
-<section class="admin-section" id="admin-stats">
-
-    <section id="total_events">
-
-        <h3>Total Events</h3>
-        <div id="cards">
-            <div class="admin-stats-cards">
-                <p>Today</p>
-                <span id="eventCountByDay">{{ $eventCountByDay }}</span>
-            </div>
+    <div class="admin-section text-center" id="admin-stats">
+        <br>
+        <h2>Event Count by Month</h2>
+        <p>Total de eventos no mês atual: <span id="eventCountByMonth">{{ $eventCountByMonth }}</span></p>
 
             <div class="admin-stats-cards">
                 <p>This Month</p>

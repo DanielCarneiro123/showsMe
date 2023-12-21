@@ -1191,3 +1191,8 @@ button:hover {
 #user-header-name:hover {
   color: white !important;
 }
+
+.table-container {
+  display: inline-block; /* or use 'flex' for a flexbox layout */
+  margin-right: 20px; /* Adjust as needed to provide spacing between tables */
+}
