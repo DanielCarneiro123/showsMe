@@ -1,29 +1,23 @@
+#swiper-slide{
+    display: grid;
+    margin: 0 1rem;
+}
 .swiper-slide img {
     display: block;
+    border-radius: 20px;
     width: 100%;
-    height: 40rem;
+    height: 100%;
     object-fit: cover;
     filter: brightness(0.2);
     transition: all .3s ease-in-out;
 }
 
 .swiper-slide figure{ 
-    margin: 0 1rem;
     position: relative;
     overflow: hidden;
+    margin: 0;
 }
 
-.swiper-slide figcaption{
-    position: absolute;
-    bottom: 0;
-    color: white;
-    background-color: black;
-    display: flex;
-    justify-content: center;
-    gap: .5rem;
-    opacity: 0;
-    transition: all .3s ease-in-out;
-}
 
 .swiper-slide-active figcaption{
     opacity: 100%;
@@ -107,8 +101,9 @@
 
 
 #event-slider {
-    max-height: 80vh;
+    max-height: 60vh;
     overflow: hidden; 
+    position: relative;
   }
   
   #event-swiper {

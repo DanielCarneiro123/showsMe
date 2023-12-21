@@ -33,8 +33,10 @@ h2 span {
 #activate-button {
     top: 20px;
     right: 20px;
-    position: absolute;
+    position: relative;
     background: linear-gradient(to bottom, #1279bd, #36aaf7);
+    width: fit-content;
+    justify-self: end;
 }
 
 /*#buy-button{
@@ -486,7 +488,6 @@ input[type="radio"] {
 
 
 #tab_bar .btn-group {
-    margin-top: 40px;
     padding: 20px;
     margin-bottom: 0;
 }
@@ -576,3 +577,97 @@ input[type="radio"] {
 #payment-button{
     display: none;
 }
+
+/*overview*/
+
+#event-name{
+    padding-top: 10px;
+    padding-bottom: 20px;
+    color: white;
+    /* background-color: #593196b7; */
+    background-image: linear-gradient(180deg,  rgba(89, 49, 150, 0.9),rgba(255, 255, 255, 1));
+
+    font-weight: 700;
+    width: fit-content;
+    justify-self: center;
+    border-bottom-right-radius: 15px;
+    border-bottom-left-radius: 15px;
+}
+
+
+#event-overview{
+    display: grid;
+}
+
+
+
+.overview-info {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7); /* Adjust the background color and opacity as needed */
+    color: white;
+
+    display: grid;
+    grid-template-areas: 
+    'location'
+    'rating'
+    'descri'
+    'Sdate'
+    'Edate'
+    ;
+    grid-template-rows:auto auto 1fr auto auto ;
+    opacity: 1;
+    transition: opacity 0.6s ease;
+    padding: 30px;
+    border-radius: 40px;
+}
+
+.overview-info #description{
+    grid-area: descri;
+    justify-self: center;
+    align-self: center ;
+    font-weight: 500;
+    font-size: 20px;
+}
+
+.overview-info .ratings-event{
+    grid-area: rating;
+    justify-self: center;
+    align-self: center ;
+    font-weight: 500;
+    font-size: 25px;
+    padding-top: 20px;
+    padding-bottom: 0;
+}
+
+
+.overview-info #location{
+    grid-area: location;
+    justify-self: end;
+    font-weight: 700;
+    font-size: 25px;
+    margin-right: 30px;
+    margin-top: 30px;
+}
+
+.overview-info #ticket_start_date{
+    grid-area: Sdate;
+    justify-self: end;
+    font-weight: 500;
+    font-size: 15px;
+    margin: 0;
+}
+
+.overview-info #ticket_end_date{
+    grid-area: Edate;
+    justify-self: end;
+    font-weight: 500;
+    font-size: 15px;
+    margin: 0;
+}
+
+.swiper-slide:hover .overview-info {
+    opacity: 0;
+}
+

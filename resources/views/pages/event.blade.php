@@ -1,7 +1,16 @@
 <script type="text/javascript" src={{ url('js/event.js') }} defer></script>
 @extends('layouts.app')
 
+
+
 @section('content')
+
+<h1 id="event-name">{{ $event->name }}</h1>
+
+@if(auth()->user() && auth()->user()->is_admin)
+<button class="event-button {{ $event->private ? 'active' : '' }}" id="activate-button"
+    data-id="{{ $event->event_id }}">{{ $event->private ? 'Activate Event' : 'Deactivate Event' }}</button>
+@endif
 
 
 <div id="tab_bar" class="container-fluid">
@@ -33,42 +42,50 @@
 </div>
 
 <section id="event-overview" class="event-section">
-    @if(auth()->user() && auth()->user()->is_admin)
-    <button class="event-button {{ $event->private ? 'active' : '' }}" id="activate-button"
-        data-id="{{ $event->event_id }}">{{ $event->private ? 'Activate Event' : 'Deactivate Event' }}</button>
-    @endif
-    <!--@if(auth()->user() && auth()->user()->is_admin)
-    @if ($event->private)
-    <form method="POST" action="{{ url('/activate-event/'.$event->event_id) }}">
-        @csrf
-        <button class="event-button" id="activate-button" type="submit">
-            <i class="fa-solid fa-circle-check"></i> Activate Event
-        </button>
-    </form>
-    @else
-    <form method="POST" action="{{ url('/deactivate-event/'.$event->event_id) }}">
-        @csrf
-        <button class="event-button" id="deactivate-button" type="submit">
-            <i class="fa-solid fa-ban"></i> Deactivate Event
-        </button>
-    </form>
-    @endif
-    @endif-->
-    <h1 id="name">{{ $event->name }}</h1>
+
 
     <section id="event-slider">
         <div class="swiper" id="event-swiper">
             <div class="swiper-wrapper">
-            @foreach ($event->images as $image)
-                <div class="swiper-slide">
-                        <figure>
-                                <img src="{{ \App\Http\Controllers\FileController::get('event_image', $image->event_image_id) }}" data-event-image-id= "{{ $image->event_image_id }}" alt="Event Image">
-                                <figcaption>
-                                    Image Test
-                                </figcaption>
-                        </figure>
+                @if (count($event->images) === 0)
+                <div id="swiper-slide" class="swiper-slide">
+                    <figure>
+                        <img src="{{ asset('media/event_image.jpg') }}" alt="Default Image">
+                        <figcaption>
+                            Image Test
+                        </figcaption>
+                    </figure>
+                    <section class="overview-info">
+                        <p id="description">{{ $event->description }}</p>
+                        <section class="ratings-event">
+                            <p id="average-rating"> {{ number_format($event->averageRating, 1) }} <span
+                                    class="star-icon">★</span></p>
+                        </section>
+                        <p id="location"> {{ $event->location }}</p>
+                        <p id="ticket_start_date">Start: {{ $event->start_timestamp->format('H:i d/m ') }}</p>
+                        <p id="ticket_end_date">End: {{ $event->end_timestamp->format('H:i d/m') }}</p>
+                    </section>
                 </div>
-            @endforeach
+                @else
+                @foreach ($event->images as $image)
+                <div id="swiper-slide" class="swiper-slide">
+                    <figure>
+                        <img src="{{ \App\Http\Controllers\FileController::get('event_image', $image->event_image_id) }}"
+                            data-event-image-id="{{ $image->event_image_id }}" alt="Event Image">
+                    </figure>
+                    <section class="overview-info">
+                        <p id="description">{{ $event->description }}</p>
+                        <section class="ratings-event">
+                            <p id="average-rating"> {{ number_format($event->averageRating, 1) }} <span
+                                    class="star-icon">★</span></p>
+                        </section>
+                        <p id="location"> {{ $event->location }}</p>
+                        <p id="ticket_start_date">Start: {{ $event->start_timestamp->format('H:i d/m ') }}</p>
+                        <p id="ticket_end_date">End: {{ $event->end_timestamp->format('H:i d/m') }}</p>
+                    </section>
+                </div>
+                @endforeach
+                @endif
             </div>
             <div class="swiper-custom-nav">
                 <i id="nav-left" aria-label="Left" class="fa-solid fa-circle-arrow-left"></i>
@@ -76,16 +93,6 @@
             </div>
             <div class="swiper-custom-pagination"></div>
         </div>
-    </section>
-
-    <section>
-        <p id="description">{{ $event->description }}</p>
-        <section class="ratings-event">
-            <p id="average-rating"> Rating: {{ number_format($event->averageRating, 1) }} <span
-                    class="star-icon">★</span></p>
-
-        </section>
-        <p id="location">Location: {{ $event->location }}</p>
     </section>
 </section>
 
@@ -203,23 +210,24 @@
                     <button type="button" class="btn btn-danger" onclick="hideEditCommentModal()">Cancel</button>
                 </form>
 
-            <form id="confirmDeleteCommentForm" style="display: none;">
-            <p id="deleteCommentText" class="text-danger"> Are you sure you want to delete your comment?</p>
-            <button class="btn btn-danger" onclick="deleteComment()">Delete</button>
-            <button type="button" class="btn btn-primary" onclick="hideDeleteCommentModal()">Cancel</button>
-            </form>
+                <form id="confirmDeleteCommentForm" style="display: none;">
+                    <p id="deleteCommentText" class="text-danger"> Are you sure you want to delete your comment?</p>
+                    <button class="btn btn-danger" onclick="deleteComment()">Delete</button>
+                    <button type="button" class="btn btn-primary" onclick="hideDeleteCommentModal()">Cancel</button>
+                </form>
 
-            <div class="comment-likes-section">
-            @if(auth()->check())
-            @if(auth()->user()->likes($comment->comment_id))
-                <i class="fas fa-thumbs-up fa-solid" aria-label="Dislike" id="liked" onclick="unlikeComment()"></i>
-            @else
-                <i class="far fa-thumbs-up fa-regular"  aria-label="Like" id="unliked" onclick="likeComment()"></i>
-            @endif
-        @else
-            <i class="far fa-thumbs-up fa-regular" aria-label="Like"  id="unliked" onclick="redirectToLogin()"></i>
-        @endif
-                <p class="comment-likes">{{ $comment->likes }}</p>
+                <div class="comment-likes-section">
+                    @if(auth()->check())
+                    @if(auth()->user()->likes($comment->comment_id))
+                    <i class="fas fa-thumbs-up fa-solid" aria-label="Dislike" id="liked" onclick="unlikeComment()"></i>
+                    @else
+                    <i class="far fa-thumbs-up fa-regular" aria-label="Like" id="unliked" onclick="likeComment()"></i>
+                    @endif
+                    @else
+                    <i class="far fa-thumbs-up fa-regular" aria-label="Like" id="unliked"
+                        onclick="redirectToLogin()"></i>
+                    @endif
+                    <p class="comment-likes">{{ $comment->likes }}</p>
 
                 </div>
 
@@ -262,7 +270,7 @@
 </section>
 
 <section id="ticket-types" class="event-section">
-    <h2 id="ticket_types_title"class="text-center">Ticket <span>Types</span></h2>
+    <h2 id="ticket_types_title" class="text-center">Ticket <span>Types</span></h2>
     @if(count($event->ticketTypes) > 0)
     <form method="POST" action="{{ auth()->check() ? url('/cart/'.$event->event_id) : route('payment') }}">
         @csrf
@@ -271,7 +279,7 @@
             <div class="text-center"><label for="name">Name</label></div>
             <div class="my-input-group">
                 <div class="icon-input">
-                    <i class="fas fa-user" aria-label="User" ></i>
+                    <i class="fas fa-user" aria-label="User"></i>
                     <input id="name" type="text" placeholder="Type your name" name="name" value="{{ old('name') }}"
                         required autofocus>
                 </div>
@@ -285,7 +293,7 @@
             <div class="text-center"><label for="email">E-mail</label></div>
             <div class="my-input-group">
                 <div class="icon-input">
-                    <i class="fas fa-envelope" aria-label="Envelope" ></i>
+                    <i class="fas fa-envelope" aria-label="Envelope"></i>
                     <input id="email" type="email" placeholder="Type your email" name="email" value="{{ old('email') }}"
                         required>
                 </div>
@@ -299,7 +307,7 @@
             <div class="text-center"><label for="phone">Phone Number</label></div>
             <div class="my-input-group">
                 <div class="icon-input">
-                    <i class="fas fa-phone" aria-label="Phone" ></i>
+                    <i class="fas fa-phone" aria-label="Phone"></i>
                     <input id="phone" type="tel" placeholder="Type your phone number" name="phone_number"
                         value="{{ old('phone_number') }}" required pattern="[0-9]{9}">
                 </div>
@@ -365,7 +373,7 @@
         <div class="d-flex justify-content-center">
             @auth
             <button type="submit" class="btn btn-success event-button" id="buy-button">
-                <i class="fa-solid fa-cart-shopping"aria-label="Shopping Cart"></i> Add To Cart
+                <i class="fa-solid fa-cart-shopping" aria-label="Shopping Cart"></i> Add To Cart
             </button>
             @endauth
 
@@ -385,7 +393,9 @@
     @endif
 
     <div class="my-event-card">
-        <div class="event-image" style="background-image: url('@if($event->images->isNotEmpty()){{ \App\Http\Controllers\FileController::get('event_image', $event->images->first()->event_image_id) }}@else{{ asset('media/event_image.jpg') }}@endif');"></div>
+        <div class="event-image"
+            style="background-image: url('@if($event->images->isNotEmpty()){{ \App\Http\Controllers\FileController::get('event_image', $event->images->first()->event_image_id) }}@else{{ asset('media/event_image.jpg') }}@endif');">
+        </div>
         <a href="{{ route('view-event', ['id' => $event->event_id]) }}" class="my-event-info">
             <p id="my-event-card-local">{{ $event->location }}</p>
             <p id="my-event-card-name">{{ $event->name }}</p>
@@ -403,10 +413,12 @@
     <h2>Edit <span>Event</span></h2>
     <section id="edit-event-images">
         @foreach ($event->images as $image)
-            <div class="image-container">
-                <img src="{{ \App\Http\Controllers\FileController::get('event_image', $image->event_image_id) }}" alt="Event Image">
-                <i class="fa-solid fa-trash" data-event-image-id="{{ $image->event_image_id }}" onclick="deleteImage(this)"></i>
-            </div>
+        <div class="image-container">
+            <img src="{{ \App\Http\Controllers\FileController::get('event_image', $image->event_image_id) }}"
+                alt="Event Image">
+            <i class="fa-solid fa-trash" data-event-image-id="{{ $image->event_image_id }}"
+                onclick="deleteImage(this)"></i>
+        </div>
         @endforeach
 
         <!-- Form to upload new image -->
@@ -425,7 +437,7 @@
     <article class="edit-or-create">
         <label for="edit_name">Event Name:</label>
         <input type="text" id="edit_name" name="edit_name" value="{{ $event->name }}" required>
-        
+
         <label for="edit_description">Event Description:</label>
         <textarea id="edit_description" name="edit_description">{{ $event->description }}</textarea>
 
