@@ -32,7 +32,6 @@ function deleteImage(deleteIcon) {
       if (this.status === 200) {
         const responseData = JSON.parse(this.responseText);
   
-        // Find the swiper slide index corresponding to the deleted image
         const swiperContainer = document.getElementById('event-swiper');
         console.log(swiperContainer);
         const swiperSlides = swiperContainer.querySelectorAll('.swiper-slide');

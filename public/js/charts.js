@@ -45,10 +45,8 @@ if (dif_tickets_chart) {
             const dif_tickets_chartChartData = response.moucho;
 
             if (dif_tickets_chartChartData) {
-                // Encontre o valor máximo nos conjuntos de dados
                 const maxYValue = Math.max(...dif_tickets_chartChartData.datasets.flatMap(dataset => dataset.data));
 
-                // Adicione 10 ao valor máximo
                 const adjustedMaxYValue = maxYValue + 10;
 
                 new Chart(dif_tickets_chart, {
@@ -89,10 +87,8 @@ if (all_tickets_chart) {
             const all_tickets_ChartData = response.moucho;
 
             if (all_tickets_ChartData) {
-                // Encontre o valor máximo nos conjuntos de dados
                 const maxYValue = Math.max(...all_tickets_ChartData.datasets.flatMap(dataset => dataset.data));
 
-                // Adicione 10 ao valor máximo
                 const adjustedMaxYValue = maxYValue + 10;
 
                 new Chart(all_tickets_chart, {

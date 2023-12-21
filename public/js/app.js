@@ -570,7 +570,6 @@ function toggleNotifications() {
     bodyElement.style.overflow = 'hidden';
 
   } else {
-    //notificationsBody.innerHTML = ''; 
     notificationContainer.style.display = 'none';
     notificationContainer.style.position = 'relative';
     bodyElement.style.overflow = 'auto';
@@ -1006,18 +1005,14 @@ function editCommentHandler() {
     const response = JSON.parse(this.responseText);
     const editedComment = response.message;
 
-    // Ensure that editedComment.comment_id and editedComment.text are defined
     if (editedComment && editedComment.comment_id && editedComment.text) {
-      // Find the comment element by data-id attribute
       const commentElement = document.querySelector(`.comment[data-id="${editedComment.comment_id}"]`);
 
       if (commentElement) {
-        // Update the displayed text of the comment
         const commentTextElement = commentElement.querySelector('.comment-text');
         if (commentTextElement) {
           commentTextElement.textContent = editedComment.text;
 
-          // Hide the editCommentForm and display #commentText
           const editCommentForm = commentElement.querySelector('#editCommentForm');
           const commentText = commentElement.querySelector('#commentText');
 
@@ -1053,9 +1048,7 @@ function addNewCommentHandler() {
     const response = JSON.parse(this.responseText);
     const newComment = response.message;
 
-    // Ensure that newComment.text and newComment.author_id are defined
     if (newComment && newComment.text && newComment.author && newComment.author.name) {
-      // Create a new comment element
       const commentElement = document.createElement('div');
       commentElement.className = 'comment';
       commentElement.setAttribute('data-id', newComment.comment_id);
@@ -1065,7 +1058,7 @@ function addNewCommentHandler() {
 
       const commentAuthor = document.createElement('p');
       commentAuthor.className = 'comment-author';
-      commentAuthor.textContent = newComment.author.name; // Use the actual author name
+      commentAuthor.textContent = newComment.author.name; 
 
       const iconsDiv = document.createElement('div');
 
@@ -1092,17 +1085,14 @@ function addNewCommentHandler() {
 
       commentIconsContainer.appendChild(photoAndName);
 
-      // Edit icon
       const editIcon = document.createElement('i');
       editIcon.className = 'fa-solid fa-pen-to-square';
       editIcon.addEventListener('click', function () {
-        // Hide commentText when edit icon is clicked
         const commentText = commentElement.querySelector('.comment-text');
         if (commentText) {
           commentText.style.display = 'none';
         }
 
-        // Show the edit comment form
         const editCommentForm = commentElement.querySelector('#editCommentForm');
         if (editCommentForm) {
           editCommentForm.style.display = 'block';
@@ -1228,7 +1218,6 @@ function addNewCommentHandler() {
       commentElement.appendChild(deleteCommentForm);
       commentElement.appendChild(commentLikesSection);
 
-      // Append the new comment directly to the container
       const commentsContainer = document.querySelector('.commentsContainer');
       if (commentsContainer) {
         commentsContainer.prepend(commentElement);
@@ -1256,7 +1245,6 @@ function showEditRatingForm() {
 
 
 function redirectToLogin() {
-  // Redirect to the login route
   window.location.href = "/login";
 }if (localStorage.getItem('resetSuccess') !== 'true') {
   function showSuccessAlert() {
@@ -1294,7 +1282,6 @@ const reportPopUp = document.querySelector('.pop-up-report');
 
 
 function updateEventCountByMonth() {
-  // Obtém o mês atual (você pode personalizar isso conforme necessário)
   let currentMonth = new Date().getMonth() + 1;
 
   sendAjaxRequest('GET', '/getEventCountByMonth/' + currentMonth, null, function (event) {
@@ -1304,7 +1291,6 @@ function updateEventCountByMonth() {
 }
 
 function updateEventCountByDay() {
-  // Obtém o dia atual (você pode personalizar isso conforme necessário)
   let currentDay = new Date().getDate();
 
   sendAjaxRequest('GET', '/getEventCountByDay/' + currentDay, null, function (event) {
@@ -1314,7 +1300,6 @@ function updateEventCountByDay() {
 }
 
 function updateEventCountByYear() {
-  // Obtém o ano atual (você pode personalizar isso conforme necessário)
   let currentYear = new Date().getFullYear();
 
   sendAjaxRequest('GET', '/getEventCountByYear/' + currentYear, null, function (event) {
@@ -1324,14 +1309,11 @@ function updateEventCountByYear() {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-  // Add event listener to toggle the visibility and background color of the additional information
   document.querySelectorAll('.see-all-buyed-row').forEach(function (row) {
       row.addEventListener('click', function () {
-          // Toggle the visibility of the additional information
           let detailsSection = row.querySelector('.additional-info');
           detailsSection.style.display = detailsSection.style.display === 'none' ? 'table-row' : 'none';
 
-          // Toggle the background color of the entire row and tbody
           row.classList.toggle('row-open');
           let tbody = row.parentNode;
           tbody.classList.toggle('tbody-open');
@@ -1351,9 +1333,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var hiddenButton = container.querySelector('.my-tickets-btn-hidden');
 
     if (ticketsPerEvent && seeMoreButton && hiddenButton) {
-      // Adicionar evento de clique ao botão "See more"
       seeMoreButton.addEventListener('click', function () {
-        // Fechar todas as outras linhas
         allContainers.forEach(function (otherContainer) {
           var otherTicketsPerEvent = otherContainer.querySelector('.my-tickets-per-event');
           var otherSeeMoreButton = otherContainer.querySelector('.my-tickets-btn-see-more');
@@ -1379,26 +1359,23 @@ document.addEventListener('DOMContentLoaded', function () {
           }
         });
 
-        // Abrir a linha atual
         ticketsPerEvent.style.maxHeight = 'fit-content';
         ticketsPerEvent.style.overflow = 'visible';
         seeMoreButton.style.display = 'none';
         hiddenButton.style.display = 'flex';
       });
 
-      // Adicionar evento de clique ao botão "Hidden"
+
       hiddenButton.addEventListener('click', function () {
-        // Fechar a linha atual
         ticketsPerEvent.style.maxHeight = '340px';
         ticketsPerEvent.style.overflow = 'scroll';
         hiddenButton.style.display = 'none';
         seeMoreButton.style.display = 'flex';
       });
 
-      // Verificar inicialmente se há overflow na altura
       var hasOverflow = ticketsPerEvent.scrollHeight > ticketsPerEvent.clientHeight;
 
-      // Mostrar ou ocultar botões com base na verificação de overflow
+
       if (hasOverflow) {
         seeMoreButton.style.display = 'flex';
         hiddenButton.style.display = 'none';
@@ -1409,7 +1386,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 });
-// script.js
 
 document.addEventListener('DOMContentLoaded', function () {
   var currentDate = new Date();
@@ -1448,21 +1424,19 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
-    // Adiciona eventos de escuta aos campos de entrada numérica
+
     document.querySelectorAll('.numeric-input input[type="number"]').forEach(function (input) {
       input.addEventListener('input', function () {
-          this.value = this.value.replace(/[^0-9]/g, ''); // Remove caracteres não numéricos
+          this.value = this.value.replace(/[^0-9]/g, ''); 
       });
 
       input.addEventListener('change', function () {
-          // Garante que o valor não seja menor que zero
           if (parseInt(this.value) < 0) {
               this.value = 0;
           }
       });
   });
 
-  // Adiciona eventos de escuta aos botões de incremento e decremento
   document.querySelectorAll('.numeric-input .btn-increment').forEach(function (btn) {
       btn.addEventListener('click', function () {
           var input = this.parentNode.querySelector('input[type="number"]');
@@ -1473,7 +1447,6 @@ document.addEventListener('DOMContentLoaded', function () {
   document.querySelectorAll('.numeric-input .btn-decrement').forEach(function (btn) {
       btn.addEventListener('click', function () {
           var input = this.parentNode.querySelector('input[type="number"]');
-          // Garante que o valor não seja menor que zero
           if (parseInt(input.value) > 0) {
               input.stepDown();
           }
