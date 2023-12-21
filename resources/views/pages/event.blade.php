@@ -174,16 +174,17 @@
             <button onclick="addNewComment()" class="btn btn-primary" id="submit-comment-button">Submit Comment</button>
         </form>
         @endif
+        <div id="app" data-base-url="{{ asset('') }}"></div>
         <div id="public-comments-section" class="commentsContainer">
             @foreach($event->comments->where('private', false) as $comment)
             <div class="comment" data-id="{{ $comment->comment_id }}">
                 <div class="comment-icons-container">
                     <div class="photo-and-name">
-                @if($comment->author->profile_image != null)
-                    <img id="profile-image-comment" src="{{ \App\Http\Controllers\FileController::get('profile_image', $comment->author->user_id) }}" alt="Profile Image">
-                @else
-                    <img id="profile-image-comment" src="{{ asset('media/default_user.jpg') }}" alt="Default Profile Image">
-                @endif  
+                        @if($comment->author->profile_image != null)
+                            <img id="profile-image-comment" src="{{ \App\Http\Controllers\FileController::get('profile_image', $comment->author->user_id) }}" alt="Profile Image">
+                        @else
+                            <img id="profile-image-comment" src="{{ asset('media/default_user.jpg') }}" alt="Default Profile Image">
+                        @endif  
                     <p class="comment-author">{{ $comment->author->name }}</p>
                     </div>
                     <div>
