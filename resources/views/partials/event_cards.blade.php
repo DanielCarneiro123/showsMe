@@ -7,9 +7,9 @@
                 <div class="event-image" style="background-image: url('{{ asset('media/event_image.jpg') }}');"></div>
             @endif
             <a href="{{ route('view-event', ['id' => $event->event_id]) }}" class="event-info">
-                <p id="event-card-local">{{ $event->location }}</p>
-                <p id="event-card-name">{{ $event->name }}</p>
-                <p id="event-card-date">{!! $event->start_timestamp->format('H:i, F j, Y') !!}<br></p>
+                <p class="event-card-local">{{ $event->location }}</p>
+                <p class="event-card-name">{{ $event->name }}</p>
+                <p class="event-card-date">{!! $event->start_timestamp->format('H:i, F j, Y') !!}<br></p>
             </a>
         </div>
     @endforeach

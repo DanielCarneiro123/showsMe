@@ -11,11 +11,11 @@
     <div class="my-event-card">
         <div class="event-image" style="background-image: url('{{ asset('media/event_image.jpg') }}');"></div>
         <a href="{{ route('view-event', ['id' => $event->event_id]) }}" class="my-event-info">
-            <p id="my-event-card-local">{{ $event->location }}</p>
-            <p id="my-event-card-name">{{ $event->name }}</p>
-            <p id="my-event-card-date">{!! $event->start_timestamp->format('H:i, F j') !!}<br></p>
-            <p id="my-event-card-tickets">Tickets: {{ $event->getTotalSoldTickets() }}</p>
-            <p id="my-event-card-revenue">Total: {{ $event->calculateRevenue() }}€</p>
+            <p class="my-event-card-local">{{ $event->location }}</p>
+            <p class="my-event-card-name">{{ $event->name }}</p>
+            <p class="my-event-card-date">{!! $event->start_timestamp->format('H:i, F j') !!}<br></p>
+            <p class="my-event-card-tickets">Tickets: {{ $event->getTotalSoldTickets() }}</p>
+            <p class="my-event-card-revenue">Total: {{ $event->calculateRevenue() }}€</p>
         </a>
     </div>
     @endforeach

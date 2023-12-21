@@ -52,7 +52,7 @@
     width: 100%;
   }
 
-  #my-event-card-tickets{
+  .my-event-card-tickets{
     grid-area: tickets;
     margin: 0;
     font-weight: 700;
@@ -62,7 +62,7 @@
     align-self: end;
   }
 
-  #my-event-card-revenue{
+  .my-event-card-revenue{
     grid-area: revenue;
     margin: 0;
     font-weight: 700;
@@ -74,7 +74,7 @@
 
   
   
-  .my-events-container .my-events-cards .my-event-info #my-event-card-name{
+  .my-events-container .my-events-cards .my-event-info .my-event-card-name{
     grid-area: name;
     font-size: 18px;
     justify-self: start;
@@ -83,7 +83,7 @@
     font-weight: 700;
   }
 
-  .my-events-container .my-events-cards .my-event-info #my-event-card-local{
+  .my-events-container .my-events-cards .my-event-info .my-event-card-local{
     grid-area: location;
     font-size: 18px;
     justify-self: end;
@@ -95,7 +95,7 @@
     display: none;
   }
   
-  .my-events-container .my-events-cards .my-event-info #my-event-card-date{
+  .my-events-container .my-events-cards .my-event-info .my-event-card-date{
     grid-area: date;
     justify-self: end;
     font-size: 18px;
@@ -105,9 +105,9 @@
     display: none;
   }
   
-  .my-event-card:hover .my-event-info #my-event-card-name,
-  .my-event-card:hover .my-event-info #my-event-card-date,
-  .my-event-card:hover .my-event-info #my-event-card-local {
+  .my-event-card:hover .my-event-info .my-event-card-name,
+  .my-event-card:hover .my-event-info .my-event-card-date,
+  .my-event-card:hover .my-event-info .my-event-card-local {
     transform: scale(1.1); 
     filter: brightness(1.5); 
     transition: transform 0.8s ease, filter 0.8s ease; 

@@ -9,7 +9,7 @@
 
         <title>{{ config('app.name', 'Laravel') }}</title>
 
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" >
         <link href="{{ asset('css/header.css') }}" rel="stylesheet">
        
         <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
@@ -29,17 +29,17 @@
         <link href="{{ asset('css/swiper.css') }}" rel="stylesheet">
         <link rel="icon" type="image/png" href="{{ asset('images/logo1.png') }}">
 
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
         <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
-        <script type="text/javascript">
+        <script >
             // Fix for Firefox autofocus CSS bug
             // See: http://stackoverflow.com/questions/18943276/html-5-autofocus-messes-up-css-loading/18945951#18945951
         </script>
         
-        <script type="text/javascript" src={{ url('js/app.js') }} defer></script>
-        <script type="text/javascript" src={{ url('js/charts.js') }} defer></script>
-        <script type="text/javascript" src={{ url('js/swiper.js') }} defer></script>
+        <script  src={{ url('js/app.js') }} defer></script>
+        <script  src={{ url('js/charts.js') }} defer></script>
+        <script  src={{ url('js/swiper.js') }} defer></script>
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     </head>
     <body>

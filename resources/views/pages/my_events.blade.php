@@ -1,5 +1,5 @@
 <!-- resources/views/pages/my_events.blade.php -->
-<script type="text/javascript" src={{ url('js/my_events_paginate.js') }} defer></script>
+<script src={{ url('js/my_events_paginate.js') }} defer></script>
 
 @extends('layouts.app')
 
