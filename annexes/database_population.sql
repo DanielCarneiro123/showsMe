@@ -201,30 +201,6 @@ VALUES
   (19, 19),
   (20, 20);
 
--- Inserts for Tags
-INSERT INTO Tag (name) 
-VALUES 
-  ('Technology'),
-  ('Art'),
-  ('Charity'),
-  ('Food'),
-  ('Workshop'),
-  ('Music'),
-  ('Environment'),
-  ('Fashion'),
-  ('Startup'),
-  ('Film'),
-  ('Health'),
-  ('Culinary'),
-  ('Tech'),
-  ('Crafts'),
-  ('Education'),
-  ('Gaming'),
-  ('Science'),
-  ('Fashion Workshop'),
-  ('Community'),
-  ('Concert');
-  
   -- Inserts for TagEvent
 INSERT INTO TagEvent (event_id, tag_id) 
 VALUES 

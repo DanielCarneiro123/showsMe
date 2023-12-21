@@ -8,10 +8,8 @@ DROP TABLE IF EXISTS Notification_;
 DROP TABLE IF EXISTS Rating;
 DROP TABLE IF EXISTS Report;
 DROP TABLE IF EXISTS Comment_;
-DROP TABLE IF EXISTS TagEvent;
 DROP TABLE IF EXISTS TicketInstance;
 DROP TABLE IF EXISTS TicketType;
-DROP TABLE IF EXISTS Tag;
 DROP TABLE IF EXISTS FAQ;
 DROP TABLE IF EXISTS Event_;
 DROP TABLE IF EXISTS TicketOrder;
@@ -108,22 +106,13 @@ CREATE TABLE TicketInstance (
    qr_code_path TEXT
 );
 
-CREATE TABLE Tag (
-   tag_id SERIAL PRIMARY KEY,
-   name TEXT NOT NULL UNIQUE
-);
-                
+          
 CREATE TABLE FAQ (
    faq_id SERIAL PRIMARY KEY,
    question TEXT NOT NULL,
    answer TEXT NOT NULL
 );
 
-CREATE TABLE TagEvent (
-   event_id INT NOT NULL REFERENCES Event_ (event_id) ON UPDATE CASCADE,
-   tag_id INT NOT NULL REFERENCES Tag (tag_id),
-   PRIMARY KEY (event_id, tag_id)
-);
 
 CREATE TABLE Notification_ (
    notification_id SERIAL PRIMARY KEY,
@@ -169,28 +158,18 @@ BEGIN
     NEW.tsvectors = (
       setweight(to_tsvector('english', NEW.name), 'A') ||
       setweight(to_tsvector('english', NEW.description), 'B') ||
-      setweight(to_tsvector('english', COALESCE((SELECT string_agg(Tag.name, ' ') FROM TagEvent JOIN Tag ON TagEvent.tag_id = Tag.tag_id WHERE TagEvent.event_id = NEW.event_id),' ')), 'C') ||
-      setweight(to_tsvector('english', NEW.location), 'D')
+      setweight(to_tsvector('english', NEW.location), 'C')
     );
   END IF;
 
   IF TG_OP = 'UPDATE' THEN
     IF (NEW.name <> OLD.name OR
         NEW.description <> OLD.description OR
-        (SELECT string_agg(Tag.name, ' ')
-         FROM TagEvent
-         JOIN Tag ON TagEvent.tag_id = Tag.tag_id
-         WHERE TagEvent.event_id = NEW.event_id)
-         <> (SELECT string_agg(Tag.name, ' ')
-             FROM TagEvent
-             JOIN Tag ON TagEvent.tag_id = Tag.tag_id
-             WHERE TagEvent.event_id = OLD.event_id) OR
          NEW.location <> OLD.location) THEN
 
       NEW.tsvectors = (
         setweight(to_tsvector('english', NEW.name), 'A') ||
         setweight(to_tsvector('english', NEW.description), 'B') ||
-        setweight(to_tsvector('english', COALESCE((SELECT string_agg(Tag.name, ' ') FROM TagEvent JOIN Tag ON TagEvent.tag_id = Tag.tag_id WHERE TagEvent.event_id = NEW.event_id),' ')), 'C') ||
         setweight(to_tsvector('english', NEW.location), 'D')
       );
 
@@ -580,73 +559,6 @@ VALUES
   (19, 19),
   (20, 20);
 
--- Inserts for Tags
-INSERT INTO Tag (name) 
-VALUES 
-  ('Technology'),
-  ('Art'),
-  ('Charity'),
-  ('Food'),
-  ('Workshop'),
-  ('Music'),
-  ('Environment'),
-  ('Fashion'),
-  ('Startup'),
-  ('Film'),
-  ('Health'),
-  ('Culinary'),
-  ('Tech'),
-  ('Crafts'),
-  ('Education'),
-  ('Gaming'),
-  ('Science'),
-  ('Fashion Workshop'),
-  ('Community'),
-  ('Concert');
-  
-  -- Inserts for TagEvent
-INSERT INTO TagEvent (event_id, tag_id) 
-VALUES 
-  (1, 1),
-  (1, 13),
-  (2, 2),
-  (2, 8),
-  (3, 3),
-  (3, 18),
-  (4, 4),
-  (4, 14),
-  (5, 5),
-  (5, 12),
-  (6, 6),
-  (6, 19),
-  (7, 7),
-  (7, 11),
-  (8, 8),
-  (8, 15),
-  (9, 9),
-  (9, 16),
-  (10, 10),
-  (10, 5),
-  (11, 11),
-  (11, 20),
-  (12, 12),
-  (12, 3),
-  (13, 13),
-  (13, 17),
-  (14, 14),
-  (14, 9),
-  (15, 15),
-  (15, 7),
-  (16, 16),
-  (16, 2),
-  (17, 17),
-  (17, 10),
-  (18, 18),
-  (18, 1),
-  (19, 19),
-  (19, 4),
-  (20, 20),
-  (20, 8);
 -- Inserts for FAQs
 INSERT INTO FAQ (question, answer) 
 VALUES 

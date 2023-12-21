@@ -6,9 +6,13 @@
 
     <section>
         @csrf
-
-        <img src="{{ \App\Http\Controllers\FileController::get('profile_image', $user->user_id) }}" alt="Profile Image">
-        
+ 
+        @if($user->profile_image != null)
+            <img id="profile-image" src="{{ \App\Http\Controllers\FileController::get('profile_image', $user->user_id) }}" alt="Profile Image">
+        @else
+            <img id="profile-image" src="{{ asset('media/default_user.jpg') }}" alt="Default Profile Image">
+        @endif
+   
         <label for="name">Name:</label>
         <input type="text" id="edit_name" name="name" value="{{ $user->name }}" required disabled>
         @error('name')
@@ -40,7 +44,7 @@
         <br>
         <button type="button" class="btn btn-outline-primary" id="edit-profile-button" onclick="toggleProfileButtons()">Edit Profile</button>
         <button type="button" class="btn btn-outline-primary" id="update-profile-button" onclick="updateProfile()" style="display: none;">Save Changes</button>
-        </br>
+        
     </section>
 </section>
 

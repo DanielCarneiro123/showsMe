@@ -1065,6 +1065,29 @@ function addNewCommentHandler() {
 
       const iconsDiv = document.createElement('div');
 
+      const photoAndName = document.createElement('div');
+      photoAndName.className = "photo-and-name";
+
+
+      const baseUrl = document.getElementById('app').getAttribute('data-base-url');
+
+      const authorPicture = document.createElement('img');
+      authorPicture.id = 'profile-image-comment';
+      authorPicture.alt = 'Profile Image';
+      if (newComment.profile_image === null) {
+       
+        authorPicture.src = baseUrl + '../media/default_user.jpg';
+      } else {
+        
+        authorPicture.src = baseUrl + `../profile_image/${newComment.profile_image}`;
+      }
+      photoAndName.appendChild(authorPicture);
+      photoAndName.appendChild(commentAuthor);
+
+
+
+      commentIconsContainer.appendChild(photoAndName);
+
       // Edit icon
       const editIcon = document.createElement('i');
       editIcon.className = 'fa-solid fa-pen-to-square';
@@ -1098,7 +1121,7 @@ function addNewCommentHandler() {
       iconsDiv.appendChild(deleteIcon);
 
 
-      commentIconsContainer.appendChild(commentAuthor);
+      
       commentIconsContainer.appendChild(iconsDiv);
 
       const commentText = document.createElement('p');
