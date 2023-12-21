@@ -218,60 +218,69 @@ function updateInactiveEventCount() {
 function updateEventPageContent(formData) {
   if (formData.edit_name.trim() === '') {
       displayDangerMessage("Event name cannot be empty");
-      return;
+      return false;
   }
 
   if (formData.edit_location.trim() === '') {
       displayDangerMessage("Event location cannot be empty");
-      return;
+      return false;
   }
 
   if (formData.edit_description.trim() === '') {
       displayDangerMessage("Event description cannot be empty");
-      return;
+      return false;
   }
 
-  let currentDateTime = new Date().toISOString();
+  let currentDate = new Date();
+  let startTimestamp = new Date(formData.edit_start_timestamp);
+  let endTimestamp = new Date(formData.edit_end_timestamp);
 
-  if (new Date(formData.edit_start_timestamp) < new Date(currentDateTime)) {
+  if (startTimestamp < currentDate) {
       displayDangerMessage("The start timestamp must be superior to the current date");
-      return;
+      return false;
   }
 
-  if (new Date(formData.edit_end_timestamp) <= new Date(currentDateTime)) {
+  if (endTimestamp <= currentDate) {
       displayDangerMessage("The end timestamp must be superior to the current date");
-      return;
+      return false;
   }
 
-  if (new Date(formData.edit_start_timestamp) >= new Date(formData.edit_end_timestamp)) {
+  if (startTimestamp >= endTimestamp) {
       displayDangerMessage("The start timestamp must be earlier than the end timestamp.");
-      return;
+      return false;
   }
 
-  document.getElementById('name').innerHTML = formData.edit_name;
+  let formattedStartDate = startTimestamp.getHours() + ':' + ('0' + startTimestamp.getMinutes()).slice(-2) + ' ' +
+                            startTimestamp.getDate() + '/' + (startTimestamp.getMonth() + 1);
+
+  let formattedEndDate = endTimestamp.getHours() + ':' + ('0' + endTimestamp.getMinutes()).slice(-2) + ' ' +
+                          endTimestamp.getDate() + '/' + (endTimestamp.getMonth() + 1);
+
+  document.getElementById('event-name').innerHTML = formData.edit_name;
   document.getElementById('location').innerHTML = formData.edit_location;
   document.getElementById('description').innerHTML = formData.edit_description;
-  // document.getElementById('start_timestamp').innerHTML =  formData.edit_start_timestamp;
-  // document.getElementById('end_timestamp').innerHTML =  formData.edit_end_timestamp;
+  document.getElementById('ticket_start_date').innerHTML = 'Start: ' + formattedStartDate;
+  document.getElementById('ticket_end_date').innerHTML = 'End: ' + formattedEndDate;
 
   displaySuccessMessage("You have updated your event successfully");
-}
 
+  return true; 
+}
 
 function updateEvent(eventId) {
   let formData = {
-    'edit_name': document.getElementById('edit_name').value,
-    'edit_description': document.getElementById('edit_description').value,
-    'edit_location': document.getElementById('edit_location').value,
-    'edit_start_timestamp': document.getElementById('edit_start_timestamp').value,
-    'edit_end_timestamp': document.getElementById('edit_end_timestamp').value
+      'edit_name': document.getElementById('edit_name').value,
+      'edit_description': document.getElementById('edit_description').value,
+      'edit_location': document.getElementById('edit_location').value,
+      'edit_start_timestamp': document.getElementById('edit_start_timestamp').value,
+      'edit_end_timestamp': document.getElementById('edit_end_timestamp').value
   };
 
-  updateEventPageContent(formData);
-
-  sendAjaxRequest('post', '../update-event/' + eventId, formData);
-  
+  if (updateEventPageContent(formData)) {
+      sendAjaxRequest('post', '../update-event/' + eventId, formData);
+  }
 }
+
   
 
 function displaySuccessMessage(message) {
