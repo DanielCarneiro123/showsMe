@@ -13,8 +13,9 @@ use Illuminate\Support\Facades\Redirect;
 use App\Models\TicketOrder;
 use App\Models\TicketInstance;
 use Illuminate\Auth\Access\AuthorizationException; 
-use Illuminate\Support\Str;
+use App\Http\Controllers\EventController;
 use App\Models\User;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash; 
 
 
@@ -28,11 +29,15 @@ class StripeController extends Controller
 
 
     public function processPayment(Request $request){
+        
         if (Auth::guest()) {
             $user = $this->createTemporaryAccount($request);
-        } else {
+        } 
+        else{
             $user = Auth::user();
         }
+        
+        
         $quantities = $request->input('quantity', []);
 
         if (empty(array_filter($quantities, function ($quantity) {
@@ -97,27 +102,34 @@ class StripeController extends Controller
         return redirect()->route('view-event', ['id' => $eventId])->with('success', 'Tickets successfully added to the cart!');
     }
 
-    private function createTemporaryAccount(Request $request)
+    public function createTemporaryAccount(Request $request)
     {
-
         $request->validate([
             'name' => 'required|string',
-            'email' => 'required|email|unique:users,email', 
-            'phone_number' => 'required|string', 
+            'email' => 'required|email', 
+            'phone_number' => 'required|string',
         ]);
-        $randomPassword = Str::random(12);
-
-        $user = new User();
-        $user->name = $request->input('name');
-        $user->email = $request->input('email');
-        $user->phone_number = $request->input('phone_number');
-        $user->password = Hash::make($randomPassword);
+    
+        
+        $user = User::where('email', $request->input('email'))->first();
+    
+        if (!$user) {
+           
+            $randomPassword = Str::random(12);
+    
+            $user = new User();
+            $user->name = $request->input('name');
+            $user->email = $request->input('email');
+            $user->phone_number = $request->input('phone_number');
+            $user->password = Hash::make($randomPassword);
+            $user->temporary = true;
+            $user->save();
+        }
+        
         $user->temporary = true;
-        $user->save();
-
         Auth::login($user);
 
         return $user;
+    
     }
 }
-

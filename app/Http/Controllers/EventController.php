@@ -77,14 +77,29 @@ class EventController extends Controller
             $user = Auth::user();
             $events = Event::where('creator_id', Auth::user()->user_id)
             ->orderBy('start_timestamp', 'asc')
-            ->get();
+            ->paginate(4);
             $notifications = $user ? $user->notifications : [];
             return view('pages.my_events', compact('events', 'notifications'));
         } else {
-            $events = collect();
+            $events = paginate(4);
             return view('pages.my_events', compact('events'));
         }
         
+    }
+
+    public function myEvents_paginate(Request $request)
+    {
+        if (Auth::check()) {
+            $user = Auth::user();
+            $events = Event::where('creator_id', Auth::user()->user_id)
+            ->orderBy('start_timestamp', 'asc')
+            ->paginate(4);
+            $notifications = $user ? $user->notifications : [];
+            return view('partials.my_event_cards', compact('events', 'notifications'))->render();
+        } else {
+            $events = collect()->paginate(4);
+            return view('partials.my_event_cards', compact('events'))->render();
+        }
     }
     
 
@@ -221,7 +236,8 @@ class EventController extends Controller
                 $ticketType = TicketType::findOrFail($ticketTypeId);
                 $event = Event::findOrFail($ticketType->event_id);
     
-                $this->authorize('purchaseTickets', [$event, $ticketType]);
+                // Authorize the sale for each ticket type and corresponding event
+                //$this->authorize('purchaseTickets', [$event, $ticketType]);
     
                 for ($i = 0; $i < $quantity; $i++) {
                     $ticketInstance = new TicketInstance();
@@ -234,15 +250,18 @@ class EventController extends Controller
                 }
             }
         }
-    
+
 
         session()->forget('cart');
+
+        if (Auth::check() && $user->temporary) {
+            $user->temporary = false;
+            Auth::logout();
+        }
         return redirect()->route('my-tickets')->with('success', 'Tickets purchased successfully.');
     }
-    
 
 
-    
     public function searchEvents(Request $request)
     {
         if (Auth::check()) {
