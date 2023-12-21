@@ -15,17 +15,12 @@ class CheckoutController extends Controller
         $user = Auth::user();
         $cart = session()->get('cart', []);
 
-        // Retrieve the event details (replace 'Event' with your actual event model)
-
-        // Initialize an array to store combined information
         $checkoutItems = [];
         $notifications = $user ? $user->notifications : [];
 
         foreach ($cart as $ticketTypeId => $quantity) {
-            // Retrieve the TicketType model
             $ticketType = TicketType::find($ticketTypeId);
-            $event = Event::find($ticketType->event_id); // Assuming you're retrieving the event by ID
-            // Add information to the array
+            $event = Event::find($ticketType->event_id); 
             $checkoutItems[] = [
                 'ticketType' => $ticketType,
                 'quantity' => $quantity,

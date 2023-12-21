@@ -18,7 +18,6 @@ class MailController extends Controller
 
         $user = Auth::user();
 
-        // If the user is logged in, use their email
         if ($user) {
             $mailData = [
                 'name' => $request->name,
@@ -27,7 +26,6 @@ class MailController extends Controller
 
             Mail::to($user->email)->send(new TicketPurchaseConfirmation($mailData, $ticketInstance));
 
-            // Add a success message or redirect as needed
             return redirect()->back()->with('success', 'Mail sent successfully to ' . $user->email);
         }
     }

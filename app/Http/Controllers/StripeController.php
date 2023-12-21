@@ -47,18 +47,15 @@ class StripeController extends Controller
             if ($quantity > 0) {
                 $ticketType = TicketType::findOrFail($ticketTypeId);
 
-                // Determine o mínimo entre stock e person_buying_limit
                 $minQuantity = min($ticketType->stock, $ticketType->person_buying_limit);
 
-                // Verifique se a quantidade é um número inteiro positivo e menor que o mínimo
                 if (is_numeric($quantity) && $quantity == (int) $quantity && $quantity > 0 && $quantity <= $minQuantity) {
 
-                    // Add the ticket type to line_items
                     $lineItems[] = [
                         "quantity" => $quantity,
                         "price_data" => [
                             "currency" => "eur",
-                            "unit_amount" => $ticketType->price * 100, // Convert to cents
+                            "unit_amount" => $ticketType->price * 100, 
                             "product_data" => [
                                 "name" => $ticketType->name,
                             ],
@@ -105,13 +102,11 @@ class StripeController extends Controller
 
         $request->validate([
             'name' => 'required|string',
-            'email' => 'required|email|unique:users,email', // Ensure email is unique in the users table
-            'phone_number' => 'required|string', // You might need to adjust this based on your requirements
+            'email' => 'required|email|unique:users,email', 
+            'phone_number' => 'required|string', 
         ]);
-        // Generate a random password for the temporary account
         $randomPassword = Str::random(12);
 
-        // Create a temporary user with the provided information
         $user = new User();
         $user->name = $request->input('name');
         $user->email = $request->input('email');
@@ -120,7 +115,6 @@ class StripeController extends Controller
         $user->temporary = true;
         $user->save();
 
-        // Log in the temporary user
         Auth::login($user);
 
         return $user;

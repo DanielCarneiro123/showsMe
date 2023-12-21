@@ -21,8 +21,6 @@ class UserController extends Controller
         return view('pages.profile', compact('user', 'notifications'));
     }
 
-   // UserController.php
-
    public function updateProfile(Request $request)
 {
     $user = Auth::user();
@@ -50,7 +48,6 @@ class UserController extends Controller
         'phone_number.numeric' => 'The phone number must be a number.',
         'phone_number.regex' => 'The phone number must only contain numbers.']);
 
-    // Usar o próprio modelo User e chamar o método update
     $user->update([
         'email' => $request->input('edit_email'),
         'name' => $request->input('edit_name'),

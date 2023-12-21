@@ -42,7 +42,7 @@ class FileController extends Controller
         $fileName = null;
         switch($type) {
             case 'profile_image':
-                $fileName = User::find($id)->profile_image; // can be null as well
+                $fileName = User::find($id)->profile_image; 
                 break;
             case 'event_image':
                 $eventImage = EventImage::find($id);
@@ -59,11 +59,10 @@ class FileController extends Controller
 
     function delete(String $type, int $id) {
         $existingFileName = self::getFileName($type, $id);
-        $response = ['message' => '', 'error' => false]; // Initialize response array
+        $response = ['message' => '', 'error' => false]; 
 
         if ($existingFileName) {
             try {
-                // Attempt to delete the file
                 Storage::disk(self::$diskName)->delete($type . '/' . $existingFileName);
 
                 switch($type) {
@@ -85,7 +84,6 @@ class FileController extends Controller
             }
         }
 
-        // Send the JSON response
         header('Content-Type: application/json');
         echo json_encode($response);
         exit();
@@ -93,17 +91,14 @@ class FileController extends Controller
 
     function upload(Request $request) {
 
-        // Validation: has file
         if (!$request->hasFile('file')) {
             return redirect()->back()->with('error', 'Error: File not found');
         }
 
-        // Validation: upload type
         if (!$this->isValidType($request->type)) {
             return redirect()->back()->with('error', 'Error: Unsupported upload type');
         }
 
-        // Validation: upload extension
         $file = $request->file('file');
         $type = $request->type;
         $extension = $file->extension();
@@ -113,11 +108,9 @@ class FileController extends Controller
 
         $fileName = $file->hashName();
 
-        // Validation: model
         $error = null;
         switch($request->type) {
             case 'profile_image':
-                //$this->delete($type, $request->id);
                 $user = User::findOrFail($request->id);
                 if ($user) {
                     $user->profile_image = $fileName;
@@ -152,18 +145,15 @@ class FileController extends Controller
 
     static function get(String $type, int $id) {
 
-        // Validation: upload type
         if (!self::isValidType($type)) {
             return self::defaultAsset($type);
         }
 
-        // Validation: file exists
         $fileName = self::getFileName($type, $id);
         if ($fileName) {
             return asset($type . '/' . $fileName);
         }
 
-        // Not found: returns default asset
         return self::defaultAsset($type);
     }
 }

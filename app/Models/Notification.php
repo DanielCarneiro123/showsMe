@@ -10,7 +10,6 @@ class Notification extends Model
 {
     use HasFactory;
 
-    // Don't add create and update timestamps in the database.
     public $timestamps = false;
 
     /**

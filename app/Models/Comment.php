@@ -61,8 +61,6 @@ class Comment extends Model
         return $this->belongsTo(User::class, 'author_id', 'user_id');
     }
 
-    // Comment.php (model)
-
     public function reports()
     {
         return $this->hasMany(Report::class, 'comment_id');

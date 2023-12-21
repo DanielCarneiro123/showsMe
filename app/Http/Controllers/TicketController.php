@@ -17,8 +17,6 @@ class TicketController extends Controller
     public function updateTicketStock(Request $request, $ticketTypeId)
     {
         try {
-            // Validate input if needed
-
             $ticketType = TicketType::findOrFail($ticketTypeId);
             $ticketType->stock = $request->input('new_stock_' . $ticketTypeId);
             $ticketType->save();

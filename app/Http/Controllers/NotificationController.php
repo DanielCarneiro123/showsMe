@@ -72,7 +72,6 @@ class NotificationController extends Controller
 
     public function updateNotifications(Request $request)
     {
-        //auth()->user()->notifications()->where('viewed', false)->update(['viewed' => true]);
 
         $unreadCount = auth()->user()->notifications()->where('viewed', false)->count();
 

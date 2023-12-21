@@ -13,7 +13,6 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
-    // Don't add create and update timestamps in the database.
     public $timestamps  = false;
     protected $primaryKey = 'user_id';
     /**
@@ -67,7 +66,7 @@ class User extends Authenticatable
             return $count;
         } catch (\Exception $e) {
             echo '<script>console.error("countUsers - erro ao contar usuários: ' . $e->getMessage() . '");</script>';
-            return 0; // Ou outro valor padrão apropriado
+            return 0;
         }
     }
     

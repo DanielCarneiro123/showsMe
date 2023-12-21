@@ -24,9 +24,9 @@ class AdminController extends Controller
         $eventCount = null;
         $activeEventCount = null;
         $inactiveEventCount = null;
-        $eventCountByMonth = Event::countEventsByMonth(date('n')); // Contagem para o mês atual
-        $eventCountByDay = Event::countEventsByDay(date('j')); // Contagem para o dia atual
-        $eventCountByYear = Event::countEventsByYear(date('Y')); // Contagem para o ano atual
+        $eventCountByMonth = Event::countEventsByMonth(date('n')); 
+        $eventCountByDay = Event::countEventsByDay(date('j')); 
+        $eventCountByYear = Event::countEventsByYear(date('Y'));
         $activeUsers = [];
         $inactiveUsers = [];
 

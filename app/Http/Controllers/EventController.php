@@ -150,7 +150,6 @@ class EventController extends Controller
         $event->private = true;
         $event->save();
         return response()->json(['message' => 'deactivated successfully']);
-       // return redirect()->back()->with('success', 'Event deactivated successfully.');
     }
 
     public function activateEvent(Request $request, $eventId)
@@ -160,7 +159,6 @@ class EventController extends Controller
         $event->private = false;
         $event->save();
         return response()->json(['message' => 'activated successfully']);
-//        return redirect()->back()->with('success', 'Event activated successfully.');
     }
 
     public function createTicketType(Request $request, Event $event)
@@ -223,7 +221,6 @@ class EventController extends Controller
                 $ticketType = TicketType::findOrFail($ticketTypeId);
                 $event = Event::findOrFail($ticketType->event_id);
     
-                // Authorize the sale for each ticket type and corresponding event
                 $this->authorize('purchaseTickets', [$event, $ticketType]);
     
                 for ($i = 0; $i < $quantity; $i++) {
@@ -233,7 +230,7 @@ class EventController extends Controller
                     $qrCodePath = $this->generateQRCodePath($ticketInstance);
                     $ticketInstance->qr_code_path = $qrCodePath;
                     $ticketInstance->save();
-                    //Mail::to($user->email)->send(new TicketPurchaseConfirmation($ticketInstance));
+                    Mail::to($user->email)->send(new TicketPurchaseConfirmation($ticketInstance));
                 }
             }
         }
