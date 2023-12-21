@@ -5,7 +5,8 @@
     'title'
     'images'
     'edit';
-    width: 100%;
+    width: fit-content;
+    justify-self: center;
 }
 
 #edit-event h2{

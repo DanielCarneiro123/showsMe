@@ -18,10 +18,9 @@
     <form method="POST" id="create-event-form" action="{{ url('/create-event') }}">
         @csrf
 
-        <div class="form-group container-fluid">
-            <label for="name" class="form-label mt-4">Event Name:</label>
+        <div id="create_name" class="form-group">
             <input type="text" class="form-control form-field" id="name" name="name"
-                placeholder="Type the name of the event" required>
+                placeholder="Event name" required>
         </div>
         @error('name')
         <span class="text-danger">{{ $message }}</span>
@@ -29,10 +28,9 @@
         </div>
 
         <!-- Event Description -->
-        <div class="form-group">
-            <label for="description" class="form-label mt-4">Event Description:</label>
+        <div id="create_descr" class="form-group">
             <textarea id="description" class="form-control form-field"
-                placeholder="Type a short description of the event" name="description"></textarea>
+                placeholder="Description" name="description"></textarea>
             @error('description')
             <span class="text-danger">{{ $message }}</span>
             @enderror
@@ -40,28 +38,27 @@
 
 
         <!-- Event Location -->
-        <div class="form-group">
-            <label for="location" class="form-label mt-4">Event Location:</label>
+        <div id="create_local" class="form-group">
             <input type="text" class="form-control form-field" id="location" name="location"
-                placeholder="Type the location of the event" required>
+                placeholder="Location" required>
             @error('location')
             <span class="text-danger">{{ $message }}</span>
             @enderror
         </div>
 
         <!-- Start Timestamp -->
-        <div class="form-group">
+        <div id="create_sdate" class="form-group">
             <label for="start_timestamp" class="form-label mt-4">Start Timestamp:</label>
-            <input type="datetime-local" class="form-control form-field" name="start_timestamp" required>
+            <input id="ticket_start_timestamp" type="datetime-local" class="form-control form-field" name="start_timestamp" required>
             @error('start_timestamp')
             <span class="text-danger">{{ $message }}</span>
             @enderror
         </div>
 
         <!-- End Timestamp -->
-        <div class="form-group">
+        <div id="create_edate" class="form-group">
             <label for="end_timestamp" class="form-label mt-4">End Timestamp:</label>
-            <input type="datetime-local" class="form-control form-field" name="end_timestamp" required>
+            <input id="ticket_end_timestamp" type="datetime-local" class="form-control form-field" name="end_timestamp" required>
             @error('end_timestamp')
             <span class="text-danger">{{ $message }}</span>
             @enderror

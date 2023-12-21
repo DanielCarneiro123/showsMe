@@ -216,52 +216,47 @@ function updateInactiveEventCount() {
 }
 
 function updateEventPageContent(formData) {
- 
   if (formData.edit_name.trim() === '') {
-    displayDangerMessage("Event name cannot be empty");
-    return;
-}
+      displayDangerMessage("Event name cannot be empty");
+      return;
+  }
 
-if (formData.edit_location.trim() === '') {
-    displayDangerMessage("Event location cannot be empty");
-    return;
-}
+  if (formData.edit_location.trim() === '') {
+      displayDangerMessage("Event location cannot be empty");
+      return;
+  }
 
-if (formData.edit_description.trim() === '') {
-    displayDangerMessage("Event description cannot be empty");
-    return;
-}
+  if (formData.edit_description.trim() === '') {
+      displayDangerMessage("Event description cannot be empty");
+      return;
+  }
 
-let currentDate = new Date().toISOString().split('T')[0];
-if (formData.edit_start_timestamp < currentDate) {
-    displayDangerMessage("The start timestamp must be superior to the current date");
-    return;
-}
+  let currentDateTime = new Date().toISOString();
 
-if (formData.edit_end_timestamp <= currentDate) {
-    displayDangerMessage("The end timestamp must be superior to the current date");
-    return;
-}
+  if (new Date(formData.edit_start_timestamp) < new Date(currentDateTime)) {
+      displayDangerMessage("The start timestamp must be superior to the current date");
+      return;
+  }
 
-if (formData.edit_start_timestamp.split('T')[0] === formData.edit_end_timestamp.split('T')[0] && formData.edit_start_timestamp.split('T')[1] >= formData.edit_end_timestamp.split('T')[1]) {
-    displayDangerMessage("The start timestamp must be earlier than the end timestamp.");
-    return;
-}
+  if (new Date(formData.edit_end_timestamp) <= new Date(currentDateTime)) {
+      displayDangerMessage("The end timestamp must be superior to the current date");
+      return;
+  }
 
-
-
+  if (new Date(formData.edit_start_timestamp) >= new Date(formData.edit_end_timestamp)) {
+      displayDangerMessage("The start timestamp must be earlier than the end timestamp.");
+      return;
+  }
 
   document.getElementById('name').innerHTML = formData.edit_name;
-
   document.getElementById('location').innerHTML = formData.edit_location;
   document.getElementById('description').innerHTML = formData.edit_description;
+  // document.getElementById('start_timestamp').innerHTML =  formData.edit_start_timestamp;
+  // document.getElementById('end_timestamp').innerHTML =  formData.edit_end_timestamp;
 
   displaySuccessMessage("You have updated your event successfully");
-  
-      
-  //document.getElementById('start_timestamp').innerHTML =  formData.edit_start_timestamp; //ainda não está display
-  //document.getElementById('end_timestamp').innerHTML =  formData.edit_end_timestamp;  //ainda não está display
 }
+
 
 function updateEvent(eventId) {
   let formData = {
@@ -1420,6 +1415,24 @@ document.addEventListener('DOMContentLoaded', function () {
   var ticketEndTimestampElement = document.getElementById('ticket_end_timestamp');
 
   if (ticketEndTimestampElement) {
+      ticketEndTimestampElement.value = formattedDate;
+  }
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+  var currentDate = new Date();
+  var formattedDate = currentDate.toISOString().slice(0, 16);
+
+  var ticketStartTimestampElement = document.getElementById('ticket_start_timestamp');
+  var ticketEndTimestampElement = document.getElementById('ticket_end_timestamp');
+
+  if (ticketStartTimestampElement) {
+      ticketStartTimestampElement.value = formattedDate;
+  }
+
+  if (ticketEndTimestampElement) {
+      currentDate.setDate(currentDate.getDate() + 1);
+      formattedDate = currentDate.toISOString().slice(0, 16);
       ticketEndTimestampElement.value = formattedDate;
   }
 });

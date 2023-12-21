@@ -24,17 +24,15 @@ h2 span {
 }
 
 #deactivate-button {
-    top: 20px;
-    right: 20px;
-    position: absolute;
+    position: relative;
     background: linear-gradient(to bottom, #bb0e08, #ee3c1c);
+    width: fit-content;
+    justify-self: end;
 }
 
 #activate-button {
-    top: 20px;
-    right: 20px;
     position: relative;
-    background: linear-gradient(to bottom, #1279bd, #36aaf7);
+    background: linear-gradient(to bottom, #12bd2e, #56f736);
     width: fit-content;
     justify-self: end;
 }
@@ -563,6 +561,10 @@ input[type="radio"] {
 
 #file-input {
     display: none;
+}
+
+#edit-event #create-event-form{
+    grid-area: edit;
 }
 
 #edit-event-images {

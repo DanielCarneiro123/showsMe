@@ -188,11 +188,14 @@
                 <div class="comment-icons-container">
                     <div class="photo-and-name">
                         @if($comment->author->profile_image != null)
-                            <img id="profile-image-comment" src="{{ \App\Http\Controllers\FileController::get('profile_image', $comment->author->user_id) }}" alt="Profile Image">
+                        <img id="profile-image-comment"
+                            src="{{ \App\Http\Controllers\FileController::get('profile_image', $comment->author->user_id) }}"
+                            alt="Profile Image">
                         @else
-                            <img id="profile-image-comment" src="{{ asset('media/default_user.jpg') }}" alt="Default Profile Image">
-                        @endif  
-                    <p class="comment-author">{{ $comment->author->name }}</p>
+                        <img id="profile-image-comment" src="{{ asset('media/default_user.jpg') }}"
+                            alt="Default Profile Image">
+                        @endif
+                        <p class="comment-author">{{ $comment->author->name }}</p>
                     </div>
                     <div>
                         @if(auth()->check())
@@ -442,23 +445,35 @@
         </form>
     </section>
 
-    <article class="edit-or-create">
-        <label for="edit_name">Event Name:</label>
-        <input type="text" id="edit_name" name="edit_name" value="{{ $event->name }}" required>
+    <article class="edit-or-create" id="create-event-form">
+        <div id="create_name">
+            <input type="text" id="edit_name" name="edit_name" value="{{ $event->name }}" required
+                placeholder="Event name">
+        </div>
 
-        <label for="edit_description">Event Description:</label>
-        <textarea id="edit_description" name="edit_description">{{ $event->description }}</textarea>
+        <div id="create_descr">
+            <textarea id="edit_description" name="edit_description" placeholder="Description"
+                required>{{ $event->description }}</textarea>
+        </div>
 
-        <label for="edit_location">Event Location:</label>
-        <input type="text" id="edit_location" name="edit_location" value="{{ $event->location }}" required>
+        <div id="create_local">
+            <input type="text" id="edit_location" name="edit_location" value="{{ $event->location }}"
+                placeholder="Location" required>
+        </div>
 
-        <label for="edit_start_timestamp">Start Timestamp:</label>
-        <input type="datetime-local" id="edit_start_timestamp" name="edit_start_timestamp"
-            value="{{ $event->start_timestamp }}" required>
+        <div id="create_sdate">
+            <label for="edit_start_timestamp">Start Timestamp:</label>
+            <input type="datetime-local" id="edit_start_timestamp" name="edit_start_timestamp"
+                value="{{ $event->start_timestamp }}" required>
+        </div>
 
-        <label for="edit_end_timestamp">End Timestamp:</label>
-        <input type="datetime-local" id="edit_end_timestamp" name="edit_end_timestamp"
-            value="{{ $event->end_timestamp }}" required>
+
+        <div id="create_edate">
+            <label for="edit_end_timestamp">End Timestamp:</label>
+            <input type="datetime-local" id="edit_end_timestamp" name="edit_end_timestamp"
+                value="{{ $event->end_timestamp }}" required>
+        </div>
+
         @error('edit_end_timestamp')
         <span class="text-danger">{{ $message }}</span>
         @enderror
