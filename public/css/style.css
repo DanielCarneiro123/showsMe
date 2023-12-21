@@ -280,6 +280,7 @@ footer .footer-icon-wrapper {
 
 a {
   text-decoration: none;
+  justify-self: center;
 }
 
 footer .follow p {

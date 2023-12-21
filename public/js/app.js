@@ -498,7 +498,7 @@ function createTypeHandler() {
   }
 }
 
-const activate = document.querySelector('#activate-button');
+const activate = document.getElementById('activate-button');
 
 if (activate) {
   activate.addEventListener('click', function () {
