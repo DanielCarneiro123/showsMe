@@ -368,6 +368,7 @@ VALUES
 -- Inserts for Realistic Events
 INSERT INTO Event_ (name, location, description, private, start_timestamp, end_timestamp, creator_id) 
 VALUES 
+  ('Arena Rock Serenade', 'Rock Arena', 'Experience the magic of these classic rock with bands, including Journey, Night Ranger, Toto and Whitesnake for a night filled with heartfelt lyrics, emotional melodies and unforgettable tunes.', FALSE, '2024-06-15 18:30:00', '2024-06-15 23:59:00', 1),  
   ('Conference on Technology Innovation', 'Tech Center', 'Join us for the latest in tech innovations and discussions.', FALSE, '2023-11-01 09:00:00', '2023-11-01 17:00:00', 1),
   ('Art Exhibition: Modern Perspectives', 'City Art Gallery', 'Explore contemporary art from local and international artists.', TRUE, '2023-11-05 18:00:00', '2023-11-05 21:00:00', 2),
   ('Community Charity Run', 'City Park', 'Run for a cause and support local charities.', FALSE, '2023-11-10 08:00:00', '2023-11-10 12:00:00', 3),
@@ -392,8 +393,11 @@ VALUES
 -- Inserts for Comments
 INSERT INTO Comment_ (text, media, event_id, author_id) 
 VALUES 
-  ('Great event!', NULL, 1, 1),
-  ('The art was amazing!', NULL, 1, 2),
+  ('Awesome concert, loved every song!', NULL, 1, 1),
+  ('The atmosphere was electric, great performance!', NULL, 1, 2),
+  ('Good vibes all night long, would attend again!', NULL, 1, 3),
+  ('Solid lineup and fantastic sound quality!', NULL, 1, 4),
+  ('Memorable night, the bands were phenomenal!', NULL, 1, 5),
   ('I had a blast running!', NULL, 3, 3),
   ('The food was delicious!', NULL, 4, 4),
   ('Interesting workshop on AI.', NULL, 5, 5),
@@ -466,8 +470,8 @@ VALUES
   -- Inserts for Ticket Types
 INSERT INTO TicketType (name, stock, description, private, person_buying_limit, start_timestamp, end_timestamp, price, event_id)
 VALUES 
-  ('General Admission', 100, 'Access to the event for one person.', FALSE, 10, '2023-11-01 00:00:00', '2023-12-01 00:00:00', 25.99, 1),
-  ('VIP Pass', 50, 'Exclusive access with VIP amenities.', TRUE, 5, '2023-11-05 12:00:00', '2023-11-10 12:00:00', 99.99, 1),
+  ('Standard Access', 100, 'Get your ticket for individual entry to the concert.', FALSE, 10, '2023-12-01 00:00:00', '2023-12-15 00:00:00', 25.99, 1),
+  ('Premiere Pass', 50, 'Elevate your concert experience with exclusive VIP perks and access.', TRUE, 5, '2023-12-05 12:00:00', '2023-12-10 12:00:00', 99.99, 1),
   ('Runner''s Package', 75, 'Participate in the community charity run.', FALSE, 15, '2023-11-10 09:00:00', '2023-11-11 12:00:00', 10.00, 3),
   ('Foodie Ticket', 120, 'Taste a variety of dishes at the food festival.', TRUE, 20, '2023-11-15 18:00:00', '2023-11-16 23:59:59', 39.99, 4),
   ('Workshop Pass', 30, 'Attend workshops on AI and technology.', FALSE, 5, '2023-11-20 14:00:00', '2023-11-21 17:00:00', 49.99, 5),
@@ -576,3 +580,8 @@ VALUES
 INSERT INTO UserLikes (user_id, comment_id) 
 VALUES 
   (2, 1);
+
+INSERT INTO EventImage (event_id, image_path) VALUES (1, 'concert_image1.jpg');
+INSERT INTO EventImage (event_id, image_path) VALUES (1, 'concert_image2.jpg');
+INSERT INTO EventImage (event_id, image_path) VALUES (1, 'concert_image3.jpg');
+INSERT INTO EventImage (event_id, image_path) VALUES (1, 'concert_image4.jpg');

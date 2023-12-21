@@ -63,7 +63,7 @@ class EventController extends Controller
         if ($user && $user->is_admin) {
             $events = Event::paginate(8);
         } else {
-            $events = Event::where('private', false)->paginate(8);
+            $events = Event::where('private', false)->orderBy('start_timestamp', 'asc')->paginate(8);
         }
 
         $notifications = $user ? $user->notifications : [];

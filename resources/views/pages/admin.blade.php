@@ -78,47 +78,53 @@
             </table>
         </div>
     </div>
-    <div class="admin-section text-center" id="admin-stats">
-        <br>
-        <h2>Event Count by Month</h2>
-        <p>Total de eventos no mês atual: <span id="eventCountByMonth">{{ $eventCountByMonth }}</span></p>
+    <section class="admin-section" id="admin-stats">
 
-            <div class="admin-stats-cards">
+    <section id="total_events">
+
+        <h3>Total Events</h3>
+        <div id="cards" class="d-flex align-items-center">
+            <div class="admin-stats-cards" style="max-width: 300px;">
+                <p>Today</p>
+                <span id="eventCountByDay">{{ $eventCountByDay }}</span>
+            </div>
+
+            <div class="admin-stats-cards" style="max-width: 300px;">
                 <p>This Month</p>
                 <span id="eventCountByMonth">{{ $eventCountByMonth }}</span>
             </div>
 
-            <div class="admin-stats-cards">
+            <div class="admin-stats-cards" style="max-width: 300px;">
                 <p>This Year</p>
                 <span id="eventCountByYear">{{ $eventCountByYear }}</span>
             </div>
         </div>
-
-
     </section>
+
+
 
 
     <section id="other_stats">
 
         <h3>Some Stats</h3>
 
-        <div id="cards">
-            <div class="admin-stats-cards">
+        <div id="cards" class="d-flex align-items-center">
+            <div class="admin-stats-cards" style="max-width: 300px;">
                 <p>Users</p>
                 <span id="userCount">{{ $userCount }}</span>
             </div>
 
-            <div class="admin-stats-cards">
+            <div class="admin-stats-cards" style="max-width: 300px;">
                 <p>Events</p>
                 <span id="eventCount">{{ $eventCount }}</span>
             </div>
 
-            <div class="admin-stats-cards">
+            <div class="admin-stats-cards" style="max-width: 300px;">
                 <p>Active Events</p>
                 <span id="activeEventCount">{{ $activeEventCount }}</span>
             </div>
 
-            <div class="admin-stats-cards">
+            <div class="admin-stats-cards" style="max-width: 300px;">
                 <p>Inactive Events</p>
                 <span id="inactiveEventCount">{{ $inactiveEventCount }}</span>
             </div>
