@@ -723,7 +723,7 @@ button:hover {
   grid-template-columns: auto 1fr;
 }
 
-#ticket-types .my-event-card .my-event-info .my-event-card-name{
+#ticket-types .my-event-card .my-event-info #my-event-card-name{
   grid-area: name;
   font-size: 18px;
   justify-self: start;
@@ -732,7 +732,7 @@ button:hover {
   font-weight: 700;
 }
 
-#ticket-types .my-event-card-date{
+#ticket-types #my-event-card-date{
   grid-area: date;
   justify-self: end;
   font-size: 18px;
@@ -741,7 +741,7 @@ button:hover {
   font-weight: 500;
 }
 
-#ticket-types .my-event-card-local{
+#ticket-types #my-event-card-local{
   grid-area: location;
   justify-self: end;
   font-size: 18px;
@@ -1041,7 +1041,7 @@ button:hover {
   grid-template-columns: auto 1fr;
 }
 
-#event-comments .my-event-card .my-event-info .my-event-card-local{
+#event-comments .my-event-card .my-event-info #my-event-card-local{
   grid-area: location;
   font-size: 18px;
   justify-self: end;
@@ -1052,7 +1052,7 @@ button:hover {
 }
 
 
-#event-comments .my-event-card .my-event-info .my-event-card-name{
+#event-comments .my-event-card .my-event-info #my-event-card-name{
   grid-area: name;
   font-size: 18px;
   justify-self: start;
@@ -1061,7 +1061,7 @@ button:hover {
   font-weight: 700;
 }
 
-.my-event-info .my-event-card-date{
+.my-event-info #my-event-card-date{
   grid-area: date;
   justify-self: end;
   font-size: 18px;
